@@ -5,6 +5,8 @@
 #include <random>
 #include <math.h>
 
+#include "geometry/test_point.hpp"
+
 
 using namespace std;
 

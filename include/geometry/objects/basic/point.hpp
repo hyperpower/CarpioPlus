@@ -1,7 +1,7 @@
 #ifndef _POINT_HPP_
 #define _POINT_HPP_
 
-#include "../geometry_define.hpp"
+#include "geometry/geometry_define.hpp"
 #include <array>
 #include <sstream>
 #include <iostream>
@@ -319,6 +319,71 @@ std::ostream& operator<<(std::ostream& stream, const Point_<TYPE, DIM>& point) {
 	stream << ")";
 	return stream;
 }
+
+template<typename TYPE, St DIM>
+double Distance2(const Point_<TYPE, DIM>& p1,
+		         const Point_<TYPE, DIM>& p2) {
+	if (DIM == 1) {
+		double dis = p1[0] - p2[0];
+		return std::abs(dis);
+	}
+	if (DIM == 2) {
+		return double(
+				(p1.x() - p2.x()) * (p1.x() - p2.x())
+						+ (p1.y() - p2.y()) * (p1.y() - p2.y()));
+	}
+	if (DIM == 3) {
+		return double(
+				(p1.x() - p2.x()) * (p1.x() - p2.x())
+						+ (p1.y() - p2.y()) * (p1.y() - p2.y())
+						+ (p1.z() - p2.z()) * (p1.z() - p2.z()));
+	}
+	SHOULD_NOT_REACH;
+	return 0.0;
+}
+template<typename TYPE, St DIM>
+double Distance(const Point_<TYPE, DIM>& p1,
+		         const Point_<TYPE, DIM>& p2) {
+	return std::sqrt(Distance2(p1, p2));
+}
+
+/**
+ * Get minimun loaction of
+ *
+ * for example:
+ * a   = ( 1, 2, 3)
+ *            ^
+ * b   = ( 0, 4, 2)
+ *         ^     ^
+ * res = Min(a, b);
+ * res = ( 0, 2, 2)
+ */
+template<typename TYPE, St DIM>
+Point_<TYPE, DIM> Min(
+		const Point_<TYPE, DIM>& a,
+		const Point_<TYPE, DIM>& b) {
+	Point_<TYPE, DIM> res;
+	for (St i = 0; i < DIM; i++) {
+		res[i] = std::min(a[i], b[i]);
+	}
+	return res;
+}
+/**
+ * Get max location of
+ */
+template<typename TYPE, St DIM>
+Point_<TYPE, DIM> Max(
+		const Point_<TYPE, DIM>& a,
+		const Point_<TYPE, DIM>& b) {
+	Point_<TYPE, DIM> res;
+	for (St i = 0; i < DIM; i++) {
+		res[i] = std::max(a[i], b[i]);
+	}
+	return res;
+}
+
+
+
 
 } //end namespace
 

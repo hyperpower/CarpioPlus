@@ -60,7 +60,7 @@ ENDIF()
 # end python ===
 # location of header files
 INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/../include
 )
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/lib/ts)
