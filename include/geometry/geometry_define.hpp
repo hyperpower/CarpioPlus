@@ -1,7 +1,7 @@
 #ifndef GEOMETRY_DEFINE_H_
 #define GEOMETRY_DEFINE_H_
 
-#include "../type_define.hpp"
+#include "type_define.hpp"
 
 #include <math.h>
 
