@@ -60,6 +60,18 @@ TEST(point, max_and_min){
 }
 
 
+TEST(point, draw_on_gnuplot){
+	Point2 x(1, 0, 0);
+	Point2 y(0, 1, 0);
+	Point2 z(0, 0, 1);
+
+	Gnuplot gnu;
+	gnu.add(GnuplotActor::Points(x, 0));
+	//gnu.plot();
+}
+
+
+
 
 }
 

@@ -85,6 +85,13 @@ enum Orientation {
 	_P_ = 1, //
 	_C_ = 2, //
 };
+enum Trinary {
+	_POSITIVE_ = 1,  //
+	_ZERO_     = 0,  //
+	_NEGATIVE_ = -1, //
+};
+
+
 
 }
 

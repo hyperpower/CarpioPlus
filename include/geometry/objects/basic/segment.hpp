@@ -306,11 +306,139 @@ protected:
 		}
 	}
 };
-
+//==================================================================
+// Functions
+//
 template<typename TYPE, St DIM>
 inline std::ostream& operator<<(std::ostream& o, const Segment_<TYPE, DIM>& p) {
 	return o << p.ps() << "-->" << p.pe();
 }
+
+// Point loaction relative to a segment
+// It has 7 possibilities
+// ================================
+//   1  |     x       |  LEFT
+//      |  o----->    |
+// ________________________________
+//   2  |  o--x-->    |  IN
+// ________________________________
+//   3  |  o----->    |  RIGHT
+//      |     x       |
+// ________________________________
+//   4  |--x---->---  |  ON_START
+// ________________________________
+//   5  |--o----x---  |  ON_END
+// ________________________________
+//   6  |-x-o---->--  |  OUT_START
+// ________________________________
+//   7  |---o---->-x- |  OUT_END
+enum PointToSegmentPosition {
+	_PS_IN_        = 0,  //
+	_PS_LEFT_      = 1,  //
+	_PS_RIGHT_     = 2,  //
+	_PS_ON_START_  = 3,  //
+	_PS_ON_END_    = 4,  //
+	_PS_OUT_START_ = 5,  //
+	_PS_OUT_END_   = 6,  //
+};
+
+std::string ToString(const PointToSegmentPosition& ps){
+	switch(ps){
+	case _PS_IN_       :  return "IN";        break;
+	case _PS_LEFT_     :  return "LEFT";      break;
+	case _PS_RIGHT_    :  return "RIGHT";     break;
+	case _PS_ON_START_ :  return "ON_START";  break;
+	case _PS_ON_END_   :  return "ON_END";    break;
+	case _PS_OUT_START_:  return "OUT_START"; break;
+	case _PS_OUT_END_  :  return "OUT_END";   break;
+	}
+	SHOULD_NOT_REACH;
+	return "ERROR PointToSegmentPosition";
+}
+
+template<typename TYPE>
+PointToSegmentPosition OnWhichSide7(
+		const Point_<TYPE, 2>& ps,
+		const Point_<TYPE, 2>& pe,
+		const Point_<TYPE, 2>& p) {
+	// 1 Is equal
+	if(p == ps){
+		return _PS_ON_START_;
+	}
+	if(p == pe){
+		return _PS_ON_END_;
+	}
+	// 2 calculate cross
+	double tmp = Cross(ps, pe, p);
+	if (tmp > 0) {
+		return _PS_LEFT_;
+	} else if (tmp < 0) {
+		return _PS_RIGHT_;
+	} else {
+		TYPE dx = pe.x() - ps.x();
+		if (dx > 0) {
+			if (p.x() > pe.x()) {
+				return _PS_OUT_END_;
+			}else if(p.x() < ps.x()){
+				return _PS_OUT_START_;
+			}else if(p.x() < pe.x() && p.x() > ps.x()){
+				return _PS_IN_;
+			}else{
+				SHOULD_NOT_REACH;
+			}
+		} else if (dx < 0) {
+			if (p.x() < pe.x()) {
+				return _PS_OUT_END_;
+			} else if (p.x() > ps.x()) {
+				return _PS_OUT_START_;
+			} else if (p.x() > pe.x() && p.x() < ps.x()) {
+				return _PS_IN_;
+			} else {
+				SHOULD_NOT_REACH;
+			}
+		} else { //equal to zero
+			TYPE dy = pe.y() - ps.y();
+			if (dy > 0) {
+				if (p.y() > pe.y()) {
+					return _PS_OUT_END_;
+				} else if (p.y() < ps.y()) {
+					return _PS_OUT_START_;
+				} else if (p.y() < pe.y() && p.y() > ps.y()) {
+					return _PS_IN_;
+				} else {
+					SHOULD_NOT_REACH;
+				}
+			} else if (dy < 0) {
+				if (p.y() < pe.y()) {
+					return _PS_OUT_END_;
+				} else if (p.y() > ps.y()) {
+					return _PS_OUT_START_;
+				} else if (p.y() > pe.y() && p.y() < ps.y()) {
+					return _PS_IN_;
+				} else {
+					SHOULD_NOT_REACH;
+				}
+			}else{
+				SHOULD_NOT_REACH;
+			}
+		}
+	}
+}
+
+template<typename TYPE>
+PointToSegmentPosition OnWhichSide7(
+		const Segment_<TYPE, 2>& seg,
+		const Point_<TYPE, 2>& pe) {
+	return OnWhichSide7(seg.ps(), seg.pe(), pe);
+}
+
+
+
+
+// ------>
+//
+
+
 
 }
 #endif
