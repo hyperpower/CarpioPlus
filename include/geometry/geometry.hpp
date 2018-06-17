@@ -6,6 +6,8 @@
 #include "objects/basic/point.hpp"
 #include "objects/basic/segment.hpp"
 
+#include "geometry/operation/intersection_ss.hpp"
+
 #include "./io/gnuplot_actor.hpp"
 
 namespace carpio {

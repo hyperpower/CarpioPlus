@@ -36,7 +36,8 @@ public:
 	typedef const TYPE& const_reference;
 
 	typedef Operation_<TYPE, DIM> Op;
-	protected:
+
+protected:
 	Point _min, _max;
 	//TYPE _xmin,_ymin,_xmax,_ymax;
 public:
@@ -61,15 +62,15 @@ public:
 		_min = point;
 		_max = point;
 	}
-	Box_(const Point& pmin, const Point& pmax) {
-		_min = pmin;
-		_max = pmax;
+	Box_(const Point& p1, const Point& p2) {
+		_min = Min(p1, p2);
+		_max = Max(p1, p2);
 	}
 
 	Box_(const Self& a, const Self& b) { // union to one box without data
 		Self& self = (*this);
-		self._min = Op::Min(a._min, b._min);
-		self._max = Op::Max(a._max, b._max);
+		self._min = Min(a._min, b._min);
+		self._max = Max(a._max, b._max);
 	}
 
 	bool empty() const{
@@ -140,7 +141,8 @@ public:
 	}
 
 	bool operator<(const Self& rhs) const {
-		//compare center point x -> y -> z -> point address
+		// compare order:
+		// center point x -> y -> z -> point address
 		const Self& self = (*this);
 		if (this->center(_X_) < rhs.center(_X_)) {
 			return true;
@@ -226,6 +228,22 @@ std::ostream& operator<<(std::ostream& stream, const Box_<TYPE, DIM>& box) {
 	stream << "  min = " << box.min();
 	return stream;
 }
+
+template<typename TYPE, St DIM>
+bool IsInOn(
+		const Box_<TYPE, DIM>& b1,
+		const Box_<TYPE, DIM>& b2){
+	for (St d = 0; d < DIM; ++d) {
+		if (b2.min(d) > b1.max(d)) {
+			return false;
+		}
+		if (b2.max(d) < b1.min(d)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 
 struct TagBBox: public TagGeometry {
 	TagBBox() {

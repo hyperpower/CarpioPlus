@@ -580,12 +580,48 @@ public:
 	}
 	// set range
 	// set the xrange
-	Gnuplot& set_xrange(const double iFrom, const double iTo);
-	Gnuplot& set_xrange_reverse(const double iFrom, const double iTo);
-	Gnuplot& set_yrange(const double iFrom, const double iTo);
-	Gnuplot& set_yrange_reverse(const double iFrom, const double iTo);
-	Gnuplot& set_zrange(const double iFrom, const double iTo);
-	Gnuplot& set_zrange_reverse(const double iFrom, const double iTo);
+	Gnuplot& set_xrange(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set xrange[" << iFrom << ":" << iTo << "]";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_xrange_reverse(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set xrange[" << iFrom << ":" << iTo << "] reverse";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_yrange(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set yrange[" << iFrom << ":" << iTo << "]";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_yrange_reverse(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set yrange[" << iFrom << ":" << iTo << "] reverse";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_zrange(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set zrange[" << iFrom << ":" << iTo << "]";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_zrange_reverse(const double iFrom, const double iTo) {
+		std::ostringstream cmdstr;
+		cmdstr << "set zrange[" << iFrom << ":" << iTo << "] reverse";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
 	Gnuplot& set_cbrange(const double iFrom, const double iTo) {
 		std::ostringstream cmdstr;
 		cmdstr << "set cbrange[" << iFrom << ":" << iTo << "]";
