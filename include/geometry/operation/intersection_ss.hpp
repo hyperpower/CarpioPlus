@@ -138,7 +138,7 @@ public:
 		return t;
 	}
 
-	IntersectionTypeSS get_intersection_type(){
+	IntersectionTypeSS cal_intersection_type(){
 		if(_pointloc[1] > -1){
 			short t1 = _get_ss_type1();
 			if(t1 == _SS_FURTHER_) { // type is further
@@ -154,6 +154,31 @@ public:
 		}else{
 			return _SS_NO_;
 		}
+	}
+
+	// normal intersection
+	Point cal_intersection_point(){
+		// The intersection type must be _SS_INTERSECT_
+		ASSERT(DIM == 2);
+		Vt x0 = (*(_arrp[0])).x();
+		Vt x1 = (*(_arrp[1])).x();
+		Vt x2 = (*(_arrp[2])).x();
+		Vt x3 = (*(_arrp[3])).x();
+
+
+		Vt y0 = (*(_arrp[0])).y();
+		Vt y1 = (*(_arrp[1])).y();
+		Vt y2 = (*(_arrp[2])).y();
+		Vt y3 = (*(_arrp[3])).y();
+
+		double denom = (x0-x1) * (y2- y3) - (y0 - y1) * (x2- x3) + 1e-20;
+
+		double x = ((x0 * y1 - y0 * x1) * (x2 - x3)
+				- (x0 - x1) * (x2 * y3 - y2 * x3)) / denom ;
+		double y = ((x0 * y1 - y0 * x1) * (y2 - y3)
+				- (y0 - y1) * (x2 * y3 - y2 * x3)) / denom;
+
+		return Point(x, y);
 	}
 
 

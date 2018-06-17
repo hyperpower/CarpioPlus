@@ -1,0 +1,159 @@
+/*
+ * _point_chain.hpp
+ *
+ *  Created on: Jul 6, 2017
+ *      Author: zhou
+ */
+
+#ifndef _POINT_CHAIN_HPP_
+#define _POINT_CHAIN_HPP_
+
+#include "geometry/geometry_define.hpp"
+#include "point.hpp"
+#include "algebra/array/array_list.hpp"
+#include "segment.hpp"
+#include <array>
+#include <vector>
+#include <limits>
+#include <list>
+#include <fstream>
+#include <algorithm>
+
+namespace carpio {
+
+template<class TYPE, St DIM>
+class PointChain_ {
+public:
+	static const St Dim = DIM;
+	typedef Point_<TYPE, DIM> Point;
+	typedef Point_<TYPE, DIM>& ref_Point;
+	typedef const Point_<TYPE, DIM>& const_ref_Point;
+	typedef Segment_<TYPE, DIM> Segment;
+	typedef Segment& ref_Segment;
+	typedef PointChain_<TYPE, DIM>& PointChain;
+	typedef TYPE vt;
+	typedef typename std::list<Point>::iterator iterator;
+	typedef typename std::list<Point>::const_iterator const_iterator;
+	typedef Operation_<TYPE, DIM> Op;
+	typedef Point value_type;
+	protected:
+	/** Linked point chain */
+	std::list<Point> _lpoints;
+	bool _closed; // is the chain closed, that is, is the first point is linked with the last one?
+public:
+	PointChain_() :
+			_lpoints(), _closed(false) {
+	}
+	PointChain_(const Point& p1) :
+			_closed(false) {
+		_lpoints.push_back(p1);
+	}
+	PointChain_(const Point& p1, const Point& p2) :
+			_closed(false) {
+		_lpoints.push_back(p1);
+		_lpoints.push_back(p2);
+	}
+	PointChain_(const Point& p1, const Point& p2, const Point& p3, bool close =
+			true) :
+			_closed(close) {
+		_lpoints.push_back(p1);
+		_lpoints.push_back(p2);
+		_lpoints.push_back(p3);
+	}
+	PointChain_(const Point& p1, const Point& p2, const Point& p3,
+			const Point& p4, bool close = true) :
+			_closed(close) {
+		_lpoints.push_back(p1);
+		_lpoints.push_back(p2);
+		_lpoints.push_back(p3);
+		_lpoints.push_back(p4);
+	}
+
+	template<class Container_Point>
+	PointChain_(const Container_Point& ver,
+			bool closed = true) : _closed(closed){
+		std::copy(ver.begin(), ver.end(), std::back_inserter(_lpoints));
+	}
+
+	void init(const Segment& s) {
+		_lpoints.push_back(s.ps());
+		_lpoints.push_back(s.pe());
+	}
+
+	void set_close() {
+		_closed = true;
+	}
+
+	bool closed() const {
+		return _closed;
+	}
+
+	bool empty() const {
+		return _lpoints.empty();
+	}
+
+	iterator begin() {
+		return _lpoints.begin();
+	}
+
+	iterator end() {
+		return _lpoints.end();
+	}
+
+	const_iterator begin() const {
+		return _lpoints.begin();
+	}
+	const_iterator end() const {
+		return _lpoints.end();
+	}
+
+	void push_back(const Point& p) {
+		_lpoints.push_back(p);
+	}
+
+	void pop_back() {
+		_lpoints.pop_back();
+	}
+
+	void clear() {
+		_lpoints.clear();
+	}
+
+	unsigned int size() const {
+		return _lpoints.size();
+	}
+
+	bool is_simple() const {
+		return Op::IsSimple(_lpoints.begin(), _lpoints.end(), closed());
+	}
+
+	double perimeter() const {
+		if (empty()) {
+			return 0;
+		}
+		double res = 0;
+		const_iterator iter_end = std::prev(_lpoints.end(), 1);
+		for (const_iterator iter = _lpoints.begin();
+				iter != iter_end; ++iter) {
+			const_iterator iter1 = std::next(iter);
+			res += Op::Distance(*iter, *iter1);
+		}
+		if (closed()) {
+			res += Op::Distance(*iter_end, *(_lpoints.begin()));
+		}
+		return res;
+	}
+
+	void show() const {
+		int count = 0;
+		for (auto& p : _lpoints) {
+			std::cout << "i = " << count << " " << p << std::endl;
+			count++;
+		}
+	}
+
+};
+
+}
+
+#endif
