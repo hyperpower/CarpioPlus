@@ -34,6 +34,8 @@ public:
 	typedef TYPE vt;
 	typedef typename std::list<Point>::iterator iterator;
 	typedef typename std::list<Point>::const_iterator const_iterator;
+	typedef typename std::list<Point>::reference reference;
+	typedef typename std::list<Point>::const_reference const_reference;
 	typedef Operation_<TYPE, DIM> Op;
 	typedef Point value_type;
 	protected:
@@ -105,6 +107,20 @@ public:
 	}
 	const_iterator end() const {
 		return _lpoints.end();
+	}
+
+	reference front() {
+		return _lpoints.front();
+	}
+	const_reference front() const {
+		return _lpoints.front();
+	}
+
+	reference back() {
+		return _lpoints.back();
+	}
+	const_reference back() const {
+		return _lpoints.back();
 	}
 
 	void push_back(const Point& p) {

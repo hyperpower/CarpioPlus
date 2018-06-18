@@ -8,6 +8,7 @@ namespace carpio {
 
 TEST(polygon_boolean, initial){
 
+
 }
 
 

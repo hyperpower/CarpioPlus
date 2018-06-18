@@ -8,6 +8,7 @@
 #ifndef GEOMETRY_TEST_SEGMENT_HPP_
 #define GEOMETRY_TEST_SEGMENT_HPP_
 #include "geometry/geometry.hpp"
+#include "gtest/gtest.h"
 
 namespace carpio {
 

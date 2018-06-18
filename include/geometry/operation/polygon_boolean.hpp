@@ -54,6 +54,11 @@ protected:
 	}
 
 protected:
+	void _build_clip_link(const PointChain& pc){
+		for(auto& p : pc){
+
+		}
+	}
 
 };
 

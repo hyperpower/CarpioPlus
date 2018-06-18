@@ -9,6 +9,7 @@
 #define GEOMETRY_TEST_POINT_HPP_
 
 #include "geometry/geometry.hpp"
+#include "gtest/gtest.h"
 
 namespace carpio {
 

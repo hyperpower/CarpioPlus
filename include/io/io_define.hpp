@@ -32,22 +32,45 @@ std::string ToString(V1 a) {
  *
  */
 template<class V1, class V2>
-std::string ToString(V1 a, V2 b, const std::string sep) {
+std::string ToString(V1 a, V2 b, const std::string& sep) {
 	std::ostringstream sst;
 	sst << a << sep << b;
 	return sst.str();
 }
 
 template<class V1, class V2, class V3>
-std::string ToString(V1 a, V2 b, V3 c, const std::string sep) {
+std::string ToString(V1 a, V2 b, V3 c, const std::string& sep) {
 	std::ostringstream sst;
 	sst << a << sep << b << sep << c;
 	return sst.str();
 }
 
+template<class V1, class V2, class V3, class V4>
+std::string ToString(V1 a, V2 b, V3 c, V4 d,
+		const std::string& sep) {
+	std::ostringstream sst;
+	sst << a << sep; //1
+	sst << b << sep; //2
+	sst << c << sep; //3
+	sst << d ; //4
+	return sst.str();
+}
+
+template<class V1, class V2, class V3, class V4, class V5>
+std::string ToString(V1 a, V2 b, V3 c, V4 d, V5 e,
+		const std::string& sep) {
+	std::ostringstream sst;
+	sst << a << sep; //1
+	sst << b << sep; //2
+	sst << c << sep; //3
+	sst << d << sep; //4
+	sst << e ;
+	return sst.str();
+}
+
 template<class V1, class V2, class V3, class V4, class V5, class V6, class V7>
 std::string ToString(V1 a, V2 b, V3 c, V4 d, V5 e, V6 f, V7 g,
-		const std::string sep) {
+		const std::string& sep) {
 	std::ostringstream sst;
 	sst << a << sep; //1
 	sst << b << sep; //2
@@ -59,7 +82,7 @@ std::string ToString(V1 a, V2 b, V3 c, V4 d, V5 e, V6 f, V7 g,
 	return sst.str();
 }
 
-inline bool file_access_check( //
+inline bool FileAccessCheck( //
 		const std::string &filename, //
 		int mode //
 		) {
