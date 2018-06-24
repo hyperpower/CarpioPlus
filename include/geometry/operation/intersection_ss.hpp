@@ -75,7 +75,7 @@ public:
 
 protected:
 	ArrayListT<const_pPoint> _arrp;
-	ArrayListV<int> _pointloc;
+	ArrayListV<int> _pointpos;
 
 	std::shared_ptr<Point> _sppoint;
 
@@ -84,7 +84,7 @@ public:
 			const Point& p1,
 			const Point& p2,
 			const Point& p3,
-			const Point& p4) : _arrp(4), _pointloc(4), _sppoint(nullptr){
+			const Point& p4) : _arrp(4), _pointpos(4), _sppoint(nullptr){
 		_arrp[0] = &p1;
 		_arrp[1] = &p2;
 		_arrp[2] = &p3;
@@ -92,13 +92,13 @@ public:
 		if (_is_box_in_on()) {
 			_get_relation();
 		} else {
-			_pointloc.assign(-1);
+			_pointpos.assign(-1);
 		}
 	}
 	IntersectionPairSS_(
 			const Segment& seg1,
 			const Segment& seg2
-			) : _arrp(4), _pointloc(4), _sppoint(nullptr){
+			) : _arrp(4), _pointpos(4), _sppoint(nullptr){
 		_arrp[0] = &(seg1.ps());
 		_arrp[1] = &(seg1.pe());
 		_arrp[2] = &(seg2.ps());
@@ -107,7 +107,7 @@ public:
 		if (_is_box_in_on()) {
 			_get_relation();
 		} else {
-			_pointloc.assign(-1);
+			_pointpos.assign(-1);
 		}
 	}
 
@@ -118,28 +118,44 @@ public:
 	}
 
 	void _get_relation(){
-		_pointloc[0] = OnWhichSide7(*(_arrp[2]), *(_arrp[3]), *(_arrp[0]));
-		_pointloc[1] = OnWhichSide7(*(_arrp[2]), *(_arrp[3]), *(_arrp[1]));
+		_pointpos[0] = OnWhichSide7(*(_arrp[2]), *(_arrp[3]), *(_arrp[0]));
+		_pointpos[1] = OnWhichSide7(*(_arrp[2]), *(_arrp[3]), *(_arrp[1]));
 		if(_get_ss_type1() == _SS_FURTHER_){
-			_pointloc[2] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[2]));
-			_pointloc[3] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[3]));
-		}// else _relation[2] and [3] are -1
+			_pointpos[2] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[2]));
+			_pointpos[3] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[3]));
+		}
 	}
 
 	short _get_ss_type1(){ // seg1 to seg2
-		short t = _SSTYPE[_pointloc[0]][_pointloc[1]];
+		short t = _SSTYPE[_pointpos[0]][_pointpos[1]];
 		ASSERT(t != _SS_ERROR_);
 		return t;
 	}
 
 	short _get_ss_type2() { // seg2 to seg1
-		short t = _SSTYPE[_pointloc[2]][_pointloc[3]];
+		short t = _SSTYPE[_pointpos[2]][_pointpos[3]];
 		ASSERT(t != _SS_ERROR_);
 		return t;
 	}
 
+	PointToSegmentPosition point_postion(St idx){
+		ASSERT(idx >= 0 && idx < 4);
+		// 0 start of seg1
+		// 1 start of seg1
+		// 2 start of seg2
+		// 3 start of seg2
+		if(idx == 2 || idx == 3){
+			if(_get_ss_type1() == _SS_FURTHER_){
+				_pointpos[2] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[2]));
+				_pointpos[3] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[3]));
+			}
+		}
+		return ToPointToSegmentPosition(_pointpos[idx]);
+
+	}
+
 	IntersectionTypeSS cal_intersection_type(){
-		if(_pointloc[1] > -1){
+		if(_pointpos[1] > -1){
 			short t1 = _get_ss_type1();
 			if(t1 == _SS_FURTHER_) { // type is further
 				short t2 = _get_ss_type2();

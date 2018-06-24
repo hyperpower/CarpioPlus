@@ -342,6 +342,20 @@ enum PointToSegmentPosition {
 	_PS_OUT_END_   = 6,  //
 };
 
+PointToSegmentPosition ToPointToSegmentPosition(int idx){
+	switch(idx){
+		case 0 : return _PS_IN_       ;  break;
+		case 1 : return _PS_LEFT_     ;  break;
+		case 2 : return _PS_RIGHT_    ;  break;
+		case 3 : return _PS_ON_START_ ;  break;
+		case 4 : return _PS_ON_END_   ;  break;
+		case 5 : return _PS_OUT_START_;  break;
+		case 6 : return _PS_OUT_END_  ;  break;
+	}
+	SHOULD_NOT_REACH;
+	return _PS_IN_; //make complier happy
+}
+
 std::string ToString(const PointToSegmentPosition& ps){
 	switch(ps){
 	case _PS_IN_       :  return "IN";        break;
