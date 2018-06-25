@@ -317,21 +317,21 @@ inline std::ostream& operator<<(std::ostream& o, const Segment_<TYPE, DIM>& p) {
 // Point loaction relative to a segment
 // It has 7 possibilities
 // ================================
+//   0  |  o--x-->    |  IN
+// ________________________________
 //   1  |     x       |  LEFT
 //      |  o----->    |
 // ________________________________
-//   2  |  o--x-->    |  IN
-// ________________________________
-//   3  |  o----->    |  RIGHT
+//   2  |  o----->    |  RIGHT
 //      |     x       |
 // ________________________________
-//   4  |--x---->---  |  ON_START
+//   3  |--x---->---  |  ON_START
 // ________________________________
-//   5  |--o----x---  |  ON_END
+//   4  |--o----x---  |  ON_END
 // ________________________________
-//   6  |-x-o---->--  |  OUT_START
+//   5  |-x-o---->--  |  OUT_START
 // ________________________________
-//   7  |---o---->-x- |  OUT_END
+//   6  |---o---->-x- |  OUT_END
 enum PointToSegmentPosition {
 	_PS_IN_        = 0,  //
 	_PS_LEFT_      = 1,  //

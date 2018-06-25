@@ -89,10 +89,9 @@ public:
 		_arrp[1] = &p2;
 		_arrp[2] = &p3;
 		_arrp[3] = &p4;
+		_pointpos.assign(-1);
 		if (_is_box_in_on()) {
 			_get_relation();
-		} else {
-			_pointpos.assign(-1);
 		}
 	}
 	IntersectionPairSS_(
@@ -103,11 +102,9 @@ public:
 		_arrp[1] = &(seg1.pe());
 		_arrp[2] = &(seg2.ps());
 		_arrp[3] = &(seg2.pe());
-
+		_pointpos.assign(-1);
 		if (_is_box_in_on()) {
 			_get_relation();
-		} else {
-			_pointpos.assign(-1);
 		}
 	}
 
@@ -138,19 +135,17 @@ public:
 		return t;
 	}
 
-	PointToSegmentPosition point_postion(St idx){
+	int point_position(St idx){
 		ASSERT(idx >= 0 && idx < 4);
 		// 0 start of seg1
 		// 1 start of seg1
 		// 2 start of seg2
 		// 3 start of seg2
 		if(idx == 2 || idx == 3){
-			if(_get_ss_type1() == _SS_FURTHER_){
-				_pointpos[2] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[2]));
-				_pointpos[3] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[3]));
-			}
+			_pointpos[2] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[2]));
+			_pointpos[3] = OnWhichSide7(*(_arrp[0]), *(_arrp[1]), *(_arrp[3]));
 		}
-		return ToPointToSegmentPosition(_pointpos[idx]);
+		return _pointpos[idx];
 
 	}
 

@@ -14,6 +14,7 @@
 #include <set>
 #include <functional>
 #include <iomanip>
+#include <algorithm>    // std::sort
 
 namespace carpio {
 
@@ -127,17 +128,18 @@ protected:
 											 pnoe->point);
 			IntersectionTypeSS itss = ssp.cal_intersection_type();
 			IntersectionGroup  row;
-			if( itss == _SS_CONNECT_ ||
-				itss == _SS_OVERLAP_ ||
-				itss == _SS_SAME_       ){
+			if( itss != _SS_NO_ &&
+				itss != _SS_INTERSECT_ ){
 				// two start point connect
-				if(_PS_ON_START_ == ssp.point_postion(0)){
+				if(_PS_ON_START_ == ssp.point_position(0)){
 					row.set(pncs, pnce, pnos, pnoe, pncs, 0);
 				}
-			}else if(itss == _SS_TOUCH_){
-				if(_PS_IN_ == ssp.point_postion(0)) {
+			}
+			if( itss == _SS_TOUCH_ ||
+				itss == _SS_OVERLAP_){
+				if(_PS_IN_ == ssp.point_position(0)) {
 					row.set(pncs, pnce, pnos, pnoe, pncs, 1);
-				}else if(_PS_IN_ == ssp.point_postion(2)){
+				}else if(_PS_IN_ == ssp.point_position(2)){
 					row.set(pncs, pnce, pnos, pnoe, pnos, 2);
 				}
 			}else if(itss == _SS_INTERSECT_){
@@ -169,20 +171,10 @@ protected:
 			}
 		}
 		// 2 merge to clip
-		std::set<typename IntersectionTable::size_type> usedic;
-		for(typename IntersectionTable::size_type ic = 0;
-				ic!=this->_table.size(); ic++){
+		this->_merge_to_clip();
+		// 3 merge to object
+		this->_merge_to_object();
 
-			for(typename IntersectionTable::size_type io= ic+1;
-					io!=this->_table.size(); io++){
-					if(  this->_table[ic].cs == this->_table[io].cs
-					   ||this->_table[ic].ce == this->_table[io].ce){
-
-					}
-
-				}
-
-		}
 	}
 
 	void for_each_node(FunN fun){
@@ -252,6 +244,84 @@ protected:
 	}
 
 protected:
+	void _merge_to_clip(){
+		typedef typename IntersectionTable::size_type Tst;
+		std::set<Tst> used;
+		for (Tst ic = 0; ic != this->_table.size(); ic++) {
+			if (used.find(ic) == used.end()) {
+				used.insert(ic);
+				typedef std::vector<Tst> IndexTable;
+				IndexTable idxtable;
+				idxtable.push_back(ic);
+				for (Tst io = ic + 1; io != this->_table.size(); io++) {
+					if (this->_table[ic].cs == this->_table[io].cs
+							&& this->_table[ic].ce == this->_table[io].ce) {
+						idxtable.push_back(io);
+						used.insert(io);
+					}
+				}
+				if (idxtable.size() > 1) {
+					// table needs sort
+					std::sort(idxtable.begin(), idxtable.end(),
+							[this, &ic](const Tst& a, const Tst& b) {
+								auto& pois = this->_table[ic].cs->point;
+								auto da = Distance(pois, this->_table[a].inter->point);
+								auto db = Distance(pois, this->_table[b].inter->point);
+								return da < db;
+							});
+				}
+				pNode pn = this->_table[ic].cs;
+				for (auto& idx : idxtable) {
+					if (pn != this->_table[idx].inter) {
+						this->insert_c(pn, this->_table[idx].inter);
+					}
+					pn = this->_table[idx].inter;
+				}
+			}
+		}
+	}
+
+	void _merge_to_object(){
+		typedef typename IntersectionTable::size_type Tst;
+		std::set<Tst> used;
+		for (Tst io = 0; io != this->_table.size(); io++) {
+			if (used.find(io) == used.end()) {
+				used.insert(io);
+				typedef std::vector<Tst> IndexTable;
+				IndexTable idxtable;
+				idxtable.push_back(io);
+				for (Tst ic = io + 1; ic != this->_table.size(); ic++) {
+					if (   this->_table[io].os == this->_table[ic].os
+						&& this->_table[io].oe == this->_table[ic].oe) {
+						idxtable.push_back(ic);
+						used.insert(ic);
+					}
+				}
+				if (idxtable.size() > 1) {
+					// table needs sort
+					std::sort(idxtable.begin(), idxtable.end(),
+							[this, &io](const Tst& a, const Tst& b) {
+								auto& pois = this->_table[io].os->point;
+								auto da = Distance(pois, this->_table[a].inter->point);
+								auto db = Distance(pois, this->_table[b].inter->point);
+								return da < db;
+							});
+				}
+				pNode pn = this->_table[io].os;
+				for (auto& idx : idxtable) {
+					if (pn != this->_table[idx].inter) {
+
+						this->insert_o(pn, this->_table[idx].inter);
+						std::cout << "insert : " <<  this->_table[idx].inter->point
+								  << " after "   << pn->point << std::endl;
+						std::cout << "pn next  " << pn->nexto->point << std::endl;
+					}
+					pn = this->_table[idx].inter;
+				}
+			}
+		}
+	}
+
 	void _build_clip_link(const PointChain& pc){
 		pNode last = cli;
 		for(auto& p : pc){
@@ -287,12 +357,18 @@ protected:
 	void insert_c(pNode& p, pNode& pnew){
 		pnew->nextc = p->nextc;
 		pnew->prevc = p;
+		if (p->nextc != nullptr) {
+			p->nextc->prevc = pnew;
+		}
 		p->nextc    = pnew;
 	}
 
 	void insert_o(pNode& p, pNode& pnew){
 		pnew->nexto = p->nexto;
 		pnew->prevo = p;
+		if (p->nexto != nullptr) {
+			p->nexto->prevo = pnew;
+		}
 		p->nexto    = pnew;
 	}
 
@@ -309,6 +385,9 @@ protected:
 
 		pc->type  = _PCO_;
 
+		if(po == obj){
+			obj = pc;
+		}
 		delete po;
 	}
 
@@ -368,7 +447,7 @@ public:
 		return actor;
 	}
 
-GnuplotActor::spActor actor_object(Gnuplot& gnu) {
+	GnuplotActor::spActor actor_object(Gnuplot& gnu) {
 		GnuplotActor::spActor actor = Gnuplot::spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3:4:5 title \"\" ";
 		actor->style() = "with vectors lc variable";
@@ -379,9 +458,9 @@ GnuplotActor::spActor actor_object(Gnuplot& gnu) {
 			Vt dy = s->point.y() - f->point.y();
 			actor->data().push_back(
 					ToString(f->point.x(),
-							f->point.y(),
-							dx,
-							dy, 2, " "));
+							 f->point.y(),
+							 dx, dy, 2, " "));
+			std::cout << " o : " << f->point << std::endl;
 		};
 
 		for_each_edge_object(fun);

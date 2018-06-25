@@ -31,9 +31,8 @@ TEST(polygon_boolean, initial) {
 	gnu.set_yrange(-2, 4);
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
+	gnu.add(pb.actor_label(gnu));
 //	gnu.plot();
-
-
 }
 
 TEST(polygon_boolean, test2) {
@@ -118,10 +117,10 @@ TEST(polygon_boolean, test4) {
 	Gnuplot gnu;
 	gnu.set_xrange(-2, 4);
 	gnu.set_yrange(-2, 4);
-	gnu.add(pb.actor_clip(gnu));
+//	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
-	gnu.add(pb.actor_label(gnu));
-//	gnu.plot();
+//	gnu.add(pb.actor_label(gnu));
+	gnu.plot();
 }
 
 TEST(polygon_boolean, test5) {
@@ -152,8 +151,132 @@ TEST(polygon_boolean, test5) {
 	gnu.set_yrange(-2, 4);
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
-	gnu.add(pb.actor_label(gnu));
-	gnu.plot();
+//	gnu.add(pb.actor_label(gnu));
+//	gnu.plot();
+}
+
+TEST(polygon_boolean, test6) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point( 1.0, 1.0));
+	lo.push_back(Point( 3.0, 1.0));
+	lo.push_back(Point( 1.0, 3.0));
+	lo.push_back(Point( 0.5, 1.5));
+
+	PC pobject(lo);
+
+	PolygonBoolean_<double> pb(pclip, pobject);
+
+	pb.show_table();
+	Gnuplot gnu;
+	gnu.set_xrange(-2, 4);
+	gnu.set_yrange(-2, 4);
+	gnu.add(pb.actor_clip(gnu));
+	gnu.add(pb.actor_object(gnu));
+//	gnu.add(pb.actor_label(gnu));
+//	gnu.plot();
+}
+
+TEST(polygon_boolean, test7) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point( 0.0, -1.0));
+	lo.push_back(Point( 2.0, -1.0));
+	lo.push_back(Point( 2.0,  3.0));
+	lo.push_back(Point( 0.0,  3.0));
+
+	PC pobject(lo);
+
+	PolygonBoolean_<double> pb(pclip, pobject);
+
+	pb.show_table();
+	Gnuplot gnu;
+	gnu.set_xrange(-2, 4);
+	gnu.set_yrange(-2, 4);
+	gnu.add(pb.actor_clip(gnu));
+	gnu.add(pb.actor_object(gnu));
+//	gnu.add(pb.actor_label(gnu));
+//	gnu.plot();
+}
+TEST(polygon_boolean, test8) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point( 0.0, 0.5));
+	lo.push_back(Point( 2.0, 0.5));
+	lo.push_back(Point( 2.0, 1.5));
+	lo.push_back(Point( 0.0, 1.5));
+
+	PC pobject(lo);
+
+	PolygonBoolean_<double> pb(pclip, pobject);
+
+	pb.show_table();
+	Gnuplot gnu;
+	gnu.set_xrange(-2, 4);
+	gnu.set_yrange(-2, 4);
+	gnu.add(pb.actor_clip(gnu));
+//	gnu.add(pb.actor_object(gnu));
+//	gnu.add(pb.actor_label(gnu));
+//	gnu.plot();
+}
+
+TEST(polygon_boolean, test9) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point(0, 0));
+	lo.push_back(Point(2, 0));
+	lo.push_back(Point(2, 2));
+	lo.push_back(Point(0, 2));
+
+	PC pobject(lo);
+	std::cout<< "here\n";
+
+	PolygonBoolean_<double> pb(pclip, pobject);
+
+	pb.show_table();
+	Gnuplot gnu;
+	gnu.set_xrange(-2, 4);
+	gnu.set_yrange(-2, 4);
+	gnu.add(pb.actor_clip(gnu));
+	gnu.add(pb.actor_object(gnu));
+//	gnu.add(pb.actor_label(gnu));
+//	gnu.plot();
 }
 
 
