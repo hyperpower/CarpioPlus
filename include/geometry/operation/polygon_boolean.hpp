@@ -68,7 +68,7 @@ protected:
 
 	typedef std::function<void(pNode)> FunN;
 	typedef std::function<void(pNode, pNode)> FunNN;
-	typedef std::function<void(pNode, pNode, pNode, pNode)> FunNNNN;
+	typedef std::function<void(pNode&, pNode&, pNode&, pNode&)> FunNNNN;
 
 
 
@@ -89,9 +89,16 @@ protected:
 			os(nullptr), oe(nullptr), inter(nullptr), type(-1){
 		}
 
-		void set(pNode pncs, pNode pnce,
-				 pNode pnos, pNode pnoe,
-				 pNode pinter, int t){
+		IntersectionGroup(const IntersectionGroup& other):
+			cs(other.cs), ce(other.ce),
+			os(other.os), oe(other.oe),
+			inter(other.inter),
+			type(other.type){
+		}
+
+		void set(pNode& pncs, pNode& pnce,
+				 pNode& pnos, pNode& pnoe,
+				 pNode& pinter, int t){
 			cs    = pncs;
 			ce    = pnce;
 			os    = pnos;
@@ -121,7 +128,7 @@ protected:
 
 	void phase_2(){
 		// build intersection table
-		FunNNNN fun = [this](pNode pncs, pNode pnce, pNode pnos, pNode pnoe){
+		FunNNNN fun = [this](pNode& pncs, pNode& pnce, pNode& pnos, pNode& pnoe){
 			IntersectionPairSS_<TYPE, 2> ssp(pncs->point,
 					                         pnce->point,
 											 pnos->point,
@@ -158,9 +165,18 @@ protected:
 	void phase_3(){
 		// combine two list
 		// 1 combine two start point connect
-		for(auto& row : this->_table){
-			if(row.type == 0){
+		for (auto i = 0; i < this->_table.size(); i++){
+			auto& row = this->_table[i];
+			if (row.type == 0) {
 				this->_merge(row.cs, row.os);
+				// change all os to cs in table
+				for(auto ii = 0; ii < this->_table.size(); ii++){
+					auto& r = this->_table[ii];
+					if (   i    != ii
+						&& r.os == row.os) {
+						r.os = row.cs;
+					}
+				}
 			}
 		}
 		for (auto it = this->_table.begin(); it != this->_table.end();) {
@@ -307,19 +323,17 @@ protected:
 								return da < db;
 							});
 				}
-				pNode pn = this->_table[io].os;
+				pNode& pn = this->_table[io].os;
 				for (auto& idx : idxtable) {
 					if (pn != this->_table[idx].inter) {
-
 						this->insert_o(pn, this->_table[idx].inter);
-						std::cout << "insert : " <<  this->_table[idx].inter->point
-								  << " after "   << pn->point << std::endl;
-						std::cout << "pn next  " << pn->nexto->point << std::endl;
 					}
 					pn = this->_table[idx].inter;
 				}
 			}
 		}
+
+
 	}
 
 	void _build_clip_link(const PointChain& pc){
@@ -373,6 +387,7 @@ protected:
 	}
 
 	void _merge(pNode& pc, pNode& po){
+		// merge po to pc
 		pc->prevo = po->prevo;
 		pc->nexto = po->nexto;
 
@@ -402,6 +417,36 @@ protected:
 	}
 
 public:
+	void show_pnode(pNode pn){
+		ASSERT(pn!=nullptr);
+		std::cout << "clip  : ";
+		if (pn->nextc != nullptr) {
+			std::cout << pn->nextc->point;
+		}else{
+			std::cout << "NULL   ";
+		}
+		if (pn->prevc != nullptr) {
+			std::cout << "    " <<pn->prevc->point << std::endl;
+		}else{
+			std::cout << "   NULL\n";
+		}
+
+		std::cout << "              " << pn->point <<std::endl;
+
+		std::cout << "object: ";
+		if (pn->nexto != nullptr) {
+			std::cout << pn->nexto->point;
+		} else {
+			std::cout << "NULL   ";
+		}
+		if (pn->prevo != nullptr) {
+			std::cout << "    " << pn->prevo->point << std::endl;
+		} else {
+			std::cout << "   NULL\n";
+		}
+
+	}
+
 	void show_table(){
 		int count = 0;
 		std::cout << std::setw(5) << "Idx"
@@ -460,7 +505,6 @@ public:
 					ToString(f->point.x(),
 							 f->point.y(),
 							 dx, dy, 2, " "));
-			std::cout << " o : " << f->point << std::endl;
 		};
 
 		for_each_edge_object(fun);

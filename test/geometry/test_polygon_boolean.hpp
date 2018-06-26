@@ -117,10 +117,10 @@ TEST(polygon_boolean, test4) {
 	Gnuplot gnu;
 	gnu.set_xrange(-2, 4);
 	gnu.set_yrange(-2, 4);
-//	gnu.add(pb.actor_clip(gnu));
+	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
 //	gnu.add(pb.actor_label(gnu));
-	gnu.plot();
+//	gnu.plot();
 }
 
 TEST(polygon_boolean, test5) {
