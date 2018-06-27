@@ -152,12 +152,37 @@ public:
 		for (const_iterator iter = _lpoints.begin();
 				iter != iter_end; ++iter) {
 			const_iterator iter1 = std::next(iter);
-			res += Op::Distance(*iter, *iter1);
+			res += Distance(*iter, *iter1);
 		}
 		if (closed()) {
-			res += Op::Distance(*iter_end, *(_lpoints.begin()));
+			res += Distance(*iter_end, *(_lpoints.begin()));
 		}
 		return res;
+	}
+
+	typedef std::function<void(Point&, Point&)> FunPP;
+	typedef std::function<void(const Point&, const Point&)> FunConstPConstP;
+
+	void for_each_edge(FunPP fun){
+		auto iters = _lpoints.begin();
+		auto itere = _lpoints.begin();
+		std::advance(itere, 1);
+		for(; itere != _lpoints.end();){
+			fun((*iters), (*itere));
+			iters++;
+			itere++;
+		}
+	}
+
+	void for_each_edge(FunConstPConstP fun) const{
+		auto iters = _lpoints.begin();
+		auto itere = _lpoints.begin();
+		std::advance(itere, 1);
+		for (; itere != _lpoints.end();) {
+			fun((*iters), (*itere));
+			iters++;
+			itere++;
+		}
 	}
 
 	void show() const {
@@ -167,8 +192,31 @@ public:
 			count++;
 		}
 	}
-
 };
+
+template<class TYPE>
+int WindingNumber(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
+	// winding number method
+	int    wn = 0;    // the  winding number counter
+
+	typedef Point_<TYPE, 2> Point;
+	pc.for_each_edge([&p, &wn](const Point& ps, const Point& pe){
+		if(ps.y() <= p.y()){
+			if(pe.y() > p.y()){
+				if(Cross(ps, pe, p) > 0){
+					++wn;
+				}
+			}
+		}else{
+			if(pe.y() <= pe.y()){
+				if(Cross(ps, pe, p) < 0){
+					--wn;
+				}
+			}
+		}
+	});
+	return wn;
+}
 
 }
 

@@ -27,6 +27,10 @@ public:
 	static const int _PO_ = 2;  // point from object
 	static const int _PCO_ = 3; // point from clip and object
 
+
+	static const int _INTERSECTION_ = 10;
+	static const int _UNION_        = 11;
+
 	typedef TYPE Vt;
 	typedef Point_<TYPE, 2> Point;
 	typedef PointChain_<TYPE, 2> PointChain;
@@ -38,13 +42,14 @@ public:
 		phase_1(clip, object);
 		phase_2();
 		phase_3();
+		phase_4();
 	}
 
 
 protected:
 
 	struct Node{
-		int type;
+		int   type;
 		Point point;
 
 		typedef Node* pNode;
@@ -190,6 +195,24 @@ protected:
 		this->_merge_to_clip();
 		// 3 merge to object
 		this->_merge_to_object();
+	}
+
+	void phase_4(){
+		// calculate the switch node
+		FunN fun = [this](pNode pn){
+			if(this->_is_switch(pn)){
+				pn->type = 100 + this->_cal_switch_type(pn);
+			}
+		};
+		for_each_node(fun);
+	}
+
+	std::vector<PointChain> output(int op = _INTERSECTION_){
+
+	}
+
+	std::vector<PointChain> output_intersection(){
+
 
 	}
 
@@ -406,13 +429,145 @@ protected:
 		delete po;
 	}
 
+	pNode _last_o(){
+		pNode p = obj;
+		while (p->nexto != nullptr) {
+			p = p->nexto;
+		}
+		return p;
+	}
+
+	pNode _last_c() {
+		pNode p = cli;
+		while (p->nextc != nullptr) {
+			p = p->nextc;
+		}
+		return p;
+	}
+
+	bool _is_switch(pNode& p){
+		if(    (p->nextc != nullptr || p->prevc != nullptr)
+			&& (p->nexto != nullptr || p->prevo != nullptr)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	int _cal_switch_type(pNode& p){
+		// p must be a switch point
+		// p clip
+		pNode nc = p->nextc;
+		pNode no = p->nexto;
+		pNode pc = p->prevc;
+		pNode po = p->prevo;
+		if(pc == nullptr){
+			pc = _last_c();
+		}
+		if(po == nullptr){
+			po = _last_o();
+		}
+		if(nc == nullptr){
+			nc = cli;
+		}
+		if(no == nullptr){
+			no = obj;
+		}
+		// Switch Type
+		// NOTHING  --  0
+		// IN       --  2
+		// OUT      -- -2
+		// HALF_IN  --  1
+		// HALF_OUT -- -1
+
+		// Step 1 clip is angle is acute or obtuse
+		int type = 0;
+		auto tri = OnWhichSide3(pc->point, p->point, nc->point);
+		if (tri == _POSITIVE_ ) { // Straight line or acute angle
+			auto os1 = OnWhichSide3(pc->point,  p->point, po->point);
+			auto os2 = OnWhichSide3( p->point, nc->point, po->point);
+			if(   os1 == _POSITIVE_
+			   && os2 == _POSITIVE_){
+				type +=-1;    //object start is inside
+			}else if(  (os1 == _ZERO_     && os2 == _POSITIVE_)
+					 ||(os1 == _POSITIVE_ && os2 == _ZERO_    )){
+				type += 0;    //object start is online
+			}else{
+				type += 1;    // object start is outside
+			}
+			// ----- end point ---
+			auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
+			auto oe2 = OnWhichSide3(p->point, nc->point, no->point);
+			if (oe1 == _POSITIVE_ && oe2 == _POSITIVE_) {
+				type += 1;    //object end is inside
+			} else if ((oe1 == _ZERO_     && oe2 == _POSITIVE_)
+					|| (oe1 == _POSITIVE_ && oe2 == _ZERO_)) {
+				type += 0;    //object end is online
+			} else {
+				type += -1;   // object end is outside
+			}
+		} else if( tri == _ZERO_){
+			auto os1 = OnWhichSide3(pc->point,  p->point, po->point);
+			if (os1 == _POSITIVE_) {
+				type += -1;   //object start is inside
+			} else if (os1 == _ZERO_) {
+				type += 0;    //object start is online
+			} else {
+				type += 1;    // object start is outside
+			}
+			auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
+			if (oe1 == _POSITIVE_) {
+				type += 1;    //object end is inside
+			} else if (oe1 == _ZERO_) {
+				type += 0;    //object end is online
+			} else {
+				type += -1;   // object end is outside
+			}
+		} else { // clip is obtuse angle
+			auto os1 = OnWhichSide3(pc->point, p->point, po->point);
+			auto os2 = OnWhichSide3(p->point, nc->point, po->point);
+			if (os1 == _NEGATIVE_ && os2 == _NEGATIVE_) {
+				type += 1;   //object start is outside
+			} else if ((os1 == _ZERO_     && os2 == _NEGATIVE_)
+					|| (os1 == _NEGATIVE_ && os2 == _ZERO_    )) {
+				type += 0;    //object start is online
+			} else {
+				type += -1;   // object start is inside
+			}
+			//
+			auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
+			auto oe2 = OnWhichSide3(p->point, nc->point, no->point);
+			if (oe1 == _NEGATIVE_ && oe2 == _NEGATIVE_) {
+				type += -1;    //object end is outside
+			} else if ((oe1 == _ZERO_     && oe2 == _NEGATIVE_)
+					|| (oe1 == _NEGATIVE_ && oe2 == _ZERO_)) {
+				type += 0;     //object end is online
+			} else {
+				type += 1;     // object end is inside
+			}
+		}
+		return type;
+	}
+
 	std::string _to_string_node_type(int type){
-		switch(type){
-			case _PN_  : return "N";
-			case _PC_  : return "C";
-			case _PO_  : return "O";
-			case _PCO_ : return "CO";
-			default: return "ERROR TYPE";
+		if(type < 10){
+			switch (type) {
+			case _PN_:  return "N";
+			case _PC_:  return "C";
+			case _PO_:  return "O";
+			case _PCO_: return "CO";
+			default:    return "ERROR TYPE";
+			}
+		}else{ //Switch type
+			const int base = 100;
+			switch(type){
+				case base    :  return "NO";
+				case base + 1:  return "HIN";
+				case base + 2:  return "IN";
+				case base - 1:  return "HOUT";
+				case base - 2:  return "OUT";
+				default:    return "ERROR TYPE";
+			}
 		}
 	}
 
@@ -471,20 +626,22 @@ public:
 		}
 	}
 
-	GnuplotActor::spActor actor_clip(Gnuplot& gnu) {
+	GnuplotActor::spActor actor_clip(Gnuplot& gnu, Vt ratio=0.1) {
 		GnuplotActor::spActor actor = Gnuplot::spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3:4:5 title \"\" ";
 		actor->style() = "with vectors lc variable";
 
-		FunNN fun = [&actor, &gnu, this](pNode f, pNode s){
+		FunNN fun = [&actor, &gnu, this, &ratio](pNode f, pNode s){
 			Vt len = Distance(f->point, s->point);
 			Vt dx  = s->point.x() - f->point.x();
 			Vt dy  = s->point.y() - f->point.y();
+			Vt ddx = dx * ratio;
+			Vt ddy = dy * ratio;
 			actor->data().push_back(
-					ToString(f->point.x(),
-							 f->point.y(),
-							 dx,
-							 dy, 1, " "));
+					ToString(f->point.x() + ddx,
+							 f->point.y() + ddy,
+							 dx - 2 * ddx,
+							 dy - 2 * ddy, 1, " "));
 		};
 
 		for_each_edge_clip(fun);
@@ -492,19 +649,22 @@ public:
 		return actor;
 	}
 
-	GnuplotActor::spActor actor_object(Gnuplot& gnu) {
+	GnuplotActor::spActor actor_object(Gnuplot& gnu, Vt ratio = 0.1) {
 		GnuplotActor::spActor actor = Gnuplot::spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3:4:5 title \"\" ";
 		actor->style() = "with vectors lc variable";
 
-		FunNN fun = [&actor, &gnu, this](pNode f, pNode s) {
+		FunNN fun = [&actor, &gnu, this, &ratio](pNode f, pNode s) {
 			Vt len = Distance(f->point, s->point);
 			Vt dx = s->point.x() - f->point.x();
 			Vt dy = s->point.y() - f->point.y();
+			Vt ddx = dx * ratio;
+			Vt ddy = dy * ratio;
 			actor->data().push_back(
-					ToString(f->point.x(),
-							 f->point.y(),
-							 dx, dy, 2, " "));
+					ToString(f->point.x() + ddx,
+							 f->point.y() + ddy,
+							 dx - 2 * ddx,
+							 dy - 2 * ddy, 2, " "));
 		};
 
 		for_each_edge_object(fun);
@@ -518,8 +678,7 @@ public:
 		int count = 1;
 		FunN fun = [&actor, &count, &gnu, this](pNode pn) {
 			gnu.set_label(count,
-					this->_to_string_node_type(pn->type) +
-					" ("+ ToString(pn->point.x(),pn->point.y(), ", ") + ")",
+					this->_to_string_node_type(pn->type),
 					pn->point.x(),pn->point.y(), "center");
 			count++;
 		};
