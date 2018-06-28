@@ -10,7 +10,8 @@
 #include "geometry/operation/intersection_ss.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 
-#include "./io/gnuplot_actor.hpp"
+#include "geometry/io/gnuplot_actor.hpp"
+#include "geometry/io/file.hpp"
 
 namespace carpio {
 

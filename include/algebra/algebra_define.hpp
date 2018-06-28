@@ -5,8 +5,8 @@
  //  \author czhou
  //  \date   12 févr. 2014
  ***********************/
-#ifndef ARITHMETIC_H_
-#define ARITHMETIC_H_
+#ifndef ALGEBRA_DEFINE_HPP_
+#define ALGEBRA_DEFINE_HPP_
 
 #include "type_define.hpp"
 

@@ -22,14 +22,20 @@ template<class TYPE>
 class PolygonBoolean_{
 
 public:
-	static const int _PN_ = 0;  // new point
-	static const int _PC_ = 1;  // point from clip
-	static const int _PO_ = 2;  // point from object
+	static const int _PN_  = 0;  // new point
+	static const int _PC_  = 1;  // point from clip
+	static const int _PO_  = 2;  // point from object
 	static const int _PCO_ = 3; // point from clip and object
 
 
 	static const int _INTERSECTION_ = 10;
 	static const int _UNION_        = 11;
+
+	static const int _NOTHING_  =  100; //  0
+	static const int _IN_       =  102; //  2
+	static const int _OUT_      =  98;  // -2
+	static const int _HALF_IN_  =  101; //  1
+	static const int _HALF_OUT_ =  99;  // -1
 
 	typedef TYPE Vt;
 	typedef Point_<TYPE, 2> Point;
@@ -43,6 +49,42 @@ public:
 		phase_2();
 		phase_3();
 		phase_4();
+	}
+
+	std::vector<PointChain> output(int op = _INTERSECTION_) {
+
+	}
+
+	std::vector<PointChain> output_intersection() {
+		std::vector<PointChain> vpc;
+		std::list<pNode> lin;
+		pNode oin = obj;
+		do {
+			oin = _find_object_in(oin);
+			if (oin != nullptr) {
+				lin.push_back(oin);
+				oin = oin->nexto;
+			}
+		} while (oin != nullptr);
+
+		std::set<pNode> used;
+		for(auto& in : lin){
+			if(used.find(in) == used.end()){
+				Probe pb(this, in, _INTERSECTION_);
+				PointChain pc;
+				do{
+					show_pnode(pb.cur);
+					used.insert(pb.cur);
+					pc.push_back(pb.cur->point);
+					pb.walk();
+				}while(pb.cur != pb.bgn);
+
+				vpc.push_back(pc);
+			}
+
+		}
+		std::cout << "lin size = " << lin.size() << std::endl;
+		return vpc;
 	}
 
 
@@ -74,6 +116,91 @@ protected:
 	typedef std::function<void(pNode)> FunN;
 	typedef std::function<void(pNode, pNode)> FunNN;
 	typedef std::function<void(pNode&, pNode&, pNode&, pNode&)> FunNNNN;
+
+
+	struct Probe{
+		typedef PolygonBoolean_<Vt>* pPB;
+		pPB   ppb;
+		int   op;  // operation type
+		pNode bgn;
+		pNode cur;
+		int   sflag;
+		int   ooc; // object or clip
+		int   dir; // direction  1 next
+		           //           -1 prev
+
+		Probe(pPB _ppb, pNode in, int t):
+			ppb(_ppb), op(t), bgn(in){
+			cur   = bgn;
+			sflag = 0;
+			ooc   = 1; //on object = 1
+			           //on clip   = 0
+			dir   = 1;
+		}
+
+		pNode walk(){
+			if (op == _INTERSECTION_) {
+				if (cur->type == _HALF_IN_) {
+					sflag += 1;
+				} else if (cur->type == _HALF_OUT_) {
+					sflag += -1;
+				}
+				if (cur->type == _IN_ || sflag == 2) {
+					ooc   = 1;
+					dir   = 1;
+					sflag = 0;
+				} else if (cur->type == _OUT_ || sflag == -2) {
+					ooc   = 0;
+					dir   = 1;
+					sflag = 0;
+				}
+				//
+				if (dir == 1) {
+					cur = ppb->_next_loop(cur, ooc);
+				} else {
+					cur = ppb->_prev_loop(cur, ooc);
+				}
+			}
+			return cur;
+		}
+
+		pNode next_one() const{
+			if (cur == nullptr) {
+				return nullptr;
+			}
+			int sflagn = sflag;
+			int oocn   = ooc;
+			int dirn   = dir;
+			if (op == _INTERSECTION_) {
+				if (cur->type == _HALF_IN_) {
+					sflagn += 1;
+				} else if (cur->type == _HALF_OUT_) {
+					sflagn += -1;
+				} else if (cur->type == _IN_ || sflagn == 2) {
+					oocn = 1;
+					dirn = 1;
+				} else if (cur->type == _OUT_ || sflagn == -2) {
+					oocn = 0;
+					dirn = 1;
+				}
+			}
+			if (dirn == 1) {
+				return ppb->_next_loop(cur, ooc);
+			} else {
+				return ppb->_prev_loop(cur, ooc);
+			}
+			return nullptr;
+		}
+
+		bool is_end() const{
+			pNode n = next_one();
+			if(n == nullptr || n == bgn){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	};
 
 
 
@@ -207,13 +334,79 @@ protected:
 		for_each_node(fun);
 	}
 
-	std::vector<PointChain> output(int op = _INTERSECTION_){
-
+	std::list<pNode> _list_instersection(pNode in, std::set<pNode>& used){
+		ASSERT(in != nullptr);
 	}
 
-	std::vector<PointChain> output_intersection(){
+	pNode _next_loop(pNode cur, int _ooc) const{
+		if(cur == nullptr){
+			return nullptr;
+		}
+		if(_ooc == 0){
+			if(cur->nextc == nullptr){
+				return cli;
+			}else{
+				return cur->nextc;
+			}
+		}else{
+			if(cur->nexto == nullptr){
+				return obj;
+			}else{
+				return cur->nexto;
+			}
+		}
+	}
 
+	pNode _prev_loop(pNode cur, int _ooc) const{
+		if (cur == nullptr) {
+			return nullptr;
+		}
+		if (_ooc == 0) {
+			if (cur->prevc == nullptr) {
+				return _last_c();
+			} else {
+				return cur->prevc;
+			}
+		} else {
+			if (cur->prevo == nullptr) {
+				return _last_o();
+			} else {
+				return cur->prevo;
+			}
+		}
+	}
 
+	pNode _find_object_in(pNode start){
+		if(start == nullptr){
+			return nullptr;
+		}
+		int hinflag = 0;
+		pNode cur = start;
+		pNode bgn = nullptr;
+		while (true) {
+			if (hinflag == 0) {
+				if (cur->type == _IN_) {
+					bgn = cur;
+					break;
+				}
+				if (cur->type == _HALF_IN_) {
+					hinflag = 1;
+				}
+			} else { //hinflag = 1
+				if (cur->type == _HALF_IN_) {
+					bgn = cur;
+					break;
+				} else if (cur->type == _HALF_OUT_) {
+					hinflag = 0;
+				}
+			}
+			if(cur->nexto !=nullptr){
+				cur = cur->nexto;
+			}else{
+				break;
+			}
+		}
+		return bgn;
 	}
 
 	void for_each_node(FunN fun){
@@ -429,7 +622,16 @@ protected:
 		delete po;
 	}
 
-	pNode _last_o(){
+
+	pNode _last(int _ooc) const{
+		if(_ooc == 0){
+			return _last_c();
+		}else{
+			return _last_o();
+		}
+	}
+
+	pNode _last_o() const{
 		pNode p = obj;
 		while (p->nexto != nullptr) {
 			p = p->nexto;
@@ -437,7 +639,7 @@ protected:
 		return p;
 	}
 
-	pNode _last_c() {
+	pNode _last_c() const{
 		pNode p = cli;
 		while (p->nextc != nullptr) {
 			p = p->nextc;

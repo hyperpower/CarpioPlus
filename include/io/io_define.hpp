@@ -126,9 +126,9 @@ protected:
 	///  2. a dictionary: illustrate how to read this text file
 	///  3. contents
 
-	str _filename;
+	str   _filename;
+	dict  _config;
 	lines _content;
-	dict _config;
 public:
 	TextFile() :
 			_filename(""), _content() {
@@ -228,7 +228,7 @@ public:
 		std::string::size_type pos, lastPos = 0, length = str.length();
 
 		using value_type = typename ContainerT::value_type;
-		using size_type = typename ContainerT::size_type;
+		using size_type  = typename ContainerT::size_type;
 
 		while (lastPos < length + 1)
 		{
