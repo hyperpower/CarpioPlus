@@ -25,11 +25,12 @@ public:
 	static const int _PN_  = 0;  // new point
 	static const int _PC_  = 1;  // point from clip
 	static const int _PO_  = 2;  // point from object
-	static const int _PCO_ = 3; // point from clip and object
+	static const int _PCO_ = 3;  // point from clip and object
 
 
 	static const int _INTERSECTION_ = 10;
 	static const int _UNION_        = 11;
+	static const int _SUBSTRACT_    = 12;
 
 	static const int _NOTHING_  =  100; //  0
 	static const int _IN_       =  102; //  2
@@ -51,11 +52,11 @@ public:
 		phase_4();
 	}
 
-	std::vector<PointChain> output(int op = _INTERSECTION_) {
-
+	~PolygonBoolean_(){
+		_delete_nodes();
 	}
 
-	std::vector<PointChain> output_intersection() {
+	std::vector<PointChain> output(int op = _INTERSECTION_) {
 		std::vector<PointChain> vpc;
 		std::list<pNode> lin;
 		pNode oin = obj;
@@ -68,22 +69,25 @@ public:
 		} while (oin != nullptr);
 
 		std::set<pNode> used;
-		for(auto& in : lin){
-			if(used.find(in) == used.end()){
-				Probe pb(this, in, _INTERSECTION_);
+		for (auto& in : lin) {
+			if (used.find(in) == used.end()) {
+				Probe pb(this, in, op);
+				std::list<pNode> lpn;
 				PointChain pc;
-				do{
-					show_pnode(pb.cur);
+				do {
 					used.insert(pb.cur);
-					pc.push_back(pb.cur->point);
+					lpn.push_back(pb.cur);
 					pb.walk();
-				}while(pb.cur != pb.bgn);
+				} while (pb.cur != pb.bgn);
 
+				_delete_overlap_edge(lpn);
+				for(auto& pn : lpn){
+					pc.push_back(pn->point);
+				}
 				vpc.push_back(pc);
 			}
 
 		}
-		std::cout << "lin size = " << lin.size() << std::endl;
 		return vpc;
 	}
 
@@ -132,19 +136,29 @@ protected:
 		Probe(pPB _ppb, pNode in, int t):
 			ppb(_ppb), op(t), bgn(in){
 			cur   = bgn;
-			sflag = 0;
-			ooc   = 1; //on object = 1
-			           //on clip   = 0
-			dir   = 1;
+			if(op==_INTERSECTION_){
+				sflag = 0;
+				ooc   = 1; //on object = 1
+			               //on clip   = 0
+				dir   = 1;
+			}else if(op == _UNION_){
+				sflag = 0;
+				ooc   = 0;
+				dir   = 1;
+			}else if(op == _SUBSTRACT_){
+				sflag = 0;
+				ooc   = 0;
+				dir   = 1;
+			}
 		}
 
 		pNode walk(){
+			if (cur->type == _HALF_IN_) {
+				sflag += 1;
+			} else if (cur->type == _HALF_OUT_) {
+				sflag += -1;
+			}
 			if (op == _INTERSECTION_) {
-				if (cur->type == _HALF_IN_) {
-					sflag += 1;
-				} else if (cur->type == _HALF_OUT_) {
-					sflag += -1;
-				}
 				if (cur->type == _IN_ || sflag == 2) {
 					ooc   = 1;
 					dir   = 1;
@@ -154,51 +168,36 @@ protected:
 					dir   = 1;
 					sflag = 0;
 				}
-				//
-				if (dir == 1) {
-					cur = ppb->_next_loop(cur, ooc);
-				} else {
-					cur = ppb->_prev_loop(cur, ooc);
+			}else if(op == _UNION_){
+				if (cur->type == _IN_ || sflag == 2) {
+					ooc   = 0;
+					dir   = 1;
+					sflag = 0;
+				} else if (cur->type == _OUT_ || sflag == -2) {
+					ooc   = 1;
+					dir   = 1;
+					sflag = 0;
 				}
+			}else if(op == _SUBSTRACT_){
+				if (   cur->type == _IN_
+					|| sflag == 2) {
+					ooc   =  0;
+					dir   =  1;
+					sflag =  0;
+				} else if (   cur->type == _OUT_
+						   || sflag == -2) {
+					ooc   =  1;
+					dir   = -1;
+					sflag =  0;
+				}
+			}
+			//
+			if (dir == 1) {
+				cur = ppb->_next_loop(cur, ooc);
+			} else {
+				cur = ppb->_prev_loop(cur, ooc);
 			}
 			return cur;
-		}
-
-		pNode next_one() const{
-			if (cur == nullptr) {
-				return nullptr;
-			}
-			int sflagn = sflag;
-			int oocn   = ooc;
-			int dirn   = dir;
-			if (op == _INTERSECTION_) {
-				if (cur->type == _HALF_IN_) {
-					sflagn += 1;
-				} else if (cur->type == _HALF_OUT_) {
-					sflagn += -1;
-				} else if (cur->type == _IN_ || sflagn == 2) {
-					oocn = 1;
-					dirn = 1;
-				} else if (cur->type == _OUT_ || sflagn == -2) {
-					oocn = 0;
-					dirn = 1;
-				}
-			}
-			if (dirn == 1) {
-				return ppb->_next_loop(cur, ooc);
-			} else {
-				return ppb->_prev_loop(cur, ooc);
-			}
-			return nullptr;
-		}
-
-		bool is_end() const{
-			pNode n = next_one();
-			if(n == nullptr || n == bgn){
-				return true;
-			}else{
-				return false;
-			}
 		}
 	};
 
@@ -334,9 +333,7 @@ protected:
 		for_each_node(fun);
 	}
 
-	std::list<pNode> _list_instersection(pNode in, std::set<pNode>& used){
-		ASSERT(in != nullptr);
-	}
+
 
 	pNode _next_loop(pNode cur, int _ooc) const{
 		if(cur == nullptr){
@@ -583,6 +580,23 @@ protected:
 		}
 	}
 
+	void _delete_nodes() {
+		std::set<pNode> setp;
+		pNode cur = cli;
+		while (cur != nullptr) {
+			setp.insert(cur);
+			cur = cur->nextc;
+		}
+		cur = obj;
+		while (cur != nullptr) {
+			setp.insert(cur);
+			cur = cur->nexto;
+		}
+		for (auto& pn : setp) {
+			delete pn;
+		}
+	}
+
 
 	void insert_c(pNode& p, pNode& pnew){
 		pnew->nextc = p->nextc;
@@ -751,23 +765,46 @@ protected:
 		return type;
 	}
 
+	void _delete_overlap_edge(std::list<pNode>& lpn){
+		// this list is an output of an operation
+		// edge could be overlap each other in some special cases
+		typedef typename std::list<pNode>::iterator Iterpn;
+		for(auto it = lpn.begin(); it != lpn.end();){
+			auto itp = std::next(it,1);
+			if(itp == lpn.end()){
+				itp = lpn.begin();
+			}
+			auto itm = std::prev(it,1);
+			if(itm == lpn.end()){
+				itm = std::prev(lpn.end(),1);
+			}
+			if((*itp) == (*itm)){
+				// address equal
+				lpn.erase(itm);
+				it = lpn.erase(it);
+			}else{
+				++it;
+			}
+		}
+	}
+
 	std::string _to_string_node_type(int type){
 		if(type < 10){
 			switch (type) {
-			case _PN_:  return "N";
-			case _PC_:  return "C";
-			case _PO_:  return "O";
+			case _PN_ : return "N";
+			case _PC_ : return "C";
+			case _PO_ : return "O";
 			case _PCO_: return "CO";
 			default:    return "ERROR TYPE";
 			}
 		}else{ //Switch type
 			const int base = 100;
 			switch(type){
-				case base    :  return "NO";
-				case base + 1:  return "HIN";
-				case base + 2:  return "IN";
-				case base - 1:  return "HOUT";
-				case base - 2:  return "OUT";
+				case _NOTHING_  :  return "NO";
+				case _HALF_IN_  :  return "HIN";
+				case _IN_       :  return "IN";
+				case _HALF_OUT_ :  return "HOUT";
+				case _OUT_      :  return "OUT";
 				default:    return "ERROR TYPE";
 			}
 		}

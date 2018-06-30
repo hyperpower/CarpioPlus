@@ -11,9 +11,12 @@ inline void two_pointchains(
 		const PointChain_<double, 2>& pcc,
 		const PointChain_<double, 2>& pco){
 
+	typedef PolygonBoolean_<double> PB;
 	PolygonBoolean_<double> pb(pcc, pco);
 
-	auto res = pb.output_intersection();
+//	auto inter = pb.output(PB::_INTERSECTION_);
+	auto uni   = pb.output(PB::_UNION_);
+//	auto sub   = pb.output(PB::_SUBSTRACT_);
 	pb.show_table();
 	Gnuplot gnu;
 	gnu.set_title(aname);
@@ -22,10 +25,16 @@ inline void two_pointchains(
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
 	int cc = 4;
-	for (auto& pc : res) {
-		gnu.add(GnuplotActor::LinePoints(pc, cc));
-		cc++;
+//	for (auto& pc : inter) {
+//		gnu.add(GnuplotActor::LinePoints(pc, cc));
+//	}
+	for (auto& pc : uni) {
+		gnu.add(GnuplotActor::LinePoints(pc, 6));
 	}
+//	for (auto& pc : sub) {
+//		gnu.add(GnuplotActor::LinePoints(pc, 7));
+//	}
+
 	gnu.add(pb.actor_label(gnu));
 	gnu.plot();
 }
@@ -217,7 +226,6 @@ TEST(polygon_boolean, test9) {
 	lo.push_back(Point(0, 2));
 
 	PC pobject(lo);
-	std::cout<< "here\n";
 
 //	two_pointchains("test9", pclip, pobject);
 }
@@ -240,7 +248,7 @@ TEST(polygon_boolean, test10) {
 
 	PC pobject(lo);
 
-//	two_pointchains("test10", pclip, pobject);
+	two_pointchains("test10", pclip, pobject);
 }
 
 TEST(polygon_boolean, test11) {
@@ -286,6 +294,29 @@ TEST(polygon_boolean, test12) {
 //	two_pointchains("test12", pclip, pobject);
 }
 
+TEST(polygon_boolean, test121) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point(0.5, -0.5));
+	lo.push_back(Point(2.5, -0.5));
+	lo.push_back(Point(2.5, 1.0));
+	lo.push_back(Point(2.0, 1.0));
+	lo.push_back(Point(2.0, 0.5));
+	lo.push_back(Point(1.0, 1.0));
+	PC pobject(lo);
+
+//	two_pointchains("test121", pclip, pobject);
+}
+
 TEST(polygon_boolean, test13) {
 	typedef Point_<double, 2> Point;
 	typedef PointChain_<double, 2> PC;
@@ -312,7 +343,35 @@ TEST(polygon_boolean, test13) {
 	typedef IOFile_Geometry_<double,2> IOFile;
 	IOFile::WritePointChain("test13_clip", pclip);
 
-	two_pointchains("test13", pclip, pobject);
+//	two_pointchains("test13", pclip, pobject);
+}
+
+TEST(polygon_boolean, test14) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0,   0));
+	lc.push_back(Point(2,   0));
+	lc.push_back(Point(2,   2));
+	lc.push_back(Point(0,   2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point(-0.8, -0.5));
+	lo.push_back(Point(2.5, -0.5));
+	lo.push_back(Point(2.5, 0.5));
+	lo.push_back(Point(-0.3, 0.5));
+	lo.push_back(Point(-0.3, 1.5));
+	lo.push_back(Point(2.3, 1.5));
+	lo.push_back(Point(2.3, 1.8));
+	lo.push_back(Point(-0.8, 1.8));
+	PC pobject(lo);
+
+	typedef IOFile_Geometry_<double,2> IOFile;
+	IOFile::WritePointChain("test13_clip", pclip);
+
+	two_pointchains("test14", pclip, pobject);
 }
 
 
