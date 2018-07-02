@@ -10,6 +10,7 @@
 
 #include "geometry/geometry_define.hpp"
 #include "point.hpp"
+#include "box.hpp"
 #include "algebra/array/array_list.hpp"
 #include "segment.hpp"
 #include <array>
@@ -30,6 +31,7 @@ public:
 	typedef const Point_<TYPE, DIM>& const_ref_Point;
 	typedef Segment_<TYPE, DIM> Segment;
 	typedef Segment& ref_Segment;
+	typedef Box_<TYPE, DIM> Box;
 	typedef PointChain_<TYPE, DIM>& PointChain;
 	typedef TYPE vt;
 	typedef typename std::list<Point>::iterator iterator;
@@ -160,6 +162,16 @@ public:
 		return res;
 	}
 
+	Box box() const {
+		Point min = this->_lpoints.front();
+		Point max = this->_lpoints.front();
+		for(auto& p: this->_lpoints){
+			min = Min(min, p);
+			max = Max(max, p);
+		}
+		return Box(min, max);
+	}
+
 	typedef std::function<void(Point&, Point&)> FunPP;
 	typedef std::function<void(const Point&, const Point&)> FunConstPConstP;
 
@@ -183,6 +195,9 @@ public:
 			iters++;
 			itere++;
 		}
+		if(this->closed()){
+			fun(_lpoints.back(), _lpoints.front());
+		}
 	}
 
 	void show() const {
@@ -195,27 +210,37 @@ public:
 };
 
 template<class TYPE>
-int WindingNumber(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
+bool IsInOn(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
 	// winding number method
 	int    wn = 0;    // the  winding number counter
 
 	typedef Point_<TYPE, 2> Point;
 	pc.for_each_edge([&p, &wn](const Point& ps, const Point& pe){
 		if(ps.y() <= p.y()){
-			if(pe.y() > p.y()){
-				if(Cross(ps, pe, p) > 0){
+			if(pe.y() >= p.y()){
+				auto pos = OnWhichSide7(ps, pe, p);
+				if(pos == _PS_LEFT_){
 					++wn;
+				}else if(  pos == _PS_ON_END_
+						|| pos == _PS_ON_START_
+						|| pos == _PS_IN_){
+					return true;
 				}
 			}
 		}else{
-			if(pe.y() <= pe.y()){
-				if(Cross(ps, pe, p) < 0){
+			if(pe.y() <= p.y()){
+				auto pos = OnWhichSide7(ps, pe, p);
+				if(pos == _PS_RIGHT_){
 					--wn;
+				}else if(  pos == _PS_ON_END_
+						|| pos == _PS_ON_START_
+						|| pos == _PS_IN_){
+					return true;
 				}
 			}
 		}
 	});
-	return wn;
+	return wn > 0;
 }
 
 }

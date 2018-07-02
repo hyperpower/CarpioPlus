@@ -38,46 +38,72 @@ TEST(point_chain, winding_number){
 
 	PC pc(l);
 
-	Point ap(0.6, 1.8);
-	std::cout << "Winding Number : ";
-	int wn = WindingNumber(ap, pc);
-	std::cout << wn;
+	std::list<Point> ltp;
+	ltp.push_back(Point(0.6, 1.8));
+	ltp.push_back(Point(0.6, 0.8));
+	ltp.push_back(Point(0.8, 0.5));
+	ltp.push_back(Point(0.3, 1.0));
+	ltp.push_back(Point(0,   1.0));
+	ltp.push_back(Point(0,   0.5));
+	ltp.push_back(Point(0.8, 0.3));
+	ltp.push_back(Point(0.8, 0.0));
 
 	Gnuplot gnu;
 	gnu.set_xrange(-1, 2);
 	gnu.set_yrange(-1, 2);
-	gnu.set_label(1, "Winding Number = " + ToString(wn), -0.8, 1.7);
-	gnu.add(GnuplotActor::Points(ap, 3));
+	int count = 1;
+	for(auto& p : ltp){
+		bool wn = IsInOn(p, pc);
+		gnu.add(GnuplotActor::Points(p, 3));
+		gnu.set_label(count, wn?"T":"F", p.x(), p.y(), "left" );
+		count++;
+	}
 	gnu.add(GnuplotActor::Arrows(pc, 0));
 	gnu.plot();
 
 }
 
-TEST(point_chain, winding_number2){
-	typedef Point_<double, 2> Point;
-	typedef PointChain_<double, 2> PC;
 
-	std::list<Point> l;
-	l.push_back(Point(0,   1));
-	l.push_back(Point(1,   1));
-	l.push_back(Point(1,   0));
-	l.push_back(Point(0,   0));
+//TEST(point_chain, winding_number_2){
+//	typedef Point_<double, 2> Point;
+//	typedef PointChain_<double, 2> PC;
+//
+//	std::list<Point> l;
+//	l.push_back(Point(0,   0));
+//	l.push_back(Point(0,   1));
+//	l.push_back(Point(1,   1));
+//	l.push_back(Point(0.5 ,0.5));
+//	l.push_back(Point(1,   0));
+//
+//	PC pc(l);
+//
+//	std::list<Point> ltp;
+//	ltp.push_back(Point(0.6, 1.8));
+//	ltp.push_back(Point(0.6, 0.8));
+//	ltp.push_back(Point(0.8, 0.5));
+//	ltp.push_back(Point(0.3, 1.0));
+//	ltp.push_back(Point(0,   1.0));
+//	ltp.push_back(Point(0,   0.3));
+//	ltp.push_back(Point(0.8, 0.3));
+//	ltp.push_back(Point(0.8, 0.0));
+//
+//
+//	Gnuplot gnu;
+//	gnu.set_xrange(-1, 2);
+//	gnu.set_yrange(-1, 2);
+//	int count = 1;
+//	for(auto& p : ltp){
+//		int wn = IsInOn(p, pc);
+//		gnu.add(GnuplotActor::Points(p, 3));
+//		gnu.set_label(count, "" + ToString(wn), p.x(), p.y(), "left" );
+//		count++;
+//	}
+//	gnu.add(GnuplotActor::Arrows(pc, 0));
+//	gnu.plot();
+//
+//}
 
-	PC pc(l);
 
-	Point ap(-0.2, -0.8);
-	std::cout << "Winding Number : ";
-	int wn = WindingNumber(ap, pc);
-	std::cout << wn;
-
-	Gnuplot gnu;
-	gnu.set_xrange(-1, 2);
-	gnu.set_yrange(-1, 2);
-	gnu.set_label(1, "Winding Number = " + ToString(wn), -0.8, 1.7);
-	gnu.add(GnuplotActor::Points(ap, 3));
-	gnu.add(GnuplotActor::Arrows(pc, 0));
-	gnu.plot();
-}
 
 
 
