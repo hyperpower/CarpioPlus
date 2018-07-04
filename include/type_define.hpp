@@ -32,7 +32,8 @@
 
 namespace carpio {
 // value type
-typedef unsigned int St; //size type
+typedef unsigned int St;    //size type
+typedef double Vt;          //value type
 typedef int Int;
 typedef unsigned int uInt;
 typedef double Float;
