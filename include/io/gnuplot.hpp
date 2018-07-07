@@ -891,20 +891,17 @@ public:
 ;
 
 //------------------------------------------------------------------------------
-int GnuplotShow(const std::list<Gnuplot_actor>& lga);
-int GnuplotShow(Gnuplot&, const std::list<Gnuplot_actor>& lga);
-
+//int GnuplotShow(const std::list<Gnuplot_actor>& lga);
+//int GnuplotShow(Gnuplot&, const std::list<Gnuplot_actor>& lga);
 namespace GnuplotActor {
 
-typedef std::shared_ptr<Gnuplot_actor> spActor;
-typedef std::list<spActor> list_spActor;
+	typedef std::shared_ptr<carpio::Gnuplot_actor> spActor;
+	typedef std::list<spActor> list_spActor;
 
-
-
-}
-
-
+	}
 
 }
+
+
 
 #endif

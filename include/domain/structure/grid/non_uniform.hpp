@@ -1,8 +1,8 @@
 #ifndef _S_SGRIDNONUNIFORM_HPP
 #define _S_SGRIDNONUNIFORM_HPP
 
-#include "structure_define.hpp"
-#include "index.hpp"
+#include "domain/structure/structure_define.hpp"
+#include "domain/structure/index.hpp"
 #include "grid.hpp"
 #include <array>
 
@@ -12,7 +12,7 @@ template<St DIM>
 class SGridNonUniform_ :public SGrid_<DIM>{
 public:
 	static const St Dim = DIM;
-	typedef ArrayListT<double> Arr;
+	typedef ArrayListV<double> Arr;
 	typedef Point_<double, Dim> Poi;
 	typedef SIndex_<Dim> Index;
 	static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
@@ -24,7 +24,9 @@ protected:
 	Arr   _cs[Dim];   // cell size
 	Arr   _c[Dim];    // coordinate center
 public:
-	SGridNonUniform_(const Poi& min, const Poi& max, const Index& n, const Idx& gl) {
+	SGridNonUniform_(
+			const Poi& min, const Poi& max,
+			const Index& n, const Idx& gl) {
 		_min = min;
 		_max = max;
 		_n = n;
@@ -225,7 +227,9 @@ public:
 	}
 	// vertex ================================
 	Poi v(Idx order, Idx i, Idx j = 0, Idx k = 0) const {
-		static const short VERTEX_IDX[][3] = { { _M_, _M_, _M_ }, //
+		static const short VERTEX_IDX[][3] = {
+			//     x    y    z
+				{ _M_, _M_, _M_ }, //
 				{ _P_, _M_, _M_ }, //
 				{ _M_, _P_, _M_ }, //
 				{ _P_, _P_, _M_ }, //
@@ -234,15 +238,17 @@ public:
 				{ _M_, _P_, _P_ }, //
 				{ _P_, _P_, _P_ }  //
 		};
-		return v(i, VERTEX_IDX[order][0], j, VERTEX_IDX[order][1], k,
-				VERTEX_IDX[order][2]);
+		return v(i, VERTEX_IDX[order][0],
+				 j, VERTEX_IDX[order][1],
+				 k, VERTEX_IDX[order][2]);
 	}
 	Poi v(Idx order, Index index) const{
 		return v(order, index.i(), index.j(), index.k());
 	}
 
-	Poi v(Idx i, short oi, Idx j = 0, short oj = 0, Idx k = 0,
-			short ok = 0) const {
+	Poi v(Idx i,     short oi,
+		  Idx j = 0, short oj = 0,
+		  Idx k = 0, short ok = 0) const {
 		Poi res;
 		Idx ai[] = { i, j, k };
 		short ao[] = { oi, oj, ok };
