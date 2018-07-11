@@ -19,6 +19,7 @@
 #include <list>
 #include <fstream>
 #include <algorithm>
+#include <functional>
 
 namespace carpio {
 

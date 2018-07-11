@@ -4,6 +4,7 @@
 #include "index.hpp"
 #include "grid/grid.hpp"
 #include "grid/non_uniform.hpp"
+#include "grid/uniform.hpp"
 
 namespace carpio {
 

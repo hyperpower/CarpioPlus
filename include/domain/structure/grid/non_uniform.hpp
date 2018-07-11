@@ -45,7 +45,7 @@ public:
 		Index n(csx.size(), csy.size(), csz.size());
 		_n = n;
 		_gl = gl;
-		for (St i = 0; i < Dim; ++i) {
+for (St i = 0; i < Dim; ++i) {
 			_ng[i] = _n[i] + 2 * _gl;
 		}
 		_set_non_uniform_grid(csx, csy, csz);
@@ -272,12 +272,6 @@ public:
 		return c;
 	}
 
-	inline St _IDX(Idx i) const {
-		return St(i + _gl);
-	}
-	inline Idx _idx(St I) const {
-		return Idx(I - _gl);
-	}
 
 	// Point is in the range
 	inline bool is_in_on(Poi p) {
@@ -336,6 +330,13 @@ public:
 	}
 
 protected:
+	inline St _IDX(Idx i) const {
+		return St(i + _gl);
+	}
+	inline Idx _idx(St I) const {
+		return Idx(I - _gl);
+	}
+
 	void _set_uniform_grid() {
 		for (St d = 0; d < Dim; ++d) {
 			Vt l = _max[d] - _min[d];

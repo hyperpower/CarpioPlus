@@ -32,6 +32,7 @@ public:
 	// size ===================================
 	virtual inline Vt s_(St dim, Idx i) const{};
 	virtual inline Vt s_(St dim, Index idx) const{};
+
 	// half size
 	virtual inline Vt hs_(St dim, Idx i) const {};
 	virtual inline Vt hs_(St dim, Index idx) const {};
@@ -44,12 +45,10 @@ public:
 	virtual Vt  c_(const St& dim, const Index& idx) const {}
 
 	virtual Vt cx(Idx i, Idx j = 0, Idx k = 0) const {}
-
 	virtual Vt cy(Idx i, Idx j = 0, Idx k = 0) const {}
 	virtual Vt cz(Idx i, Idx j = 0, Idx k = 0) const {}
 
 	virtual St num_cells() const {}
-
 	virtual St num_vertex() const {}
 	virtual St num_face() const {}
 
