@@ -6,6 +6,12 @@
 #include "grid/non_uniform.hpp"
 #include "grid/uniform.hpp"
 
+#include "ghost/ghost.hpp"
+#include "ghost/regular.hpp"
+
+#include "order/order.hpp"
+#include "order/xyz.hpp"
+
 namespace carpio {
 
 

@@ -196,7 +196,9 @@ public:
 	typedef PyObject* pPO;
 	typedef ArrayListV<double> Arrd;
 	typedef std::list<double> Listd;
-	public:
+
+public:
+
 	template<class Container>
 	Plotly_actor_scatter3d(
 			const Container& x,
@@ -214,12 +216,14 @@ public:
 		this->_map["z"] = pz;
 	}
 
-	void set_colorscale(const Listd& d, const int& size = 10,
+	void set_colorscale(
+			const Listd& d,
+			const int& size = 10,
 			const std::string name = "Viridis") {
 		typedef typename Listd::value_type vt;
 		pPO dict = PyDict_New();
-		pPO key = Py_BuildValue("s", "color");
-		pPO val = this->_to_list(d);
+		pPO key  = Py_BuildValue("s", "color");
+		pPO val  = this->_to_list(d);
 		PyDict_SetItem(dict, key, val);
 		pPO key2 = Py_BuildValue("s", "colorscale");
 		pPO val2 = Py_BuildValue("s", name.c_str());

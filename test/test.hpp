@@ -12,7 +12,8 @@
 //#include "algebra/test_multi_array.hpp"
 //#include "io/test_csv.hpp"
 
-#include "structure/test_grid.hpp"
+//#include "structure/test_grid.hpp"
+#include "structure/test_order.hpp"
 
 
 using namespace std;

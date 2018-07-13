@@ -1,7 +1,7 @@
 #ifndef _S_DEFINE_HPP
 #define _S_DEFINE_HPP
 
-#include "type_define.hpp"
+#include "domain/domain_define.hpp"
 
 #include "algebra/algebra.hpp"
 #include "geometry/geometry.hpp"
