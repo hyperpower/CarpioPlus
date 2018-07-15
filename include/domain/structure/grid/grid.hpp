@@ -104,6 +104,12 @@ public:
 
 	}
 
+	virtual inline St _IDX(const Idx& i) const {
+
+	}
+	virtual inline Idx _idx(const St& I) const {
+	}
+
 
 };
 

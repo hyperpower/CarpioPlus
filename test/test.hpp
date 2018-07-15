@@ -13,7 +13,8 @@
 //#include "io/test_csv.hpp"
 
 //#include "structure/test_grid.hpp"
-#include "structure/test_order.hpp"
+//#include "structure/test_order.hpp"
+#include "structure/test_scalar.hpp"
 
 
 using namespace std;

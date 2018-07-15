@@ -9,6 +9,9 @@
 #define _ARRAYLIST_H_
 
 #include "type_define.hpp"
+#include "algebra/blas/blas_0.hpp"
+#include "algebra/blas/blas_1.hpp"
+
 
 #include <stddef.h>
 #include <stdio.h>
@@ -37,30 +40,6 @@ public:
 protected:
     St m_Len;
     T *m_p;    //!< The heap for the real data.
-
-    inline int _copy(size_type n, const T * a, T* b) {
-        //make sure: the length of a and b is equal
-        //           and n>0
-        size_type LN = 7;
-        size_type m = (n - 1) % LN;
-        for (size_type i = 0; i <= m; ++i) {
-            b[i] = a[i];
-        }
-        if (n <= LN) {
-            return 1;
-        }
-        size_type mp1 = m + 1;
-        for (size_type i = mp1; i < n; i += LN) {
-            b[i] = a[i];
-            b[i + 1] = a[i + 1];
-            b[i + 2] = a[i + 2];
-            b[i + 3] = a[i + 3];
-            b[i + 4] = a[i + 4];
-            b[i + 5] = a[i + 5];
-            b[i + 6] = a[i + 6];
-        }
-        return 2;
-    }
 public:
     //constructor==================================
     ArrayListT();
@@ -72,10 +51,10 @@ public:
     //=============================================
     virtual ~ArrayListT();
     //=============================================
-    T* getPointer() {
+    T* data() {
         return m_p;
     }
-    const T* getPointer() const {
+    const T* data() const {
         return m_p;
     }
     //=============================================
@@ -139,7 +118,7 @@ ArrayListT<T>::ArrayListT(const ArrayListT<T>& a) {
     m_Len = a.size();
     m_p = new T[m_Len];
     //unrolled loop
-    _copy(m_Len, a.getPointer(), m_p);
+    Copy(m_Len, a.m_p, this->m_p);
 }
 
 template<typename T>
@@ -236,12 +215,12 @@ ArrayListT<T>& ArrayListT<T>::operator=(const ArrayListT<T> &a) {
     }
     if (m_Len == a.size()) {
         //unrolled loop
-        _copy(m_Len, a.getPointer(), m_p);
+        Copy(m_Len, a.m_p, m_p);
     } else {
         delete[] this->m_p;
         m_Len = a.size();
         m_p = new T[m_Len];
-        _copy(m_Len, a.getPointer(), m_p);
+        Copy(m_Len, a.m_p, m_p);
     }
     return *this;
 }
@@ -484,6 +463,9 @@ public:
     typedef const V& const_reference;
     typedef St size_type;
     typedef St difference_type;
+    typedef ArrayListV<V>        Self;
+    typedef ArrayListV<V>&       ref_Self;
+    typedef const ArrayListV<V>& const_ref_Self;
     //constructor==================================
     ArrayListV();
     ArrayListV(size_type Len);
@@ -491,14 +473,20 @@ public:
     void reconstruct(size_type Len);
     //arrayListV(V *nd, size_type Len);
     //opertator====================================
-    ArrayListV<V> operator+(const ArrayListV<V> &a);
-    ArrayListV<V> operator+(const V &a);
-    ArrayListV<V> operator-(const ArrayListV<V> &a);
-    ArrayListV<V> operator-(const V &a);
-    ArrayListV<V> operator*(const ArrayListV<V> &a);
-    ArrayListV<V> operator*(const V &a);
-    ArrayListV<V> operator/(const ArrayListV<V> &a);
-    ArrayListV<V> operator/(const V &a);
+    ref_Self operator+=(const V& a);
+    ref_Self operator-=(const V& a);
+    ref_Self operator*=(const V& a);
+    ref_Self operator/=(const V& a);
+    ref_Self operator+=(const Self& a);
+    ref_Self operator-=(const Self& a);
+    ref_Self operator*=(const Self& a);
+    ref_Self operator/=(const Self& a);
+
+        Self operator-() const;
+        Self operator*(const Self &a);
+        Self operator*(const V &a);
+        Self operator/(const Self &a);
+        Self operator/(const V &a);
 
     //other functions==============================
     V sum() const;
@@ -517,13 +505,19 @@ public:
     void show() const;
 };
 template<typename V>
-ArrayListV<V>& operator*=(ArrayListV<V> &x, const V &a);
+ArrayListV<V> operator+(ArrayListV<V> x, const ArrayListV<V> &y);
 template<typename V>
-ArrayListV<V>& operator+=(ArrayListV<V> &x, const ArrayListV<V> &y);
+ArrayListV<V> operator+(ArrayListV<V> x, const V &a);
 template<typename V>
-ArrayListV<V>& operator+=(ArrayListV<V> &x, const V &a);
+ArrayListV<V> operator+(const V &a, ArrayListV<V> x);
+
 template<typename V>
-ArrayListV<V>& operator-=(ArrayListV<V> &x, const ArrayListV<V> &y);
+ArrayListV<V> operator-(ArrayListV<V> x, const ArrayListV<V> &y);
+template<typename V>
+ArrayListV<V> operator-(ArrayListV<V> x, const V &a);
+template<typename V>
+ArrayListV<V> operator-(const V &a, const ArrayListV<V>& x);
+
 template<typename V>
 ArrayListV<V> operator*(const V &a, const ArrayListV<V> &x);
 template<typename V>
@@ -561,38 +555,6 @@ template<typename V>
 ArrayListV<V>::ArrayListV(size_type Len, const V& nd) :
     ArrayListT<V>(Len, nd) {
 }
-//+=
-template<typename T>
-void _add_equal(const St& n, const T* src, T* dst) {
-    for (St i = 0; i < n; i++) {
-        dst[i] += src[i];
-    }
-}
-template<typename T>
-int _copy_(St n, const T * a, T* b) {
-    //make sure: the length of a and b is equal
-    //           and n>0
-
-    St LN = 7;
-    St m = (n - 1) % LN;
-    for (St i = 0; i <= m; ++i) {
-        b[i] = a[i];
-    }
-    if (n <= LN) {
-        return 1;
-    }
-    St mp1 = m + 1;
-    for (St i = mp1; i < n; i += LN) {
-        b[i] = a[i];
-        b[i + 1] = a[i + 1];
-        b[i + 2] = a[i + 2];
-        b[i + 3] = a[i + 3];
-        b[i + 4] = a[i + 4];
-        b[i + 5] = a[i + 5];
-        b[i + 6] = a[i + 6];
-    }
-    return 2;
-}
 
 template<typename V>
 void ArrayListV<V>::reconstruct(size_type Len) {
@@ -610,23 +572,59 @@ void ArrayListV<V>::reconstruct(size_type Len) {
     this->m_p = new V[this->m_Len];
     this->assign(0);
 }
+
 template<typename V>
-ArrayListV<V> ArrayListV<V>::operator+(const ArrayListV<V> &a) {
-    ASSERT(a.size() == this->size());
-    ArrayListV<V> res(this->m_Len);
-    _copy_(a.size(), this->m_p, res.m_p);
-    _add_equal(a.size(), a.m_p, res.m_p);
-    return res;
+ArrayListV<V> operator+(ArrayListV<V> x, const ArrayListV<V> &y){
+	ASSERT(x.size() == y.size());
+	x += y;
+	return x;
 }
 template<typename V>
-ArrayListV<V> ArrayListV<V>::operator-(const ArrayListV<V> &a) {
-    ASSERT(a.size() == this->size());
-    ArrayListV<V> tmp(this->m_Len);
-    for (size_type i = 0; i < this->m_Len; i++) {
-        tmp[i] = this->m_p[i] - a[i];
-    }
-    return tmp;
+ArrayListV<V> operator+(ArrayListV<V> x, const V &a){
+	x += a;
+	return x;
 }
+template<typename V>
+ArrayListV<V> operator+(const V &a, ArrayListV<V> x){
+	x += a;
+	return x;
+}
+
+template<typename V>
+ArrayListV<V> operator-(ArrayListV<V> x, const ArrayListV<V> &y){
+	ASSERT(x.size() == y.size());
+	x -= y;
+	return x;
+}
+template<typename V>
+ArrayListV<V> operator-(ArrayListV<V> x, const V &a){
+	x -= a;
+	return x;
+}
+template<typename V>
+ArrayListV<V> operator-(const V &a, const ArrayListV<V>& x){
+	ArrayListV<V> res(x.size());
+	res.assign(a);
+	res -= x;
+	return res;
+}
+//template<typename V>
+//ArrayListV<V> ArrayListV<V>::operator+(const ArrayListV<V> &a) {
+//    ASSERT(a.size() == this->size());
+//    ArrayListV<V> res(this->m_Len);
+//    Copy_(a.size(), this->m_p, res.m_p);
+//    AddEqual(a.size(), a.m_p, res.m_p);
+//    return res;
+//}
+template<typename V>
+ArrayListV<V> ArrayListV<V>::operator-() const{
+	ArrayListV<V> tmp(this->m_Len);
+	for (size_type i = 0; i < this->m_Len; i++) {
+		tmp[i] = -(this->m_p[i]);
+	}
+	return tmp;
+}
+
 template<typename V>
 ArrayListV<V> ArrayListV<V>::operator*(const ArrayListV<V> &a) {
     ASSERT(a.size() == this->size());
@@ -644,22 +642,6 @@ ArrayListV<V> ArrayListV<V>::operator/(const ArrayListV<V> &a) {
         tmp[i] = this->m_p[i] / a[i];
     }
     return tmp;
-}
-template<typename V>
-ArrayListV<V> ArrayListV<V>::operator+(const V &a) {
-    ArrayListV<V> sum(this->m_Len);
-    for (size_type i = 0; i < this->m_Len; i++) {
-        sum[i] = this->m_p[i] + a;
-    }
-    return sum;
-}
-template<typename V>
-ArrayListV<V> ArrayListV<V>::operator-(const V &a) {
-    ArrayListV<V> sum(this->m_Len);
-    for (size_type i = 0; i < this->m_Len; i++) {
-        sum[i] = this->m_p[i] - a;
-    }
-    return sum;
 }
 template<typename V>
 ArrayListV<V> ArrayListV<V>::operator*(const V &a) {
@@ -783,35 +765,57 @@ void ArrayListV<V>::show() const {
 }
 //=========================================================
 template<typename V>
-ArrayListV<V>& operator*=(ArrayListV<V> &x, const V &a) {
-    for (St i = 0; i < x.size(); ++i) {
-        x[i] *= a;
-    }
-    return x;
+ArrayListV<V>& ArrayListV<V>::operator+=(const V &a) {
+    AddEqual(this->size(), this->m_p, a);
+    return *this;
 }
 template<typename V>
-ArrayListV<V>& operator+=(ArrayListV<V> &x, const ArrayListV<V> &y) {
-    ASSERT(x.size() == y.size());
-    for (St i = 0; i < x.size(); i++) {
-        x[i] += y[i];
+ArrayListV<V>& ArrayListV<V>::operator-=(const V &a) {
+    for (St i = 0; i < this->size(); ++i) {
+        this->at(i) -= a;
     }
-    return x;
+    return *this;
 }
 template<typename V>
-ArrayListV<V>& operator+=(ArrayListV<V> &x, const V &y) {
-    for (St i = 0; i < x.size(); i++) {
-        x[i] += y;
+ArrayListV<V>& ArrayListV<V>::operator*=(const V &a) {
+    for (St i = 0; i < this->size(); ++i) {
+        this->at(i) *= a;
     }
-    return x;
+    return *this;
 }
 template<typename V>
-ArrayListV<V>& operator-=(ArrayListV<V> &x, const ArrayListV<V> &y) {
-    ASSERT(x.size() == y.size());
-    for (St i = 0; i < x.size(); i++) {
-        x[i] -= y[i];
+ArrayListV<V>& ArrayListV<V>::operator/=(const V &a) {
+    for (St i = 0; i < this->size(); ++i) {
+        this->at(i) /= a;
     }
-    return x;
+    return *this;
 }
+template<typename V>
+ArrayListV<V>& ArrayListV<V>::operator+=(const ArrayListV<V> &a) {
+	ASSERT(this->size() == a.size());
+	AddEqual(this->size(), this->m_p, a.m_p);
+    return *this;
+}
+template<typename V>
+ArrayListV<V>& ArrayListV<V>::operator-=(const ArrayListV<V> &a) {
+	ASSERT(this->size() == a.size());
+	MinusEqual(this->size(), this->m_p, a.m_p);
+    return *this;
+}
+template<typename V>
+ArrayListV<V>& ArrayListV<V>::operator*=(const ArrayListV<V> &a) {
+	ASSERT(this->size() == a.size());
+	MultiplyEqual(this->size(), this->m_p, a.m_p);
+    return *this;
+}
+template<typename V>
+ArrayListV<V>& ArrayListV<V>::operator/=(const ArrayListV<V> &a) {
+	ASSERT(this->size() == a.size());
+	DivideEqual(this->size(), this->m_p, a.m_p);
+    return *this;
+}
+
+
 template<typename V>
 ArrayListV<V> operator*(const V& a, const ArrayListV<V>& x) {
     ArrayListV<V> res(x);

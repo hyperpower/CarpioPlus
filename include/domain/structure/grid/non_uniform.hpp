@@ -329,7 +329,6 @@ for (St i = 0; i < Dim; ++i) {
 		return _idx(res);
 	}
 
-protected:
 	inline St _IDX(Idx i) const {
 		return St(i + _gl);
 	}
@@ -337,6 +336,7 @@ protected:
 		return Idx(I - _gl);
 	}
 
+protected:
 	void _set_uniform_grid() {
 		for (St d = 0; d < Dim; ++d) {
 			Vt l = _max[d] - _min[d];

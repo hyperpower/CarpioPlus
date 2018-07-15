@@ -291,12 +291,10 @@ public:
 		return _idx(res);
 	}
 
-
-protected:
-	inline St _IDX(Idx i) const {
+	inline St _IDX(const Idx& i) const {
 		return St(i + _gl);
 	}
-	inline Idx _idx(St I) const {
+	inline Idx _idx(const St& I) const {
 		return Idx(I - _gl);
 	}
 
