@@ -86,6 +86,29 @@ enum Orientation {
 	_P_ = 1, //
 	_C_ = 2, //
 };
+
+inline void NormalPlane(const St&d, St& d1, St& d2){
+	if(d == _X_){
+		d1 = _Y_;
+		d2 = _Z_;
+	}else if(d == _Y_){
+		d1 = _Z_;
+		d2 = _X_;
+	}else if(d == _Z_){
+		d1 = _X_;
+		d2 = _Y_;
+	}else{
+		SHOULD_NOT_REACH;
+	}
+}
+
+inline St Normal(const St&d1, const St& d2){
+	ASSERT(d1 >=0 && d1 <=2);
+	ASSERT(d2 >=0 && d2 <=2);
+	ASSERT(d1 != d2);
+	return ToAxes(3 - d1 - d2);
+}
+
 enum Trinary {
 	_POSITIVE_ = 1,  //
 	_ZERO_     = 0,  //

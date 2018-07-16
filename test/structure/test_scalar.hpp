@@ -15,11 +15,10 @@ TEST(scalar, initial){
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
 	typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
 
-
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,
-			                          {5, 3},
+			                          {5, 5},
 									   0.3, 2 ));
 
 	spSGhost spgh(new SGhostRegular_<2>(spsg));
@@ -27,6 +26,12 @@ TEST(scalar, initial){
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
 	Scalar sc(spsg,spgh, sporder);
+
+	Plotly plt;
+	plt.add(PlotlyActor::WireFrame(sc.grid()));
+	plt.add(PlotlyActor::Heatmap(sc.grid(), sc));
+	plt.size(800, 800);
+	plt.plot();
 }
 
 TEST(scalar, add){
@@ -121,6 +126,7 @@ TEST(scalar, add){
 	std::cout << "      2.3 / " << sc(0, 0) << std::endl;
 	std::cout << "sc3 = " << sc3(0, 0) << std::endl;
 	ASSERT_LE(std::abs(sc3(0, 0) - (2.3 / sc(0, 0))), 1e-4);
+
 
 }
 

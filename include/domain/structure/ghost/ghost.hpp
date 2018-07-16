@@ -20,6 +20,7 @@ public:
 	}
 
 	virtual bool is_ghost(const Index& index) const{};
+	virtual bool is_normal(const Index& index) const{};
 
 
 	virtual int boundary_id(const Index& indexc,

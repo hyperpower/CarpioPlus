@@ -441,7 +441,6 @@ protected:
 }
 ;
 
-}
 
 namespace PlotlyActor{
 
@@ -449,8 +448,10 @@ typedef std::shared_ptr<carpio::Plotly_actor> spPA;
 typedef std::shared_ptr<carpio::Plotly_actor_scatter> spPA_scatter;
 typedef std::shared_ptr<carpio::Plotly_actor_scatter3d> spPA_scatter3d;
 typedef std::shared_ptr<carpio::Plotly_actor_mesh3d> spPA_mesh3d;
+typedef std::shared_ptr<carpio::Plotly_actor_heatmap> spPA_heatmap;
+
 
 }
-
+}
 
 #endif

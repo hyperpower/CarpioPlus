@@ -151,6 +151,17 @@ public:
     St size() const{
     	return _ghost->size_normal();
     }
+
+
+	const Grid& grid() const {
+		return (*_grid);
+	}
+	const Ghost& ghost() const {
+		return (*_ghost);
+	}
+	const Order& order() const {
+		return (*_order);
+	}
 protected:
     bool _is_compatible(const Self& o) const{
     	return (  _grid  == o._grid

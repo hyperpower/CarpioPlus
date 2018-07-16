@@ -49,8 +49,12 @@ public:
 		return false;
 	};
 
+	bool is_normal(const Index& index) const{
+		return !(is_ghost(index));
+	}
 
-		int boundary_id(
+
+	int boundary_id(
 				const Index& indexc,
 				const Index& indexg,
 				const Axes& axe,
