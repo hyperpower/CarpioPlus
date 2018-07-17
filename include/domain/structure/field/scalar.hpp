@@ -61,7 +61,7 @@ public:
 		if (this == &a) {
 			return *this;
 		}
-		ASSERT(_is_compatible(a));
+		ASSERT(is_compatible(a));
 		_mat = a._mat;
 		return *this;
 	}
@@ -94,7 +94,7 @@ public:
 
 	Self& operator+=(const Self& rhs){
     	// actual addition of rhs to *this
-		ASSERT(_is_compatible(rhs));
+		ASSERT(is_compatible(rhs));
 		_mat += rhs._mat;
     	return *this;
     }
@@ -107,7 +107,7 @@ public:
 
     Self& operator-=(const Self& rhs) {
 		// actual addition of rhs to *this
-		ASSERT(_is_compatible(rhs));
+		ASSERT(is_compatible(rhs));
 		_mat -= rhs._mat;
 		return *this;
 	}
@@ -120,7 +120,7 @@ public:
 
 	Self& operator*=(const Self& rhs) {
 		// actual addition of rhs to *this
-		ASSERT(_is_compatible(rhs));
+		ASSERT(is_compatible(rhs));
 		_mat *= rhs._mat;
 		return *this;
 	}
@@ -133,7 +133,7 @@ public:
 
 	Self& operator/=(const Self& rhs) {
 		// actual addition of rhs to *this
-		ASSERT(_is_compatible(rhs));
+		ASSERT(is_compatible(rhs));
 		_mat /= rhs._mat;
 		return *this;
 	}
@@ -162,14 +162,17 @@ public:
 	const Order& order() const {
 		return (*_order);
 	}
-protected:
-    bool _is_compatible(const Self& o) const{
+    bool is_compatible(const Self& o) const{
     	return (  _grid  == o._grid
     			&&_ghost == o._ghost
 				&&_order == o._order);
     }
 
 };
+template<St DIM>
+bool IsCompatible(const SScalar_<DIM>& lhs, const SScalar_<DIM>& rhs){
+	return lhs.is_compatible(rhs);
+}
 
 template<St DIM>
 std::ostream& operator<<(std::ostream& stream, const SScalar_<DIM>& s) {

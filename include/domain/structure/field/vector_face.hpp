@@ -78,6 +78,14 @@ public:
 		}
 	}
 
+	Vt& operator()(Axes a, Orientation o, const Index& index){
+		return this->operator ()(a, o, index.i(), index.j(), index.k());
+	}
+
+	const Vt& operator()(Axes a, Orientation o, const Index& index) const{
+		return this->operator ()(a, o, index.i(), index.j(), index.k());
+	}
+
 };
 
 

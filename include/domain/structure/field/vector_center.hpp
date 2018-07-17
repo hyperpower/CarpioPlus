@@ -45,6 +45,18 @@ public:
 		}
 	}
 
+	const Order& order() const {
+		return _arrs[_X_]->order();
+	}
+
+	const Grid& grid() const {
+		return _arrs[_X_]->grid();
+	}
+
+	const Ghost& ghost() const {
+		return _arrs[_X_]->ghost();
+	}
+
 	Scalar& operator[](St d){
 		return *(_arrs[d]);
 	}

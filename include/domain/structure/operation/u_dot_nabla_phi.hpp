@@ -16,7 +16,7 @@ namespace carpio{
 
 
 template<St DIM>
-class UdotNabla_{
+class SUdotNabla_{
 public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
@@ -27,11 +27,11 @@ public:
 	typedef SVectorFace_<DIM>   VectorFace;
 
 
-	UdotNabla_(){
+	SUdotNabla_(){
 
 	}
 
-	virtual ~UdotNabla_(){
+	virtual ~SUdotNabla_(){
 
 	}
 
@@ -43,7 +43,7 @@ public:
 
 
 template<St DIM>
-class UdotNabla_FOU: public UdotNabla_<DIM>{
+class SUdotNabla_FOU: public SUdotNabla_<DIM>{
 public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
@@ -54,11 +54,11 @@ public:
 	typedef SVectorFace_<DIM>   VectorFace;
 
 
-	UdotNabla_FOU(){
+	SUdotNabla_FOU(){
 
 	}
 
-	virtual ~UdotNabla_FOU(){
+	virtual ~SUdotNabla_FOU(){
 
 	}
 
