@@ -56,8 +56,9 @@ public:
 	virtual Vt min_size(St dim) const {}
 
 	// face  ===================================
-	virtual Poi f(St dim,  bool fb, Idx i, Idx j = 0, Idx k = 0) const {}
-	virtual Vt  f_(St dim, int  fb, Idx idx) const {}
+	virtual Poi f(St dim,  int ori, const Index& index) const {}
+	virtual Poi f(St dim,  int fb, Idx i, Idx j = 0, Idx k = 0) const {}
+	virtual Vt  f_(St dim, int  ori, Idx idx) const {}
 
 	// distance to face
 	virtual Vt df_(St dim, Idx idx) const {}

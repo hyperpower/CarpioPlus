@@ -32,15 +32,7 @@ public:
 	int type() const {
 		return _type;
 	}
-	Vt value(Vt x) const {
-		return _value;
-	}
-	Vt value(Vt x, Vt y) const {
-		return _value;
-	}
-	Vt value(Vt x, Vt y, Vt z) const {
-		return _value;
-	}
+
 	Vt value(Vt x, Vt y, Vt z, Vt t) const {
 		return _value;
 	}

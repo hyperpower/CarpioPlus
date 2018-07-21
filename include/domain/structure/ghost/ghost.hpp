@@ -20,6 +20,10 @@ public:
 	}
 
 	virtual bool is_ghost(const Index& index) const{};
+	virtual bool is_boundary(
+			const Index& index,
+			const Axes& a,
+			const Orientation&) const{};
 	virtual bool is_normal(const Index& index) const{};
 
 

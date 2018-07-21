@@ -112,7 +112,7 @@ public:
 		}
 		return std::move(res);
 	}
-	Poi c(Index index) const {
+	Poi c(const Index& index) const {
 		return c(index.i(), index.j(), index.k());
 	}
 	Vt  c_(const St& dim, const Idx& idx) const {
@@ -156,23 +156,29 @@ public:
 	}
 
 	// face  ===================================
-	Poi f(St dim, bool fb, Idx i, Idx j = 0, Idx k = 0) const {
+	Poi f(St dim, int fb, const Index& index) const {
+		return f(dim, fb, index.i(), index.j(), index.k());
+	}
+
+	Poi f(St dim, int fb, Idx i, Idx j = 0, Idx k = 0) const {
 		Poi pc = c(i, j, k);
 		Vt halfs = _cs * 0.5;
-		if (fb) { //right face
+		if (fb == _P_) { //right face
 			pc[dim] = pc[dim] + halfs;
-		} else {  //left face
+		} else if (fb == _M_){  //left face
 			pc[dim] = pc[dim] - halfs;
+		} else{
+			SHOULD_NOT_REACH;
 		}
 		return pc;
 	}
 
-	Vt f_(St dim, int fb, Idx idx) const {
+	Vt f_(St dim, int ori, Idx idx) const {
 		Vt halfs = hs_(dim, idx);
 		Vt cen = c_(dim, idx);
-		if (fb == _P_) {         //right face
+		if (ori == _P_) {         //right face
 			return cen + halfs;
-		} else if (fb == _M_) {  //left face
+		} else if (ori == _M_) {  //left face
 			return cen - halfs;
 		} else {
 			SHOULD_NOT_REACH;

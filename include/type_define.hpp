@@ -87,6 +87,16 @@ enum Orientation {
 	_C_ = 2, //
 };
 
+Orientation Opposite(const Orientation& ori){
+	if(ori == _M_){
+		return _P_;
+	}else if(ori == _P_){
+		return _M_;
+	}else{
+		return _C_;
+	}
+}
+
 inline void NormalPlane(const St&d, St& d1, St& d2){
 	if(d == _X_){
 		d1 = _Y_;

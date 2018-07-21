@@ -220,8 +220,14 @@ std::ostream& operator<<(std::ostream& stream, const SIndex_<DIM>& index) {
 	stream << ")";
 	return stream;
 }
-
-
+template<St DIM>
+void Shift(SIndex_<DIM>& index, St dim, St ori, St step = 1) {
+	if(ori == _M_){
+		index[dim] = index[dim] - step;
+	}else if(ori == _P_){
+		index[dim] = index[dim] + step;
+	}
+}
 
 }
 

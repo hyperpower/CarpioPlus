@@ -14,15 +14,11 @@ public:
 	// Constructor
 	BoundaryCondition() {
 		// default boundary condition is symmetric boundary condition
-
 	}
 	virtual ~BoundaryCondition(){}
 
 	// get
 	virtual int type() const {}
-	virtual Vt value(Vt x) const {}
-	virtual Vt value(Vt x, Vt y) const {}
-	virtual Vt value(Vt x, Vt y, Vt z) const {}
 	virtual Vt value(Vt x, Vt y, Vt z, Vt t) const {}
 
 

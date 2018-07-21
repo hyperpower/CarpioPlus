@@ -182,14 +182,20 @@ for (St i = 0; i < Dim; ++i) {
 	}
 
 	// face  ===================================
-	Poi f(St dim, bool fb, Idx i, Idx j = 0, Idx k = 0) const {
+	Poi f(St dim, int fb, const Index& index) const {
+		return f(dim, fb, index.i(), index.j(), index.k());
+	}
+
+	Poi f(St dim, int fb, Idx i, Idx j = 0, Idx k = 0) const {
 		Poi pc = c(i, j, k);
 		Idx ai[] = { i, j, k };
 		Vt halfs = hs_(dim, ai[dim]);
-		if (fb) { //right face
+		if (fb == _P_) { //right face
 			pc[dim] = pc[dim] + halfs;
-		} else {  //left face
+		} else if(fb == _M_){  //left face
 			pc[dim] = pc[dim] - halfs;
+		} else{
+			SHOULD_NOT_REACH;
 		}
 		return pc;
 	}

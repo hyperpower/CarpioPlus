@@ -49,6 +49,22 @@ public:
 		return false;
 	};
 
+	bool is_boundary(
+				const Index& index,
+				const Axes& a,
+				const Orientation& o) const{
+		ASSERT(a < DIM);
+		Idx idx = index.value(a);
+		if(o == _M_){
+			return idx == 0;
+		}else if(o == _P_){
+			return idx == (_grid->n().value(a) - 1);
+		}else{
+			SHOULD_NOT_REACH;
+			return false;
+		}
+	}
+
 	bool is_normal(const Index& index) const{
 		return !(is_ghost(index));
 	}
