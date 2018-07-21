@@ -15,7 +15,6 @@ public:
 	typedef std::shared_ptr<const BoundaryCondition> spcBC;
 	//typedef BoundaryCondition* pBoundaryCondition;
 	//typedef const BoundaryCondition<cvt, vt>* const_pBoundaryCondition;
-	//typedef BCID_compare_<cvt,vt> BCID_compare;
 
 	typedef std::map<int, spBC> BCMap;
 protected:

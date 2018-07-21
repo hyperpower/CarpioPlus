@@ -35,7 +35,7 @@ public:
 
 	}
 
-	virtual Scalar operator()(const VectorCenter& U, const Scalar& phi){
+	virtual Scalar operator()(const VectorFace& U, const Scalar& phi){
 
 	}
 
@@ -62,7 +62,7 @@ public:
 
 	}
 
-	virtual Scalar operator()(const VectorCenter& U, const Scalar& phi){
+	virtual Scalar operator()(const VectorFace& U, const Scalar& phi){
 
 	}
 

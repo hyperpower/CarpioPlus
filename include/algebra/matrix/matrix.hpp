@@ -11,7 +11,7 @@
 #include <iostream>
 #include <iterator>
 
-#include "array_list.hpp"
+#include "algebra/array/array_list.hpp"
 #ifdef OPENMP
 #include <omp.h>
 #endif
