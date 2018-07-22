@@ -22,6 +22,8 @@ namespace carpio {
 template<St DIM>
 class StructureDomain_{
 public:
+	typedef St SizeType;
+	typedef Vt ValueType;
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
