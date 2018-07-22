@@ -2,8 +2,8 @@
 #define _S_PLOTLY_ACTOR_HPP
 
 #include "io/plotly.hpp"
-#include "domain/structure/grid/grid.hpp"
-#include "domain/structure/field/scalar.hpp"
+#include "domain/structure/grid/sgrid.hpp"
+#include "domain/structure/field/sscalar.hpp"
 namespace carpio{
 namespace PlotlyActor{
 

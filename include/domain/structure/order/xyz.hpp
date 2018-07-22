@@ -4,7 +4,7 @@
 
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "order.hpp"
 #include "algebra/array/multi_array.hpp"

@@ -3,12 +3,12 @@
 
 
 #include "structure_define.hpp"
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/scalar.hpp"
-#include "domain/structure/field/vector_center.hpp"
-#include "domain/structure/field/vector_face.hpp"
+#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/svector_center.hpp"
+#include "domain/structure/field/svector_face.hpp"
 
 #include <array>
 

@@ -2,7 +2,7 @@
 #define _STRUCTURE_HPP_
 
 #include "index.hpp"
-#include "grid/grid.hpp"
+#include "grid/sgrid.hpp"
 #include "grid/non_uniform.hpp"
 #include "grid/uniform.hpp"
 
@@ -12,9 +12,9 @@
 #include "order/order.hpp"
 #include "order/xyz.hpp"
 
-#include "field/scalar.hpp"
-#include "field/vector_center.hpp"
-#include "field/vector_face.hpp"
+#include "field/sscalar.hpp"
+#include "field/svector_center.hpp"
+#include "field/svector_face.hpp"
 
 
 namespace carpio {

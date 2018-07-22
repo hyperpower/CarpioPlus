@@ -1,7 +1,7 @@
 #ifndef _S_SCALAR_HPP_
 #define _S_SCALAR_HPP_
 
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
 #include "utility/tinyformat.hpp"

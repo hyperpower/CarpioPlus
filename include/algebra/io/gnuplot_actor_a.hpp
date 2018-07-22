@@ -8,13 +8,17 @@ namespace carpio{
 
 namespace GnuplotActor{
 
+
+
 template<class T>
-spActor Points(const ArrayListT<T>& arrx,
+spActor TwoArrayList(
+		       const ArrayListT<T>& arrx,
 		       const ArrayListT<T>& arry,
-			   int   color_idx = -1){
+			   int   color_idx = -1,
+			   const std::string& style  = "with points lc variable"){
 	spActor actor    = spActor(new Gnuplot_actor());
 	actor->command() = "using 1:2:3 title \"\" ";
-	actor->style()   = "with points lc variable";
+	actor->style()   = style;
 	ASSERT(arrx.size() == arry.size());
 	for(St i = 0; i < arrx.size(); ++i){
 		if (color_idx >= 0) {
@@ -28,7 +32,23 @@ spActor Points(const ArrayListT<T>& arrx,
 }
 
 template<class T>
-spActor OneArrayList(const ArrayListT<T>& arrx,
+spActor Points(const ArrayListT<T>& arrx,
+		       const ArrayListT<T>& arry,
+			   int   color_idx = -1){
+	TwoArrayList(arrx, arry, color_idx, "with points lc variable");
+}
+
+template<class T>
+spActor LinesPoints(
+		       const ArrayListT<T>& arrx,
+		       const ArrayListT<T>& arry,
+			   int   color_idx = -1){
+	TwoArrayList(arrx, arry, color_idx, "with linespoints lc variable");
+}
+
+template<class T>
+spActor OneArrayList(
+		       const ArrayListT<T>& arrx,
 			   int   color_idx = -1,
 			   const std::string& style = "with points lc variable"){
 	spActor actor    = spActor(new Gnuplot_actor());
@@ -48,12 +68,12 @@ spActor OneArrayList(const ArrayListT<T>& arrx,
 template<class T>
 spActor Points(const ArrayListT<T>& arrx,
 			   int   color_idx = -1){
-	OneArrayList(arrx, color_idx, "with poiints lc variable");
+	OneArrayList(arrx, color_idx, "with points lc variable");
 }
 
 template<class T>
 spActor LinesPoints(const ArrayListT<T>& arrx,
-			   int   color_idx = -1){
+			        int   color_idx = -1){
 	OneArrayList(arrx, color_idx, "with linespoints lc variable");
 }
 

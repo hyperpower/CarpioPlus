@@ -4,7 +4,7 @@
 #include "domain/domain_define.hpp"
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "ghost.hpp"
 
 namespace carpio{

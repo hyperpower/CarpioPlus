@@ -3,12 +3,12 @@
 
 
 #include "domain/structure/structure_define.hpp"
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/scalar.hpp"
-#include "domain/structure/field/vector_center.hpp"
-#include "domain/structure/field/vector_face.hpp"
+#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/svector_center.hpp"
+#include "domain/structure/field/svector_face.hpp"
 
 #include "domain/boundary/boundary_condition.hpp"
 #include "domain/boundary/bc_value.hpp"
@@ -20,11 +20,11 @@ namespace carpio{
 template<St DIM>
 Vt _value_type1(const SScalar_<DIM>      fc,
 		        const BoundaryCondition& bc,
-				const SIndex_<DIM>&  idxc,
-				const SIndex_<DIM>&  idxg,
-				const Axes&          axe,
-				const Orientation&   ori,
-				const Vt&            time = 0.0){
+				const SIndex_<DIM>&      idxc,
+				const SIndex_<DIM>&      idxg,
+				const Axes&              axe,
+				const Orientation&       ori,
+				const Vt&                time = 0.0){
 	// boundary condition must be type 1
 	// walk back
 	auto oori = Opposite(ori);
@@ -57,11 +57,11 @@ Vt _value_type1(const SScalar_<DIM>      fc,
 template<St DIM>
 Vt _value_type2(const SScalar_<DIM>      fc,
 		        const BoundaryCondition& bc,
-				const SIndex_<DIM>&  idxc,
-				const SIndex_<DIM>&  idxg,
-				const Axes&          axe,
-				const Orientation&   ori,
-				const Vt&            time = 0.0){
+				const SIndex_<DIM>&      idxc,
+				const SIndex_<DIM>&      idxg,
+				const Axes&              axe,
+				const Orientation&       ori,
+				const Vt&                time = 0.0){
 	// boundary condition must be type 2
 	// walk back
 	auto oori = Opposite(ori);

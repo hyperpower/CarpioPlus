@@ -3,7 +3,7 @@
 
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
-#include "grid.hpp"
+#include "sgrid.hpp"
 #include <array>
 
 namespace carpio{
