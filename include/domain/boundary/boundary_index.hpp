@@ -3,6 +3,7 @@
 
 #include "domain/structure/structure_define.hpp"
 #include "boundary_condition.hpp"
+#include "bc_value.hpp"
 
 namespace carpio{
 
