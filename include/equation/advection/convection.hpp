@@ -9,6 +9,7 @@ template<St DIM, class DOMAIN>
 class Convection_ : public Equation_<DIM, DOMAIN>{
 public:
 	typedef DOMAIN Domain;
+	typedef Equation_<DIM, DOMAIN>     Equation;
 	typedef typename Domain::SizeType  St;
 	typedef typename Domain::ValueType Vt;
 	typedef typename Domain::Grid      Grid;
@@ -40,9 +41,21 @@ public:
 	typedef std::unordered_map<std::string, Function> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
-
 protected:
 
+public:
+	Convection_(spGrid spg, spGhost spgh):
+		Equation(spg, spgh){
+	}
+
+	Convection_(spGrid spg, spGhost spgh,
+			    spScalar phi,
+				spScalar u,
+				spScalar v = nullptr,
+				spScalar w = nullptr):
+		Equation(spg, spgh){
+
+	}
 
 
 
