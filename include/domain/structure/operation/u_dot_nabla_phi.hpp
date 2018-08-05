@@ -2,7 +2,7 @@
 #define _S_U_DOT_NABLA_PHI_HPP
 
 
-#include "structure_define.hpp"
+#include "domain/structure/structure_define.hpp"
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"

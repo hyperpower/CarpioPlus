@@ -34,6 +34,12 @@ public:
 protected:
 	std::array<spScalar, DIM> _arrs;
 public:
+	SVectorCenter_() {
+		FOR_EACH_DIM{
+			_arrs[d] = nullptr;
+		}
+	}
+
 	SVectorCenter_(
 			spScalar u,
 			spScalar v = nullptr,
@@ -43,6 +49,11 @@ public:
 			ASSERT(a[d] != nullptr);
 			_arrs[d] = a[d];
 		}
+	}
+
+	void set(Axes a, spScalar sps){
+		ASSERT(a < DIM);
+		_arrs[a] = sps;
 	}
 
 	const Order& order() const {

@@ -23,6 +23,8 @@ public:
 	typedef std::shared_ptr<SGhost_<DIM> > spGhost;
 	typedef std::shared_ptr<SOrder_<DIM> > spOrder;
 
+	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
+
 	typedef MultiArrayV_<Vt, DIM> Mat;
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
@@ -55,6 +57,15 @@ public:
 
 	void assign(const Vt& value){
 		_mat.assign(value);
+	}
+
+	void assign(FunXYZT_Value fun, Vt t = 0.0){
+		for(auto& idx : (*_order)){
+			auto cp = _grid->c(idx);
+			this->operator ()(idx) = fun(cp.value(_X_),
+					                     cp.value(_Y_),
+										 cp.value(_Z_), t);
+		}
 	}
 
 	Self& operator=(const Self& a) {

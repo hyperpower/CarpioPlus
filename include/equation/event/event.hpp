@@ -8,16 +8,16 @@
 
 namespace carpio{
 
-template<St DIM> class Equation_;
+//template<St DIM> class Equation_;
 
-template<St DIM>
+template<St DIM, class DOMAIN>
 class Event_ {
 public:
 	static const St Dim         = DIM;
 	static const St NumFaces    = DIM + DIM;
 	static const St NumVertexes = (DIM == 3) ? 8 : (DIM + DIM);
 
-	typedef Equation_<Dim> Equ;
+	typedef Equation_<Dim, DOMAIN> Equ;
 	typedef Equ* pEqu;
 	typedef const Equ* const_pEqu;
 
@@ -80,7 +80,7 @@ public:
 	 *                fob = -1 is before the step,
 	 *                fob = 1 is after the step
 	 */
-	bool _do_execute(St step, Vt t, int fob) const {
+	bool do_execute(St step, Vt t, int fob) const {
 		if (this->_has_flag(fob)) {
 			bool res = ((step - this->_istart) % this->_istep == 0);
 			if (this->_iend != -1) {

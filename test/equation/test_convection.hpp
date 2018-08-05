@@ -8,17 +8,32 @@
 namespace carpio {
 
 TEST(convection, initial){
-	typedef StructureDomain_<2> Domain;
+	const St DIM = 1;
+	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
-			new SGridUniform_<2>({0.0,0.0},  // min point
-					             {10,  10},  // num on each direction
-								  0.5,       // cell size
-								  2));       // ghost layer
+			new SGridUniform_<DIM>({0.0, 0.0}, // min point
+					               {10,  10},  // num on each direction
+								    0.5,       // cell size
+								    2));       // ghost layer
 	typename Domain::spGhost spghost(
-			new SGhostRegular_<2>(spgrid));
+			new SGhostRegular_<DIM>(spgrid));
+
+	typename Domain::spOrder sporder(
+			new SOrderXYZ_<DIM>(spgrid, spghost));
+	std::cout << "order ok\n";
 
 	// Define the equation
-	Convection_<2, Domain> equ(spgrid, spghost);
+	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
+
+	equ.set_time_term(10, 0.1);
+
+	// Set boundary condition
+
+
+	// Set initial condition
+
+	// Run
+	equ.run();
 }
 
 

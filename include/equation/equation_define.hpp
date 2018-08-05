@@ -5,11 +5,13 @@
 #include "time_term.hpp"
 #include "domain/boundary/boundary_index.hpp"
 #include "utility/any.hpp"
+//#include "event/event.hpp"
 #include <memory>
+#include <type_traits>
 
 namespace carpio {
 
-template<St DIM> class Event_;
+template<St DIM, class DOMAIN> class Event_;
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class DOMAIN>
@@ -22,7 +24,7 @@ public:
 	typedef typename Domain::Ghost     Ghost;
 	typedef typename Domain::Order     Order;
 	typedef typename Domain::Scalar    Scalar;
-	typedef Event_<DIM>                Event;
+	typedef Event_<DIM, Domain>        Event;
 	typedef TimeTerm_<DIM>             TimeTerm;
 
 	typedef typename Domain::VectorCenter VectorCenter;
@@ -38,19 +40,20 @@ public:
 	typedef std::shared_ptr<TimeTerm>      spTimeTerm;
 	typedef std::shared_ptr<BoundaryIndex> spBoundaryIndex;
 
-	typedef std::function<Vt(Vt, Vt, Vt, Vt)> Function;
+	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 	typedef std::map<std::string, Any>                AFlags;
 	typedef std::map<std::string, spScalar>           Scalars;
 	typedef std::map<std::string, spBoundaryIndex>    BIs;
 	typedef std::unordered_map<std::string, spEvent>  Events;
-	typedef std::unordered_map<std::string, Function> Functions;
+	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
 
 protected:
 	spGrid  _grid;
 	spGhost _ghost;
+	spOrder _order;
 
 	// time relates variables
 	spTimeTerm _time;
@@ -63,20 +66,20 @@ protected:
 	BIs        _bis;           //!< each variable has a Boundary Index
 
 public:
-	Equation_(spGrid pf, spGhost pg = nullptr) :
-				_grid(pf), _ghost(pg) {
-			this->_time = nullptr;
-		}
+	Equation_(spGrid pf, spGhost pg, spOrder spo) :
+				_grid(pf), _ghost(pg), _order(spo){
+		this->_time = nullptr;
+	}
 
 	virtual ~Equation_() {
 	}
 
 	virtual int run_one_step(St step) {
-			std::cout << step << "  Equation: run one step \n";
-			return -1;
-		}
+		std::cout << step << "  Equation: run one step \n";
+		return -1;
+	}
 
-	virtual int initial() {
+	virtual int initialize() {
 		std::cout << "  Equation: initial \n";
 		SHOULD_NOT_REACH;
 		return -1;
@@ -94,8 +97,8 @@ public:
 
 	void run() {
 		// the equation don't have time
-		if (!this->has_event("time_term")) {
-			initial();
+		if (this->_time == nullptr) {
+			initialize();
 			// start events
 			run_events(0, 0.0, Event::START);
 
@@ -105,7 +108,7 @@ public:
 			finalize();
 		} else {
 			// events before calculation
-			initial();
+			initialize();
 			run_events(this->_time->current_step(), //
 					this->_time->current_step(),    //
 					Event::START);
@@ -138,7 +141,7 @@ public:
 
 	void run_events(St step, Vt t, int fob) {
 		for (auto& event : this->_events) {
-			if (event.second->_do_execute(step, t, fob)) {
+			if (event.second->do_execute(step, t, fob)) {
 				event.second->execute(step, t, fob, this);
 			}
 		}
@@ -160,6 +163,16 @@ public:
 		return *(this->_grid);
 	}
 
+
+	// overload operators ===============================
+	Scalar& operator[](const std::string& name){
+		return *(this->_scalars[name]);
+	}
+
+	const Scalar& operator[](const std::string& name) const{
+		return *(this->_scalars[name]);
+	}
+
 	/**
 	 * @brief this function check the events
 	 *        if flags contain key and value == val return true
@@ -173,12 +186,32 @@ public:
 		return false;
 	}
 
+	void set_time_term(St n, Vt dt, Vt tau = 1){
+		this->_time = spTimeTerm(
+				           new TimeTerm( n, dt, tau));
+	}
+
 	bool has_function(const std::string& key) const {
 		auto it = this->_functions.find(key);
 		if (it != this->_functions.end()) {
 			return true;
 		}
 		return false;
+	}
+
+	void set_function(const std::string& key, FunXYZT_Value fun){
+		this->_functions[key] = fun;
+	}
+
+	FunXYZT_Value get_funtion(const std::string& key){
+		if(has_function(key)){
+			return this->_functions[key];
+		}else{
+			FunXYZT_Value res = [](Vt x, Vt y, Vt z, Vt t){
+				return 0.0;
+			};
+			return res;
+		}
 	}
 
 	bool has_value(const std::string& key) const {
@@ -197,8 +230,31 @@ public:
 		return false;
 	}
 
-	void set_function(const std::string& name, Function fun) {
-		this->_functions[name] = fun;
+	bool has_scalar(const std::string& key) const {
+		auto it = this->_scalars.find(key);
+		if (it != this->_scalars.end()) {
+			return true;
+		}
+		return false;
+	}
+
+	void new_scalar(const std::string& name){
+		if(!(this->has_scalar(name))){
+			this->_scalars[name] = spScalar(new Scalar(
+					this->_grid,
+					this->_ghost,
+					this->_order));
+		}
+	}
+
+	template<class Container>
+	void new_scalars(const Container& list){
+		auto isstring = std::is_same<typename Container::value_type,
+				                     std::string>::value;
+		ASSERT(isstring == true);
+		for(auto& str : list){
+			new_scalar(str);
+		}
 	}
 
 	void show_events() const {

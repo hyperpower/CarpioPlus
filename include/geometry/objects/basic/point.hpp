@@ -46,46 +46,6 @@ public:
 		}
 	}
 
-	const_reference val(int axi) const {
-		switch (axi) {
-		case _X_: {
-			return this->at(0);
-		}
-		case _Y_: {
-			ASSERT(Dim >= 2);
-			return this->at(1);
-		}
-		case _Z_: {
-			ASSERT(Dim >= 3);
-			return this->at(2);
-		}
-		default: {
-			SHOULD_NOT_REACH;
-		}
-		}
-		return this->at(0); //make compile happy;
-	}
-	reference val(int axi) {
-		switch (axi) {
-		case _X_: {
-			return this->at(0);
-		}
-		case _Y_: {
-			ASSERT(Dim >= 2);
-			return this->at(1);
-		}
-		case _Z_: {
-			ASSERT(Dim >= 3);
-			return this->at(2);
-		}
-		default: {
-			SHOULD_NOT_REACH;
-		}
-		}
-		SHOULD_NOT_REACH;
-		return this->at(0); //make compile happy;
-	}
-
 	const_reference operator()(St idx) const {
 		ASSERT(idx < Dim);
 		return this->at(idx);
@@ -98,7 +58,7 @@ public:
 	Vt value(St idx) const {
 		Vt res;
 		if (idx < Dim) {
-			return val(idx);
+			return this->operator ()(idx);
 		} else {
 			return 0;
 		}

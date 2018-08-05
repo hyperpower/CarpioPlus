@@ -16,6 +16,8 @@
 #include "field/svector_center.hpp"
 #include "field/svector_face.hpp"
 
+#include "operation/u_dot_nabla_phi.hpp"
+
 
 namespace carpio {
 
@@ -58,6 +60,9 @@ public:
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
+
+	typedef SUdotNabla_<DIM>        UdotNabla;
+	typedef SUdotNabla_FOU<DIM>     UdotNabla_FOU;
 
 
 };

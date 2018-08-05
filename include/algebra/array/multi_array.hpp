@@ -47,17 +47,19 @@ class MultiArray_ {
     	this->m_mp = a.m_mp;
     }
     MultiArray_(St iLen, St jLen= 0, St kLen= 0){
+    	St len         = iLen;
 		this->m_len[0] = iLen;
 		if (Dim >= 2) {
 			ASSERT(iLen > 0 && jLen > 0);
 			this->m_len[1] = jLen;
-			this->m_mp.reconstruct(iLen * jLen);
+			len *= jLen;
 		}
-		if (Dim >= 3) {
+		if (Dim == 3) {
 			ASSERT(iLen > 0 && jLen > 0 && kLen > 0);
 			this->m_len[2] = kLen;
-			this->m_mp.reconstruct(iLen * jLen * kLen);
+			len *= kLen;
 		}
+		this->m_mp.reconstruct(len);
     }
 
     void reconstruct(St iLen, St jLen = 0, St kLen= 0){
@@ -234,17 +236,19 @@ class MultiArrayV_ {
     	this->m_mp = a.m_mp;
     }
     MultiArrayV_(St iLen, St jLen= 0, St kLen= 0){
+    	St len         = iLen;
 		this->m_len[0] = iLen;
 		if (Dim >= 2) {
 			ASSERT(iLen > 0 && jLen > 0);
 			this->m_len[1] = jLen;
-			this->m_mp.reconstruct(iLen * jLen);
+			len *= jLen;
 		}
 		if (Dim >= 3) {
 			ASSERT(iLen > 0 && jLen > 0 && kLen > 0);
 			this->m_len[2] = kLen;
-			this->m_mp.reconstruct(iLen * jLen * kLen);
+			len *= kLen;
 		}
+		this->m_mp.reconstruct(len);
     }
 
     void reconstruct(St iLen, St jLen = 0, St kLen= 0){
