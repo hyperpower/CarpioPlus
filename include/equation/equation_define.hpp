@@ -7,7 +7,6 @@
 #include "utility/any.hpp"
 //#include "event/event.hpp"
 #include <memory>
-#include <type_traits>
 
 namespace carpio {
 
