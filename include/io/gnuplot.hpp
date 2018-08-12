@@ -437,6 +437,35 @@ public:
 		this->set_title();
 		return *this;
 	}
+	Gnuplot& set_xformat(const std::string &label = "%t") {
+//      Tic-mark label numerical format specifiers
+//		Format	    Explanation
+//		%f	        floating point notation
+//		%e or %E	exponential notation; an "e" or "E" before the power
+//		%g or %G	the shorter of %e (or %E) and %f
+//		%x or %X	hex
+//		%o or %O	octal
+//		%t	        mantissa to base 10
+//		%l	        mantissa to base of current logscale
+//		%s	        mantissa to base of current logscale; scientific power
+//		%T	        power to base 10
+//		%L	        power to base of current logscale
+//		%S	        scientific power
+//		%c	        character replacement for scientific power
+//		%P	        multiple of pi
+		std::ostringstream cmdstr;
+		cmdstr << "set format x \"" << label << "\"";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	Gnuplot& set_yformat(const std::string &label = "%t") {
+		std::ostringstream cmdstr;
+		cmdstr << "set format y \"" << label << "\"";
+		cmd(cmdstr.str());
+		return *this;
+	}
+
 
 	/// set x axis label
 	Gnuplot& set_xlabel(const std::string &label = "x") {
@@ -492,7 +521,7 @@ public:
 	Gnuplot& set_terminal_pdf(const std::string& filename, double x = 400,
 			double y = 300, const std::string& font = "Helvetica",
 			int fontsize = 12) {
-		this->terminal_std = "pdf";
+		this->terminal_std = "pdfcairo";
 		std::stringstream sst;
 		sst << "set terminal " << this->terminal_std << " enhanced font '"
 				<< font << "," << fontsize << "'" << "size " << x << ", " << y;
@@ -898,7 +927,29 @@ namespace GnuplotActor {
 	typedef std::shared_ptr<carpio::Gnuplot_actor> spActor;
 	typedef std::list<spActor> list_spActor;
 
+	template<typename X, typename Y>
+	spActor XY(const X& x,
+			   const Y& y,
+			   const std::string &pcmd = "using 1:2 title \"\" ",
+		       const std::string& scmd = "") {
+		spActor actor = spActor(new Gnuplot_actor());
+	actor->command() = pcmd;
+	actor->style()   = scmd;
+	ASSERT(x.size() == y.size());
+	typename X::const_iterator xiter = x.begin();
+	typename X::const_iterator yiter = y.begin();
+	for(; xiter!=x.end();){
+		std::ostringstream sst;
+		sst << (*xiter) << " " << (*yiter);
+		actor->data().push_back(sst.str());
+		xiter++;
+		yiter++;
 	}
+//	actor->data().push_back("");
+	return actor;
+}
+
+}
 
 }
 
