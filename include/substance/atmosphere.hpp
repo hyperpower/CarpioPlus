@@ -98,7 +98,7 @@ public:
 	}
 
 	Vt kinematic_viscosity() const{
-		return dynamic_viscosity()/density();
+		return dynamic_viscosity() * density();
 	}
 
 	Vt coeffiecient_of_thermal_conductivity() const{
@@ -373,6 +373,7 @@ std::ostream& operator<<(std::ostream& stream, const Atmosphere& atmos) {
 	stream << " - Speed of Sound    : " << atmos.speed_of_sound()<< " m/s" << std::endl;
 	stream << " - Gravity           : " << atmos.gravity()       << " m/s2" << std::endl;
 	stream << " - Dynamic Viscosity    : " << atmos.dynamic_viscosity()<< " Pa s" << std::endl;
+	stream << " - Kinematic Viscosity  : " << atmos.kinematic_viscosity()<< " m2 / s" << std::endl;
 	stream << " - Thermal Conductivity : " << atmos.coeffiecient_of_thermal_conductivity()<< " W/(m K)" << std::endl;
 	return stream;
 }

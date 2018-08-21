@@ -63,22 +63,19 @@ class MultiArray_ {
     }
 
     void reconstruct(St iLen, St jLen = 0, St kLen= 0){
-		St Len = 0;
+		St len         = iLen;
 		this->m_len[0] = iLen;
-		if (Dim == 1) {
-			Len = iLen;
-		}
 		if (Dim >= 2) {
 			ASSERT(iLen > 0 && jLen > 0);
 			this->m_len[1] = jLen;
-			Len = iLen * jLen;
+			len *= jLen;
 		}
-		if (Dim >= 3) {
+		if (Dim == 3) {
 			ASSERT(iLen > 0 && jLen > 0 && kLen > 0);
 			this->m_len[2] = kLen;
-			Len = iLen * jLen * kLen;
+			len *= kLen;
 		}
-		this->m_mp.reconstruct(Len);
+		this->m_mp.reconstruct(len);
     }
     //=============================================
     MultiArray_<T, DIM>& operator=(const MultiArray_<T, DIM>& a){
@@ -86,7 +83,7 @@ class MultiArray_ {
 			return *this;
 		}
 		this->m_len = a.m_len;
-		this->m_mp = a.m_mp;
+		this->m_mp  = a.m_mp;
 		return *this;
     }
     //=============================================
