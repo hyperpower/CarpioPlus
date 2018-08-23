@@ -307,15 +307,15 @@ protected:
 	//         the surface to 86 geometric kilometers
 	//      b = 1        2       3       4       5      6        7
 	const std::array<Vt, 7> Hb =  // Geopotential height
-			  { 0,       11000,  20000,  32000,  47000,  51000,  71000 }; // (m')
+			  {{ 0,       11000,  20000,  32000,  47000,  51000,  71000 }}; // (m')
 	const std::array<Vt, 7> Lmb =  // Molecular-scale temperature gradient
-			  { -6.5e-3, 0.0e-3, 1.0e-3, 2.8e-3, 0.0,   -2.8e-3, -2.0e-3 }; // (K / m')
+			  {{ -6.5e-3, 0.0e-3, 1.0e-3, 2.8e-3, 0.0,   -2.8e-3, -2.0e-3 }}; // (K / m')
 
-	const std::array<Vt, 13> Ztable = { 80.0e3, 80.5e3, 81.0e3, 81.5e3, 82.0e3,
-			82.5e3, 83.0e3, 83.5e3, 84.0e3, 84.5e3, 85.0e3, 85.5e3, 86.0e3 }; // (m)
-	const std::array<Vt, 13> Mratiotable = { 1.0, 0.999996, 0.999989, 0.999971,
+	const std::array<Vt, 13> Ztable = {{ 80.0e3, 80.5e3, 81.0e3, 81.5e3, 82.0e3,
+			82.5e3, 83.0e3, 83.5e3, 84.0e3, 84.5e3, 85.0e3, 85.5e3, 86.0e3 }}; // (m)
+	const std::array<Vt, 13> Mratiotable = {{ 1.0, 0.999996, 0.999989, 0.999971,
 			0.999941, 0.999909, 0.999870, 0.999829, 0.999786, 0.999741,
-			0.999694, 0.999641, 0.999579 };
+			0.999694, 0.999641, 0.999579 }};
 	std::array<Vt, 7> Tmb;
 	std::array<Vt, 7> Pb;
 

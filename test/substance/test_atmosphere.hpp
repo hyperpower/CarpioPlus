@@ -188,6 +188,12 @@ TEST(atmosphere, Everest) {
 	std::cout << atmos << std::endl;
 }
 
+TEST(atmosphere, Other) {
+	Atmosphere atmos(9144);
+	std::cout << "Other" << std::endl;
+	std::cout << atmos << std::endl;
+}
+
 
 
 }
