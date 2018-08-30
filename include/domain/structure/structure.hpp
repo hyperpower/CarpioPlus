@@ -61,8 +61,8 @@ public:
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
 
-	typedef SUdotNabla_<DIM>        UdotNabla;
-	typedef SUdotNabla_FOU<DIM>     UdotNabla_FOU;
+	typedef SUdotNabla_<DIM>    UdotNabla;
+	typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
 
 
 };

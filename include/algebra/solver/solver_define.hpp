@@ -3,6 +3,7 @@
 
 #include "algebra/algebra_define.hpp"
 #include "algebra/array/array_list.hpp"
+#include "algebra/matrix/matrix_scr.hpp"
 
 #include <list>
 
@@ -21,7 +22,7 @@ protected:
 	double _tol;     // Tolerance
 
 	int _num_iter;
-	double _resid;
+	double _residual;
 	Listr _lresid; //
 public:
 
@@ -30,7 +31,7 @@ public:
 		_tol = tol;
 
 		_num_iter = 0;
-		_resid = 1e10;
+		_residual = 1e10;
 	}
 
 	virtual int solve(const MatSCR &A, // A  The matrix
@@ -55,7 +56,7 @@ public:
 	}
 
 	double residual() const {
-		return this->_resid;
+		return this->_residual;
 	}
 
 	Arr get_residual_array() const{

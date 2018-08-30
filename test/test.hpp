@@ -10,8 +10,8 @@
 //#include "geometry/test_polygon_boolean.hpp"
 //#include "geometry/test_point_chain.hpp"
 //#include "algebra/test_multi_array.hpp"
-//#include "algebra/test_matrix_sparse.hpp"
-#include "algebra/test_linear_polynomial.hpp"
+#include "algebra/test_matrix_sparse.hpp"
+//#include "algebra/test_linear_polynomial.hpp"
 //#include "io/test_csv.hpp"
 //#include "substance/test_atmosphere.hpp"
 

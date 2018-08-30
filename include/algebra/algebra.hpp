@@ -2,7 +2,7 @@
 #define _ALGEBRA_HPP_
 
 #include "algebra_define.hpp"
-#include "sort.hpp"
+#include "algebra/misc/sort.hpp"
 
 namespace carpio {
 

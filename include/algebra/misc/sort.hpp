@@ -8,7 +8,7 @@
 #ifndef _ALGEBRA_SORT_H_
 #define _ALGEBRA_SORT_H_
 
-#include "array/array_list.hpp"
+#include "algebra/array/array_list.hpp"
 
 namespace carpio
 {

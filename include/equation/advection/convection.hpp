@@ -43,7 +43,8 @@ public:
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
-	typedef typename Domain::UdotNabla  UdotNabla;
+	typedef typename Domain::UdotNabla     UdotNabla;
+	typedef typename Domain::UdotNabla_FOU UdotNabla_FOU;
 
 protected:
 	spVectorCenter _vc;

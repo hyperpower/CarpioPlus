@@ -20,7 +20,6 @@ TEST(convection, initial){
 
 	typename Domain::spOrder sporder(
 			new SOrderXYZ_<DIM>(spgrid, spghost));
-	std::cout << "order ok\n";
 
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
