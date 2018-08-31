@@ -522,8 +522,6 @@ template<typename V>
 ArrayListV<V> operator*(const V &a, const ArrayListV<V> &x);
 template<typename V>
 ArrayListV<V> operator*(const ArrayListV<V> &x, const V &a);
-template<typename V>
-ArrayListV<V> operator-(const ArrayListV<V> &a, const ArrayListV<V> &b);
 //=================================================
 /*
  * Return evenly spaced numbers over a specified interval.
@@ -829,12 +827,7 @@ ArrayListV<V> operator*(const ArrayListV<V>& x, const V&a) {
     return res;
 }
 
-template<typename V>
-ArrayListV<V> operator-(const ArrayListV<V> &a, const ArrayListV<V> &b) {
-    ArrayListV<V> res(a);
-    res -= b;
-    return res;
-}
+
 
 typedef ArrayListV<Float> arrayList;
 typedef ArrayListV<St> arrayList_st;

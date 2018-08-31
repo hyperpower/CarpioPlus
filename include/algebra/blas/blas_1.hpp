@@ -6,6 +6,9 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <iostream>
+#include <cmath>
+#include "algebra/array/array_list.hpp"
+
 
 namespace carpio {
 
@@ -76,6 +79,41 @@ int Copy(ST n, const VT * src, VT* dst) {
         dst[i + 6] = src[i + 6];
     }
     return 2;
+}
+
+/**
+ * \brief   NRM2 returns the euclidean norm of a vector via the function
+ *          name, so that
+ *          SNRM2 := sqrt( x'*x ).
+ *
+ * \param   array
+ *
+ * \return  int
+ */
+template<class ST, class VT>
+VT Nrm2(ST n,           //size of the array, sx.size==sy.size
+		const VT* x,    //
+		ST incx) {
+	VT zero = 0.0e+0;
+	VT norm = zero;
+	if (n <= 0 || incx <= 0) {
+		return norm;
+	} else if (n == 1) {
+		norm = std::abs(x[0]);
+	} else {
+		for (int i = 0; i < (n - 1) * incx; i += incx) {
+			if (x[i] != zero) {
+				norm += x[i] * x[i];
+			}
+		}
+		norm = std::sqrt(norm);
+	}
+	return norm;
+}
+
+template<typename VT>
+VT Nrm(ArrayListV<VT>& arr){
+
 }
 
 }

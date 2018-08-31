@@ -82,13 +82,13 @@ public:
 	}
 
 	MatrixSCR_(const MatrixSCO_<Vt> &CO) :
-			val_(CO.NumNonzeros()), rowptr_(CO.iLen() + 1), colind_(
-					CO.NumNonzeros()), nz_(CO.NumNonzeros()) {
-		dim_[0] = CO.iLen();
-		dim_[1] = CO.jLen();
+			val_(CO.non_zeros()), rowptr_(CO.size_i() + 1), colind_(
+					CO.non_zeros()), nz_(CO.non_zeros()) {
+		dim_[0] = CO.size_i();
+		dim_[1] = CO.size_j();
 
 		St i;
-		ArrayListV<St> tally(CO.iLen() + 1, 0);
+		ArrayListV<St> tally(CO.size_i() + 1, 0);
 		//      First pass through nonzeros.  Tally entries in each row.
 		//      And calculate rowptr array.
 		for (i = 0; i < nz_; i++) {
