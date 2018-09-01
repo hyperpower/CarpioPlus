@@ -24,7 +24,7 @@ TEST(convection, initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(10, 0.1);
+	equ.set_time_term(1, 0.1);
 
 	// Set boundary condition
 

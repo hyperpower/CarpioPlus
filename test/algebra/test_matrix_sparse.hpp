@@ -14,7 +14,7 @@ namespace carpio{
 
 TEST(matrxi_sparse, matrix){
 	typedef MatrixSCO_<double> MatSCO;
-	typedef ArrayListV<double> Arr;
+	typedef ArrayListV_<double> Arr;
 	std::cout << "This test show how to read sparse matrix" << std::endl;
 	MatSCO mat;
 	mm_read_mtx_sparse("./test/input_files/mm/cavity01.mtx", mat);
@@ -30,7 +30,7 @@ TEST(matrxi_sparse, matrix){
 
 TEST(matrxi_sparse, matrix_write){
 	typedef MatrixSCO_<double> MatSCO;
-	typedef ArrayListV<double> Arr;
+	typedef ArrayListV_<double> Arr;
 	std::cout << "This test show how to read sparse matrix" << std::endl;
 	MatSCO mat;
 	mm_read_mtx_sparse("./test/input_files/mm/cavity01.mtx", mat);
@@ -56,9 +56,9 @@ TEST(matrxi_sparse, matrix_jacobi){
 	MatrixSCR_<Float> mfr(mf);
 
 	// assign x and b -------------------------------------
-	ArrayListV<Float> b(mfr.size_i());
+	ArrayListV_<Float> b(mfr.size_i());
 	b.assign(1);
-	ArrayListV<Float> x(mfr.size_i());
+	ArrayListV_<Float> x(mfr.size_i());
 	x.assign(1);
 
 	// solve ----------------------------------------------

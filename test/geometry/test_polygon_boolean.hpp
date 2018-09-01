@@ -28,7 +28,7 @@ inline void two_pointchains(
 //		gnu.add(GnuplotActor::LinePoints(pc, 4));
 //	}
 	for (auto& pc : uni) {
-		gnu.add(GnuplotActor::LinePoints(pc, 6));
+		gnu.add(GnuplotActor::LinesPoints(pc, 6));
 	}
 //	for (auto& pc : sub) {
 //		gnu.add(GnuplotActor::LinePoints(pc, 7));

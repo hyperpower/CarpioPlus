@@ -32,11 +32,11 @@ class MultiArray_ {
     typedef St size_type;
     typedef St difference_type;
 
-    typedef typename ArrayListT<value_t>::iterator iterator;
-    typedef typename ArrayListT<value_t>::const_iterator const_iterator;
+    typedef typename ArrayListT_<value_t>::iterator iterator;
+    typedef typename ArrayListT_<value_t>::const_iterator const_iterator;
   private:
     std::array<St, Dim> m_len;
-    ArrayListT<value_t> m_mp;
+    ArrayListT_<value_t> m_mp;
   public:
     //constructor==========================
     MultiArray_(){
@@ -218,19 +218,18 @@ class MultiArrayV_ {
     typedef St size_type;
     typedef St difference_type;
 
-    typedef typename ArrayListT<value_t>::iterator iterator;
-    typedef typename ArrayListT<value_t>::const_iterator const_iterator;
+    typedef typename ArrayListT_<value_t>::iterator iterator;
+    typedef typename ArrayListT_<value_t>::const_iterator const_iterator;
   private:
     std::array<St, Dim> m_len;
-    ArrayListV<value_t> m_mp;
+    ArrayListV_<value_t> m_mp;
   public:
     //constructor==========================
     MultiArrayV_(){
     	m_len.fill(0);
     }
-    MultiArrayV_(const Self& a){
-    	this->m_len = a.m_len;
-    	this->m_mp = a.m_mp;
+    MultiArrayV_(const Self& a):
+    	m_len(a.m_len), m_mp(a.m_mp){
     }
     MultiArrayV_(St iLen, St jLen= 0, St kLen= 0){
     	St len         = iLen;

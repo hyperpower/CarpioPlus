@@ -33,7 +33,7 @@ inline bool _compare_great_(TYPE& a, TYPE& b)
 }
 
 template<typename TYPE>
-void Sort_Bubble(ArrayListT<TYPE> & arr,
+void Sort_Bubble(ArrayListT_<TYPE> & arr,
 		bool (*compare)(const TYPE&, const TYPE&))
 {
 	int num = arr.size();
@@ -47,7 +47,7 @@ void Sort_Bubble(ArrayListT<TYPE> & arr,
 }
 
 template<typename TYPE>
-void Sort_Insert(ArrayListT<TYPE> & arr,
+void Sort_Insert(ArrayListT_<TYPE> & arr,
 		bool (*compare)(const TYPE&, const TYPE&))
 {
 	int num = arr.size();
@@ -62,7 +62,7 @@ void Sort_Insert(ArrayListT<TYPE> & arr,
 }
 
 template<typename TYPE>
-int QSort(ArrayListV<TYPE>& v, int base_ptr, int total_elems,
+int QSort(ArrayListV_<TYPE>& v, int base_ptr, int total_elems,
 		bool (*compare)(const TYPE&, const TYPE&))
 {
 	double pivot_buffer;
@@ -203,20 +203,20 @@ int QSort(ArrayListV<TYPE>& v, int base_ptr, int total_elems,
 }
 
 template<typename TYPE>
-int QSort_ascend(ArrayListV<TYPE>& v, int base_ptr, int total_elems)
+int QSort_ascend(ArrayListV_<TYPE>& v, int base_ptr, int total_elems)
 {
 	return QSort(v, base_ptr, total_elems, _compare_less_);
 }
 
 template<typename TYPE>
-int QSort_decrease(ArrayListV<TYPE>& v, int base_ptr, int total_elems)
+int QSort_decrease(ArrayListV_<TYPE>& v, int base_ptr, int total_elems)
 {
 	return QSort(v, base_ptr, total_elems, _compare_great_);
 }
 
 template<typename TYPE>
-int QSort(ArrayListV<St>& v,
-		ArrayListV<TYPE>& x,
+int QSort(ArrayListV_<St>& v,
+		ArrayListV_<TYPE>& x,
 		int base_ptr,
 		int total_elems,
 		bool (*compare)(const TYPE&, const TYPE&))
@@ -373,7 +373,7 @@ int QSort(ArrayListV<St>& v,
 }
 
 template<typename TYPE>
-int QSort_ascend(ArrayListV<St>& v, ArrayListV<TYPE>& x, int base_ptr,
+int QSort_ascend(ArrayListV_<St>& v, ArrayListV_<TYPE>& x, int base_ptr,
 		int total_elems)
 {
 	return QSort(v, x, base_ptr, total_elems, _compare_less_);

@@ -12,7 +12,7 @@ template<St DIM>
 class SGridUniform_ :public SGrid_<DIM>{
 public:
 	static const St Dim = DIM;
-	typedef ArrayListV<double> Arr;
+	typedef ArrayListV_<double> Arr;
 	typedef Point_<double, Dim> Poi;
 	typedef SIndex_<Dim> Index;
 	static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);

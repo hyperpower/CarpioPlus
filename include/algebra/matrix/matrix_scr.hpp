@@ -27,9 +27,9 @@ class MatrixSCR_ {
 public:
 	typedef VALUE Vt;
 private:
-	ArrayListV<Vt> val_;       // data values (nz_ elements)
-	ArrayListV<St> rowptr_;    // row_ptr     (dim_[0]+1 elements)
-	ArrayListV<St> colind_;    // col_ind     (nz_ elements)
+	ArrayListV_<Vt> val_;       // data values (nz_ elements)
+	ArrayListV_<St> rowptr_;    // row_ptr     (dim_[0]+1 elements)
+	ArrayListV_<St> colind_;    // col_ind     (nz_ elements)
 
 	St nz_;                   // number of nonzeros
 	St dim_[2];               // number of rows, cols
@@ -57,7 +57,7 @@ public:
 
 		St i, j;
 
-		ArrayListV<St> tally(C.iLen() + 1, 0);
+		ArrayListV_<St> tally(C.iLen() + 1, 0);
 		//      First pass through nonzeros.  Tally entries in each row.
 		//      And calculate rowptr array.
 		for (i = 0; i < nz_; i++) {
@@ -88,7 +88,7 @@ public:
 		dim_[1] = CO.size_j();
 
 		St i;
-		ArrayListV<St> tally(CO.size_i() + 1, 0);
+		ArrayListV_<St> tally(CO.size_i() + 1, 0);
 		//      First pass through nonzeros.  Tally entries in each row.
 		//      And calculate rowptr array.
 		for (i = 0; i < nz_; i++) {
@@ -115,8 +115,8 @@ public:
 		dim_[1] = N;
 	}
 
-	MatrixSCR_(St M, St N, St nz, const ArrayListV<Vt> &val,
-			const ArrayListV<St> &r, const ArrayListV<St> &c) :
+	MatrixSCR_(St M, St N, St nz, const ArrayListV_<Vt> &val,
+			const ArrayListV_<St> &r, const ArrayListV_<St> &c) :
 			val_(val), rowptr_(r), colind_(c), nz_(nz) {
 		dim_[0] = M;
 		dim_[1] = N;
@@ -191,8 +191,8 @@ public:
 	 * then sum_row() is a column vector
 	 * containing the sum of each row.
 	 */
-	ArrayListV<Vt> sum_row() const {
-		ArrayListV<Vt>  res(this->size_i());
+	ArrayListV_<Vt> sum_row() const {
+		ArrayListV_<Vt>  res(this->size_i());
 		for (St i = 0; i < this->size_i(); ++i) {
 			res[i] = 0;
 			for (St j = this->row_ptr(i); j < this->row_ptr(i + 1); ++j) {
@@ -232,13 +232,13 @@ public:
 		return 0.0;
 	}
 
-	ArrayListV<Vt> operator*(const ArrayListV<Vt> &x) const {
+	ArrayListV_<Vt> operator*(const ArrayListV_<Vt> &x) const {
 		St M = dim_[0];
 		St N = dim_[1];
 		//  Check for compatible dimensions:
 		ASSERT(x.size() == N);
 
-		ArrayListV<Vt> res(M);
+		ArrayListV_<Vt> res(M);
 		for (St i = 0; i < M; ++i) {
 			for (St j = rowptr_[i]; j < rowptr_[i + 1]; ++j) {
 				res[i] += x[colind_[j]] * val_[j];
@@ -247,12 +247,12 @@ public:
 		return res;
 	}
 
-	ArrayListV<Vt> trans_mult(const ArrayListV<Vt> &x) const {
+	ArrayListV_<Vt> trans_mult(const ArrayListV_<Vt> &x) const {
 		St Mt = dim_[1];
 		St Nt = dim_[0];
 		//  Check for compatible dimensions:
 		ASSERT(x.size() == Nt);
-		ArrayListV<Vt> res(Mt);
+		ArrayListV_<Vt> res(Mt);
 		for (St i = 0; i < Mt; ++i) {
 			for (St j = rowptr_[i]; j < rowptr_[i + 1]; ++j) {
 				res[i] += x[colind_[j]] * val_[j];
@@ -268,7 +268,7 @@ public:
 
 		St i, j;
 
-		ArrayListV<St> tally(C.getiLen() + 1, 0);
+		ArrayListV_<St> tally(C.getiLen() + 1, 0);
 		//      First pass through nonzeros.  Tally entries in each row.
 		//      And calculate rowptr array.
 		for (i = 0; i < nz_; i++) {

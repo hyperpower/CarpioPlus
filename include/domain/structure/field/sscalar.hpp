@@ -173,10 +173,16 @@ public:
 	const Order& order() const {
 		return (*_order);
 	}
+
     bool is_compatible(const Self& o) const{
     	return (  _grid  == o._grid
     			&&_ghost == o._ghost
 				&&_order == o._order);
+    }
+    // return a new scalar with compatible gird, ghost and order
+    Self new_compatible() const{
+    	Self res(this->_grid, this->_ghost, this->_order);
+    	return res;
     }
 
 };

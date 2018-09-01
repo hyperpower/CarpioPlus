@@ -11,7 +11,7 @@ template<St DIM>
 class SGrid_ {
 public:
 	static const St Dim = DIM;
-	typedef ArrayListT<Vt> Arr;
+	typedef ArrayListT_<Vt> Arr;
 	typedef Point_<Vt, Dim> Poi;
 	typedef SIndex_<Dim> Index;
 	typedef St size_type;

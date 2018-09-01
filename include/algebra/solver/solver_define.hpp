@@ -13,9 +13,9 @@ template<class VALUE>
 class Solver_ {
 public:
 	typedef VALUE Vt;
-	typedef typename ArrayListV<Vt>::size_type St;
+	typedef typename ArrayListV_<Vt>::size_type St;
 	typedef MatrixSCR_<Vt> MatSCR;
-	typedef ArrayListV<Vt> Arr;
+	typedef ArrayListV_<Vt> Arr;
 	typedef std::list<double> Listr;
 protected:
 	int _max_iter;   //max_iter

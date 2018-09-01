@@ -15,9 +15,9 @@ template<class VALUE>
 class Jacobi_: public Solver_<VALUE> {
 public:
 	typedef VALUE Vt;
-	typedef typename ArrayListV<Vt>::size_type St;
+	typedef typename ArrayListV_<Vt>::size_type St;
 	typedef MatrixSCR_<VALUE> MatSCR;
-	typedef ArrayListV<VALUE> Arr;
+	typedef ArrayListV_<VALUE> Arr;
 	typedef std::list<double> Listr;
 
 	Jacobi_(int max_iter = 100, Vt tol = 1e-3) :

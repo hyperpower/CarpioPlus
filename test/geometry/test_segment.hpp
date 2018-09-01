@@ -40,7 +40,7 @@ TEST(segment, segment_plot){
 
 	Seg2 seg(x, y);
 Gnuplot gnu;
-	gnu.add(GnuplotActor::LinePoints(seg));
+	gnu.add(GnuplotActor::LinesPoints(seg));
 //	gnu.plot();
 	std::cout << "The segemnt is " << seg << std::endl;
 	ASSERT_EQ(seg.ps(), x);
@@ -56,7 +56,7 @@ TEST(segment, segment_point_location){
 
 	Gnuplot gnu;
 	gnu.add(GnuplotActor::Points(p));
-	gnu.add(GnuplotActor::LinePoints(seg));
+	gnu.add(GnuplotActor::LinesPoints(seg));
 //	gnu.plot();
 	std::cout << "The segemnt is :" << seg << std::endl;
 	std::cout << "The point is   :" << p << std::endl;
@@ -84,8 +84,8 @@ TEST(segment, intersection){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinePoints(seg1, 0));
-	gnu.add(GnuplotActor::LinePoints(seg2, 1));
+	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
+	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
 	gnu.add(GnuplotActor::Points(np, 3));
 	gnu.plot();
 }
@@ -109,8 +109,8 @@ TEST(segment, intersection2){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinePoints(seg1, 0));
-	gnu.add(GnuplotActor::LinePoints(seg2, 1));
+	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
+	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
 	gnu.add(GnuplotActor::Points(np, 3));
 	gnu.plot();
 }
@@ -133,8 +133,8 @@ TEST(segment, intersection3){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinePoints(seg1, 0));
-	gnu.add(GnuplotActor::LinePoints(seg2, 1));
+	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
+	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
 	gnu.add(GnuplotActor::Points(np, 3));
 	gnu.plot();
 }

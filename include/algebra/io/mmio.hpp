@@ -495,7 +495,7 @@ int mm_read_unsymmetric_sparse(const char *fname, int *M_, int *N_, int *nz_,
 namespace carpio {
 
 template<class VALUE>
-void mm_read_mtx_dense(std::string filename, MatrixV<VALUE>& m) {
+void mm_read_mtx_dense(std::string filename, MatrixV_<VALUE>& m) {
 	FILE* f;
 	if (FileAccessCheck(filename, 4)) { //enable read
 		f = fopen(filename.c_str(), "r");
@@ -540,7 +540,7 @@ void mm_read_mtx_dense(std::string filename, MatrixV<VALUE>& m) {
 }
 
 template<class VALUE>
-void mm_read_array(std::string filename, ArrayListV<VALUE>& arr) {
+void mm_read_array(std::string filename, ArrayListV_<VALUE>& arr) {
 	FILE* f;
 	if (FileAccessCheck(filename, 4)) { //enable read
 		f = fopen(filename.c_str(), "r");
@@ -689,7 +689,7 @@ void mm_write_mtx_sparse(std::string filename, MatrixSCR_<VALUE>& m) {
 
 
 template<class VALUE>
-void mm_write_array(std::string filename, ArrayListV<VALUE>& m) {
+void mm_write_array(std::string filename, ArrayListV_<VALUE>& m) {
 
 	FILE* f = fopen(filename.c_str(), "w");
 

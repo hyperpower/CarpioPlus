@@ -10,10 +10,10 @@
 namespace carpio {
 
 template<typename T, St DIM1, St DIM2>
-class MatrixS {
+class MatrixS_ {
 public:
     // type definitions===================
-    typedef MatrixS<T, DIM1, DIM2> self;
+    typedef MatrixS_<T, DIM1, DIM2> self;
     typedef T value_type;
     typedef T* pointer;
     typedef const T* const_pointer;
@@ -26,12 +26,12 @@ public:
 
 public:
     //constructor==========================
-    MatrixS() {
+    MatrixS_() {
     }
-    MatrixS(const T& a) {
+    MatrixS_(const T& a) {
         this->assign(a);
     }
-    MatrixS(const MatrixS<T, DIM1, DIM2>& a) {
+    MatrixS_(const MatrixS_<T, DIM1, DIM2>& a) {
         typedef size_type st;
         for (st i = 0; i < DIM1; i++) {
             for (st j = 0; j < DIM2; j++) {
@@ -54,7 +54,7 @@ public:
         return *this;
     }
     //=============================================
-    ~MatrixS() {
+    ~MatrixS_() {
     }
     //Capacity=====================================
     static inline size_type size() {
@@ -125,7 +125,7 @@ public:
     }
     //
     void show() const {
-        std::cout << "> MatrixS " << DIM1 << " x " << DIM2 << "\n";
+        std::cout << "> MatrixS_ " << DIM1 << " x " << DIM2 << "\n";
         std::cout << "> ";
         for (int i = 0; i < DIM1; i++) {
             for (int j = 0; j < DIM2; j++) {
@@ -138,17 +138,17 @@ public:
     }
 };
 
-typedef MatrixS<Float, 2, 2> Matrix2x2;
-typedef MatrixS<Float, 3, 3> Matrix3x3;
-typedef MatrixS<Float, 4, 4> Matrix4x4;
+typedef MatrixS_<Float, 2, 2> Matrix2x2;
+typedef MatrixS_<Float, 3, 3> Matrix3x3;
+typedef MatrixS_<Float, 4, 4> Matrix4x4;
 
 template<typename T, St DIM1, St DIM2>
-static inline void zeros(MatrixS<Float, DIM1, DIM2>& m) {
+static inline void zeros(MatrixS_<Float, DIM1, DIM2>& m) {
     m.assign(0);
 }
 
 template<typename T, St DIM1, St DIM2>
-static inline void ones(MatrixS<Float, DIM1, DIM2>& m) {
+static inline void ones(MatrixS_<Float, DIM1, DIM2>& m) {
     m.assign(1);
 }
 
@@ -166,7 +166,7 @@ static inline T det2x2(const T& a, const T& b, const T& c, const T& d) {
 }
 
 template<typename T>
-inline T determinant(const MatrixS<T, 2, 2>& m) {
+inline T determinant(const MatrixS_<T, 2, 2>& m) {
     T a, b, c, d;
     a = m(0, 0);
     b = m(0, 1);
@@ -198,7 +198,7 @@ static inline T det3x3(const T& a1, const T& a2, const T& a3, const T& b1,
 }
 
 template<typename T>
-inline T determinant(const MatrixS<T, 3, 3>& m) {
+inline T determinant(const MatrixS_<T, 3, 3>& m) {
     const T& a1 = m(0, 0), b1 = m(0, 1), c1 = m(0, 2);
     const T& a2 = m(1, 0), b2 = m(1, 1), c2 = m(1, 2);
     const T& a3 = m(2, 0), b3 = m(2, 1), c3 = m(2, 2);
@@ -212,7 +212,7 @@ inline T determinant(const MatrixS<T, 3, 3>& m) {
  * \returns: the value of det(\p m).
  */
 template<typename T>
-inline T determinant(const MatrixS<T, 4, 4>& m) {
+inline T determinant(const MatrixS_<T, 4, 4>& m) {
     T ans4;
     const T& a1 = m(0, 0), b1 = m(0, 1), c1 = m(0, 2), d1 = m(0, 3);
     const T& a2 = m(1, 0), b2 = m(1, 1), c2 = m(1, 2), d2 = m(1, 3);
@@ -228,7 +228,7 @@ inline T determinant(const MatrixS<T, 4, 4>& m) {
 }
 
 template<typename T>
-inline void adjoint(const MatrixS<T, 4, 4>& m, MatrixS<T, 4, 4>& ma) {
+inline void adjoint(const MatrixS_<T, 4, 4>& m, MatrixS_<T, 4, 4>& ma) {
     const T& a1 = m(0, 0), b1 = m(0, 1), c1 = m(0, 2), d1 = m(0, 3);
     const T& a2 = m(1, 0), b2 = m(1, 1), c2 = m(1, 2), d2 = m(1, 3);
     const T& a3 = m(2, 0), b3 = m(2, 1), c3 = m(2, 2), d3 = m(2, 3);
@@ -258,7 +258,7 @@ inline void adjoint(const MatrixS<T, 4, 4>& m, MatrixS<T, 4, 4>& ma) {
 }
 
 template<typename T>
-inline void adjoint(const MatrixS<T, 3, 3>& m, MatrixS<T, 3, 3>& ma) {
+inline void adjoint(const MatrixS_<T, 3, 3>& m, MatrixS_<T, 3, 3>& ma) {
     /* row column labeling reversed since we transpose rows & columns */
     // the matrix without transpose is called cofactor matrix
     // the matrix with    transpose is called adjoint  matrix
@@ -274,8 +274,8 @@ inline void adjoint(const MatrixS<T, 3, 3>& m, MatrixS<T, 3, 3>& ma) {
 }
 
 template<typename T>
-inline int inverse(const MatrixS<T, 4, 4>& m, MatrixS<T, 4, 4>& m_inv) {
-    typedef MatrixS<T, 4, 4> matrix;
+inline int inverse(const MatrixS_<T, 4, 4>& m, MatrixS_<T, 4, 4>& m_inv) {
+    typedef MatrixS_<T, 4, 4> matrix;
     T det = determinant(m);
     if (det == 0.) {
         return -1;
@@ -290,8 +290,8 @@ inline int inverse(const MatrixS<T, 4, 4>& m, MatrixS<T, 4, 4>& m_inv) {
 }
 
 template<typename T>
-inline int inverse(const MatrixS<T, 3, 3>& m, MatrixS<T, 3, 3>& m_inv) {
-    typedef MatrixS<T, 3, 3> matrix;
+inline int inverse(const MatrixS_<T, 3, 3>& m, MatrixS_<T, 3, 3>& m_inv) {
+    typedef MatrixS_<T, 3, 3> matrix;
     T det = determinant(m);
     if (det == 0.) {
         return -1;
@@ -306,7 +306,7 @@ inline int inverse(const MatrixS<T, 3, 3>& m, MatrixS<T, 3, 3>& m_inv) {
 }
 
 template<typename T>
-void transpose(const MatrixS<T, 4, 4> m, MatrixS<T, 4, 4> mt) {
+void transpose(const MatrixS_<T, 4, 4> m, MatrixS_<T, 4, 4> mt) {
     mt(0, 0) = m(0, 0);
     mt(1, 0) = m(0, 1);
     mt(2, 0) = m(0, 2);
@@ -326,7 +326,7 @@ void transpose(const MatrixS<T, 4, 4> m, MatrixS<T, 4, 4> mt) {
 }
 
 template<typename T>
-void transpose(const MatrixS<T, 3, 3> m, MatrixS<T, 3, 3> mt) {
+void transpose(const MatrixS_<T, 3, 3> m, MatrixS_<T, 3, 3> mt) {
     mt(0, 0) = m(0, 0);
     mt(1, 0) = m(0, 1);
     mt(2, 0) = m(0, 2);
@@ -339,7 +339,7 @@ void transpose(const MatrixS<T, 3, 3> m, MatrixS<T, 3, 3> mt) {
 }
 
 template<typename T>
-void transpose(const MatrixS<T, 2, 2> m, MatrixS<T, 2, 2> mt) {
+void transpose(const MatrixS_<T, 2, 2> m, MatrixS_<T, 2, 2> mt) {
     mt(0, 0) = m(0, 0);
     mt(1, 0) = m(0, 1);
     mt(0, 1) = m(1, 0);

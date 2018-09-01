@@ -74,8 +74,8 @@ public:
 	typedef const Point* const_pPoint;
 
 protected:
-	ArrayListT<const_pPoint> _arrp;
-	ArrayListV<int> _pointpos;
+	ArrayListT_<const_pPoint> _arrp;
+	ArrayListV_<int> _pointpos;
 
 	std::shared_ptr<Point> _sppoint;
 

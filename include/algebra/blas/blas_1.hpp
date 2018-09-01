@@ -12,7 +12,7 @@
 namespace carpio {
 
 //Forward Declaration
-template <class VT> class ArrayListV;
+template <class VT> class ArrayListV_;
 
 //Copies vector to another vector.
 template<typename ST, typename VT>
@@ -37,9 +37,9 @@ VT Nrmp(ST n, const VT* x, VT2 p, ST incx);
 
 // High level functions
 // work with ArrayListV
-template<class VT> VT Nrm1(const ArrayListV<VT>& ax);
-template<class VT> VT Nrm2(const ArrayListV<VT>& arr);
-template<class VT> VT Nrmp(const ArrayListV<VT>& arr, float p);
+template<class VT> VT Nrm1(const ArrayListV_<VT>& ax);
+template<class VT> VT Nrm2(const ArrayListV_<VT>& arr);
+template<class VT> VT Nrmp(const ArrayListV_<VT>& arr, float p);
 
 
 // -----------------------------------------------------
@@ -246,20 +246,20 @@ VT Nrm2(ST n,           //size of the array, sx.size==sy.size
 }
 
 template<class VT>
-VT Nrm1(const ArrayListV<VT>& ax) {
-	typedef typename ArrayListV<VT>::size_type St;
+VT Nrm1(const ArrayListV_<VT>& ax) {
+	typedef typename ArrayListV_<VT>::size_type St;
 	return Asum(ax.size(), ax.data(), St(1));
 }
 
 template<class VT>
-VT Nrm2(const ArrayListV<VT>& arr){
-	typedef typename ArrayListV<VT>::size_type St;
+VT Nrm2(const ArrayListV_<VT>& arr){
+	typedef typename ArrayListV_<VT>::size_type St;
 	return Nrm2(arr.size(), arr.data(), St(1));
 }
 
 template<class VT>
-VT Nrmp(const ArrayListV<VT>& arr, float p){
-	typedef typename ArrayListV<VT>::size_type St;
+VT Nrmp(const ArrayListV_<VT>& arr, float p){
+	typedef typename ArrayListV_<VT>::size_type St;
 	return Nrmp(arr.size(), arr.data(), p, St(1));
 }
 

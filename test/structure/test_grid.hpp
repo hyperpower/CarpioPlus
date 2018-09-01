@@ -17,7 +17,6 @@ TEST(structure, initial){
 	spSGrid spsg(new SGridUniform_<2>(pmin,
 			                          {15, 10},
 									   0.3, 2 ));
-
 //	Gnuplot ply;
 //	ply.set_xrange(-0.5, 3.5);
 //	ply.set_yrange(-0.5, 3.5);

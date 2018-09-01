@@ -14,7 +14,6 @@ TEST(structure, initial){
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
 	typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
 
-
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,

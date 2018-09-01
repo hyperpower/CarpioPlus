@@ -15,7 +15,7 @@ class Plotly_actor {
 public:
 	typedef PyObject* pPO;
 	typedef std::map<std::string, pPO> Map;
-	typedef ArrayListV<double> Arrd;
+	typedef ArrayListV_<double> Arrd;
 	typedef std::list<double> Listd;
 	protected:
 	Map _map;
@@ -110,7 +110,7 @@ protected:
 class Plotly_actor_scatter: public Plotly_actor {
 public:
 	typedef PyObject* pPO;
-	typedef ArrayListV<double> Arrd;
+	typedef ArrayListV_<double> Arrd;
 	typedef std::list<double> Listd;
 	public:
 	template<class Container>
@@ -194,7 +194,7 @@ public:
 class Plotly_actor_scatter3d: public Plotly_actor {
 public:
 	typedef PyObject* pPO;
-	typedef ArrayListV<double> Arrd;
+	typedef ArrayListV_<double> Arrd;
 	typedef std::list<double> Listd;
 
 public:
@@ -247,7 +247,7 @@ public:
 class Plotly_actor_mesh3d: public Plotly_actor {
 public:
 	typedef PyObject* pPO;
-	typedef ArrayListV<double> Arrd;
+	typedef ArrayListV_<double> Arrd;
 	public:
 	template<class Container>
 	Plotly_actor_mesh3d(const Container& x, const Container& y,
@@ -277,7 +277,7 @@ public:
 class Plotly_actor_heatmap: public Plotly_actor {
 public:
 	typedef PyObject* pPO;
-	typedef ArrayListV<double> Arrd;
+	typedef ArrayListV_<double> Arrd;
 	typedef std::list<double> Listd;
 	public:
 	// x, y indicate the location of the faces

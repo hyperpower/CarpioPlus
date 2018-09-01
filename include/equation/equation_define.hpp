@@ -5,18 +5,17 @@
 #include "time_term.hpp"
 #include "domain/boundary/boundary_index.hpp"
 #include "utility/any.hpp"
-//#include "event/event.hpp"
-#include <memory>
 
 namespace carpio {
 
-template<St DIM, class DOMAIN> class Event_;
 template<St DIM> class TimeTerm_;
 
-template<St DIM, class DOMAIN>
+template<St DIM, class D> class Event_;
+
+template<St DIM, class D>
 class Equation_{
 public:
-	typedef DOMAIN Domain;
+	typedef D Domain;
 	typedef typename Domain::SizeType  St;
 	typedef typename Domain::ValueType Vt;
 	typedef typename Domain::Grid      Grid;
@@ -280,8 +279,9 @@ public:
 					<< iter->second << std::endl;
 		}
 	}
-
 };
+
+
 
 
 

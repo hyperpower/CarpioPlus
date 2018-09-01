@@ -63,7 +63,16 @@ public:
 	}
 
 	virtual Scalar operator()(const VectorFace& U, const Scalar& phi){
+		std::cout << "FOU\n";
+		Scalar res = phi.new_compatible();
+		FOR_EACH_DIM{
+			for(auto& idx : phi.order()){
+				Vt vp = U(Axes(d), _P_, idx);
+				Vt vm = U(Axes(d), _M_, idx);
+			}
+		}
 
+		return res;
 	}
 
 };

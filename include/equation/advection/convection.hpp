@@ -1,17 +1,18 @@
 #ifndef _CONVECTION_HPP_
 #define _CONVECTION_HPP_
 
+#include "type_define.hpp"
 #include "equation/equation_define.hpp"
 #include "equation/event/event.hpp"
 #include <vector>
 
-namespace carpio{
+namespace carpio {
 
-template<St DIM, class DOMAIN>
-class Convection_ : public Equation_<DIM, DOMAIN>{
+template<St DIM, class D>
+class Convection_: public Equation_<DIM, D>{
 public:
-	typedef DOMAIN Domain;
-	typedef Equation_<DIM, DOMAIN>     Equation;
+	typedef D Domain;
+	typedef Equation_<DIM, D>          Equation;
 	typedef typename Domain::SizeType  St;
 	typedef typename Domain::ValueType Vt;
 	typedef typename Domain::Grid      Grid;
@@ -79,13 +80,10 @@ public:
 	}
 
 	int run_one_step(St step) {
-
-
 		std::cout << "    Convection: One Step "<< step <<" \n";
+		_one_step_fou_explicit(step);
 		return -1;
 	}
-
-
 
 protected:
 	void _new_uvw(){
@@ -96,8 +94,13 @@ protected:
 		}
 	}
 
-
-
+	void _one_step_fou_explicit(St step){
+		UdotNabla_FOU FOU;
+		VectorFace& vf = *(this->_vf);
+		Scalar& phi    = *(this->_scalars["phi"]);
+		Vt dt = this->_time->dt();
+		phi = FOU(vf, phi) * dt + phi;
+	}
 };
 
 

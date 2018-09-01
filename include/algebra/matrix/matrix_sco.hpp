@@ -21,11 +21,11 @@ template<class VALUE>
 class MatrixSCO_ {
 public:
 	typedef VALUE Vt;
-	typedef MatrixV<VALUE> Matrix;
+	typedef MatrixV_<VALUE> Matrix;
 private:
-	ArrayListV<Vt> val_;    // data values (nz_ elements)
-	ArrayListV<St> rowind_;    // row_ind (nz_ elements)
-	ArrayListV<St> colind_;    // col_ind (nz_ elements)
+	ArrayListV_<Vt> val_;    // data values (nz_ elements)
+	ArrayListV_<St> rowind_;    // row_ind (nz_ elements)
+	ArrayListV_<St> colind_;    // col_ind (nz_ elements)
 
 	St nz_;                   // number of nonzeros
 	St dim_[2];               // number of rows, cols
@@ -158,23 +158,23 @@ public:
 		return 0.0;
 	}
 
-	ArrayListV<Vt> operator*(const ArrayListV<Vt> &x) const {
+	ArrayListV_<Vt> operator*(const ArrayListV_<Vt> &x) const {
 		St M = dim_[0];
 		St N = dim_[1];
 //  Check for compatible dimensions:
 		ASSERT(x.size() == N);
-		ArrayListV<Vt> res(M);
+		ArrayListV_<Vt> res(M);
 		for (St i = 0; i < nz_; i++) {
 			res[rowind_[i]] += x[colind_[i]] * val_[i];
 		}
 		return res;
 	}
 
-	ArrayListV<Vt> trans_mult(const ArrayListV<Vt> &x) const {
+	ArrayListV_<Vt> trans_mult(const ArrayListV_<Vt> &x) const {
 		St tM = dim_[1];
 		St tN = dim_[0];
 		ASSERT(!(x.Len() == tN));
-		ArrayListV<Vt> res(tM);
+		ArrayListV_<Vt> res(tM);
 		for (St i = 0; i < nz_; i++) {
 			res[colind_[i]] += x[rowind_[i]] * val_[i];
 		}
@@ -199,8 +199,8 @@ public:
 				std::cout << std::scientific << val_[i] << "\n";
 			}
 		} else {
-			for (St i = 0; i < this->iLen(); i++) {
-				for (St j = 0; j < this->jLen(); j++) {
+			for (St i = 0; i < this->size_i(); i++) {
+				for (St j = 0; j < this->size_j(); j++) {
 					bool isnz = 0;
 					for (St t = 0; t < nz_; t++) {
 						if (rowind_(t) == i && colind_(t) == j) {

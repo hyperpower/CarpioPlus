@@ -82,7 +82,6 @@ public:
 	//vt tau() const {
 	//	return _tau;
 	//}
-
 };
 
 }

@@ -1,23 +1,23 @@
 #ifndef _EVENT_HPP
 #define _EVENT_HPP
 
-#include "type_define.hpp"
 #include <map>
 #include <utility>
 #include <iostream>
+#include "type_define.hpp"
 
 namespace carpio{
 
-//template<St DIM> class Equation_;
+template<St DIM, class D> class Equation_;
 
-template<St DIM, class DOMAIN>
+template<St DIM, class D>
 class Event_ {
 public:
 	static const St Dim         = DIM;
 	static const St NumFaces    = DIM + DIM;
 	static const St NumVertexes = (DIM == 3) ? 8 : (DIM + DIM);
 
-	typedef Equation_<Dim, DOMAIN> Equ;
+	typedef Equation_<Dim, D> Equ;
 	typedef Equ* pEqu;
 	typedef const Equ* const_pEqu;
 
