@@ -7,10 +7,12 @@
 #include <stdio.h>
 #include <iostream>
 #include <cmath>
-#include "algebra/array/array_list.hpp"
 
 
 namespace carpio {
+
+//Forward Declaration
+template <class VT> class ArrayListV;
 
 //Copies vector to another vector.
 template<typename ST, typename VT>
@@ -20,6 +22,27 @@ int Copy(ST n, const VT * src, VT* dst);
 template<typename ST, typename VT>
 int ASum(ST n, const VT * sx, ST incx = 1);
 
+template<class VT>
+int Rotg(VT& sa, VT& sb, VT& c, VT& s);
+
+template<class VT, class ST>
+VT Amax(ST n, const VT* sx, ST incx);
+
+template<class ST, class VT>
+VT Nrm2(ST n, const VT* x, ST incx);
+
+template<class VT, class VT2, class ST>
+VT Nrmp(ST n, const VT* x, VT2 p, ST incx);
+
+
+// High level functions
+// work with ArrayListV
+template<class VT> VT Nrm1(const ArrayListV<VT>& ax);
+template<class VT> VT Nrm2(const ArrayListV<VT>& arr);
+template<class VT> VT Nrmp(const ArrayListV<VT>& arr, float p);
+
+
+// -----------------------------------------------------
 template<typename ST, typename VT>
 int ASum(ST n, const VT * sx, ST incx){
 	VT asum = 0.0e0;
@@ -81,6 +104,117 @@ int Copy(ST n, const VT * src, VT* dst) {
     return 2;
 }
 
+//construct givens plane rotation.
+template<class VT>
+int Rotg(VT& sa, //
+		 VT& sb, //
+		 VT& c,  //
+		 VT& s)  //
+		{
+	VT r,roe,scale,z;
+	roe = sb;
+	if (std::abs(sa) > std::abs(sb)) {
+		roe = sa;
+	}
+	scale = std::abs(sa) + std::abs(sb);
+	if (scale == 0.0) {
+		c = 1.0;
+		s = 0.0;
+		r = 0.0;
+		z = 0.0;
+	} else {
+		r = scale
+				* std::sqrt(
+						(sa / scale) * (sa / scale)
+								+ (sb / scale) * (sb / scale));
+		r = sign2(roe) * r;
+		c = sa / r;
+		s = sb / r;
+		z = 1.0;
+		if (std::abs(sa) > std::abs(sb)) {
+			z = s;
+		}
+		if (std::abs(sb) > std::abs(sa) && c != 0.0) {
+			z = 1.0 / c;
+		}
+	}
+	sa = r;
+	sb = z;
+	return 1;
+}
+
+/**
+ * \brief   max(abs())
+ *
+ * \param   array
+ *
+ * \return  int
+ */
+template<class VT, class ST>
+VT Amax(      ST  n,        //size of the array, sx.size
+		const VT*  sx,    //
+		      ST  incx) {
+	VT max = 0.0e0;
+	if (n < 0 || incx <= 0) {
+		return max;
+	}
+	if (incx == 1) {
+		//increase = 1
+		max = std::abs(sx[0]);
+		for (ST i = 1; i < n; ++i) {
+			if (std::abs(sx[i]) > max) {
+				max = std::abs(sx[i]);
+			}
+		}
+	} else {
+		int nincx = n * incx;
+		max = std::abs(sx[0]);
+		for (ST i = 0; i < nincx; i += incx) {
+			if (std::abs(sx[i]) > max) {
+				max = std::abs(sx[i]);
+			}
+		}
+	}
+	return max;
+}
+
+/**
+ * \brief   NRM returns the p norm of a vector via the function
+ *          name, so that
+ *          SNRM2 := ( x ).
+ *
+ * \param   array
+ *
+ * \return  int
+ */
+template<class VT, class VT2, class ST>
+VT Nrmp(         ST  n,    //size of the array, sx.size==sy.size
+		   const VT* x,    //
+		         VT2 p,    //
+		         ST  incx) {
+	if (p == 1.0) {
+		return Asum(n, x, incx);
+	}
+	if (p == 2.0) {
+		return Nrm2(n, x, incx);
+	}
+	VT zero = 0.0e+0;
+	VT norm = zero;
+	if (n <= 0 || incx <= 0) {
+		return norm;
+	} else if (n == 1) {
+		norm = std::abs(x[0]);
+	} else {
+		for (int i = 0; i < (n - 1) * incx; i += incx) {
+			if (x[i] != zero) {
+				norm += std::pow(std::abs(x[i]), p);
+			}
+		}
+		norm = std::pow(norm, 1.0 / double(p));
+	}
+	return norm;
+}
+
 /**
  * \brief   NRM2 returns the euclidean norm of a vector via the function
  *          name, so that
@@ -111,10 +245,26 @@ VT Nrm2(ST n,           //size of the array, sx.size==sy.size
 	return norm;
 }
 
-template<typename VT>
-VT Nrm(ArrayListV<VT>& arr){
-
+template<class VT>
+VT Nrm1(const ArrayListV<VT>& ax) {
+	typedef typename ArrayListV<VT>::size_type St;
+	return Asum(ax.size(), ax.data(), St(1));
 }
+
+template<class VT>
+VT Nrm2(const ArrayListV<VT>& arr){
+	typedef typename ArrayListV<VT>::size_type St;
+	return Nrm2(arr.size(), arr.data(), St(1));
+}
+
+template<class VT>
+VT Nrmp(const ArrayListV<VT>& arr, float p){
+	typedef typename ArrayListV<VT>::size_type St;
+	return Nrmp(arr.size(), arr.data(), p, St(1));
+}
+
+
+
 
 }
 

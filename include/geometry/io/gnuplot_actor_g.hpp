@@ -38,7 +38,7 @@ spActor Points(
 }
 
 template<typename TYPE>
-spActor LinePoints(
+spActor LinesPoints(
 		const Segment_<TYPE, 2>& seg,
 		int color_idx = -1) {
 	spActor actor = spActor(new Gnuplot_actor());
@@ -63,7 +63,7 @@ spActor LinePoints(
 }
 
 template<typename TYPE>
-spActor LinePoints(
+spActor LinesPoints(
 		const PointChain_<TYPE, 2>& pc,
 		int color_idx = -1) {
 	spActor actor = spActor(new Gnuplot_actor());

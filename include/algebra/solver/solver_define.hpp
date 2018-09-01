@@ -62,10 +62,9 @@ public:
 	Arr get_residual_array() const{
 		Arr res(this->_lresid.size());
 		St i = 0;
-		for(auto val : this->_lresid)
-		{
+		for(auto& val : this->_lresid){
 			res[i] = val;
-			i++;
+			++i;
 		}
 		return res;
 	}

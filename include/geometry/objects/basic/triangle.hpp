@@ -295,9 +295,9 @@ public:
 		return (this->p(0, a) == this->p(1, a) && this->p(1, a) == this->p(2, a));
 	}
 
-	bool is_in_box(const Point_<TYPE, DIM> &pt) const {
-		ASSERT(false);
-	}
+//	bool is_in_box(const Point_<TYPE, DIM> &pt) const {
+//		ASSERT(false);
+//	}
 	bool is_equal(const Self& tri) const{
 		return (this->p(0) == tri.p(0) && this->p(1) == tri.p(1)
 				&& this->p(2) == tri.p(2));

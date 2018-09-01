@@ -68,13 +68,19 @@ spActor OneArrayList(
 template<class T>
 spActor Points(const ArrayListT<T>& arrx,
 			   int   color_idx = -1){
-	OneArrayList(arrx, color_idx, "with points lc variable");
+	return OneArrayList(arrx, color_idx, "with points lc variable");
 }
 
 template<class T>
 spActor LinesPoints(const ArrayListT<T>& arrx,
 			        int   color_idx = -1){
-	OneArrayList(arrx, color_idx, "with linespoints lc variable");
+	return OneArrayList(arrx, color_idx, "with linespoints lc variable");
+}
+
+template<class T>
+spActor Lines(const ArrayListT<T>& arrx,
+			        int   color_idx = -1){
+	return OneArrayList(arrx, color_idx, "with lines lc variable");
 }
 
 
