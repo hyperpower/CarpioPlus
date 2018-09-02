@@ -3,6 +3,8 @@
 
 #include "equation/advection/convection.hpp"
 #include "domain/structure/structure.hpp"
+#include "domain/boundary/boundary_condition.hpp"
+#include "domain/boundary/boundary_index.hpp"
 #include "gtest/gtest.h"
 
 namespace carpio {
@@ -24,12 +26,17 @@ TEST(convection, initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(1, 0.1);
+	equ.set_time_term(1, 0.01);
 
 	// Set boundary condition
-
-
+	typedef std::shared_ptr<BoundaryIndex> spBI;
+	typedef BoundaryCondition BC;
+	spBI spbi(new BoundaryIndex());
+	spbi->insert(0,std::make_shared<BC>(
+			BoundaryConditionValue(BC::_BC1_, 1.0)));
+	equ.set_boundary_index_phi(spbi);
 	// Set initial condition
+	equ.set_initial_velocity(_X_, [](Vt, Vt, Vt, Vt){return 1.0;});
 
 	// Run
 	equ.run();

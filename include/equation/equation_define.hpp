@@ -212,6 +212,20 @@ public:
 		}
 	}
 
+	bool has_boundary_index(const std::string& key) const {
+		auto it = this->_bis.find(key);
+		if (it != this->_bis.end()) {
+			return true;
+		}
+		return false;
+	}
+
+	void set_boundary_index(
+			const std::string& key,
+			spBoundaryIndex spbi){
+		this->_bis[key] = spbi;
+	}
+
 	bool has_value(const std::string& key) const {
 		auto it = this->_values.find(key);
 		if (it != this->_values.end()) {

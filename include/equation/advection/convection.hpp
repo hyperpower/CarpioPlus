@@ -8,6 +8,40 @@
 
 namespace carpio {
 
+//This file use to solve convection equation
+// 1 non-conservation from
+//
+//       d(phi)              d( phi)       2D --version
+//    u ------------ +  v -------------  = 0
+//          dx                 dy
+//
+//      d(phi)       d(phi)       d(phi)       3D --version
+//    u -------- + v -------  + w -------  = 0
+//        dx           dy          dz
+//
+// 2 conservation from
+//
+//      d( u phi)            d( v phi)       2D --version
+//     --------------- +   --------------  = 0
+//          dx                 dy
+//
+//      d(u phi)     d( v phi)       d(w phi)       3D --version
+//     ----------- + ---------  +  ----------  = 0
+//            dx        dy             dz
+//
+// 2 with time
+//
+//   d(phi)    d(u phi)    d(v phi)       2D --version
+//   ------ +  ------- +  -------  = 0
+//     dt         dx         dy
+//
+//   d(phi)     d(u phi)  d(v phi)   d(w phi)       3D --version
+//   ------ +  ------- +  -------  + -------  = 0
+//     dt         dx         dy          dz
+
+
+
+
 template<St DIM, class D>
 class Convection_: public Equation_<DIM, D>{
 public:
@@ -85,6 +119,48 @@ public:
 		return -1;
 	}
 
+	void set_boundary_index_phi(spBoundaryIndex spbi){
+		this->set_boundary_index("phi", spbi);
+	}
+
+	void set_boundary_index_velocity(Axes a, spBoundaryIndex spbi){
+		switch (a) {
+		case _X_: {
+			this->set_boundary_index("u", spbi);
+			break;
+		}
+		case _Y_: {
+			this->set_boundary_index("v", spbi);
+			break;
+		}
+		case _Z_: {
+			this->set_boundary_index("w", spbi);
+			break;
+		}
+		}
+	}
+
+	void set_initial_phi(FunXYZT_Value fun){
+		this->set_function("initial_phi", fun);
+	}
+
+	void set_initial_velocity(Axes a, FunXYZT_Value fun){
+		switch (a) {
+		case _X_: {
+			this->set_function("initial_u", fun);
+			break;
+		}
+		case _Y_: {
+			this->set_function("initial_v", fun);
+			break;
+		}
+		case _Z_: {
+			this->set_function("initial_w", fun);
+			break;
+		}
+		}
+	}
+
 protected:
 	void _new_uvw(){
 		std::vector<std::string> vname = {"u", "v", "w"};
@@ -95,7 +171,7 @@ protected:
 	}
 
 	void _one_step_fou_explicit(St step){
-		UdotNabla_FOU FOU;
+		UdotNabla_FOU FOU(this->_bis["phi"]);
 		VectorFace& vf = *(this->_vf);
 		Scalar& phi    = *(this->_scalars["phi"]);
 		Vt dt = this->_time->dt();

@@ -53,6 +53,7 @@ TEST(scalar, initial){
 TEST(scalar, value){
 	typedef SIndex_<2> Index;
 	typedef SScalar_<2> Scalar;
+	typedef SValue_<2> Value;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
 	typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
@@ -78,7 +79,7 @@ TEST(scalar, value){
 			  << " --> ghost   : " << sc.ghost().is_ghost(index) << std::endl;
 	std::cout << "        " << index
 			  << "               "
-			  << Value(sc, bi, {4, 4}, index, _X_ , _P_) <<std::endl;
+			  << Value::Get(sc, bi, {4, 4}, index, _X_ , _P_) <<std::endl;
 	index = {4,4};
 	std::cout << "index = " << index
 		      << " --> ghost   : " << sc.ghost().is_ghost(index) << std::endl;

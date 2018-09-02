@@ -17,6 +17,7 @@
 #include "field/svector_face.hpp"
 
 #include "operation/u_dot_nabla_phi.hpp"
+#include "operation/operation.hpp"
 
 
 namespace carpio {
@@ -63,6 +64,10 @@ public:
 
 	typedef SUdotNabla_<DIM>    UdotNabla;
 	typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
+
+	//operation
+	typedef SValue_<DIM>       Value;
+	typedef SInterpolate_<DIM> Interpolate;
 
 
 };
