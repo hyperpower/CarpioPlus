@@ -27,13 +27,7 @@ public:
 	static const int AFTER  = 0x200;
 
 protected:
-	/*
-	 *  _flag = 0      disabled flag
-	 *  _flag = -1     forward
-	 *  _flag = 1      backward      (default)
-	 *  _flag = 2      both run, forward and backward
-	 *  _flag = -2     both do not run, forward and backward
-	 */
+
 	int _flag;
 	int _istart, _iend, _istep;
 
@@ -61,11 +55,28 @@ public:
 	}
 
 	virtual int flag() const {
-		return 0;
+		return _flag;
 	}
 
 	virtual void set_flag(int i) {
-		return;
+		_flag = i;
+	}
+
+	virtual std::string flag_string() const {
+		std::string str = "";
+		if (this->_has_flag(START)) {
+			str += "START ";
+		}
+		if (this->_has_flag(END)) {
+			str += "END ";
+		}
+		if (this->_has_flag(BEFORE)) {
+			str += "BEFORE ";
+		}
+		if (this->_has_flag(AFTER)) {
+			str += "AFTER";
+		}
+		return str;
 	}
 
 	virtual ~Event_() {
