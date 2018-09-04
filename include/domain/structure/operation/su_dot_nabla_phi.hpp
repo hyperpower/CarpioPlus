@@ -11,7 +11,7 @@
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
 
-#include "domain/structure/operation/operation.hpp"
+#include "domain/structure/operation/soperation.hpp"
 
 #include <array>
 

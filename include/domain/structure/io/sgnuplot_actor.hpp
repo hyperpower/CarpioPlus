@@ -1,7 +1,7 @@
 #ifndef _S_GNUPLOT_ACTOR_HPP
 #define _S_GNUPLOT_ACTOR_HPP
 
-#include "domain/structure/grid/grid.hpp"
+#include "domain/structure/grid/sgrid.hpp"
 #include "io/gnuplot.hpp"
 
 namespace carpio{

@@ -92,7 +92,6 @@ spPA_scatter ScalarCenter(const SScalar_<DIM>& v, St dim = 2, Idx i = 0) {
 		res->set_mode("lines + markers");
 	}
 	return res;
-
 }
 
 template<St DIM>

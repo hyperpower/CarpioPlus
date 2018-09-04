@@ -1,7 +1,7 @@
 #ifndef EQUATION_TEST_CONVECTION_HPP_
 #define EQUATION_TEST_CONVECTION_HPP_
 
-#include "equation/advection/convection.hpp"
+#include "equation/equation.hpp"
 #include "domain/structure/structure.hpp"
 #include "domain/boundary/boundary_condition.hpp"
 #include "domain/boundary/boundary_index.hpp"
@@ -26,7 +26,7 @@ TEST(convection, initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(1, 0.01);
+	equ.set_time_term(4, 0.01);
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -37,6 +37,13 @@ TEST(convection, initial){
 	equ.set_boundary_index_phi(spbi);
 	// Set initial condition
 	equ.set_initial_velocity(_X_, [](Vt, Vt, Vt, Vt){return 1.0;});
+
+	// Add events
+	typedef Event_<DIM, Domain> Event;
+	typedef std::shared_ptr<Event_<DIM, Domain> >  spEvent;
+	spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
+			                                          -1, -1, 1, Event::AFTER));
+	equ.add_event("OutputTime", spetime);
 
 	// Run
 	equ.run();

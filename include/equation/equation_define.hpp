@@ -184,6 +184,11 @@ public:
 		return false;
 	}
 
+	void add_event(const std::string& key, spEvent spe){
+		ASSERT(spe != nullptr);
+		this->_events[key] = spe;
+	}
+
 	void set_time_term(St n, Vt dt, Vt tau = 1){
 		this->_time = spTimeTerm(
 				           new TimeTerm( n, dt, tau));

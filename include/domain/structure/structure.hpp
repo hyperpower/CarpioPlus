@@ -16,8 +16,8 @@
 #include "field/svector_center.hpp"
 #include "field/svector_face.hpp"
 
-#include "operation/u_dot_nabla_phi.hpp"
-#include "operation/operation.hpp"
+#include "operation/su_dot_nabla_phi.hpp"
+#include "operation/soperation.hpp"
 
 
 namespace carpio {

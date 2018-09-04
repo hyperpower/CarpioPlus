@@ -62,6 +62,10 @@ public:
 		_flag = i;
 	}
 
+	virtual std::string name() const{
+		return "Event Base";
+	}
+
 	virtual std::string flag_string() const {
 		std::string str = "";
 		if (this->_has_flag(START)) {
