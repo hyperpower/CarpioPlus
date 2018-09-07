@@ -850,17 +850,17 @@ protected:
 					case _PC_ : return "C";
 					case _PO_ : return "O";
 					case _PCO_: return "CO";
-					default: return "ERROR TYPE";
+					default:    return "ERROR TYPE";
 				}
 			} else { //Switch type
 				const int base = 100;
 				switch(type) {
-					case _NOTHING_ : return "NO";
-					case _HALF_IN_ : return "HIN";
-					case _IN_ : return "IN";
+					case _NOTHING_ :  return "NO";
+					case _HALF_IN_ :  return "HIN";
+					case _IN_ :       return "IN";
 					case _HALF_OUT_ : return "HOUT";
-					case _OUT_ : return "OUT";
-					default: return "ERROR TYPE";
+					case _OUT_ :      return "OUT";
+					default:          return "ERROR TYPE";
 				}
 			}
 		}

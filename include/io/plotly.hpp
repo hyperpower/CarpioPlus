@@ -17,10 +17,12 @@ public:
 	typedef std::map<std::string, pPO> Map;
 	typedef ArrayListV_<double> Arrd;
 	typedef std::list<double> Listd;
-	protected:
+
+protected:
 	Map _map;
 	pPO _module;
-	public:
+
+public:
 	Plotly_actor(){
 	}
 	virtual ~Plotly_actor(){};

@@ -30,6 +30,8 @@
 			return ;                           \
 	    }
 
+#define _PI_ (3.1415926)
+
 namespace carpio {
 // value type
 typedef unsigned int St;    //size type

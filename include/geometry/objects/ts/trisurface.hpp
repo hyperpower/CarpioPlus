@@ -28,11 +28,13 @@ public:
 	typedef TriSurface_<TYPE, DIM> Self;
 	typedef St size_type;
 	typedef TYPE vt;
+
 	typedef TriFace_<TYPE, DIM, Self> Fac;
-	typedef Edge_<TYPE, DIM, Fac> Edg;
-	typedef Point_<TYPE, DIM> Poi;
+	typedef Edge_<TYPE, DIM, Fac>     Edg;
+	typedef Vertex_<TYPE, DIM, Edg>   Ver;
+
+	typedef Point_<TYPE, DIM>         Poi;
 	typedef Poi* pPoi;
-	typedef Vertex_<TYPE, DIM, Edg> Ver;
 	typedef Ver* pVer;
 	typedef Edg* pEdg;
 	typedef Fac* pFac;
@@ -53,9 +55,6 @@ public:
 public:
 	std::set<pFac> faces;
 
-	Any _any_data;
-	//std::set<pEdg> c_edge;
-	//std::set<pVer> c_vertex;
 public:
 	TriSurface_() {
 	}
