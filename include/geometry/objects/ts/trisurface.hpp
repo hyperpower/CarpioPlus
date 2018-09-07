@@ -48,7 +48,9 @@ public:
 
 	typedef typename std::list<pFac>::iterator iterator;
 	typedef typename std::list<pFac>::const_iterator const_iterator;
-	public:
+
+
+public:
 	std::set<pFac> faces;
 
 	Any _any_data;
@@ -173,20 +175,6 @@ public:
 
 	}
 
-	void clear2() {
-//		for (auto iter = c_vertex.begin(); iter != c_vertex.end(); ++iter) {
-//			delete (*iter);
-//		}
-//		c_vertex.clear();
-//		for (auto iter = c_edge.begin(); iter != c_edge.end(); ++iter) {
-//			delete (*iter);
-//		}
-//		c_edge.clear();
-		for (auto iter = faces.begin(); iter != faces.end(); ++iter) {
-			delete (*iter);
-		}
-		faces.clear();
-	}
 	size_type size_edge() const {
 		return count_edge();   // can be improved
 	}

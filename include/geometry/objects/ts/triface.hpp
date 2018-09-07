@@ -292,12 +292,12 @@ public:
 				*(this->vertex(2)), poi);
 	}
 
-	typename Op::Box box() const {
-		return Op::BoundingBox(
-				*(this->vertex(0)),
-				*(this->vertex(1)),
-				*(this->vertex(2)));
-	}
+//	typename Op::Box box() const {
+//		return Op::BoundingBox(
+//				*(this->vertex(0)),
+//				*(this->vertex(1)),
+//				*(this->vertex(2)));
+//	}
 
 	Any& data() {
 		return _any_data;

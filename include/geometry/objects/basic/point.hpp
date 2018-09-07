@@ -5,6 +5,7 @@
 #include <array>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
 namespace carpio {
 

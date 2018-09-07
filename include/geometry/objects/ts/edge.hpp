@@ -8,11 +8,13 @@
 #ifndef _EDGE_HPP_
 #define _EDGE_HPP_
 
+#include "type_define.hpp"
 #include "vertex.hpp"
 #include <iomanip>
 #include <list>
 #include <set>
 #include <functional>
+#include "utility/any.hpp"
 
 namespace carpio {
 

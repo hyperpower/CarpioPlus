@@ -7,11 +7,15 @@
 #include "objects/basic/segment.hpp"
 #include "objects/basic/line.hpp"
 
+#include "objects/ts/vertex.hpp"
+
 #include "geometry/operation/intersection_ss.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 
-#include "geometry/io/gnuplot_actor_g.hpp"
+#include "geometry/io/ggnuplot_actor.hpp"
 #include "geometry/io/file.hpp"
+
+#include "geometry/operation/creation/create_ts.hpp"
 
 namespace carpio {
 
