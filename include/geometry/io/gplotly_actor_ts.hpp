@@ -21,9 +21,6 @@ public:
 	typedef Point_<TYPE, DIM> Point;
 	typedef Point_<TYPE, DIM>& ref_Point;
 	typedef const Point_<TYPE, DIM>& const_ref_Point;
-	//	typedef Segment_<TYPE, DIM> Segment;
-//	typedef Segment_<TYPE, DIM>& ref_Segment;
-//	typedef const Segment_<TYPE, DIM>& const_ref_Segment;
 
 	typedef TriSurface_<TYPE, DIM> TriSurface;
 	typedef typename TriSurface::pVer pVertex;
@@ -33,10 +30,6 @@ public:
 
 	typedef TriFace_<TYPE, 3, TriSurface3> TriFace3;
 	typedef TriFace_<TYPE, 2, TriSurface2> TriFace2;
-
-	typedef Box_<TYPE, DIM> Box;
-	typedef BBox_<TYPE, DIM> BBox;
-//	typedef BBTree_<BBox> BBTree;
 
 	typedef std::shared_ptr<Plotly_actor> spPA;
 	typedef std::shared_ptr<Plotly_actor_scatter> spPA_scatter;
