@@ -23,9 +23,6 @@ public:
 protected:
 	std::ostream* _stream;
 
-
-	St _count_exe;
-
 	std::list<Vt>     _l_t;     //time
 	std::list<St>     _l_step;  //step
 	std::list<tick_t> _l_cpu;   //cpu time
@@ -37,17 +34,14 @@ public:
 	 *
 	 *  default constructor is running event after each step
 	 */
-
 	EventOutputTime_(std::ostream& stream,
 			         int is = -1,    int ie = -1,
 					 int istep = -1, int flag = 0) :
 						 _stream(&stream),
 						 Event(is, ie, istep, flag) {
-		this->_count_exe = 0;
 	}
 
 	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
-		_count_exe++;
 		_record_time(step, t);
 		_output(step, t);
 		return -1;

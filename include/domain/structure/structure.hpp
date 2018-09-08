@@ -19,6 +19,8 @@
 #include "operation/su_dot_nabla_phi.hpp"
 #include "operation/soperation.hpp"
 
+#include "domain/structure/io/sio_file.hpp"
+
 
 namespace carpio {
 
@@ -65,11 +67,12 @@ public:
 	typedef SUdotNabla_<DIM>    UdotNabla;
 	typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
 
-	//operation
+	// operation
 	typedef SValue_<DIM>       Value;
 	typedef SInterpolate_<DIM> Interpolate;
 
-
+	// io file
+	typedef SIOFile_<DIM> IOFile;
 };
 
 

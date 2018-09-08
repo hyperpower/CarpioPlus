@@ -26,7 +26,7 @@ TEST(convection, initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(4, 0.01);
+	equ.set_time_term(4, 0.1);
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -44,6 +44,10 @@ TEST(convection, initial){
 	spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
 			                                          -1, -1, 1, Event::AFTER));
 	equ.add_event("OutputTime", spetime);
+
+	typedef EventOutputScalar_<DIM, Domain> EventOutputScalar;
+	EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
+	equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
 
 	// Run
 	equ.run();

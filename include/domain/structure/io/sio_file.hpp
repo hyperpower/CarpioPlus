@@ -26,9 +26,9 @@ public:
 		auto& grid = data.grid();
 		// format first line
 		auto n = grid.n();
-		carpio::TextFile txtf(filename);
-		txtf.add_line(tfm::format("## Size : %d", data.size()));
-		txtf.add_line(tfm::format("## Dim : %d", DIM));
+		TextFile txtf(filename);
+		txtf.add_line(tfm::format("## SIZE : %d", data.size()));
+		txtf.add_line(tfm::format("## DIM : %d", DIM));
 		txtf.add_line(tfm::format("## NX : %d", n(_X_)));
 		if (DIM >= 2) {
 			txtf.add_line(tfm::format("## NY : %d", n(_Y_)));

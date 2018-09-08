@@ -21,9 +21,9 @@
 
 //#include "structure/test_grid.hpp"
 //#include "structure/test_order.hpp"
-#include "structure/test_scalar.hpp"
+//#include "structure/test_scalar.hpp"
 //#include "structure/test_operation.hpp"
-//#include "equation/test_convection.hpp"
+#include "equation/test_convection.hpp"
 
 using namespace std;
 

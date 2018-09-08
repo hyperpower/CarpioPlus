@@ -8,6 +8,9 @@
 
 #include "event/event.hpp"
 #include "event/output_time.hpp"
+#include "event/output_scalar.hpp"
+
+
 namespace carpio{
 
 
