@@ -80,6 +80,7 @@ public:
 
 	typedef typename Domain::UdotNabla     UdotNabla;
 	typedef typename Domain::UdotNabla_FOU UdotNabla_FOU;
+	typedef typename Domain::Interpolate   Interpolate;
 
 protected:
 	spVectorCenter _vc;
@@ -172,9 +173,16 @@ protected:
 
 	void _one_step_fou_explicit(St step){
 		UdotNabla_FOU FOU(this->_bis["phi"]);
-		VectorFace& vf = *(this->_vf);
-		Scalar& phi    = *(this->_scalars["phi"]);
-		Vt dt = this->_time->dt();
+		VectorFace&   vf  = *(this->_vf);
+		VectorCenter& vc  = *(this->_vc);
+		Scalar&       phi = *(this->_scalars["phi"]);
+		Vt            dt  = this->_time->dt();
+
+		Interpolate::VectorCenterToFace(vc, vf,
+		    this->get_boundary_index("u"),
+			this->get_boundary_index("v"),
+			this->get_boundary_index("w"));
+
 		phi = FOU(vf, phi) * dt + phi;
 	}
 };

@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	Vt& operator()(Axes a, Orientation o,
+	Vt& operator()(St a, St o,
 			       St i, St j = 0, St k = 0) {
 		ASSERT(a < DIM);
 		St index[] = { i, j, k };
@@ -62,7 +62,7 @@ public:
 		}
 	}
 
-	const Vt& operator()(Axes a, Orientation o,
+	const Vt& operator()(St a, St o,
 			       St i, St j = 0, St k = 0) const {
 		ASSERT(a < DIM);
 		St index[] = { i, j, k };
@@ -76,11 +76,11 @@ public:
 		}
 	}
 
-	Vt& operator()(Axes a, Orientation o, const Index& index){
+	Vt& operator()(St a, St o, const Index& index){
 		return this->operator ()(a, o, index.i(), index.j(), index.k());
 	}
 
-	const Vt& operator()(Axes a, Orientation o, const Index& index) const{
+	const Vt& operator()(St a, St o, const Index& index) const{
 		return this->operator ()(a, o, index.i(), index.j(), index.k());
 	}
 

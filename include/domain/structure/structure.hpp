@@ -20,6 +20,7 @@
 #include "operation/soperation.hpp"
 
 #include "domain/structure/io/sio_file.hpp"
+#include "domain/structure/io/sgnuplot_actor.hpp"
 
 
 namespace carpio {
@@ -67,12 +68,19 @@ public:
 	typedef SUdotNabla_<DIM>    UdotNabla;
 	typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
 
+	// function
+	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
+
+
 	// operation
 	typedef SValue_<DIM>       Value;
 	typedef SInterpolate_<DIM> Interpolate;
 
 	// io file
 	typedef SIOFile_<DIM> IOFile;
+
+	// plot
+	typedef SGnuplotActor_<DIM> GnuplotActor;
 };
 
 

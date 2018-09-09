@@ -14,8 +14,8 @@ TEST(convection, initial){
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
 			new SGridUniform_<DIM>({0.0, 0.0}, // min point
-					               {10,  10},  // num on each direction
-								    0.5,       // cell size
+					               {100, 10},  // num on each direction
+								    0.25,       // cell size
 								    2));       // ghost layer
 	typename Domain::spGhost spghost(
 			new SGhostRegular_<DIM>(spgrid));
@@ -26,7 +26,7 @@ TEST(convection, initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(4, 0.1);
+	equ.set_time_term(4, 0.01);
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -47,7 +47,14 @@ TEST(convection, initial){
 
 	typedef EventOutputScalar_<DIM, Domain> EventOutputScalar;
 	EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
+	eos.set_path("./plot/");
 	equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
+
+	typedef EventGnuplotScalar_<DIM, Domain> EventGnuplotScalar;
+	EventGnuplotScalar egs("phi", -1, -1, 1, Event::AFTER);
+	egs.gnuplot().set_yrange(-0.3, 1.3);
+	egs.set_path("./plot/");
+	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotScalar>(egs));
 
 	// Run
 	equ.run();

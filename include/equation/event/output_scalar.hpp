@@ -60,7 +60,6 @@ protected:
 		std::stringstream ss;
 		ss << _path;
 		tfm::format(ss, _format.c_str() , _sn, step, t);
-		std::cout << ss.str() << std::endl;
 		return ss.str();
 	}
 };

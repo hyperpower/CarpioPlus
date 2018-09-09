@@ -19,6 +19,7 @@ inline void two_pointchains(
 	auto sub   = pb.output(PB::_SUBSTRACT_);
 	pb.show_table();
 	Gnuplot gnu;
+	gnu.set_terminal_png(aname + ".png");
 	gnu.set_title(aname);
 	gnu.set_xrange(-2, 4);
 	gnu.set_yrange(-2, 4);
@@ -55,7 +56,7 @@ TEST(polygon_boolean, test1) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-//	two_pointchains("test1", pclip, pobject);
+	two_pointchains("test1", pclip, pobject);
 }
 
 TEST(polygon_boolean, test2) {
@@ -75,7 +76,7 @@ TEST(polygon_boolean, test2) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-//	two_pointchains("test2", pclip, pobject);
+	two_pointchains("test2", pclip, pobject);
 }
 
 TEST(polygon_boolean, test3) {
@@ -95,7 +96,7 @@ TEST(polygon_boolean, test3) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-//	two_pointchains("test3", pclip, pobject);
+	two_pointchains("test3", pclip, pobject);
 }
 
 TEST(polygon_boolean, test4) {
@@ -116,7 +117,7 @@ TEST(polygon_boolean, test4) {
 
 	PC pobject(lo);
 
-//	two_pointchains("test4", pclip, pobject);
+	two_pointchains("test4", pclip, pobject);
 }
 
 TEST(polygon_boolean, test5) {

@@ -35,12 +35,11 @@ public:
 
 	static void VectorCenterToFace(
 			const SVectorCenter_<DIM>& vc,
-			      SVectorFace_<DIM>& vf,
-		    const BoundaryIndex& bi,
-			const BoundaryIndex& bj = BoundaryIndex(),
-			const BoundaryIndex& bk = BoundaryIndex()) {
-		typedef const BoundaryIndex* pcBI;
-		pcBI abi[] = { &bi, &bj, &bk };
+			      SVectorFace_<DIM>&   vf,
+		          spBI                 bi,
+			      spBI                 bj = nullptr,
+				  spBI                 bk = nullptr) {
+		spBI abi[] = { bi, bj, bk };
 		for (auto& idx : vc.order()) {
 			for (St d = 0; d < DIM; d++) {
 				auto idxm = idx.m(d);
@@ -49,7 +48,7 @@ public:
 				auto hs   = vc[d].grid().hs_(d, idx);
 				auto hsm  = vc[d].grid().hs_(d, idxm);
 				// m case
-				vf(d, _M_, idx) = (v * hsm + vm * hs) / (hs + hsm);
+				vf(Axes(d), _M_, idx) = (v * hsm + vm * hs) / (hs + hsm);
 				// p case, just for the last one
 				if (vc.ghost().is_boundary(idx, d, _P_)) {
 					auto idxp = idx.p(d);

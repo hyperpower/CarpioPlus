@@ -68,6 +68,13 @@ public:
 		}
 	}
 
+	Vt max() const {
+		return _mat.max();
+	}
+	Vt min() const {
+		return _mat.min();
+	}
+
 	Self& operator=(const Self& a) {
 		if (this == &a) {
 			return *this;

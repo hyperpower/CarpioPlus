@@ -38,11 +38,11 @@ public:
 
 	static Vt Get(
 			const Scalar&        fc,
-			const BoundaryIndex&  bi,
-		    const SIndex_<DIM>&  idxc,
-			const SIndex_<DIM>&  idxg,
-			const Axes&          axe,
-			const Orientation&   ori,
+			const BoundaryIndex& bi,
+		    const Index&         idxc,
+			const Index&         idxg,
+			const St&            axe,
+			const St&            ori,
 			const Vt&            time = 0.0){
 		if(fc.ghost().is_ghost(idxg)){
 			auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
@@ -57,18 +57,27 @@ public:
 		}
 	}
 
+	static Vt Max(const Scalar& s){
+		return s.max();
+	}
+
+	static Vt Min(const Scalar& s) {
+		return s.min();
+	}
+
 protected:
 
-	static Vt _value_type1(const Scalar&      fc,
+	static Vt _value_type1(
+			        const Scalar&      fc,
 			        const BC&          bc,
 					const Index&       idxc,
 					const Index&       idxg,
-					const Axes&        axe,
-					const Orientation& ori,
+					const St&          axe,
+					const St&          ori,
 					const Vt&          time = 0.0){
 		// boundary condition must be type 1
 		// walk back
-		auto oori = Opposite(ori);
+		auto oori = Opposite(Orientation(ori));
 		auto idxb = idxg.shift(axe, oori);
 		int step  = 0;
 		while(fc.ghost().is_ghost(idxb)){
@@ -94,16 +103,17 @@ protected:
 		return vx - (vbc - vx) * (dx + dg) / dx;
 	}
 
-	static Vt _value_type2(const Scalar&      fc,
+	static Vt _value_type2(
+			        const Scalar&      fc,
 			        const BC&          bc,
 					const Index&       idxc,
 					const Index&       idxg,
-					const Axes&        axe,
-					const Orientation& ori,
+					const St&          axe,
+					const St&          ori,
 					const Vt&          time = 0.0){
 		// boundary condition must be type 2
 		// walk back
-		auto oori = Opposite(ori);
+		auto oori = Opposite(Orientation(ori));
 		auto idxb = idxg.shift(axe, oori);
 		int step  = 0;
 		while(fc.ghost().is_ghost(idxb)){

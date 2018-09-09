@@ -383,6 +383,15 @@ class MultiArrayV_ {
     	 m_mp.assign(value);
     }
 
+
+	T max() const {
+		return this->m_mp.max();
+	}
+
+	T min() const {
+		return this->m_mp.min();
+	}
+
     //element access===============================
 
     inline bool check_idx(St dim, St idx) const {

@@ -51,8 +51,8 @@ public:
 
 	bool is_boundary(
 				const Index& index,
-				const Axes& a,
-				const Orientation& o) const{
+				const St& a,
+				const St& o) const{
 		ASSERT(a < DIM);
 		Idx idx = index.value(a);
 		if(o == _M_){
@@ -73,8 +73,8 @@ public:
 	int boundary_id(
 				const Index& indexc,
 				const Index& indexg,
-				const Axes& axe,
-			    const Orientation& ori) const{
+				const St& axe,
+			    const St& ori) const{
 		// get seg idx in BCID
 		St ABI[3][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
 		Index n = this->_grid->n();

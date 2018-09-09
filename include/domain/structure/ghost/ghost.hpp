@@ -22,15 +22,15 @@ public:
 	virtual bool is_ghost(const Index& index) const{};
 	virtual bool is_boundary(
 			const Index& index,
-			const Axes& a,
-			const Orientation&) const{};
+			const St& a,
+			const St&) const{};
 	virtual bool is_normal(const Index& index) const{};
 
 
 	virtual int boundary_id(const Index& indexc,
 			                const Index& indexg,
-							const Axes&  axe,
-							const Orientation& ori) const{};
+							const St&  axe,
+							const St& ori) const{};
 	virtual St size_normal() const{
 	}
 };

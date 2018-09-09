@@ -63,10 +63,12 @@ protected:
 	Scalars    _scalars;       //!< variables on the center of node
 	BIs        _bis;           //!< each variable has a Boundary Index
 
+	spBoundaryIndex _default_spbi;
 public:
 	Equation_(spGrid pf, spGhost pg, spOrder spo) :
 				_grid(pf), _ghost(pg), _order(spo){
-		this->_time = nullptr;
+		this->_time   = nullptr;
+		_default_spbi = spBoundaryIndex(new BoundaryIndex());
 	}
 
 	virtual ~Equation_() {
@@ -229,6 +231,14 @@ public:
 			const std::string& key,
 			spBoundaryIndex spbi){
 		this->_bis[key] = spbi;
+	}
+
+	spBoundaryIndex get_boundary_index(const std::string& key){
+		if (this->has_boundary_index(key)){
+			return this->_bis[key];
+		}else{
+			return _default_spbi;
+		}
 	}
 
 	bool has_value(const std::string& key) const {

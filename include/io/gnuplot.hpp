@@ -530,9 +530,12 @@ public:
 		return *this;
 	}
 
-	Gnuplot& set_terminal_png(const std::string& filename, double x = 400,
-			double y = 300, const std::string& font = "Helvetica",
-			int fontsize = 12) {
+	Gnuplot& set_terminal_png(
+			const std::string& filename,
+			           double  x         = 800,
+			           double  y         = 600,
+			const std::string& font      = "Helvetica",
+			              int  fontsize  = 12) {
 		this->terminal_std = "pngcairo";
 		std::stringstream sst;
 		sst << "set terminal " << this->terminal_std << " enhanced font '"
