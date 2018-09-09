@@ -12,9 +12,9 @@
 
 #include <math.h>
 #include <iostream>
+#include <cmath>
 
 namespace carpio {
-
 
 inline int StepFun(Float x) {
 	return (x <= 0) ? 0 : 1;

@@ -33,7 +33,7 @@ public:
 	        int istep = -1, int flag = 0) :
 		 _sn(sname),
 		 Event(is, ie, istep, flag) {
-		_format = "%s_%d_%8.4e";
+		_format = "%s_%d_%8.4e.txt";
 		_path   = "./";
 	}
 
