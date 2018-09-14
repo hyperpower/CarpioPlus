@@ -155,6 +155,7 @@ public:
 		return _cs;
 	}
 
+
 	// face  ===================================
 	Poi f(St dim, int fb, const Index& index) const {
 		return f(dim, fb, index.i(), index.j(), index.k());

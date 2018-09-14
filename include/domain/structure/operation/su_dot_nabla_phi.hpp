@@ -101,7 +101,7 @@ public:
 				if (uc >= 0) {
 					phi_u = Value::Get(
 							phi, *(this->_spbi),
-							idx, idxm, d,_M_, t);
+							idx, idxm, d, _M_, t);
 					phi_d = phi(idx);
 
 				} else { // uc < 0
@@ -132,8 +132,9 @@ public:
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
 	typedef SScalar_<DIM> Scalar;
-
+	typedef SIndex_<DIM>  Index;
 	typedef SUdotNabla_<DIM> Base;
+
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
@@ -150,6 +151,30 @@ public:
 	virtual ~SUdotNabla_TVD(){
 	}
 
+	//  A review on TVD schemes and a refined flux-limiter
+	//  for steady-state calculations
+	//  Di Zhang, Chunbo Jiang, Dongfang Liang, Liang Cheng
+	//  Journal of Computational Physics 302 (2015) 114–154
+	//
+	// k-scheme
+	//            1 + k           1 - k
+	// limiter = ------- r(CD) + -------
+	//              2               2
+	//          d(phi)/dx (CU)
+	// r(CD) = ----------------
+	//          d(phi)/dx (DC)
+	//
+	// SOU                      k = -1  (Second order upwind   upwind2)
+	// Fromm                    k = 0
+	// CUI                      k = 1/3
+	// QUICK                    k = 1/2
+	// CDS                      k = 1   (Center Difference Scheme,  center)
+
+
+	// Improved total variation diminishing schemes for advection
+	// simulation on arbitrary grids
+	// J. Hou , F. Simons and R. Hinkelmann
+	// Int. J. Numer. Meth. Fluids 2012; 70:359–382
 	virtual Scalar operator()(const VectorFace& U, const Scalar& phi, const Vt& t = 0.0){
 		Scalar res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
@@ -158,26 +183,43 @@ public:
 
 			FOR_EACH_DIM
 			{
-				Vt up = U(Axes(d), _P_, idx);
-				Vt um = U(Axes(d), _M_, idx);
+				Index idxp = idx.p(d);
+				Index idxm = idx.m(d);
+				Vt up = U(d, _P_, idx);
+				Vt um = U(d, _M_, idx);
 				Vt uc = (up + um) * 0.5;      //average velocity to center
-				auto idxm = idx.m(d);
-				auto idxp = idx.p(d);
-				Vt phi_u, phi_d;
-				Vt s      = phi.grid().s_(d, idx);
-				if (uc >= 0) {
-					phi_u = Value::Get(
-							phi, *(this->_spbi),
-							idx, idxm, d,_M_, t);
-					phi_d = phi(idx);
-
-				} else { // uc < 0
-					phi_u = phi(idx);
-					phi_d = Value::Get(
-							phi, *(this->_spbi),
-							idx, idxp, d, _P_, t);
+				Index Cm,Um,Dm,Cp,Up,Dp;
+				Vt fp,fm,R,r;
+				if (uc >= 0.0) {
+					// fm ------------------
+					Dm = idx;
+					Cm = idxm;
+					Um = idxm.m(d);
+					// fp ------------------
+					Dp = idxp;
+					Cp = idx;
+					Up = idxm;
+				} else if (uc < 0.0) {
+					// fm ------------------
+					Dm = idxm;
+					Cm = idx;
+					Um = idxp;
+					// fp ------------------
+					Dp = idx;
+					Cp = idxp;
+					Up = idxp.p(d);
 				}
-				arr[d] = uc * (phi_u - phi_d) / s;
+//				// p -----------------------
+//				R = _RCD(phi, d, Cp, Dp);
+//				r = _rCD(phi, d, Up, Cp, Dp);
+//				fp = cdata(Cp) + lim(r, R) / R * (cdata(Dp) - cdata(Cp));
+//				// m ---------------------
+//				R = _RCD(cdata, d, Cm, Dm);
+//				r = _rCD(cdata, d, Um, Cm, Dm);
+//				fm = cdata(Cm) + lim(r, R) / R * (cdata(Dm) - cdata(Cm));
+//				//
+//				v_dot_dfd[d] = (vface[d](idx) * fp - vface[d](idxm) * fm)
+//						/ cdata.s_(d, idx);
 			}
 
 			Vt sum = 0;
@@ -189,6 +231,31 @@ public:
 
 		return res;
 	}
+
+protected:
+	static Vt _rCD(
+			const Scalar& phi, St d,
+			const Index&  U,
+			const Index&  C,
+			const Index&  D) {
+		const Grid& grid = phi.grid();
+		Vt sU = grid.s_(d, U);
+		Vt sC = grid.s_(d, C);
+		Vt sD = grid.s_(d, D);
+//		Vt vU = cdata(U);
+//		Value::Get(phi, *(this->_spbi), idx, idxp, d, _P_, t);
+//		Vt vC = cdata(C);
+//		Vt vD = cdata(D);
+//		return (vC - vU) * (sD + sC) / (vD - vC + SMALL) / (sC + sU);
+	}
+
+	static Vt _RCD(const Scalar& phi, St d, const Index& C, const Index& D) {
+		const Grid& grid = phi.grid();
+		Vt sC = grid.s_(d, C);
+		Vt sD = grid.s_(d, D);
+		return (sD + sC) / sC;
+	}
+
 
 };
 

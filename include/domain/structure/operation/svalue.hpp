@@ -77,14 +77,14 @@ protected:
 					const Vt&          time = 0.0){
 		// boundary condition must be type 1
 		// walk back
-		auto oori = Opposite(Orientation(ori));
+		auto oori = Opposite(Orientation(ori));  // opposite oritation
 		auto idxb = idxg.shift(axe, oori);
 		int step  = 0;
 		while(fc.ghost().is_ghost(idxb)){
 			Shift(idxb, axe, oori);
 			step++;
 		}
-		auto fp = fc.grid().f(axe, ori, idxb);
+		auto fp = fc.grid().f(axe, ori, idxb);   // face point
 		for(int i = 0; i < step; ++i){
 			Shift(idxb, axe, oori);
 		}

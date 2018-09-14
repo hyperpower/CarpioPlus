@@ -25,18 +25,19 @@ public:
 	}
 
 	int solve(const MatSCR &A, // A  The matrix
-			Arr &x,          // x
-			const Arr& b    // b
+			        Arr &x,    // x
+			  const Arr& b     // b
 			) {
 		this->_init();
 
 		return this->_solve(A, x, b);
 	}
 
+protected:
 	int _solve( //
 			const MatSCR &A, // A  The matrix
 			Arr &x,          // x
-			const Arr& b    // b
+			const Arr& b     // b
 			) {
 		Vt resid;
 

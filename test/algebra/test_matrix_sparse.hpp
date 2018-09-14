@@ -15,7 +15,7 @@ namespace carpio{
 TEST(matrxi_sparse, matrix){
 	typedef MatrixSCO_<double> MatSCO;
 	typedef ArrayListV_<double> Arr;
-	std::cout << "This test show how to read sparse matrix" << std::endl;
+	std::cout << "This test show how to read sparse matrix aa" << std::endl;
 	MatSCO mat;
 	mm_read_mtx_sparse("./test/input_files/mm/cavity01.mtx", mat);
 

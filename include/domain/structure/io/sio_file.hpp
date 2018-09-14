@@ -4,6 +4,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/field/sscalar.hpp"
 #include "io/io_define.hpp"
+#include "domain/boundary/boundary_index.hpp"
 
 namespace carpio{
 
@@ -14,9 +15,8 @@ public:
 	typedef ArrayListT_<Vt> Arr;
 	typedef Point_<Vt, Dim> Poi;
 	typedef SIndex_<Dim> Index;
-	typedef St size_type;
-	static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
-	static const St NumFace = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
+	typedef BoundaryIndex BI;
+
 
 	typedef SScalar_<DIM> Scalar;
 
@@ -52,6 +52,7 @@ public:
 		}
 		txtf.write();
 	}
+
 };
 
 }

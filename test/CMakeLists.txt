@@ -40,8 +40,6 @@ message(STATUS "======== LOOKING FOR PYTHON ${REQUIRED_PYTHON_VERSION} =========
 find_package ( PythonInterp ${REQUIRED_PYTHON_VERSION} REQUIRED)
 find_package ( PythonLibs ${REQUIRED_PYTHON_VERSION} REQUIRED)
 
-#find_package ( PythonLibs ${PYTHON_VERSION_STRING} EXACT REQUIRED )
-
 
 message(STATUS "PYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE}")
 message(STATUS "PYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY}")
@@ -63,22 +61,14 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/../include
 )
 
-#add_subdirectory(${PROJECT_SOURCE_DIR}/lib/ts)
-#add_subdirectory(${PROJECT_SOURCE_DIR}/lib/utility)
-#add_subdirectory(${PROJECT_SOURCE_DIR}/lib/io)
-
 
 #find_package(VTK REQUIRED)
 #include(${VTK_USE_FILE})
 
 add_executable(carpio ${SOURCE_FILES})
 
-
 # link the libraries to the executable
-#target_link_libraries (carpio io)
-#target_link_libraries (carpio utility)
 target_link_libraries (carpio gtest)
-#target_link_libraries (carpio glog)
 target_link_libraries (carpio pthread)
 
 if(PYTHON_LIBRARIES)

@@ -130,12 +130,12 @@ int Solve(VALUE a1, VALUE b1, VALUE c1,
 // Gaussian Elimination
 template<class VALUE>
 int Solve(  //solver
-		MatrixV<VALUE>& A,      //the Matrix     [in]  solver will change matrix
-		ArrayListV<VALUE>& b    //the b          [in][out]  solver will change b
+		MatrixV_<VALUE>& A,      //the Matrix     [in]       solver will change matrix
+		ArrayListV_<VALUE>& b    //the b          [in][out]  solver will change b
 		) {
 	//Assert
 	ASSERT(A.size_i() == A.size_j());   //the matrix must be n x n;
-	ASSERT(b.size() == A.size_i());     //the size b=n
+	ASSERT(b.size()   == A.size_i());     //the size b=n
 	int n = b.size();
 	int i, j, max_i;
 	VALUE max, dum;
