@@ -11,9 +11,11 @@ find_package(MPI)
 if (MPI_LIBRARY)
 	set(MPI_INCLUDE_DIR ${MPI_INCLUDE_PATH} CACHE STRING "MPI Include Path")
 	set(MPI_LIBRARIES ${MPI_LIBRARY};${MPI_EXTRA_LIBRARY} CACHE STRING "MPI Libraries")
+	message(STATUS "MPI LIB = ${MPI_LIBRARIES}")
+	message(STATUS "MPI INC = ${MPI_INCLUDE_PATH}")
 endif (MPI_LIBRARY)
 
-OPTION(ENABLE_OPENMP "Enable openmp" ON) # Enabled by default
+#OPTION(ENABLE_OPENMP "Enable openmp" OFF) # Enabled by default
 IF(ENABLE_OPENMP)
 	message(STATUS "======== LOOKING FOR OPENMP ========================")
     ADD_DEFINITIONS(-DOPENMP)
@@ -28,17 +30,17 @@ ENDIF(ENABLE_OPENMP)
 
 #set(Python_ADDITIONAL_VERSIONS 3.5)
 # Check the architecture and set CMAKE_LIBRARY_ARCHITECTURE accordingly
-if(UNIX)
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(CMAKE_LIBRARY_ARCHITECTURE "x86_64-linux-gnu")
-  endif()
-endif()
+#if(UNIX)
+#  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+#    set(CMAKE_LIBRARY_ARCHITECTURE "x86_64-linux-gnu")
+#  endif()
+#endif()
 set(Python_ADDITIONAL_VERSIONS 3.4)
 # python =======
 set(REQUIRED_PYTHON_VERSION 3.4)
 message(STATUS "======== LOOKING FOR PYTHON ${REQUIRED_PYTHON_VERSION} ========================")
 find_package ( PythonInterp ${REQUIRED_PYTHON_VERSION} REQUIRED)
-find_package ( PythonLibs ${REQUIRED_PYTHON_VERSION} REQUIRED)
+find_package ( PythonLibs   ${REQUIRED_PYTHON_VERSION} REQUIRED)
 
 
 message(STATUS "PYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE}")
@@ -55,24 +57,28 @@ ELSE()
   MESSAGE(FATAL_ERROR "Unable to find PythonLibs.")
 ENDIF()
 
+
+
 # end python ===
 # location of header files
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/../include
 )
 
+INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})
 
 #find_package(VTK REQUIRED)
 #include(${VTK_USE_FILE})
 
-add_executable(carpio ${SOURCE_FILES})
+add_executable(carpio_test ${SOURCE_FILES})
 
 # link the libraries to the executable
-target_link_libraries (carpio gtest)
-target_link_libraries (carpio pthread)
+target_link_libraries (carpio_test pthread)
+target_link_libraries (carpio_test gtest)
+target_link_libraries (carpio_test ${MPI_LIBRARIES})
 
 if(PYTHON_LIBRARIES)
-  TARGET_LINK_LIBRARIES(carpio ${PYTHON_LIBRARIES})
+  TARGET_LINK_LIBRARIES(carpio_test ${PYTHON_LIBRARIES})
 ELSE()
   MESSAGE(FATAL_ERROR "Unable to link python libraries")
 ENDIF()

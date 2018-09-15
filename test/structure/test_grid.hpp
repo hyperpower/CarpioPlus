@@ -2,7 +2,7 @@
 #define STRUCTURE_TEST_GRID_HPP_
 
 #include "domain/structure/structure.hpp"
-#include "domain/structure/io/plotly_actor.hpp"
+#include "domain/structure/io/splotly_actor.hpp"
 //#include "domain/structure/io/gnuplot_actor.hpp"
 #include "gtest/gtest.h"
 

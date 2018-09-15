@@ -53,6 +53,30 @@ inline bool IsInRange(TYPE down, TYPE value, TYPE up, Range range) {
 	return false;
 }
 
+// a number is prime or not
+inline bool IsPrime(St n) {
+	if (n == 1) {
+		return false;
+	}
+	if (n == 2 || n == 3) {
+		return true;
+	} else if ((n % 2 == 0) || (n % 3 == 0)) {
+		return false;
+	} else {
+		St p = 5;
+		St w = 2;
+		while (p * p <= n) {
+			if (n % p == 0) {
+				return false;
+			}
+			p += w;
+			w = 6 - w;
+		}
+		return true;
+	}
+}
+
+
 // this function return a^2+b^2
 template<typename TYPE>
 TYPE SqareSum(const TYPE &a, const TYPE &b){
