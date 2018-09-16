@@ -28,7 +28,7 @@ protected:
 	Listr _lresid; //
 public:
 
-	Solver_(int max_iter = 100, Vt tol = 1e-3) {
+	Solver_(int max_iter = 100, Vt tol = 1e-6) {
 		_max_iter = max_iter;
 		_tol = tol;
 

@@ -38,7 +38,7 @@ public:
 	MatrixT_();
 	MatrixT_(const MatrixT_<T>& a);
 	MatrixT_(size_type iLen, size_type jLen);
-	MatrixT_(size_type iLen, size_type jLen, T **value);
+	MatrixT_(size_type iLen, size_type jLen, T** value);
 	void reconstruct(size_type iLen, size_type jLen);
 	//=============================================
 	MatrixT_<T>& operator=(const MatrixT_<T> &a);
@@ -239,7 +239,7 @@ MatrixT_<T>::MatrixT_(St iLen, St jLen) {
 }
 
 template<typename T>
-MatrixT_<T>::MatrixT_(St iLen, St jLen, T **value) {
+MatrixT_<T>::MatrixT_(St iLen, St jLen, T** value) {
 	m_iLen = iLen;
 	m_jLen = jLen;
 	//m_total = m_iLen * m_jLen;
@@ -623,16 +623,97 @@ public:
 	typedef const T& const_reference;
 	typedef St size_type;
 	typedef St difference_type;
+
+	typedef MatrixT_<T> Base;
+	typedef MatrixV_<T> Self;
+	typedef Self&       ref_Self;
 	//constructor==========================
 	MatrixV_();
-	MatrixV_(size_type iLen, size_type jLen);
-	MatrixV_(size_type iLen, size_type jLen, T **value);
-	//void reconstruct(size_type size_i, size_type size_j);
+	MatrixV_(St iLen, St jLen);
+	MatrixV_(St iLen, St jLen, St n, T *value);
+	//void reconstruct(St size_i, St size_j);
 	//~MatrixV_();
 	//=============================================
-	MatrixV_<T> operator+(const MatrixV_<T> &a);
-	MatrixV_<T> operator-(const MatrixV_<T> &a);
-	MatrixV_<T> operator*(const MatrixV_<T> &a);
+	ref_Self operator+=(const T& a) {
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] += a;
+			}
+		}
+		return *this;
+	}
+	ref_Self operator-=(const T& a) {
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] -= a;
+			}
+		}
+		return *this;
+	}
+	ref_Self operator*=(const T& a){
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] *= a;
+			}
+		}
+		return *this;
+	}
+	ref_Self operator/=(const T& a) {
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] /= a;
+			}
+		}
+		return *this;
+	}
+	ref_Self operator+=(const Self& a) {
+		ASSERT(a.size_i() == this->size_i());
+		ASSERT(a.size_j() == this->size_j());
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] += a[i][j];
+			}
+		}
+		return *this;
+	}
+	ref_Self operator-=(const Self& a) {
+		ASSERT(a.size_i() == this->size_i());
+		ASSERT(a.size_j() == this->size_j());
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] -= a[i][j];
+			}
+		}
+		return *this;
+	}
+	ref_Self operator*=(const Self& a) {
+		ASSERT(a.size_i() == this->size_i());
+		ASSERT(a.size_j() == this->size_j());
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] *= a[i][j];
+			}
+		}
+		return *this;
+	}
+	ref_Self operator/=(const Self& a) {
+		ASSERT(a.size_i() == this->size_i());
+		ASSERT(a.size_j() == this->size_j());
+		for (St i = 0; i < this->m_iLen; i++) {
+			for (St j = 0; j < this->m_jLen; j++) {
+				this->m_mp[i][j] /= a[i][j];
+			}
+		}
+		return *this;
+	}
+	Self operator-() const;
+	Self operator+(const Self &a);
+	Self operator-(const Self &a);
+	Self operator*(const Self &a);
+	Self operator*(const T &a);
+	Self operator/(const Self &a);
+	Self operator/(const T &a);
+
 	//show ========================================
 	void show() const;
 
@@ -650,11 +731,19 @@ MatrixV_<T>::MatrixV_(St iLen, St jLen) :
 }
 
 template<typename T>
-MatrixV_<T>::MatrixV_(St iLen, St jLen, T **value) :
+MatrixV_<T>::MatrixV_(St iLen, St jLen, St n, T *value) :
 		MatrixT_<T>(iLen, jLen) {
-	for (size_type i = 0; i < this->m_iLen; i++) {
-		for (size_type j = 0; j < this->m_jLen; j++) {
-			this->m_mp[i][j] = value[i][j];
+	// if n > i * j, the rest number will be dropped.
+	// if n < i * j, the rest number will be zero.
+	St i1d = 0;
+	for (St j = 0; j < this->m_jLen; j++) {
+		for (St i = 0; i < this->m_iLen; i++) {
+			if (i1d >= n) {
+				this->m_mp[i][j] = 0.0;
+			} else {
+				this->m_mp[i][j] = value[i1d];
+			}
+			i1d++;
 		}
 	}
 }
@@ -669,8 +758,8 @@ MatrixV_<T> MatrixV_<T>::operator+(const MatrixV_<T> &a) {
 	{
 #pragma omp for schedule(dynamic)
 #endif
-	for (size_type i = 0; i < this->m_iLen; i++) {
-		for (size_type j = 0; j < this->m_jLen; j++) {
+	for (St i = 0; i < this->m_iLen; i++) {
+		for (St j = 0; j < this->m_jLen; j++) {
 			sum[i][j] = this->m_mp[i][j] + a[i][j];
 		}
 	}
@@ -678,6 +767,24 @@ MatrixV_<T> MatrixV_<T>::operator+(const MatrixV_<T> &a) {
 	}
 #endif
 	return sum;
+}
+template<typename T>
+MatrixV_<T> MatrixV_<T>::operator-() const{
+	MatrixV_<T> res(this->m_iLen, this->m_jLen);
+#ifdef OPENMP
+#pragma omp parallel if (this->size_i() > 100)
+	{
+#pragma omp for schedule(dynamic)
+#endif
+	for (St i = 0; i < this->m_iLen; i++) {
+		for (St j = 0; j < this->m_jLen; j++) {
+			res[i][j] = -(this->m_mp[i][j]);
+		}
+	}
+#ifdef OPENMP
+	}
+#endif
+	return res;
 }
 template<typename T>
 MatrixV_<T> MatrixV_<T>::operator-(const MatrixV_<T> &a) {
@@ -690,8 +797,8 @@ MatrixV_<T> MatrixV_<T>::operator-(const MatrixV_<T> &a) {
 #pragma omp for schedule(dynamic)
 #endif
 
-	for (size_type i = 0; i < this->m_iLen; i++) {
-		for (size_type j = 0; j < this->m_jLen; j++) {
+	for (St i = 0; i < this->m_iLen; i++) {
+		for (St j = 0; j < this->m_jLen; j++) {
 			sum[i][j] = this->m_mp[i][j] - a[i][j];
 		}
 	}
@@ -700,18 +807,45 @@ MatrixV_<T> MatrixV_<T>::operator-(const MatrixV_<T> &a) {
 #endif
 	return sum;
 }
+
 template<typename T>
 MatrixV_<T> MatrixV_<T>::operator*(const MatrixV_<T> &a) {
 	ASSERT(a.size_i() == this->size_j());
-	size_type nrow = this->m_iLen;
-	size_type ncol = a.size_j();
+	St nrow = this->m_iLen;
+	St ncol = a.size_j();
 	MatrixV_<T> res(nrow, ncol);
-	for (size_type i = 0; i < nrow; i++) {
-		for (size_type j = 0; j < ncol; j++) {
-			res[i][j] = 0;
-			for (size_type k = 0; k < this->m_jLen; k++) {
-				res[i][j] += this->m_mp[i][k] * a[k][j];
-			}
+	for (St i = 0; i < nrow; i++) {
+		for (St j = 0; j < ncol; j++) {
+			res[i][j] = this->m_mp[i][j] * a[i][j];
+		}
+	}
+	return res;
+}
+
+//template<typename T>
+//MatrixV_<T> MatrixV_<T>::operator*(const MatrixV_<T> &a) {
+//	ASSERT(a.size_i() == this->size_j());
+//	St nrow = this->m_iLen;
+//	St ncol = a.size_j();
+//	MatrixV_<T> res(nrow, ncol);
+//	for (St i = 0; i < nrow; i++) {
+//		for (St j = 0; j < ncol; j++) {
+//			res[i][j] = 0;
+//			for (St k = 0; k < this->m_jLen; k++) {
+//				res[i][j] += this->m_mp[i][k] * a[k][j];
+//			}
+//		}
+//	}
+//	return res;
+//}
+template<typename T>
+MatrixV_<T> MatrixV_<T>::operator*(const T& a) {
+	St nrow = this->m_iLen;
+	St ncol = this->m_jLen;
+	MatrixV_<T> res(nrow, ncol);
+	for (St i = 0; i < nrow; i++) {
+		for (St j = 0; j < ncol; j++) {
+			res[i][j] = this->m_mp[i][j] * a;
 		}
 	}
 	return res;

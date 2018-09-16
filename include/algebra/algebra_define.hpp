@@ -273,69 +273,9 @@ int _QuadraticDiscriminant(const TYPE& a, const TYPE& b, const TYPE& c,
 	}
 }
 
-template<class TYPE>
-int SolveQuadraticEquation(const TYPE& a, const TYPE& b, const TYPE& c,
-		Float& x1, Float& x2) {
-	Float discri = 0;
-	int numroot = _QuadraticDiscriminant(a, b, c, discri);
-	if (numroot == 2) {
-		x1 = (-b - std::sqrt(discri)) / 2 / a;
-		x2 = (-b + std::sqrt(discri)) / 2 / a;
-		return 2;
-	} else if (numroot == 1) {
-		x1 = -b / 2 / a;
-		x2 = x1;
-		return 1;
-	} else {
-		return 0;
-	}
-}
 
-template<class TYPE>
-int SolveCubicEquation(const TYPE& a, const TYPE& b, const TYPE& c,
-		const TYPE& d, Float& x1, Float& x2, Float& x3) {
-	ASSERT(a != 0);
-	Float A = b * b - 3.0 * a * c;
-	Float B = b * c - 9.0 * a * d;
-	Float C = c * c - 3.0 * b * d;
-	Float discri = B * B - 4.0 * A * C;
-	//case 1 has three equal real roots
-	if (A == 0 && B == 0) {
-		x1 = -b / 3.0 / a;
-		x2 = x1;
-		x3 = x1;
-		return 1;
-	}
-	if (discri > 0) {
-		Float Y1 = A * b + 1.5 * a * (-B + std::sqrt(discri));
-		Float Y2 = A * b + 1.5 * a * (-B - std::sqrt(discri));
-		Float cuberY1 = Y1 < 0 ? - std::pow(-Y1, 1.0 / 3.0) : std::pow(Y1, 1.0 / 3.0);
-		Float cuberY2 = Y2 < 0 ? - std::pow(-Y2, 1.0 / 3.0) : std::pow(Y2, 1.0 / 3.0);
-		x1 = (-b - cuberY1 - cuberY2) / 3.0 / a;
-		//ignore complex roots
-		x2 = x1;
-		x3 = x1;
-		return 2;
-	}
-	if (discri == 0) {
-		Float K = B / A;
-		x1 = -b / a + K;
-		x2 = K / 2.0;
-		x3 = x2;
-		SortIncr(x1, x2, x3);
-		return 3;
-	}
-	if (discri < 0) {
-		Float T = (2.0 * A * b - 3.0 * a * B) / (2.0 * pow(A, 1.5));
-		Float sita3 = acos(T) / 3.0;
-		x1 = (-b - 2.0 * std::sqrt(A) * std::cos(sita3)) / (3.0 * a);
-		x2 = (-b + std::sqrt(A) * (cos(sita3) + std::sqrt(3.0) * sin(sita3))) / (3.0 * a);
-		x3 = (-b + std::sqrt(A) * (cos(sita3) - std::sqrt(3.0) * sin(sita3))) / (3.0 * a);
-		SortIncr(x1, x2, x3);
-		return 4;
-	}
-	return -1;
-}
+
+
 
 } //namespace Larus
 

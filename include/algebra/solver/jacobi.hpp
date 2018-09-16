@@ -17,10 +17,11 @@ public:
 	typedef VALUE Vt;
 	typedef typename ArrayListV_<Vt>::size_type St;
 	typedef MatrixSCR_<VALUE> MatSCR;
+	typedef MatrixV_<VALUE>   Mat;
 	typedef ArrayListV_<VALUE> Arr;
 	typedef std::list<double> Listr;
 
-	Jacobi_(int max_iter = 100, Vt tol = 1e-3) :
+	Jacobi_(int max_iter = 100, Vt tol = 1e-6) :
 			Solver_<VALUE>(max_iter, tol) {
 	}
 
@@ -29,12 +30,20 @@ public:
 			  const Arr& b     // b
 			) {
 		this->_init();
+		return this->_solve(A, x, b);
+	}
 
+	int solve(
+				const Mat& A,    // dense matrix
+				      Arr &x,    // x
+				const Arr& b
+				){
+		this->_init();
 		return this->_solve(A, x, b);
 	}
 
 protected:
-	int _solve( //
+	int _solve(              //
 			const MatSCR &A, // A  The matrix
 			Arr &x,          // x
 			const Arr& b     // b
@@ -60,7 +69,6 @@ protected:
 
 		// construct T
 		St M = T.size_i();
-		//st N = T.jLen();
 
 		for (St i = 0; i < M; ++i) {
 			// find D
@@ -100,6 +108,64 @@ protected:
 
 		this->_residual = resid;
 		this->_num_iter = this->_max_iter;
+		return 1;
+	}
+
+
+	/*
+	* Runs the Jacobi method for A*x = b.
+	*
+	* ON ENTRY :
+	* A an n-by-n matrix A[i][i] is not 0;
+	* x start vector for the iteration and the return vector
+	* b an n-dimensional vector;
+	*
+	* ON RETURN :
+	* The status of the solver */
+	int _solve(
+			const Mat &A,     // A  The matrix
+			      Arr &x,     // x
+			const Arr& b     )// b
+			{
+		Vt resid;
+
+		Vt normb = Nrm2(b);
+		Arr r = b - A * x;
+		//
+		if (normb == 0.0)
+			normb = 1;
+
+		if ((resid = Nrm2(r) / normb) <= this->_tol) {
+			this->_residual = resid;
+			this->_num_iter = 0;
+			return 0;
+		}
+
+		Arr newx(x.size());
+		Arr dx(x.size());
+		St  n = x.size();
+		for (int iter = 1; iter <= this->_max_iter; ++iter) {
+			Vt sum = 0.0;
+			for (St i = 0; i < n; i++) {
+				dx[i] = b[i];
+				for (St j = 0; j < n; j++){
+					dx[i] -= A[i][j] * x[j];
+				}
+				dx[i]   /= A[i][i] + SMALL;
+				newx[i] += dx[i];
+			}
+			// critic
+			r = b - A * newx;
+			resid = Nrm2(r) / normb;
+			this->_lresid.push_back(resid);
+			if (resid <= this->_tol) {
+				this->_residual = resid;
+				this->_num_iter = iter;
+				return 0;
+			}
+			// copy
+			x = newx;
+		}
 		return 1;
 	}
 };

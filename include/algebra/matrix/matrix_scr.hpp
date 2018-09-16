@@ -18,7 +18,7 @@ template<class VALUE> class MatrixSCO_;
 template<class VALUE> class MatrixSCC_;
 /*
  * Example:
- * row_prt() 0        3        6        9   10      12
+ * row_ptr() 0        3        6        9   10      12
  * val()     1  2  3, 4  5  6, 7  8  9, 10, 11  12,
  * col_ind() 0  1  4  0  1  2  1  2  4  3   0   4
  */
@@ -78,7 +78,6 @@ public:
 				count++;
 			}
 		}
-
 	}
 
 	MatrixSCR_(const MatrixSCO_<Vt> &CO) :
@@ -106,7 +105,33 @@ public:
 			colind_[tally(CO.row_ind(i))] = CO.col_ind(i);
 			tally[CO.row_ind(i)]++;
 		}
+	}
 
+	MatrixSCR_(const MatrixV_<Vt> &m) : nz_(0), rowptr_(m.size_i() + 1){
+		dim_[0] = m.size_i();
+		dim_[1] = m.size_j();
+		// count non-zero
+		for(St row = 0; row < m.size_i(); row++){
+			for(St col = 0; col < m.size_j(); col++){
+				if(m[row][col] != 0.0){
+					nz_++;
+				}
+			}
+		}
+		val_.reconstruct(nz_);
+		colind_.reconstruct(nz_);
+		St n = 0;
+		rowptr_[0] = 0;
+		for (St row = 0; row < m.size_i(); row++) {
+			for (St col = 0; col < m.size_j(); col++) {
+				if (m[row][col] != 0.0) {
+					val_[n]    = m[row][col];
+					colind_[n] = col;
+					n++;
+				}
+			}
+			rowptr_[row + 1] = n;
+		}
 	}
 
 	MatrixSCR_(St M, St N, St nz, Vt *val, St *r, St *c) :

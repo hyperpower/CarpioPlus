@@ -38,13 +38,7 @@ int SolveQuadraticEquation(const TYPE &a, const TYPE &b, const TYPE &c,
     }
 }
 
-template<class TYPE>
-inline void Swap(TYPE &a, TYPE &b) //
-{
-    TYPE tmp = a;
-    a = b;
-    b = tmp;
-}
+
 
 template<class TYPE>
 inline void SortIncrease(TYPE &a, TYPE &b, TYPE &c) //

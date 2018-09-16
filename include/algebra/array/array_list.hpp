@@ -11,7 +11,9 @@
 #include "type_define.hpp"
 #include "algebra/blas/blas_0.hpp"
 #include "algebra/blas/blas_1.hpp"
+#include "utility/tinyformat.hpp"
 
+#include <initializer_list>
 
 #include <stddef.h>
 #include <stdio.h>
@@ -45,6 +47,7 @@ public:
     ArrayListT_();
     ArrayListT_(const ArrayListT_<T>& a);
     ArrayListT_(size_type Len);
+    ArrayListT_(const std::initializer_list<T>& l);
     void reconstruct(size_type Len);
     ArrayListT_(size_type Len, const T& nd);
     ArrayListT_(T *nd, size_type Len);
@@ -124,7 +127,19 @@ ArrayListT_<T>::ArrayListT_(const ArrayListT_<T>& a) {
 template<typename T>
 ArrayListT_<T>::ArrayListT_(size_type Len) {
     m_Len = Len;
-    m_p = new T[m_Len];
+    m_p   = new T[m_Len];
+}
+
+template<typename T>
+ArrayListT_<T>::ArrayListT_(const std::initializer_list<T>& l) {
+	St n      = l.size();
+	m_Len     = n;
+	this->m_p = new T[m_Len];
+	St i  = 0;
+	for(auto& v : l){
+		this->m_p[i] = v;
+		i++;
+	}
 }
 
 template<typename T>
@@ -456,6 +471,7 @@ template<typename V>
 class ArrayListV_: public ArrayListT_<V> {
 public:
     // type definitions
+	typedef ArrayListT_<V> Base;
     typedef V value_type;
     typedef V* pointer;
     typedef const V* const_pointer;
@@ -470,6 +486,7 @@ public:
     ArrayListV_();
     ArrayListV_(size_type Len);
     ArrayListV_(size_type Len, const V& nd);
+    ArrayListV_(const std::initializer_list<V>& l):Base(l){};
     void reconstruct(size_type Len);
     //arrayListV(V *nd, size_type Len);
     //opertator====================================
@@ -553,6 +570,7 @@ template<typename V>
 ArrayListV_<V>::ArrayListV_(size_type Len, const V& nd) :
     ArrayListT_<V>(Len, nd) {
 }
+
 
 template<typename V>
 void ArrayListV_<V>::reconstruct(size_type Len) {
@@ -754,11 +772,7 @@ template<typename V>
 void ArrayListV_<V>::show() const {
     std::cout << "size = " << this->m_Len << "\n";
     for (int i = 0; i < this->m_Len; i++) {
-        std::cout.width(5);
-        std::cout << i << " ";
-        std::cout.width(12);
-        std::cout.precision(8);
-        std::cout << this->m_p[i] << "\n";
+    	tfm::format(std::cout, "%d %12.5f\n", i, this->m_p[i]);
     }
 }
 //=========================================================

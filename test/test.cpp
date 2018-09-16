@@ -16,7 +16,7 @@ int RunTests(int argc, char **argv) {
 
 int main(int argc, char **argv) {
 	int res = carpio::RunTests(argc, argv);
-    std::cout<<" ====== end =======";
+    std::cout<<" ====== end =======\n";
     return res;
 }
 
