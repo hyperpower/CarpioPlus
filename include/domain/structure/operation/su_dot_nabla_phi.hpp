@@ -190,36 +190,53 @@ public:
 				Vt uc = (up + um) * 0.5;      //average velocity to center
 				Index Cm,Um,Dm,Cp,Up,Dp;
 				Vt fp,fm,R,r;
+				Vt VDm, VCm, VUm, VDp, VCp, VUp;
 				if (uc >= 0.0) {
 					// fm ------------------
 					Dm = idx;
 					Cm = idxm;
 					Um = idxm.m(d);
+					// get value
+					VDm = phi(idx);
+					VCm = Value::Get(phi, *(this->_spbi), idx, Cm, d, _M_, t);
+					VUm = Value::Get(phi, *(this->_spbi), idx, Um, d, _M_, t);
 					// fp ------------------
 					Dp = idxp;
 					Cp = idx;
 					Up = idxm;
+					// get value
+					VDp = Value::Get(phi, *(this->_spbi), idx, Dp, d, _P_, t);
+					VCp = VDm;
+					VUp = VCm;
 				} else if (uc < 0.0) {
 					// fm ------------------
 					Dm = idxm;
 					Cm = idx;
 					Um = idxp;
+					// get value
+					VDm = Value::Get(phi, *(this->_spbi), idx, Dm, d, _M_, t);
+					VCm = phi(idx);
+					VUm = Value::Get(phi, *(this->_spbi), idx, Um, d, _P_, t);
 					// fp ------------------
 					Dp = idx;
 					Cp = idxp;
 					Up = idxp.p(d);
+					// get value
+					VDp = VCm;
+					VCp = VUm;
+					VUp = Value::Get(phi, *(this->_spbi), idx, Up, d, _P_, t);
 				}
-//				// p -----------------------
-//				R = _RCD(phi, d, Cp, Dp);
-//				r = _rCD(phi, d, Up, Cp, Dp);
-//				fp = cdata(Cp) + lim(r, R) / R * (cdata(Dp) - cdata(Cp));
-//				// m ---------------------
-//				R = _RCD(cdata, d, Cm, Dm);
-//				r = _rCD(cdata, d, Um, Cm, Dm);
-//				fm = cdata(Cm) + lim(r, R) / R * (cdata(Dm) - cdata(Cm));
-//				//
-//				v_dot_dfd[d] = (vface[d](idx) * fp - vface[d](idxm) * fm)
-//						/ cdata.s_(d, idx);
+				// p -----------------------
+				R = _RCD(phi, d, Cp, Dp);
+				r = _rCD(phi, d, Up, Cp, Dp, VUp, VCp, VDp);
+				fp = VCp + lim(r, R) / R * (VDp - VCp);
+				// m ---------------------
+				R = _RCD(phi, d, Cm, Dm);
+				r = _rCD(phi, d, Um, Cm, Dm, VUm, VCm, VDm);
+				fm = VCm + lim(r, R) / R * (VDm - VCm);
+				//
+				arr[d] = (up * fp - um * fm)
+						/ phi.grid().s_(d, idx);
 			}
 
 			Vt sum = 0;
@@ -233,21 +250,21 @@ public:
 	}
 
 protected:
+
 	static Vt _rCD(
-			const Scalar& phi, St d,
-			const Index&  U,
-			const Index&  C,
-			const Index&  D) {
-		const Grid& grid = phi.grid();
-		Vt sU = grid.s_(d, U);
-		Vt sC = grid.s_(d, C);
-		Vt sD = grid.s_(d, D);
-//		Vt vU = cdata(U);
-//		Value::Get(phi, *(this->_spbi), idx, idxp, d, _P_, t);
-//		Vt vC = cdata(C);
-//		Vt vD = cdata(D);
-//		return (vC - vU) * (sD + sC) / (vD - vC + SMALL) / (sC + sU);
-	}
+				const Scalar& phi, St d,
+				const Index&  U,
+				const Index&  C,
+				const Index&  D,
+				const Vt&     VU,
+				const Vt&     VC,
+				const Vt&     VD) {
+			const Grid& grid = phi.grid();
+			Vt sU = grid.s_(d, U);
+			Vt sC = grid.s_(d, C);
+			Vt sD = grid.s_(d, D);
+			return (VC - VU) * (sD + sC) / (VD - VC + SMALL) / (sC + sU);
+		}
 
 	static Vt _RCD(const Scalar& phi, St d, const Index& C, const Index& D) {
 		const Grid& grid = phi.grid();
