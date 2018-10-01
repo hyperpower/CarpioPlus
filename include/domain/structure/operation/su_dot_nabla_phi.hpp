@@ -142,10 +142,19 @@ public:
 
 	typedef SValue_<DIM> Value;
 
+	typedef Vt (*Limiter)(Vt, Vt);
+
+protected:
+	Limiter lim;
+public:
+
 	SUdotNabla_TVD(): Base(){
+		// default limiter
+		lim = SUdotNabla_TVD::_limiter_QUICK;
 	}
 
 	SUdotNabla_TVD(spBI spbi) : Base(spbi){
+		lim = SUdotNabla_TVD::_limiter_QUICK;
 	}
 
 	virtual ~SUdotNabla_TVD(){
@@ -272,6 +281,47 @@ protected:
 		Vt sD = grid.s_(d, D);
 		return (sD + sC) / sC;
 	}
+
+	//  A review on TVD schemes and a refined flux-limiter
+	//  for steady-state calculations
+	//  Di Zhang, Chunbo Jiang, Dongfang Liang, Liang Cheng
+	//  Journal of Computational Physics 302 (2015) 114–154
+	//
+	// k-scheme
+	//            1 + k           1 - k
+	// limiter = ------- r(CD) + -------
+	//              2               2
+	//          d(phi)/dx (CU)
+	// r(CD) = ----------------
+	//          d(phi)/dx (DC)
+	//
+	// SOU                      k = -1  (Second order upwind   upwind2)
+	// Fromm                    k = 0
+	// CUI                      k = 1/3
+	// QUICK                    k = 1/2
+	// CDS                      k = 1   (Center Difference Scheme,  center)
+
+	static Vt _limiter_SOU(Vt r, Vt R) {
+		return r + 1.0;
+	}
+
+	static Vt _limiter_Fromm(Vt r, Vt R){
+		return 0.5 * r + 0.5;
+	}
+
+	static Vt _limiter_CUI(Vt r, Vt R) {
+		return 2.0 / 3.0 * r + 1.0 / 3.0;
+	}
+
+	static Vt _limiter_QUICK(Vt r, Vt R){
+		return 0.75 * r + 0.25;
+	}
+
+	static Vt _limiter_CDS(Vt r, Vt R) {
+		return r;
+	}
+
+
 
 
 };

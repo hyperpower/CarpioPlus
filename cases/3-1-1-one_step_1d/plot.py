@@ -51,7 +51,7 @@ def split(seq, num):
     return out
 
 def plot_one(strstep, strtime):
-    print "Draw : ", strstep, " ", strtime
+    print("Draw : ", strstep, " ", strtime)
 
     plt.figure(figsize=(6, 4))
 
@@ -312,10 +312,10 @@ def main():
     #strt = "48"
     #plot_one(stri, strt) 
     
-    plot_all()
-    plot_error1()
-    plot_error2()
-    plot_errori()
+    #plot_all()
+    #plot_error1()
+    #plot_error2()
+    #plot_errori()
 
 if __name__ == '__main__':
     main()

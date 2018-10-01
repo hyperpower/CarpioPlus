@@ -41,7 +41,7 @@ def build():
     print("run   --------------------------------- ")
     os.system("./build/main ")
     print("plot   -------------------------------- ")
-    os.system("python plot.py")
+    os.system("python3 plot.py")
 
 def main():
     clean()
