@@ -4,31 +4,26 @@ import string
 import math
 import operator
 import shutil
+import sys
 
 
 FILE_ORIGINAL = [
     "main.cpp",
     "CMakeLists.txt",
     "plot.py",
-    "run.py"
+    "run.py",
+    "report.tex"
 ]
 
-def clean():
-    print("clean ====== ")
-    path = "./"
-    files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    dfs = []
-    for f in files:
-        if f not in FILE_ORIGINAL:
-            dfs.append(f)
-    for df in dfs:
-        print("Remove file -> ", df)
-        os.remove(df)
+PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
+PATH_THIS     = os.path.abspath(os.path.join(__file__, "../"))
+PATH_DATA     = os.path.abspath(os.path.join(PATH_THIS, "data"))
+PATH_FIG      = os.path.abspath(os.path.join(PATH_THIS, "fig"))
+PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
+PATH_PYTOOLS  = os.path.abspath(os.path.join(PATH_CASES, "pytools"))
 
-    dirs = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
-    for d in dirs:
-        print("Remove dir -> ", d)
-        shutil.rmtree(d)
+sys.path.append(PATH_PYTOOLS)
+import runtool as RT
 
 def build():
     print("cmake --------------------------------- ")
@@ -44,7 +39,7 @@ def build():
     os.system("python3 plot.py")
 
 def main():
-    clean()
+    RT.clean(PATH_THIS, FILE_ORIGINAL)
     build()
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     spGrid spgrid(
             new SGridUniform_<DIM>({0.0, 0.0}, // min point
                                    {100, 10},  // num on each direction
-                                    0.25,       // cell size
+                                    0.25,      // cell size
                                     2));       // ghost layer
     spGhost spghost(
             new SGhostRegular_<DIM>(spgrid));
