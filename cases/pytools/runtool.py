@@ -16,3 +16,4 @@ def clean(path, original_files):
     for d in dirs:
         print("Remove dir -> ", d)
         shutil.rmtree(d)
+

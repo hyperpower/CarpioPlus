@@ -1,10 +1,14 @@
 import os
-import numpy as np
+import sys
 import string
 import math
 import operator
-import shutil
 
+_DIR_THIS_  = os.path.dirname(__file__)
+_DIR_CASES_ = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+_PY_TOOLS_  = os.path.join(_DIR_CASES_, "pytools");
+sys.path.insert(0, _PY_TOOLS_)
+import runtool
 
 FILE_ORIGINAL = [
     "main.cpp",
@@ -12,23 +16,6 @@ FILE_ORIGINAL = [
     "plot.py",
     "run.py"
 ]
-
-def clean():
-    print("clean ====== ")
-    path = "./"
-    files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-    dfs = []
-    for f in files:
-        if f not in FILE_ORIGINAL:
-            dfs.append(f)
-    for df in dfs:
-        print("Remove file -> ", df)
-        os.remove(df)
-
-    dirs = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
-    for d in dirs:
-        print("Remove dir -> ", d)
-        shutil.rmtree(d)
 
 def build():
     print("cmake --------------------------------- ")
@@ -44,7 +31,7 @@ def build():
     os.system("python plot.py")
 
 def main():
-    clean()
+    runtool.clean(_DIR_THIS_, FILE_ORIGINAL)
     build()
 
 if __name__ == '__main__':

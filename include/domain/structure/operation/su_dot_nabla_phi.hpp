@@ -229,11 +229,11 @@ public:
 				// p -----------------------
 				R = _RCD(phi, d, Cp, Dp);
 				r = _rCD(phi, d, Up, Cp, Dp, VUp, VCp, VDp);
-				fp = VCp + lim(r, R) / R * (VDp - VCp);
+//				fp = VCp + lim(r, R) / R * (VDp - VCp);
 				// m ---------------------
 				R = _RCD(phi, d, Cm, Dm);
 				r = _rCD(phi, d, Um, Cm, Dm, VUm, VCm, VDm);
-				fm = VCm + lim(r, R) / R * (VDm - VCm);
+//				fm = VCm + lim(r, R) / R * (VDm - VCm);
 				//
 				arr[d] = (up * fp - um * fm)
 						/ phi.grid().s_(d, idx);

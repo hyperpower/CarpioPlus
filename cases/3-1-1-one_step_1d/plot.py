@@ -5,8 +5,9 @@ import numpy as np
 import string
 import math
 import operator
-from scipy import ndimage
+# from scipy import ndimage
 import multiprocessing
+from multiprocessing import Pool
 
 def _col(matrix, i):
     return [row[i] for row in matrix]
@@ -20,15 +21,13 @@ matplotlib.rcParams['text.latex.unicode'] = True
 matplotlib.rcParams['font.family'] = 'serif'
 matplotlib.rcParams['font.size'] = 12
 
-PATH_EXAMPLE  = os.path.abspath(os.path.join(__file__, "../"))
-PATH_THIS     = os.path.abspath(__file__)
-PATH_RESULT   = os.path.abspath("./result")
-PATH_FIG      = os.path.abspath("./fig")
-PATH_PROJECT  = os.path.abspath(os.path.join(PATH_EXAMPLE, "../.."))
-PATH_PYSCRIPT = os.path.abspath(os.path.join(PATH_PROJECT, "pyscript"))
 
-sys.path.append(PATH_PYSCRIPT)
-import read
+
+_DIR_THIS_  = os.path.dirname(__file__)
+_DIR_CASES_ = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+_PY_TOOLS_  = os.path.join(_DIR_CASES_, "pytools");
+sys.path.insert(0, _PY_TOOLS_)
+import runtool
 
 def file_name(namedir, namevar):
     res = []
@@ -51,7 +50,7 @@ def split(seq, num):
     return out
 
 def plot_one(strstep, strtime):
-    print "Draw : ", strstep, " ", strtime
+    print("Draw : ", strstep, " ", strtime)
 
     plt.figure(figsize=(6, 4))
 
@@ -283,7 +282,7 @@ def plot_errori():
 
 def plot_all():
     matfu = file_name(PATH_RESULT, "exact")
-    print len(matfu)
+    print(len(matfu))
     matfc = []
     for one in matfu:
         matfc.append(one)
@@ -294,7 +293,7 @@ def plot_all():
     results = []
     cmatfs = split(matfc, cpus)
 
-    print "Thread num : ", len(cmatfs)
+    print("Thread num : ", len(cmatfs))
     for i in xrange(0, cpus):
         mat = cmatfs[i]
         for one in mat:
@@ -307,15 +306,29 @@ def plot_all():
     os.system("convert -delay 5 -loop 0 ./fig/comp_*.png comp.gif")
 
 
+def test(i):
+    print(i)
+
+
+def mp():
+    lists=[1,2,3]
+    pool=Pool(processes=10) #定义最大的进程数
+    for i in range(0, 50):
+        pool.apply_async(test,args=(i,))        #p必须是一个可迭代变量。
+    pool.close()
+    pool.join()
+
+
 def main():
     #stri = "480"
     #strt = "48"
     #plot_one(stri, strt) 
     
-    plot_all()
-    plot_error1()
-    plot_error2()
-    plot_errori()
+    #plot_all()
+    #plot_error1()
+    #plot_error2()
+    #plot_errori()
+    mp()
 
 if __name__ == '__main__':
     main()
