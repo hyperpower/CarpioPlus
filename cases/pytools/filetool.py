@@ -96,7 +96,7 @@ class TextFile:
         nx = float(self._dict["NX"])
         arr = []
         for i in range(0, int(nx)):
-            arr.append(self._mat[i][0])
+            arr.append(self._mat[i][1])
         return arr
 
     def get_coo_y(self):
@@ -106,7 +106,7 @@ class TextFile:
         arr = []
         if dim >=2:
             for i in range(0, int(ny)):
-                arr.append(self._mat[i* nx][1])
+                arr.append(self._mat[i* nx][2])
             return arr
         else:
             return [0]
@@ -127,12 +127,12 @@ class TextFile:
         return mat
 
     def get_arr_val(self):
-        assert(int(self._dict["Dim"]) == 1)
+        assert(int(self._dict["DIM"]) == 1)
         nx  = int(self._dict["NX"])
-        dim = int(self._dict["Dim"])
+        dim = int(self._dict["DIM"])
         arr = []
         for i in range(0, nx):
-            arr.append(self._mat[i][3])
+            arr.append(self._mat[i][4])
         return arr
 
 

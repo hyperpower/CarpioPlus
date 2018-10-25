@@ -3,19 +3,26 @@ import sys
 import string
 import math
 import operator
-
-_DIR_THIS_  = os.path.dirname(__file__)
-_DIR_CASES_ = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-_PY_TOOLS_  = os.path.join(_DIR_CASES_, "pytools");
-sys.path.insert(0, _PY_TOOLS_)
-import runtool
+import shutil
+import sys
 
 FILE_ORIGINAL = [
     "main.cpp",
     "CMakeLists.txt",
     "plot.py",
-    "run.py"
+    "run.py",
+    "report.tex"
 ]
+
+PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
+PATH_THIS     = os.path.abspath(os.path.join(__file__, "../"))
+PATH_DATA     = os.path.abspath(os.path.join(PATH_THIS, "data"))
+PATH_FIG      = os.path.abspath(os.path.join(PATH_THIS, "fig"))
+PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
+PATH_PYTOOLS  = os.path.abspath(os.path.join(PATH_CASES, "pytools"))
+
+sys.path.append(PATH_PYTOOLS)
+import runtool as RT
 
 def build():
     print("cmake --------------------------------- ")
@@ -28,10 +35,10 @@ def build():
     print("run   --------------------------------- ")
     os.system("./build/main ")
     print("plot   -------------------------------- ")
-    os.system("python plot.py")
+    os.system("python3 plot.py")
 
 def main():
-    runtool.clean(_DIR_THIS_, FILE_ORIGINAL)
+    RT.clean(PATH_THIS, FILE_ORIGINAL)
     build()
 
 if __name__ == '__main__':

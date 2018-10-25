@@ -7,7 +7,7 @@
 
 //#include "utility/test_any.hpp"
 //#include "utility/test_clock.hpp"
-#include "mpi/test_mpi_learn.hpp"
+//#include "mpi/test_mpi_learn.hpp"
 
 //#include "geometry/test_point.hpp"
 //#include "geometry/test_segment.hpp"
@@ -25,7 +25,7 @@
 //#include "structure/test_order.hpp"
 //#include "structure/test_scalar.hpp"
 //#include "structure/test_operation.hpp"
-//#include "equation/test_convection.hpp"
+#include "equation/test_convection.hpp"
 
 using namespace std;
 

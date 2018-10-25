@@ -5,29 +5,31 @@ import numpy as np
 import string
 import math
 import operator
-# from scipy import ndimage
+
 import multiprocessing
 from multiprocessing import Pool
 
-def _col(matrix, i):
-    return [row[i] for row in matrix]
+# def _col(matrix, i):
+#     return [row[i] for row in matrix]
 
-def chunks(l, n):
-    n = max(1, n)
-    return [l[i:i+n] for i in xrange(0, len(l), n)]
+# def chunks(l, n):
+#     n = max(1, n)
+#     return [l[i:i+n] for i in xrange(0, len(l), n)]
 
-matplotlib.rcParams['text.usetex'] = True
-matplotlib.rcParams['text.latex.unicode'] = True
-matplotlib.rcParams['font.family'] = 'serif'
-matplotlib.rcParams['font.size'] = 12
+# matplotlib.rcParams['text.usetex'] = True
+# matplotlib.rcParams['text.latex.unicode'] = True
+# matplotlib.rcParams['font.family'] = 'serif'
+# matplotlib.rcParams['font.size'] = 12
 
+PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
+PATH_THIS     = os.path.abspath(os.path.join(__file__, "../"))
+PATH_DATA     = os.path.abspath(os.path.join(PATH_THIS, "data"))
+PATH_FIG      = os.path.abspath(os.path.join(PATH_THIS, "fig"))
+PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
+PATH_PYTOOLS  = os.path.abspath(os.path.join(PATH_CASES, "pytools"))
 
-
-_DIR_THIS_  = os.path.dirname(__file__)
-_DIR_CASES_ = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-_PY_TOOLS_  = os.path.join(_DIR_CASES_, "pytools");
-sys.path.insert(0, _PY_TOOLS_)
-import runtool
+sys.path.append(PATH_PYTOOLS)
+import filetool as FT
 
 def file_name(namedir, namevar):
     res = []
@@ -63,8 +65,8 @@ def plot_one(strstep, strtime):
     """
     Set range
     """
-    x_st = 0
-    x_ed = 200
+    x_st = -10
+    x_ed = 100
     y_st = -0.5
     y_ed = 1.5
 
@@ -76,32 +78,19 @@ def plot_one(strstep, strtime):
     """
     Data part
     """
-    fne = PATH_RESULT + "/exact_" + strstep + "_" + strtime  
+    fne = PATH_DATA + "/phi_" + strstep + "_" + strtime + ".txt"
 
-    scheme = ["upwind1", "center", "center4"]
-
-    fnv = []
-    for s in scheme:
-        fnv.append(PATH_RESULT + "/phi_" + s + "_" + strstep + "_" + strtime)  
-
-    pe   = read.PointData(fne)
-    arrx = pe.get_coo_x()
+    pe    = FT.PointData(fne)
+    arrx  = pe.get_coo_x()
     arre  = pe.get_arr_val()
-    arrv = []
-    for f in fnv: 
-        pv   = read.PointData(f)
-        arrv.append(pv.get_arr_val())
-    
+    arrv  = []    
+
     plt.plot(arrx, arre) 
-    llg = []
-    for arr in arrv:
-        lg, = plt.plot(arrx, arr, marker=".") 
-        llg.append(lg)
 
     plt.text(10, 1.25, "Time = "+ "%.2f" % float(strtime))
     plt.text(10, 1.00, "Step = "+ "%04d" % float(strstep))
 
-    plt.legend(llg, scheme, loc= 'upper right')
+    # plt.legend(llg, scheme, loc= 'upper right')
 
     plt.grid(True)
     #plt.axes().set_aspect('equal')
@@ -320,15 +309,14 @@ def mp():
 
 
 def main():
-    #stri = "480"
-    #strt = "48"
-    #plot_one(stri, strt) 
+    stri = "4"
+    strt = "4.0000e-02"
+    plot_one(stri, strt) 
     
     #plot_all()
     #plot_error1()
     #plot_error2()
     #plot_errori()
-    mp()
 
 if __name__ == '__main__':
     main()
