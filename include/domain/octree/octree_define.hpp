@@ -1,5 +1,5 @@
-#ifndef _S_DEFINE_HPP
-#define _S_DEFINE_HPP
+#ifndef _O_DEFINE_HPP
+#define _O_DEFINE_HPP
 
 #include "domain/domain_define.hpp"
 
@@ -14,7 +14,6 @@
 #include <cmath>
 
 namespace carpio {
-
 
 
 

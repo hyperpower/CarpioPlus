@@ -5,7 +5,7 @@
 #include "type_define.hpp"
 
 namespace carpio{
-
+#define FOR_EACH_DIM for(St d=0;d<DIM;++d)
 }
 
 

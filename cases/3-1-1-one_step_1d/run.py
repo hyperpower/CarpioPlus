@@ -14,11 +14,11 @@ FILE_ORIGINAL = [
     "report.tex"
 ]
 
-PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
 PATH_THIS     = os.path.abspath(os.path.join(__file__, "../"))
+PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
+PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
 PATH_DATA     = os.path.abspath(os.path.join(PATH_THIS, "data"))
 PATH_FIG      = os.path.abspath(os.path.join(PATH_THIS, "fig"))
-PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
 PATH_PYTOOLS  = os.path.abspath(os.path.join(PATH_CASES, "pytools"))
 
 sys.path.append(PATH_PYTOOLS)
