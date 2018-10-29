@@ -1,7 +1,7 @@
-#ifndef CELL_H_
-#define CELL_H_
+#ifndef _CELL_H_
+#define _CELL_H_
 
-#include "domain_define.hpp"
+#include "domain/octree/octree_define.hpp"
 #include "algebra/algebra_define.hpp"
 #include "geometry/geometry.hpp"
 
@@ -106,13 +106,13 @@ public:
 	}
 
 protected:
-	static const int INSIDE = 0; // 000000
+	static const int INSIDE = 0;   // 000000
 	static const int LEFT   = 1;   // 000001
-	static const int RIGHT  = 2;  // 000010
-	static const int BOTTOM = 4; // 000100
-	static const int TOP    = 8;    // 001000
+	static const int RIGHT  = 2;   // 000010
+	static const int BOTTOM = 4;   // 000100
+	static const int TOP    = 8;   // 001000
 	static const int BACK   = 16;  // 010000
-	static const int FRONT  = 32; // 100000
+	static const int FRONT  = 32;  // 100000
 
 	int _out_code(vt x, vt y, vt z = 0) {
 		vt xmin = this->get(_M_, _X_);
@@ -239,8 +239,7 @@ public:
 			_center[2] += dz;
 		}
 	}
-}
-;
+};
 
 }
 

@@ -89,6 +89,14 @@ enum Orientation {
 	_C_ = 2, //
 };
 
+
+enum Plane {
+	_XY_ = 24,
+	_YZ_ = 48,
+	_ZX_ = 40,
+};
+
+
 Orientation Opposite(const Orientation& ori){
 	if(ori == _M_){
 		return _P_;
