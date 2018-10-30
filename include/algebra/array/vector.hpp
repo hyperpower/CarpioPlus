@@ -1,7 +1,7 @@
 #ifndef _VECTOR_HPP_
 #define _VECTOR_HPP_
 
-#include "algebra_define.hpp"
+#include "algebra/algebra_define.hpp"
 #include <array>
 #include <iostream>
 #include <math.h>

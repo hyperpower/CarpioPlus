@@ -34,9 +34,9 @@ public:
 		}
 	}
 
-	Cell_(const vt &x, const vt &dhx, //
-			const vt &y = 0.0, const vt &dhy = 0.0, //
-			const vt &z = 0.0, const vt &dhz = 0.0) {
+	Cell_(const vt &x,       const vt &dhx, //
+		  const vt &y = 0.0, const vt &dhy = 0.0, //
+		  const vt &z = 0.0, const vt &dhz = 0.0) {
 		for (St i = 0; i < Dim; ++i) {
 			if (i == 0) {
 				_center[i] = x;

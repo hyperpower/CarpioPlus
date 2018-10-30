@@ -40,7 +40,7 @@ public:
 	virtual inline Vt volume(Index idx) const {};
 	// center ==================================
 	virtual Poi c(Idx i, Idx j = 0, Idx k = 0) const {}
-	virtual Poi c(Index index) const {}
+	virtual Poi c(const Index& index) const {}
 	virtual Vt  c_(const St& dim, const Idx& idx) const {}
 	virtual Vt  c_(const St& dim, const Index& idx) const {}
 

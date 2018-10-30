@@ -133,10 +133,10 @@ for (St i = 0; i < Dim; ++i) {
 		return (dim < Dim) ? _c[dim][_IDX(idx[dim])] : 0;
 	}
 
-	Poi c(Index index) const {
+	Poi c(const Index& index) const {
 		return c(index.i(), index.j(), index.k());
 	}
-	Poi C(Index INDEX) const {
+	Poi C(const Index& INDEX) const {
 		return C(INDEX.i(), INDEX.j(), INDEX.k());
 	}
 

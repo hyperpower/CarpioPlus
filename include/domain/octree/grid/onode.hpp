@@ -569,7 +569,8 @@ public:
 	/*
 	 *  make sure point is in this node
 	 */
-	St which_child(const Vt &x,
+	St which_child(
+			const Vt &x,
 			const Vt &y = 0,
 			const Vt &z = 0) {
 		St idx = 0;
@@ -1155,11 +1156,11 @@ public:
 /*
  *  functions out of class ================================================
  */
-template<typename DATA, St DIM> int GetDataIdx(
-		const Node_<DATA, DIM> *pn) {
-	ASSERT(pn != nullptr);
-	return pn->data->get_idx();
-}
+//template<typename DATA, St DIM> int GetDataIdx(
+//		const Node_<DATA, DIM> *pn) {
+//	ASSERT(pn != nullptr);
+//	return pn->data->get_idx();
+//}
 
 template<typename DATA, St DIM>
 Node_<DATA, DIM> *
