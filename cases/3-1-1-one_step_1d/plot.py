@@ -9,17 +9,10 @@ import operator
 import multiprocessing
 from multiprocessing import Pool
 
-# def _col(matrix, i):
-#     return [row[i] for row in matrix]
-
-# def chunks(l, n):
-#     n = max(1, n)
-#     return [l[i:i+n] for i in xrange(0, len(l), n)]
-
-# matplotlib.rcParams['text.usetex'] = True
-# matplotlib.rcParams['text.latex.unicode'] = True
-# matplotlib.rcParams['font.family'] = 'serif'
-# matplotlib.rcParams['font.size'] = 12
+matplotlib.rcParams['text.usetex']        = True
+matplotlib.rcParams['text.latex.unicode'] = True
+matplotlib.rcParams['font.family']        = 'serif'
+matplotlib.rcParams['font.size']          = 12
 
 PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
 PATH_THIS     = os.path.abspath(os.path.join(__file__, "../"))
@@ -60,7 +53,7 @@ def plot_one(strstep, strtime):
     Set labels
     """
     plt.xlabel(r'x')
-    plt.ylabel(r'phi')
+    plt.ylabel(r'$\phi$')
 
     """
     Set range
@@ -87,6 +80,7 @@ def plot_one(strstep, strtime):
 
     plt.plot(arrx, arre) 
 
+
     plt.text(10, 1.25, "Time = "+ "%.2f" % float(strtime))
     plt.text(10, 1.00, "Step = "+ "%04d" % float(strstep))
 
@@ -98,7 +92,6 @@ def plot_one(strstep, strtime):
     plt.savefig(PATH_FIG + "/comp_" + "%06d" % int(strstep) +".png")
     plt.close()
     # plt.show()
-
 
 def read_error_file(scheme):
     filename = PATH_RESULT + "/error_" + scheme
@@ -294,24 +287,75 @@ def plot_all():
     
     os.system("convert -delay 5 -loop 0 ./fig/comp_*.png comp.gif")
 
-
-def test(i):
-    print(i)
-
-
 def mp():
     lists=[1,2,3]
-    pool=Pool(processes=10) #定义最大的进程数
+    pool=Pool(processes=10) # the max processes number 
     for i in range(0, 50):
-        pool.apply_async(test,args=(i,))        #p必须是一个可迭代变量。
+        pool.apply_async(test,args=(i,))
     pool.close()
     pool.join()
 
+def plot_illustration_fig():
+    plt.figure(figsize=(6, 4))
+
+    """
+    Set labels
+    """
+    plt.xlabel(r'x')
+    plt.ylabel(r'$\phi$')
+
+    """
+    Set range
+    """
+    x_st = 0
+    x_ed = 2
+    y_st = -0.25
+    y_ed = 1.25
+
+    plt.xlim([x_st, x_ed])
+    plt.ylim([y_st, y_ed])
+    #plt.xscale('log')
+    #plt.yscale('log')
+
+    """
+    Data part
+    """
+    arrx_start = [x_st, 0.5, 0.5, x_ed] 
+    arr_v      = [1.0,  1.0, 0.0, 0.0]
+    arrx_end   = [x_st, 1.5, 1.5, x_ed]    
+
+    plt.plot(arrx_end  , arr_v, linewidth=2.0)
+    plt.plot(arrx_start, arr_v, linewidth=3.0)
+
+    plt.text(0.25, 1.05, "Time = "+ "%.2f" % float(0.0), fontsize = 'large')
+    plt.text(1.25, 1.05, "Time = "+ "%.2f" % float(1.0), fontsize = 'large')
+
+    plt.annotate('Initial profile', 
+            xy=(0.5, 0.75), xytext=(0.75, 0.85), fontsize = 'large',
+            arrowprops = dict(facecolor='black', shrink = 0.05),
+            )
+    plt.annotate('Advected profile', 
+            xy=(1.5, 0.35), xytext=(0.6, 0.2), fontsize = 'large',
+            arrowprops = dict(facecolor='black', shrink = 0.05),
+            )
+    plt.arrow(0.4, 0.5, 0.2, 0.0, width=0.01, color = "k")
+
+    plt.text(0.52, 0.55, "u = 1.0", fontsize = 'large')
+
+    # plt.legend(llg, scheme, loc= 'upper right')
+
+    plt.grid(True)
+    #plt.axes().set_aspect('equal')
+    plt.tight_layout()
+    plt.savefig(PATH_FIG + "/illustration.png")
+    plt.close()
+    # plt.show()
 
 def main():
-    stri = "4"
-    strt = "4.0000e-02"
-    plot_one(stri, strt) 
+    plot_illustration_fig()
+    # stri = "4"
+    # strt = "4.0000e-02"
+    # plot_one(stri, strt) 
     
     #plot_all()
     #plot_error1()
