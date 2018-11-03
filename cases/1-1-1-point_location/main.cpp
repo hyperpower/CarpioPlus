@@ -44,11 +44,9 @@ std::string a_case(const Point& p1, const Point& p2, const Point& p3){
 int main(int argc, char** argv) {
     Point p1( 0.0, 0.0);
     Point p2( 1.0, 1.0);
-    Point p3( 0.8, 2.0);
     
     // left
-    a_case(p1,p2, p3);
-
+    a_case(p1, p2, Point(0.5, 0.7));
     // right
     a_case(p1, p2, Point(0.8, 0.3));
     // on start end

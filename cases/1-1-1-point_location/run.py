@@ -23,7 +23,7 @@ PATH_PYTOOLS  = os.path.abspath(os.path.join(PATH_CASES, "pytools"))
 sys.path.append(PATH_PYTOOLS)
 import runtool as RT
 
-CASE_INFO = {}
+import report as REPORT
 
 def build():
     runtime = []
@@ -33,30 +33,27 @@ def build():
     os.system("mkdir data")
     os.system("mkdir fig")
     os.system("cmake .")
-    runtime.append(("cmake", time.clock() - tprev))
+    runtime.append(("dt_cmake",time.clock() - tprev))
     tprev = time.clock()
     print("make  --------------------------------- ")
     os.system("make")
-    runtime.append(("make", time.clock() - tprev))
+    runtime.append(("dt_make", time.clock() - tprev))
     tprev = time.clock()
     print("run   --------------------------------- ")
     os.system("./build/main ")
-    runtime.append(("run", time.clock() - tprev))
+    runtime.append(("dt_run",  time.clock() - tprev))
     tprev = time.clock()
     print("plot   -------------------------------- ")
-    runtime.append(("plot", time.clock() - tprev))
+    runtime.append(("dt_plot", time.clock() - tprev))
     tprev = time.clock()
     print("report   ------------------------------ ")
-    os.system("python3 report.py")
-    runtime.append(("report", time.clock() - tprev))
-    tprev = time.clock()
+    # os.system("python3 report.py")
+    REPORT.run(runtime)
     # os.system("python3 plot.py")
     return runtime
 
 def main():
     RT.clean(PATH_THIS, FILE_ORIGINAL)
-    CASE_INFO.update(RT.case_info(PATH_THIS, FILE_ORIGINAL))
-    # print(CASE_INFO)
     rt = build()
     # print(rt)
 

@@ -10,6 +10,15 @@ Welcome to Carpio's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+Cases
+=================
+.. toctree::
+   :maxdepth: 1
+   :caption: Table of Contents:
+
+   1-1-1-point_location
+   1-1-2-segments_intersection
+
 
 
 Indices and tables
