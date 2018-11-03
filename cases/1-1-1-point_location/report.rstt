@@ -1,0 +1,7 @@
+Problem Description
+===================
+
+We want to define the loaction of a point to a segment. This problem is a bit
+of complicate than obtaining a point loction to a line. Here, we define 7 possible
+loctions, as shown below,
+

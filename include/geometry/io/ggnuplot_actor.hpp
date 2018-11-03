@@ -17,50 +17,70 @@
 
 namespace carpio {
 
-namespace GnuplotActor {
+template<typename TYPE, St DIM>
+class GGnuplotActor_ {
+public:
+	static const St Dim = DIM;
+	typedef TYPE Vt;
+	typedef Point_<TYPE, DIM> Point;
+	typedef Point_<TYPE, DIM>& ref_Point;
+	typedef const Point_<TYPE, DIM>& const_ref_Point;
+	typedef Segment_<TYPE, DIM> Segment;
+	typedef Segment& ref_Segment;
+	typedef const Segment& const_ref_Segment;
 
-template<typename TYPE>
-spActor Points(
-		const Point_<TYPE, 2>& p,
-		int color_idx = -1) {
-	spActor actor = spActor(new Gnuplot_actor());
-	actor->command() = "using 1:2:3 title \"\" ";
-	actor->style() = "with points lc variable";
+	typedef PointChain_<TYPE, DIM> PointChain;
 
-	if (color_idx >= 0) {
-		actor->data().push_back(ToString(p.x(), p.y(), color_idx, " "));
-	} else {
-		actor->data().push_back(ToString(p.x(), p.y(), 0, " "));
-	}
+	typedef std::shared_ptr<Gnuplot_actor> spActor;
+	typedef std::list<spActor> list_spActor;
 
-	actor->data().push_back("");
-	return actor;
-}
+public:
+	static spActor Points(
+			const Point& p,
+			int color_idx = -1) {
+		ASSERT(Dim == 2);
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with points lc variable";
 
-template<typename TYPE>
-spActor LinesPoints(
-		const Segment_<TYPE, 2>& seg,
-		int color_idx = -1) {
-	spActor actor = spActor(new Gnuplot_actor());
-	actor->command() = "using 1:2:3 title \"\" ";
-	actor->style() = "with linespoints lc variable";
-	if (seg.empty()) {
+		if (color_idx >= 0) {
+			actor->data().push_back(ToString(p.x(), p.y(), color_idx, " "));
+		} else {
+			actor->data().push_back(ToString(p.x(), p.y(), 0, " "));
+		}
+
 		actor->data().push_back("");
 		return actor;
 	}
-	if (color_idx >= 0) {
-		actor->data().push_back(ToString(seg.psx(), seg.psy(), color_idx, " "));
-	} else {
-		actor->data().push_back(ToString(seg.psx(), seg.psy(), 0, " "));
-	}
 
-	if (color_idx >= 0) {
-		actor->data().push_back(ToString(seg.pex(), seg.pey(), color_idx, " "));
-	} else {
-		actor->data().push_back(ToString(seg.pex(), seg.pey(), 0, " "));
+	static spActor LinesPoints(
+			const Segment& seg,
+			int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with linespoints lc variable";
+		if (seg.empty()) {
+			actor->data().push_back("");
+			return actor;
+		}
+		if (color_idx >= 0) {
+			actor->data().push_back(ToString(seg.psx(), seg.psy(), color_idx, " "));
+		} else {
+			actor->data().push_back(ToString(seg.psx(), seg.psy(), 0, " "));
+		}
+
+		if (color_idx >= 0) {
+			actor->data().push_back(ToString(seg.pex(), seg.pey(), color_idx, " "));
+		} else {
+			actor->data().push_back(ToString(seg.pex(), seg.pey(), 0, " "));
+		}
+		return actor;
 	}
-	return actor;
-}
+};
+
+
+namespace GnuplotActor {
+
 
 template<typename TYPE>
 spActor LinesPoints(
@@ -73,7 +93,6 @@ spActor LinesPoints(
 		actor->data().push_back("");
 		return actor;
 	}
-
 
 	for (auto& p : pc) {
 		if (color_idx >= 0) {

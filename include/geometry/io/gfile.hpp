@@ -19,7 +19,7 @@
 namespace carpio {
 
 template<typename TYPE, St DIM>
-class IOFile_Geometry_ {
+class GFile_ {
 public:
 	static const St Dim = DIM;
 	typedef TYPE Vt;

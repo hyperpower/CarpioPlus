@@ -79,7 +79,6 @@ public:
 			}
 		}
 		return actor;
-
 	}
 };
 

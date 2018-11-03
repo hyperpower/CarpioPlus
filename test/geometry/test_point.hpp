@@ -18,6 +18,7 @@ const St dim = 3;
 typedef Point_<double, dim> Point;
 typedef Point_<double, 3> Point3;
 typedef Point_<double, 2> Point2;
+typedef GGnuplotActor_<double, 2> GA;
 
 
 TEST(point, point_initial){
@@ -67,8 +68,10 @@ TEST(point, draw_on_gnuplot){
 	Point2 z(0, 0, 1);
 
 	Gnuplot gnu;
-	gnu.add(GnuplotActor::Points(x, 0));
-	//gnu.plot();
+	auto a1 = GA::Points(x, 0);
+	a1->style() = "with points pointtype 7 pointsize 3 lc variable";
+	gnu.add(a1);
+//	gnu.plot();
 }
 
 

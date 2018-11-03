@@ -1,5 +1,22 @@
 import os
 import shutil
+import time
+
+def parse_name(name):
+    sn = name.split("-")
+    return sn
+
+def case_info(path, origianl_files):
+    info_dict = {}
+    # folder name is case name
+    info_dict["folder_name"] = os.path.basename(path)
+    parsed_name = parse_name(info_dict["folder_name"])
+    info_dict["level1"] = int(parsed_name[0])
+    info_dict["level2"] = int(parsed_name[1])
+    info_dict["level3"] = int(parsed_name[2])
+    info_dict["name"]   = parsed_name[3]
+
+    return info_dict
 
 def clean(path, original_files):
     print("clean ====== ")

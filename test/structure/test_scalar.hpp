@@ -148,8 +148,6 @@ TEST(scalar, add){
 	std::cout << "      2.3 / " << sc(0, 0) << std::endl;
 	std::cout << "sc3 = " << sc3(0, 0) << std::endl;
 	ASSERT_LE(std::abs(sc3(0, 0) - (2.3 / sc(0, 0))), 1e-4);
-
-
 }
 
 

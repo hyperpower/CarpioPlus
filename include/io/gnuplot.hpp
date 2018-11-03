@@ -508,10 +508,10 @@ public:
 			const std::string & label,
 			const double& x, const double& y,
 			const std::string &append = "") {
+		ASSERT(tag > 0);
 		std::ostringstream cmdstr;
 		cmdstr << "set label " << tag << " \"" << label << "\" at first " << x
-				<< ",first " << y << " " << append;
-		//std::cout<<cmdstr.str();
+				<< ",second " << y << " " << append;
 		cmd(cmdstr.str());
 		return *this;
 	}
