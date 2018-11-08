@@ -2,11 +2,18 @@
 
 This folder include all the test cases for Carpio project.
 
-## Table of content
+## Table of Content
 
 1. Geometry
    1. Basic Geometry Objects
-      1. Point Location
+      1. :ballot_box_with_check: Point Location 
+      2. :ballot_box_with_check: Segments intersection
+      3. Segment vs box
+      4. Triangle intersection
+      5. Point in polygon
+   2. Triangle Surface
+      1. Build triangle surface
+      2. Delauney Triangulation
 2. Algebra
    1. Array
    2. Matrix
@@ -18,9 +25,6 @@ This folder include all the test cases for Carpio project.
 
 Compliation of the cases depends on multiple projects. They are CMake, Python 3 and Multiple packages of Python.
 
-```
-Give examples
-```
 
 ## Usage
 
@@ -32,13 +36,13 @@ If you want to run case "1-1-1-point_location" (project_name), changing your wor
 cd path_to_project
 ```
 
-And 
+And run the 'run.py'
 
 ```
-until finished
+python3 run.py
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+The case will automatically run for you. The figures will put in fig folder, and the data will put in 'data' folder.
 
 ## To do list
 
