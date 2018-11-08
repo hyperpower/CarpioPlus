@@ -1,5 +1,49 @@
-Test cases for Carpio
+# Cases for Carpio Project
 
-* 1 Geometry
-* 2 Algebra
-* 3 Equation
+This folder include all the test cases for Carpio project.
+
+## Table of content
+
+1. Geometry
+   1. Basic Geometry Objects
+      1. Point Location
+2. Algebra
+   1. Array
+   2. Matrix
+3. Equation
+   1. Convection
+      1. One Step 1D
+
+## Prerequisites
+
+Compliation of the cases depends on multiple projects. They are CMake, Python 3 and Multiple packages of Python.
+
+```
+Give examples
+```
+
+## Usage
+
+Each case can work independently. Follwing instruction shows how to these cases.
+
+If you want to run case "1-1-1-point_location" (project_name), changing your working dir to this folder.
+
+```
+cd path_to_project
+```
+
+And 
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## To do list
+
+- delete report.py in 1-1-2
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
