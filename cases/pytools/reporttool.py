@@ -1,6 +1,8 @@
 import os
 from jinja2 import Environment, Template 
 import datetime
+import runtool as RT
+
 
 def filehead():
 	text = """============================
@@ -68,6 +70,35 @@ def render(template, renderdata):
     	renderdata
     )
 
+
+def copy_fig_folder(path, folder_name):
+    os.system("rm -r " + path.rstsource + "/_static/" + folder_name)
+    os.system("cp -r " + path.fig + " " + path.rstsource + "/_static/" + folder_name)
+
+def run(path, runtime, origianl_files):
+    tmp  = filehead()
+
+    file = open(path.this + "/report.rstt", "r")
+    tmp += file.read()
+    file.close()
+
+    tmp += filetail()
+
+    # prepare data ===============================================
+    data      = {}
+    case_data = RT.case_info(path.this, origianl_files)
+    data.update(case_data)
+    file_data = file_info(path.this, origianl_files)
+    data["files"]   = file_data 
+    data["runtime"] = runtime
+    # copy fig ===================================================
+    copy_fig_folder(path, data["folder_name"])
+
+    res = render(tmp, data)
+
+    out_file = open(path.rstsource + "/" + case_data["folder_name"] + ".rst", "w")
+    out_file.write(res)
+    out_file.close()
 
 # get file status
 # (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(file)
