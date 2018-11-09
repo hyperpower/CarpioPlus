@@ -382,8 +382,21 @@ double Cross(
 	return 0.0;
 }
 
+// 1D
+template<typename TYPE>
+Trinary OnWhichSide3(
+		const TYPE& p,
+		const TYPE& v) {
+	if (v > p) {
+		return _POSITIVE_;
+	} else if (v < p) {
+		return _NEGATIVE_;
+	} else {
+		return _ZERO_;
+	}
+}
 
-
+// 2D
 template<typename TYPE>
 Trinary OnWhichSide3(
 		const Point_<TYPE, 2>& p0,
@@ -398,7 +411,7 @@ Trinary OnWhichSide3(
 		return _ZERO_;
 	}
 }
-
+// 3D
 template<typename TYPE>
 Trinary OnWhichSide3(
 		const Point_<TYPE, 3>& p0,

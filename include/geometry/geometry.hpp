@@ -5,6 +5,7 @@
 #include "geometry_define.hpp"
 #include "objects/basic/point.hpp"
 #include "objects/basic/segment.hpp"
+#include "objects/basic/box.hpp"
 #include "objects/basic/line.hpp"
 
 #include "objects/ts/vertex.hpp"

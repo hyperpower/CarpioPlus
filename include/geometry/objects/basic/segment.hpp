@@ -3,7 +3,7 @@
 
 #include "geometry/geometry_define.hpp"
 #include "point.hpp"
-#include "box.hpp"
+//#include "box.hpp"
 #include <array>
 #include <type_traits>
 #include <typeinfo>
@@ -15,6 +15,8 @@ struct TagSegment: public TagGeometry {
 	}
 	;
 };
+
+template<typename TYPE, St DIM> class Box_;
 
 template<typename TYPE, St DIM>
 class Segment_: public std::array< Point_<TYPE, DIM>, 2> {
@@ -314,7 +316,7 @@ inline std::ostream& operator<<(std::ostream& o, const Segment_<TYPE, DIM>& p) {
 	return o << p.ps() << "-->" << p.pe();
 }
 
-// Point loaction relative to a segment
+// Point loaction relative to a segment in 2D
 // It has 7 possibilities
 // ================================
 //   0  |  o--x-->    |  IN
@@ -369,6 +371,60 @@ std::string ToString(const PointToSegmentPosition& ps){
 	SHOULD_NOT_REACH;
 	return "ERROR PointToSegmentPosition";
 }
+
+// For 1D
+// NO _PS_LEFT_ and _PS_RIGHT_
+template<typename TYPE>
+PointToSegmentPosition OnWhichSide5Increase(
+		const TYPE& min,  // start
+		const TYPE& max,  // end
+		const TYPE& v){
+	ASSERT(min <= max);
+	if (v ==  min){
+		return _PS_ON_START_;
+	}else if(v == max){
+		return _PS_ON_END_;
+	}else if (v < min){
+		return _PS_OUT_START_;
+	}else if (v > max){
+		return _PS_OUT_END_;
+	}else{
+		return _PS_IN_;
+	}
+}
+
+template<typename TYPE>
+PointToSegmentPosition OnWhichSide5Decrease(
+		const TYPE& max,  // start
+		const TYPE& min,  // end
+		const TYPE& v){
+	ASSERT(min >= max);
+	if (v ==  min){
+		return _PS_ON_END_;
+	}else if(v == max){
+		return _PS_ON_START_;
+	}else if (v < min){
+		return _PS_OUT_END_;
+	}else if (v > max){
+		return _PS_OUT_START_;
+	}else{
+		return _PS_IN_;
+	}
+}
+
+template<typename TYPE>
+PointToSegmentPosition OnWhichSide5(
+		const TYPE& start,  // start
+		const TYPE& end,    // end
+		const TYPE& v){
+	if(start <= end){
+		return OnWhichSide5Increase(start, end, v);
+	}else{
+		return OnWhichSide5Decrease(start, end, v);
+	}
+}
+
+// 2D
 
 template<typename TYPE>
 PointToSegmentPosition OnWhichSide7(

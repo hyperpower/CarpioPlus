@@ -5,6 +5,7 @@
 #include "point.hpp"
 #include "segment.hpp"
 #include <array>
+#include <map>
 #include "utility/any.hpp"
 
 
@@ -227,6 +228,110 @@ std::ostream& operator<<(std::ostream& stream, const Box_<TYPE, DIM>& box) {
 	stream << "max = " << box.max();
 	stream << "  min = " << box.min();
 	return stream;
+}
+
+
+
+// Point location relative to a box
+// It has 25 possibilities in 2D
+//
+// 51    52    53    54    55
+//        |           |
+// 41 -- 42 == 43 == 44 -- 45
+//        |           |
+// 31    32    33    34    35
+//        |           |
+// 21 -- 22 == 23 == 24 -- 25
+//        |           |
+// 11    12    13    14    15
+//
+inline int _ToInt(const PointToSegmentPosition& ps){
+//	_PS_IN_        = 0  --> 3
+//	_PS_LEFT_      = 1  --> 6
+//	_PS_RIGHT_     = 2  --> 7
+//	_PS_ON_START_  = 3  --> 2
+//	_PS_ON_END_    = 4  --> 4
+//	_PS_OUT_START_ = 5  --> 1
+//	_PS_OUT_END_   = 6  --> 5
+	int _ARES[] = {3, 6, 7, 2, 4, 1, 5};
+	return _ARES[int(ps)];
+}
+
+template<class TYPE>
+int PointToBoxPositionCode(
+		const TYPE& minx, const TYPE& miny,
+		const TYPE& maxx, const TYPE& maxy,
+		const TYPE& vx,   const TYPE& vy){
+	auto positionx =  OnWhichSide5(minx, maxx, vx);
+	auto positiony =  OnWhichSide5(miny, maxy, vy);
+	auto nx        = _ToInt(positionx);
+	auto ny        = _ToInt(positiony);
+	return (ny * 10) + nx;
+}
+
+template<class TYPE>
+int PointToBoxPositionCode(
+		const TYPE& minx, const TYPE& miny, const TYPE& minz,
+		const TYPE& maxx, const TYPE& maxy, const TYPE& maxz,
+		const TYPE& vx,   const TYPE& vy,   const TYPE& vz){
+	auto positionx =  OnWhichSide5(minx, maxx, vx);
+	auto positiony =  OnWhichSide5(miny, maxy, vy);
+	auto positionz =  OnWhichSide5(minz, maxz, vz);
+	auto nx        = _ToInt(positionx);
+	auto ny        = _ToInt(positiony);
+	auto nz        = _ToInt(positionz);
+	return (nz * 100) + (ny * 10) + nx;
+}
+
+template<class TYPE, St DIM>
+int PointToBoxPositionCode(
+		const Point_<TYPE, DIM>& pmin,
+		const Point_<TYPE, DIM>& pmax,
+		const Point_<TYPE, DIM>& p){
+	if(DIM == 1){
+		auto position = OnWhichSide5(pmin.x(), pmax.x(), p.x());
+		return _ToInt(position);
+	}else if(DIM == 2){
+		return PointToBoxPositionCode(
+				   pmin.x(), pmin.y(),
+				   pmax.x(), pmax.y(),
+				   p.x(),    p.y());
+	}else{ //Dim == 3
+		return PointToBoxPositionCode(
+	               pmin.x(), pmin.y(), pmin.z(),
+	               pmax.x(), pmax.y(), pmax.z(),
+				   p.x(),    p.y(),    p.z());
+	}
+}
+
+template<class TYPE, St DIM>
+int PointToBoxPositionCode(
+		const Box_<TYPE, DIM>& box,
+		const Point_<TYPE, DIM>& p){
+	return PointToBoxPositionCode(box.min(), box.max(), p);
+}
+
+template<typename TYPE, St DIM>
+bool IsInOn(
+		const Box_<TYPE, DIM>& box,
+		const Point_<TYPE, DIM>& p){
+	auto pos =  OnWhichSide5(box.min(_X_), box.max(_X_), p.x());
+	if(pos == _PS_OUT_START_ || pos == _PS_OUT_END_){
+		return false;
+	}
+	if (DIM >= 2) {
+		pos = OnWhichSide5(box.min(_Y_), box.max(_Y_), p.y());
+		if (pos == _PS_OUT_START_ || pos == _PS_OUT_END_) {
+			return false;
+		}
+		if (DIM == 3) {
+			pos = OnWhichSide5(box.min(_Z_), box.max(_Z_), p.z());
+			if (pos == _PS_OUT_START_ || pos == _PS_OUT_END_) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 template<typename TYPE, St DIM>
