@@ -3,13 +3,14 @@
 
 #include "geometry/geometry.hpp"
 #include "gtest/gtest.h"
+#include "utility/random.hpp"
 
 namespace carpio {
+typedef Point_<double, 2> Point;
+typedef PointChain_<double, 2> PC;
+typedef GGnuplotActor_<double, 2> GA;
 
 TEST(point_chain, initial){
-	typedef Point_<double, 2> Point;
-	typedef PointChain_<double, 2> PC;
-
 	std::list<Point> l;
 	l.push_back(Point(0,0));
 	l.push_back(Point(1,0));
@@ -26,20 +27,18 @@ TEST(point_chain, initial){
 }
 
 TEST(point_chain, winding_number){
-	typedef Point_<double, 2> Point;
-	typedef PointChain_<double, 2> PC;
-
-	std::list<Point> l;
-	l.push_back(Point(0,   0));
-	l.push_back(Point(1,   0));
-	l.push_back(Point(0.5 ,0.5));
-	l.push_back(Point(1,   1));
-	l.push_back(Point(0,   1));
+	std::list<Point> l =
+	{ Point(0,   0),
+	  Point(1,   0),
+	  Point(0.5 ,0.5),
+	  Point(1,   1),
+	  Point(0,   1)};
 
 	PC pc(l);
 
 	std::list<Point> ltp;
-	ltp.push_back(Point(0.6, 1.8));
+
+	ltp.push_back(Point(Random::nextDouble(-0.5, 1.5), Random::nextDouble(-0.5, 1.5)));
 	ltp.push_back(Point(0.6, 0.8));
 	ltp.push_back(Point(0.8, 0.5));
 	ltp.push_back(Point(0.3, 1.0));
@@ -49,16 +48,20 @@ TEST(point_chain, winding_number){
 	ltp.push_back(Point(0.8, 0.0));
 
 	Gnuplot gnu;
-	gnu.set_xrange(-1, 2);
-	gnu.set_yrange(-1, 2);
+	gnu.set_xrange(-0.5, 1.5);
+	gnu.set_yrange(-0.5, 1.5);
 	int count = 1;
 	for(auto& p : ltp){
 		bool wn = IsInOn(p, pc);
-		gnu.add(GnuplotActor::Points(p, 3));
-		gnu.set_label(count, wn?"T":"F", p.x(), p.y(), "left" );
+		auto actor = GA::Points(p, wn? 3 : 4);
+		actor->style() = "with points ps 2 pt 7 lc variable";
+		gnu.add(actor);
+		gnu.set_label(count, wn? "  IN ":"  OUT ", p.x(), p.y(), "left" );
 		count++;
 	}
-	gnu.add(GnuplotActor::Arrows(pc, 0));
+	auto a_arrows = GA::Arrows(pc, 2);
+	a_arrows->style() = "with vectors lw 2 lc variable";
+	gnu.add(a_arrows);
 	gnu.plot();
 
 }

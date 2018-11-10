@@ -76,6 +76,75 @@ public:
 		}
 		return actor;
 	}
+
+	static spActor LinesPoints(
+			const PointChain& pc,
+			int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with linespoints lc variable";
+		if (pc.empty()) {
+			actor->data().push_back("");
+			return actor;
+		}
+
+		for (auto& p : pc) {
+			if (color_idx >= 0) {
+				actor->data().push_back(
+						ToString(p.x(), p.y(), color_idx, " "));
+			} else {
+				actor->data().push_back(ToString(p.x(), p.y(), 0, " "));
+			}
+		}
+
+		if (color_idx >= 0) {
+			actor->data().push_back(ToString(pc.front().x(), pc.front().y(), color_idx, " "));
+		} else {
+			actor->data().push_back(ToString(pc.front().x(), pc.front().y(), 0, " "));
+		}
+		return actor;
+	}
+
+	static spActor Arrows(
+			const PointChain& pc,
+			int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style() = "with vectors lc variable";
+		if (pc.empty()) {
+			actor->data().push_back("");
+			return actor;
+		}
+
+		auto iterps = pc.begin();
+		auto iterpe = pc.begin();
+		std::advance(iterpe, 1);
+		for (;iterpe !=pc.end();iterps++, iterpe++) {
+			if (color_idx >= 0) {
+				actor->data().push_back(
+						ToString(iterps->x(), iterps->y(),
+								 iterpe->x()-iterps->x() , iterpe->y()-iterps->y(), color_idx, " "));
+			} else {
+				actor->data().push_back(
+				        ToString(iterps->x(), iterps->y(),
+				        		 iterpe->x()-iterps->x() , iterpe->y()-iterps->y(), 0.0, " "));
+			}
+		}
+
+		if (color_idx >= 0) {
+			actor->data().push_back(
+					ToString(pc.back().x(),
+							 pc.back().y(),
+							 pc.front().x() - pc.back().x(),
+							 pc.front().y() - pc.back().y(), color_idx, " "));
+		} else {
+			actor->data().push_back(
+					ToString(iterps->x(), iterps->y(), iterpe->x() - iterps->x(),
+							iterpe->y() - iterps->y(), 0.0, " "));
+		}
+
+		return actor;
+	}
 };
 
 

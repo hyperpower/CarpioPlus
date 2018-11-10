@@ -16,6 +16,7 @@ namespace carpio {
 typedef Point_<double, 3> Point3;
 typedef Point_<double, 2> Point2;
 typedef Segment_<double, 2> Seg2;
+typedef GGnuplotActor_<double, 2> GA;
 
 TEST(segment, segment_initial){
 	Point2 x(1, 0);
@@ -40,7 +41,7 @@ TEST(segment, segment_plot){
 
 	Seg2 seg(x, y);
 Gnuplot gnu;
-	gnu.add(GnuplotActor::LinesPoints(seg));
+	gnu.add(GA::LinesPoints(seg));
 //	gnu.plot();
 	std::cout << "The segemnt is " << seg << std::endl;
 	ASSERT_EQ(seg.ps(), x);
@@ -55,8 +56,8 @@ TEST(segment, segment_point_location){
 	Point2 p(0.0, 1.50);
 
 	Gnuplot gnu;
-	gnu.add(GnuplotActor::Points(p));
-	gnu.add(GnuplotActor::LinesPoints(seg));
+	gnu.add(GA::Points(p));
+	gnu.add(GA::LinesPoints(seg));
 //	gnu.plot();
 	std::cout << "The segemnt is :" << seg << std::endl;
 	std::cout << "The point is   :" << p << std::endl;
@@ -84,9 +85,9 @@ TEST(segment, intersection){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
-	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
-	gnu.add(GnuplotActor::Points(np, 3));
+	gnu.add(GA::LinesPoints(seg1, 0));
+	gnu.add(GA::LinesPoints(seg2, 1));
+	gnu.add(GA::Points(np, 3));
 	gnu.plot();
 }
 
@@ -109,9 +110,9 @@ TEST(segment, intersection2){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
-	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
-	gnu.add(GnuplotActor::Points(np, 3));
+	gnu.add(GA::LinesPoints(seg1, 0));
+	gnu.add(GA::LinesPoints(seg2, 1));
+	gnu.add(GA::Points(np, 3));
 	gnu.plot();
 }
 TEST(segment, intersection3){
@@ -133,9 +134,9 @@ TEST(segment, intersection3){
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
-	gnu.add(GnuplotActor::LinesPoints(seg1, 0));
-	gnu.add(GnuplotActor::LinesPoints(seg2, 1));
-	gnu.add(GnuplotActor::Points(np, 3));
+	gnu.add(GA::LinesPoints(seg1, 0));
+	gnu.add(GA::LinesPoints(seg2, 1));
+	gnu.add(GA::Points(np, 3));
 	gnu.plot();
 }
 

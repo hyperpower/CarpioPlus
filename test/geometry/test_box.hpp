@@ -40,6 +40,21 @@ TEST(box, point_to_box_position){
 	ASSERT_EQ(IsInOn(box, Point2( 1.0, 1.0)), true);
 }
 
+TEST(box, box_box_in_on){
+	std::cout << "Initial 2 boxs" << std::endl;
+	Point2 min1(1, 0);
+	Point2 max1(0, 1);
+	Box2 box1(min1, max1);
+	Box2 box2(Point2(0.5, 0.5), Point2(1.5, 1,5));
+	std::cout << "The box 1 is " << box1 << std::endl;
+	std::cout << "The box 2 is " << box2 << std::endl;
+
+	ASSERT_EQ(IsInOn(box1, box2), true);
+	Box2 box3(Point2(1., 1.), Point2(1.5, 1.5));
+	std::cout << "The box 3 is " << box3 << std::endl;
+	ASSERT_EQ(IsInOn(box1, box3), true);
+}
+
 
 
 

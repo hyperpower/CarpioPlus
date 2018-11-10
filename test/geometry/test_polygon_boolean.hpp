@@ -6,6 +6,10 @@
 
 namespace carpio {
 
+typedef GGnuplotActor_<double, 2> GA;
+typedef GFile_<double,2> GF;
+
+
 inline void two_pointchains(
 		const std::string& aname,
 		const PointChain_<double, 2>& pcc,
@@ -26,13 +30,13 @@ inline void two_pointchains(
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
 //	for (auto& pc : inter) {
-//		gnu.add(GnuplotActor::LinePoints(pc, 4));
+//		gnu.add(GA::LinePoints(pc, 4));
 //	}
 	for (auto& pc : uni) {
-		gnu.add(GnuplotActor::LinesPoints(pc, 6));
+		gnu.add(GA::LinesPoints(pc, 6));
 	}
 //	for (auto& pc : sub) {
-//		gnu.add(GnuplotActor::LinePoints(pc, 7));
+//		gnu.add(GA::LinePoints(pc, 7));
 //	}
 
 	gnu.add(pb.actor_label(gnu));
@@ -340,8 +344,8 @@ TEST(polygon_boolean, test13) {
 	lo.push_back(Point(1.0, 1.0));
 	PC pobject(lo);
 
-	typedef IOFile_Geometry_<double,2> IOFile;
-	IOFile::WritePointChain("test13_clip", pclip);
+
+	GF::WritePointChain("test13_clip", pclip);
 
 //	two_pointchains("test13", pclip, pobject);
 }
@@ -368,8 +372,7 @@ TEST(polygon_boolean, test14) {
 	lo.push_back(Point(-0.8, 1.8));
 	PC pobject(lo);
 
-	typedef IOFile_Geometry_<double,2> IOFile;
-	IOFile::WritePointChain("test13_clip", pclip);
+	GF::WritePointChain("test13_clip", pclip);
 
 //	two_pointchains("test14", pclip, pobject);
 }
@@ -393,8 +396,7 @@ TEST(polygon_boolean, test15) {
 	lo.push_back(Point(2.1,   3.5));
 	PC pobject(lo);
 
-	typedef IOFile_Geometry_<double,2> IOFile;
-	IOFile::WritePointChain("test13_clip", pclip);
+	GF::WritePointChain("test13_clip", pclip);
 
 //	two_pointchains("test15", pclip, pobject);
 }
