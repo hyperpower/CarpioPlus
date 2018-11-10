@@ -30,7 +30,7 @@ Compliation of the cases depends on multiple projects. They are CMake, Python 3 
 
 Each case can work independently. Follwing instruction shows how to these cases.
 
-If you want to run case "1-1-1-point_location" (project_name), changing your working dir to this folder.
+If you want to run case "1-1-1-point_location" (project_name), you can chang your working directory to this folder.
 
 ```
 cd path_to_project

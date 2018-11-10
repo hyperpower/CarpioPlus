@@ -10,7 +10,7 @@
 
 #include "objects/ts/vertex.hpp"
 
-#include "geometry/operation/intersection_ss.hpp"
+#include "geometry/operation/intersection/segment_segment.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 
 #include "geometry/io/ggnuplot_actor.hpp"

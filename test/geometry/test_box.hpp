@@ -4,12 +4,10 @@
  *  Created on: Jun 15, 2018
  *      Author: zhou
  */
-
 #ifndef GEOMETRY_TEST_BOX_HPP_
 #define GEOMETRY_TEST_BOX_HPP_
 #include "geometry/geometry.hpp"
 #include "gtest/gtest.h"
-
 namespace carpio {
 
 
