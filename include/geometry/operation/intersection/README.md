@@ -12,7 +12,7 @@ Files in this folder define all of the functions
 
 ## Segment vs. Segment
 
-All of related functions can be found in '[segment_segment.hpp](include/geometry/operation/intersection/segment_segment.hpp)'. 
+All of related functions can be found in '[segment_segment.hpp](segment_segment.hpp)'. 
 
 
 ## Usage
