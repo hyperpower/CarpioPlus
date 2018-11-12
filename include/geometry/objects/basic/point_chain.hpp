@@ -225,7 +225,8 @@ bool IsInOn(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
 				}else if(  pos == _PS_ON_END_
 						|| pos == _PS_ON_START_
 						|| pos == _PS_IN_){
-					return true;
+					wn = 1; // force winding number be a positive number
+					return;
 				}
 			}
 		}else{
@@ -236,7 +237,8 @@ bool IsInOn(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
 				}else if(  pos == _PS_ON_END_
 						|| pos == _PS_ON_START_
 						|| pos == _PS_IN_){
-					return true;
+					wn = 1; // force winding number be a positive number
+					return;
 				}
 			}
 		}

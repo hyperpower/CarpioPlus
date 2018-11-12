@@ -32,9 +32,6 @@ The first specical case is that the point is *on the edge* of the polgon. The wi
 
 The second specical case is that the point is *on the vertex* of the polgon. 
 
-.. warning::
-   The winding number method will **not** return the right results.
-
 .. figure:: _static/{{folder_name}}/vertex_points.png
    :alt: Point on the vertex of a polygon
    :align: center 

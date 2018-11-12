@@ -7,6 +7,7 @@
 #include "objects/basic/segment.hpp"
 #include "objects/basic/box.hpp"
 #include "objects/basic/line.hpp"
+#include "objects/basic/point_chain.hpp"
 
 #include "objects/ts/vertex.hpp"
 

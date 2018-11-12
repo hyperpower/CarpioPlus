@@ -247,8 +247,8 @@ std::ostream& operator<<(std::ostream& stream, const Box_<TYPE, DIM>& box) {
 //
 inline int _ToInt(const PointToSegmentPosition& ps){
 //	_PS_IN_        = 0  --> 3
-//	_PS_LEFT_      = 1  --> 6
-//	_PS_RIGHT_     = 2  --> 7
+//	_PS_LEFT_      = 1  --> 6 == NOT USE
+//	_PS_RIGHT_     = 2  --> 7 == NOT USE
 //	_PS_ON_START_  = 3  --> 2
 //	_PS_ON_END_    = 4  --> 4
 //	_PS_OUT_START_ = 5  --> 1

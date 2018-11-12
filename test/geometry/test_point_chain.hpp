@@ -45,7 +45,7 @@ TEST(point_chain, winding_number){
 	ltp.push_back(Point(0,   1.0));
 	ltp.push_back(Point(0,   0.5));
 	ltp.push_back(Point(0.8, 0.3));
-	ltp.push_back(Point(0.8, 0.0));
+	ltp.push_back(Point(1.0, 0.0));
 
 	Gnuplot gnu;
 	gnu.set_xrange(-0.5, 1.5);
