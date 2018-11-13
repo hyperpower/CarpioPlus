@@ -10,16 +10,28 @@ This folder include all the test cases for Carpio project.
       2. :ballot_box_with_check: Segments intersection
       3. Segment vs box
       4. Triangle intersection
-      5. Point in polygon
+      5. :ballot_box_with_check: Point in polygon
+      6. Polygon collision detection
+      7. Polygon boolean
    2. Triangle Surface
       1. Build triangle surface
       2. Delauney Triangulation
 2. Algebra
    1. Array
+      1. Array operations
    2. Matrix
+      1. Matrix operations
+3. Domain
+   1. Structure
+   2. Octree
 3. Equation
    1. Convection
       1. One Step 1D
+      2. Gate 1D
+      3. One Step 2D
+      4. Gate 2D
+   2. Poisson
+   3. Navier-Stokes
 
 ## Prerequisites
 
