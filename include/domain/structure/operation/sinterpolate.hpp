@@ -34,11 +34,11 @@ public:
 	typedef SValue_<DIM> Value;
 
 	static void VectorCenterToFace(
-			const SVectorCenter_<DIM>& vc,
-			      SVectorFace_<DIM>&   vf,
-		          spBI                 bi,
-			      spBI                 bj = nullptr,
-				  spBI                 bk = nullptr) {
+			const VectorCenter& vc,
+			      VectorFace&   vf,
+		          spBI          bi,
+			      spBI          bj = nullptr,
+				  spBI          bk = nullptr) {
 		spBI abi[] = { bi, bj, bk };
 		for (auto& idx : vc.order()) {
 			for (St d = 0; d < DIM; d++) {
