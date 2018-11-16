@@ -37,6 +37,10 @@ public:
 
 	}
 
+	St ghost_layer() const{
+		return _grid->ghost_layer();
+	}
+
 	bool is_ghost(const Index& index) const{
 		for (St d = 0; d < DIM; ++d) {
 			Idx res = index.value(d);

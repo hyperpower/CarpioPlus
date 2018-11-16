@@ -20,6 +20,10 @@ public:
 
 	typedef SGrid_<DIM>   Grid;
 	typedef SGrid_<2>     Grid2;
+	typedef SGhost_<DIM>  Ghost;
+	typedef SGhost_<1>    Ghost1;
+	typedef SGhost_<2>    Ghost2;
+	typedef SGhost_<3>    Ghost3;
 	typedef SScalar_<DIM> Scalar;
 	typedef SScalar_<1>   Scalar1;
 	typedef SScalar_<2>   Scalar2;
@@ -28,7 +32,7 @@ public:
 			const Grid2& grid, int color_idx = -1) {
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
-		actor->style()  = "with line lc variable";
+		actor->style()   = "with line lc variable";
 
 		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
 
@@ -39,11 +43,15 @@ public:
 					typename Grid::Poi p = grid.v(order[o], index);
 					if (color_idx >= 0) {
 						actor->data().push_back(
-								ToString(p.value(_X_), p.value(_Y_), color_idx,
-										" "));
+								ToString(p.value(_X_),
+										 p.value(_Y_),
+										 color_idx,
+										 " "));
 					} else {
 						actor->data().push_back(
-								ToString(p.value(_X_), p.value(_Y_), 0, " "));
+								ToString(p.value(_X_),
+										 p.value(_Y_),
+										 0, " "));
 					}
 				}
 				typename Grid2::Poi p = grid.v(0, index);

@@ -23,6 +23,8 @@ public:
 
 	virtual ~SGrid_(){}
 
+	// ghost layer ============================
+	virtual Idx ghost_layer() const{};
 	// index ==================================
 	virtual const Index& n() const{};
 	virtual const Index& N() const{};

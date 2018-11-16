@@ -19,6 +19,8 @@ public:
 
 	}
 
+	virtual St num_layer() const{};
+
 	virtual bool is_ghost(const Index& index) const{};
 	virtual bool is_boundary(
 			const Index& index,

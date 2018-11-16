@@ -62,6 +62,10 @@ public:
 		}
 	}
 
+	Idx ghost_layer() const{
+		return _gl;
+	}
+
 	// index ==================================
 	const Index& n() const{
 		return _n;
@@ -197,7 +201,7 @@ public:
 	// vertex ================================
 	Poi v(Idx order, Idx i, Idx j = 0, Idx k = 0) const {
 		static const short VERTEX_IDX[][3] = {
-					//     x    y    z
+				//     x    y    z
 					{ _M_, _M_, _M_ }, //
 					{ _P_, _M_, _M_ }, //
 					{ _M_, _P_, _M_ }, //

@@ -45,11 +45,16 @@ public:
 		Index n(csx.size(), csy.size(), csz.size());
 		_n = n;
 		_gl = gl;
-for (St i = 0; i < Dim; ++i) {
+		for (St i = 0; i < Dim; ++i) {
 			_ng[i] = _n[i] + 2 * _gl;
 		}
 		_set_non_uniform_grid(csx, csy, csz);
 	}
+
+	Idx ghost_layer() const{
+		return _gl;
+	}
+
 	// index ==================================
 	const Index& n() const {
 		return _n;
