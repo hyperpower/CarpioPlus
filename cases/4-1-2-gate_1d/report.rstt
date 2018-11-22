@@ -1,0 +1,45 @@
+Problem Description
+===================
+
+The 1D gate profile has been initialized at [0.25, 0.75]. The velocity is u = 1m/s. After 1 seconds (100 step with Delta t 0.01). The final profile should be at [1.25, 1.75]
+
+.. figure:: _static/{{folder_name}}/illustration.png
+   :alt: the gate profile
+   :align: center 
+
+   Random points location to a polygon.
+
+Results
+===================
+
+Random points test
+-------------------
+Few points have been generated randomly. The funtion **IsInOn(Point, PointChain)** is used for test the point location. The results is shown as follows:
+
+.. figure:: _static/{{folder_name}}/random_points.png
+   :alt: Points location to a polygon
+   :align: center 
+
+   Random points location to a polygon.
+
+Special case test
+------------------
+The first specical case is that the point is *on the edge* of the polgon. The winding number method will return **True**.
+
+.. figure:: _static/{{folder_name}}/edge_points.png
+   :alt: Point on the edge of a polygon
+   :align: center 
+
+   Point on the edge of a polygon.
+
+
+The second specical case is that the point is *on the vertex* of the polgon. 
+
+.. figure:: _static/{{folder_name}}/vertex_points.png
+   :alt: Point on the vertex of a polygon
+   :align: center 
+
+   Point on the vertex of a polygon.
+
+
+

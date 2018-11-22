@@ -92,6 +92,14 @@ public:
 
 	}
 
+	Grid& grid(){
+		return _grid;
+	}
+
+	const Grid& grid() const{
+		return _grid;
+	}
+
 	bool is_ghost(const Index& index) const{
 		for (St d = 0; d < DIM; ++d) {
 			Idx res = index.value(d);
