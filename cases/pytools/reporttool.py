@@ -19,8 +19,9 @@ Case Information
 ===================
 Run time infomation:
 
-.. table:: Summary of Running Time
+.. table:: Summary of Running Time.
    :widths: auto
+   :align: center 
 
    ============= =====================
     Functions      CPU Time            
@@ -30,15 +31,18 @@ Run time infomation:
    {% endfor -%}
    ============= =====================
 
-Files in this case:
 
-+---------------+---------------------------+---------------------------+ 
-| File          | Creat Time                | Modified Time             | 
-+===============+===========================+===========================+ 
-{% for file in files -%}
-|{{ '%15s' % file.name }}| {{'%24s' % file.ctime}}| {{ '%24s' %  file.mtime}}| 
-+---------------+---------------------------+---------------------------+
-{% endfor %}
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   {% for file in files -%}
+   |{{ '%15s' % file.name }}| {{'%24s' % file.ctime}}| {{ '%24s' %  file.mtime}}| 
+   +---------------+---------------------------+---------------------------+
+   {% endfor %}
 """
 	return text
 

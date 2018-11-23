@@ -19,9 +19,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Carpio'
+project   = 'Carpio'
 copyright = '2018, Chengsi Zhou'
-author = 'Chengsi Zhou'
+author    = 'Chengsi Zhou'
 
 # The short X.Y version
 version = ''
@@ -66,7 +66,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -75,6 +75,8 @@ exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
+
+numfig = True
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -88,7 +90,15 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'github_user': 'hyperpower', # github icon shows under the logo
+    'github_repo': 'CarpioPlus',
+    'fixed_sidebar': True,
+    'logo_name' : True,
+    'logo_text_align' : 'center',
+    'show_powered_by' : False,
+    'font_size' : '18px'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -103,8 +113,20 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
+html_sidebars = {
+    '**': [
+        'about.html',
+        'localtoc.html',
+        'searchbox.html'
+    ],
+    'index': [
+        'about.html',
+        'navigation.html',
+        'searchbox.html'
+    ]
+}
 
+html_show_copyright = True
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

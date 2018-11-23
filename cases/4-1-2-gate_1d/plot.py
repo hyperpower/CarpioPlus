@@ -10,7 +10,6 @@ import multiprocessing
 from multiprocessing import Pool
 
 matplotlib.rcParams['text.usetex']        = True
-matplotlib.rcParams['text.latex.unicode'] = True
 matplotlib.rcParams['font.family']        = 'serif'
 matplotlib.rcParams['font.size']          = 12
 
@@ -331,7 +330,7 @@ def plot_illustration_fig():
     plt.text(1.25, 1.05, "Time = "+ "%.2f" % float(1.0), fontsize = 'large')
 
     plt.annotate('Initial profile', 
-            xy=(0.75, 0.75), xytext=(0.85, 0.85), fontsize = 'large',
+            xy=(0.6, 0.75), xytext=(0.85, 0.85), fontsize = 'large',
             arrowprops = dict(facecolor='black', shrink = 0.05),
             )
     plt.annotate('Advected profile', 

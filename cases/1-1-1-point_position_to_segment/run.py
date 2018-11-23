@@ -5,20 +5,16 @@ import time
 FILE_ORIGINAL = [
     "main.cpp",
     "CMakeLists.txt",
-    "plot.py",
+    # "plot.py",
     "run.py",
     "report.rstt"
 ]
 
-PATH_THIS     = os.path.abspath(os.path.join(__file__,   "../"))
-PATH_CASES    = os.path.abspath(os.path.join(__file__,   "../.."))
-PATH_PROJECT  = os.path.abspath(os.path.join(PATH_CASES, "../"))
-PATH_DATA     = os.path.abspath(os.path.join(PATH_THIS,  "data"))
-PATH_FIG      = os.path.abspath(os.path.join(PATH_THIS,  "fig"))
 PATH_PYTOOLS  = os.path.abspath(os.path.join(__file__, "../../pytools"))
 
 sys.path.append(PATH_PYTOOLS)
 import runtool as RT
+from runtool import Path
 
 import reporttool as REPORT
 
@@ -41,7 +37,6 @@ def build(path):
     runtime.append(("dt_run",  time.clock() - tprev))
     tprev = time.clock()
     print("plot   -------------------------------- ")
-    os.system("python3 plot.py")
     runtime.append(("dt_plot", time.clock() - tprev))
     tprev = time.clock()
     print("report   ------------------------------ ")
@@ -51,9 +46,10 @@ def build(path):
     return runtime
 
 def main():
-    path = RT.Path(__file__)
+    path = Path(__file__)
     RT.clean(path.this, FILE_ORIGINAL)
     rt = build(path)
+
     # print(rt)
 
 if __name__ == '__main__':

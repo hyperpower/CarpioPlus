@@ -10,15 +10,32 @@ Welcome to Carpio's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-Cases
+Theory
 =================
 .. toctree::
    :maxdepth: 1
-   :caption: Table of Contents:
+
+   theory/convection
+
+Cases
+=================
+
+Geometry
+-----------------
+.. toctree::
+   :maxdepth: 1
 
    1-1-1-point_position_to_segment
    1-1-2-segments_intersection
    1-1-5-point_in_polygon
+   
+
+Convection
+-----------------
+.. toctree::
+   :maxdepth: 1
+
+   4-1-2-gate_1d
 
 
 
