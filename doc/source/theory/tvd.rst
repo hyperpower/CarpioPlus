@@ -53,14 +53,13 @@ In order to predict the varible value at the cell-face, :math:`\phi_{i+1/2}` and
 :math:`\kappa`-scheme firstly introduecd by Van Leer. The numerical flux of the :math:`\kappa`-scheme on uniform 1D grids reads:
 
 .. math::
-   \phi_{i+1/2} = \phi_{i} + (\frac{1 + \kappa}{4} (\phi_{i + 1} - \phi_{i}) + \frac{1 - \kappa}{4} (\phi_{i} - \phi_{i - 1})) = 0
+   \phi_{i+1/2} = \phi_{i} + (\frac{1 + \kappa}{4} (\phi_{i + 1} - \phi_{i}) + \frac{1 - \kappa}{4} (\phi_{i} - \phi_{i - 1}))
    :label: eq_k_i12
 
 Eq. :eq:`eq_k_i12` can be extend to non-uniform 1D grids:
 
 .. math::
-   \phi_{i+1/2} = \phi_{i} + \frac{\Delta x_i}{2}(\frac{1 + \kappa}{2} (\frac{d \phi}{d x})_{i+1/2} + \frac{1 - \kappa}{2} (\frac{d \phi}{d x})_{i-1/2} ) = 0
-   :label: eq_k_i12
+   \phi_{i+1/2} = \phi_{i} + \frac{\Delta x_i}{2}(\frac{1 + \kappa}{2} (\frac{d \phi}{d x})_{i+1/2} + \frac{1 - \kappa}{2} (\frac{d \phi}{d x})_{i-1/2} ) 
 
 where,
 
