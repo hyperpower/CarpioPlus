@@ -35,6 +35,7 @@ Convection
 .. toctree::
    :maxdepth: 1
 
+   4-1-1-one_step_1d
    4-1-2-gate_1d
 
 

@@ -5,6 +5,7 @@ We want to find two segments intersection. Here, we define 6 possible cases for 
 
 .. table:: Segement vs. Segment Locations
     :widths: auto
+    :align: center 
 
     =====  ============
      Num.    Type
