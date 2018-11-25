@@ -13,7 +13,7 @@ Welcome to Carpio's documentation!
 Theory
 =================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    theory/convection
 
