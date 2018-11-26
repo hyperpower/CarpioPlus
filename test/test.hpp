@@ -23,9 +23,9 @@
 //#include "substance/test_atmosphere.hpp"
 
 //#include "structure/test_grid.hpp"
-#include "structure/test_ghost.hpp"
+//#include "structure/test_ghost.hpp"
 //#include "structure/test_order.hpp"
-//#include "structure/test_scalar.hpp"
+#include "structure/test_scalar.hpp"
 //#include "structure/test_operation.hpp"
 //#include "equation/test_convection.hpp"
 

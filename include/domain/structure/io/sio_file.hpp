@@ -22,11 +22,11 @@ public:
 
 public:
 	static void OutputScalar(const std::string& filename, const Scalar& data) {
-		// Open a file
 		auto& grid = data.grid();
-		// format first line
 		auto n = grid.n();
+		// Open a file
 		TextFile txtf(filename);
+		// format first line
 		txtf.add_line(tfm::format("## SIZE : %d", data.size()));
 		txtf.add_line(tfm::format("## DIM : %d", DIM));
 		txtf.add_line(tfm::format("## NX : %d", n(_X_)));
@@ -51,6 +51,14 @@ public:
 			txtf.add_line(ss.str());
 		}
 		txtf.write();
+	}
+
+	static void InputScalar(const std::string& filename,
+			                const Scalar&      data){
+		TextFile txtf(filename);
+		txtf.read();
+		txtf.parse_config();
+		txtf.show_config();
 	}
 
 };

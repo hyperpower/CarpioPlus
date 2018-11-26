@@ -219,8 +219,6 @@ public:
 		}
 	}
 
-
-
 	template<class ContainerT>
 	static void Tokenize(const std::string& str, ContainerT& tokens,
 			const std::string& delimiters = " ", bool trimEmpty = true)
