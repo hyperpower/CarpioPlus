@@ -273,6 +273,14 @@ int _QuadraticDiscriminant(const TYPE& a, const TYPE& b, const TYPE& c,
 	}
 }
 
+// n!
+inline double Factorial(St n) {
+	double r = 1;
+	for (St i = n; i > 0; i--) {
+		r *= i;
+	}
+	return r;
+}
 
 
 

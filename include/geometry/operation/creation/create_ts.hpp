@@ -19,11 +19,12 @@ class CreateTS_ {
 public:
 	static const St Dim = DIM;
 	typedef TYPE Vt;
-	typedef Point_<TYPE, DIM> Point;
-	typedef Point_<TYPE, DIM>& ref_Point;
+	typedef Point_<TYPE, DIM>                  Point;
+	typedef Point_<TYPE, DIM>&             ref_Point;
 	typedef const Point_<TYPE, DIM>& const_ref_Point;
-	typedef Segment_<TYPE, DIM> Segment;
-	typedef Segment& ref_Segment;
+
+	typedef Segment_<TYPE, DIM>      Segment;
+	typedef Segment&             ref_Segment;
 	typedef const Segment& const_ref_Segment;
 
 	typedef TriSurface_<TYPE, DIM>          TriSurface;

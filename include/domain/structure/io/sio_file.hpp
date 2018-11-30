@@ -53,14 +53,6 @@ public:
 		txtf.write();
 	}
 
-	static void InputScalar(const std::string& filename,
-			                const Scalar&      data){
-		TextFile txtf(filename);
-		txtf.read();
-		txtf.parse_config();
-		txtf.show_config();
-	}
-
 };
 
 }

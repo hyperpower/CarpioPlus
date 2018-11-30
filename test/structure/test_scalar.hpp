@@ -55,17 +55,6 @@ TEST(scalar, outputfile) {
 	IOFile::OutputScalar("s.txt", sc);
 }
 
-TEST(scalar, readfile){
-	Point_<Vt, 2> pmin(0, 0, 0);
-	Point_<Vt, 2> pmax(1, 1, 1);
-	spSGrid spsg(new SGridUniform_<2>(pmin, { 5, 5 }, 0.3, 2));
-	spSGhost spgh(new SGhostRegular_<2>(spsg));
-	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
-
-	Scalar sc(spsg, spgh, sporder);
-
-	IOFile::InputScalar("s.txt", sc);
-}
 
 TEST(scalar, add){
 

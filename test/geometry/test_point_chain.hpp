@@ -62,8 +62,7 @@ TEST(point_chain, winding_number){
 	auto a_arrows = GA::Arrows(pc, 2);
 	a_arrows->style() = "with vectors lw 2 lc variable";
 	gnu.add(a_arrows);
-	gnu.plot();
-
+//	gnu.plot();
 }
 
 

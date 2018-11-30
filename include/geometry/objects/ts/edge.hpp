@@ -44,7 +44,7 @@ public:
 
 	typedef std::list<pEdg> list_pEdge;
 	typedef std::list<pVer> list_pVertex;
-	typedef std::list<pFac> list_pTriFace;
+	typedef std::list<pFac> list_pFace;
 
 	typedef typename std::list<pFac>::iterator iterator_face;
 	typedef typename std::list<pFac>::const_iterator const_iterator_face;
@@ -53,7 +53,7 @@ public:
 	pVer v1;
 	pVer v2;
 
-	list_pTriFace faces;
+	list_pFace faces;
 
 	Any _any_data;
 

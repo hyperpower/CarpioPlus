@@ -89,6 +89,10 @@ public:
 		_closed = true;
 	}
 
+	void set_open() {
+		_closed = false;
+	}
+
 	bool closed() const {
 		return _closed;
 	}

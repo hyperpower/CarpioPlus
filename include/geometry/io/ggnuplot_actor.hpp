@@ -52,6 +52,98 @@ public:
 		actor->data().push_back("");
 		return actor;
 	}
+	template<class ITERPOINTS>
+	static spActor Points(
+			ITERPOINTS begin,
+			ITERPOINTS end,
+			int color_idx      =-1) {
+		ASSERT(Dim == 2);
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with points lc variable";
+
+		auto iterps = begin;
+		for (; iterps != end; iterps++) {
+			if (color_idx >= 0) {
+				actor->data().push_back(
+						ToString(iterps->x(), iterps->y(), color_idx, " "));
+			} else {
+				actor->data().push_back(
+						ToString(iterps->x(), iterps->y(), 0.0, " "));
+			}
+		}
+		actor->data().push_back("");
+		return actor;
+	}
+
+	template<class ITERPOINTS>
+	static spActor LinesPoints(
+				ITERPOINTS begin,
+				ITERPOINTS end,
+				int color_idx      = -1,
+				bool close         = false) {
+		ASSERT(Dim == 2);
+		int color = color_idx > 0? color_idx : 0;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with linespoints lc variable";
+
+		auto iterps = begin;
+		auto iterpe = std::next(begin);
+		for (; iterpe != end; iterps++, iterpe++) {
+			actor->data().push_back(
+					ToString(iterps->x(), iterps->y(), color, " "));
+			actor->data().push_back(
+					ToString(iterpe->x(), iterpe->y(), color, " "));
+			actor->data().push_back("");
+		}
+
+		if (close) {
+			auto iterf = begin;
+			auto iterb = std::prev(end);
+			actor->data().push_back(
+					ToString(iterb->x(), iterb->y(), color, " "));
+			actor->data().push_back(
+					ToString(iterf->x(), iterf->y(), color, " "));
+			actor->data().push_back("");
+		}
+
+		return actor;
+	}
+
+	template<class ITERPOINTS>
+	static spActor Lines(ITERPOINTS begin,
+			             ITERPOINTS end,
+						 int color_idx = -1,
+			             bool close = false) {
+		ASSERT(Dim == 2);
+		int color = color_idx > 0? color_idx : 0;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with lines lc variable";
+
+		auto iterps = begin;
+		auto iterpe = std::next(begin);
+		for (; iterpe != end; iterps++, iterpe++) {
+			actor->data().push_back(
+					ToString(iterps->x(), iterps->y(), color, " "));
+			actor->data().push_back(
+					ToString(iterpe->x(), iterpe->y(), color, " "));
+			actor->data().push_back("");
+		}
+
+		if (close) {
+			auto iterf = begin;
+			auto iterb = std::prev(end);
+			actor->data().push_back(
+					ToString(iterb->x(), iterb->y(), color, " "));
+			actor->data().push_back(
+					ToString(iterf->x(), iterf->y(), color, " "));
+			actor->data().push_back("");
+		}
+
+		return actor;
+	}
 
 	static spActor LinesPoints(
 			const Segment& seg,
@@ -110,7 +202,7 @@ public:
 			int color_idx = -1) {
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3:4:5 title \"\" ";
-		actor->style() = "with vectors lc variable";
+		actor->style()   = "with vectors lc variable";
 		if (pc.empty()) {
 			actor->data().push_back("");
 			return actor;
@@ -130,17 +222,19 @@ public:
 				        		 iterpe->x()-iterps->x() , iterpe->y()-iterps->y(), 0.0, " "));
 			}
 		}
-
-		if (color_idx >= 0) {
-			actor->data().push_back(
-					ToString(pc.back().x(),
-							 pc.back().y(),
-							 pc.front().x() - pc.back().x(),
-							 pc.front().y() - pc.back().y(), color_idx, " "));
-		} else {
-			actor->data().push_back(
-					ToString(iterps->x(), iterps->y(), iterpe->x() - iterps->x(),
-							iterpe->y() - iterps->y(), 0.0, " "));
+		if (pc.closed()) {
+			if (color_idx >= 0) {
+				actor->data().push_back(
+						ToString(pc.back().x(), pc.back().y(),
+								pc.front().x() - pc.back().x(),
+								pc.front().y() - pc.back().y(), color_idx,
+								" "));
+			} else {
+				actor->data().push_back(
+						ToString(iterps->x(), iterps->y(),
+								iterpe->x() - iterps->x(),
+								iterpe->y() - iterps->y(), 0.0, " "));
+			}
 		}
 
 		return actor;
