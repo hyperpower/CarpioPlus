@@ -16,6 +16,7 @@
 #include "field/sscalar.hpp"
 #include "field/svector_center.hpp"
 #include "field/svector_face.hpp"
+#include "field/sexpression.hpp"
 
 #include "operation/su_dot_nabla_phi.hpp"
 #include "operation/soperation.hpp"

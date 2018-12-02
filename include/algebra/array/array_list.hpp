@@ -490,10 +490,10 @@ public:
     void reconstruct(size_type Len);
     //arrayListV(V *nd, size_type Len);
     //opertator====================================
-    ref_Self operator+=(const V& a);
-    ref_Self operator-=(const V& a);
-    ref_Self operator*=(const V& a);
-    ref_Self operator/=(const V& a);
+    ref_Self operator+=(const value_type& a);
+    ref_Self operator-=(const value_type& a);
+    ref_Self operator*=(const value_type& a);
+    ref_Self operator/=(const value_type& a);
     ref_Self operator+=(const Self& a);
     ref_Self operator-=(const Self& a);
     ref_Self operator*=(const Self& a);
@@ -564,7 +564,7 @@ ArrayListV_<V>::ArrayListV_() :
 template<typename V>
 ArrayListV_<V>::ArrayListV_(size_type Len) :
     ArrayListT_<V>(Len) {
-    this->assign(0);
+    this->assign(V(0));
 }
 template<typename V>
 ArrayListV_<V>::ArrayListV_(size_type Len, const V& nd) :
@@ -586,7 +586,7 @@ void ArrayListV_<V>::reconstruct(size_type Len) {
         delete[] this->m_p;
     this->m_Len = Len;
     this->m_p = new V[this->m_Len];
-    this->assign(0);
+    this->assign(V(0));
 }
 
 template<typename V>
@@ -777,7 +777,7 @@ void ArrayListV_<V>::show() const {
 }
 //=========================================================
 template<typename V>
-ArrayListV_<V>& ArrayListV_<V>::operator+=(const V &a) {
+ArrayListV_<V>& ArrayListV_<V>::operator+=(const ArrayListV_<V>::value_type &a) {
     AddEqual(this->size(), this->m_p, a);
     return *this;
 }

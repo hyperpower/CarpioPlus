@@ -39,15 +39,12 @@ public:
 			const Point& p,
 			int color_idx = -1) {
 		ASSERT(Dim == 2);
+		int color = color_idx > 0? color_idx : 0;
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with points lc variable";
 
-		if (color_idx >= 0) {
-			actor->data().push_back(ToString(p.x(), p.y(), color_idx, " "));
-		} else {
-			actor->data().push_back(ToString(p.x(), p.y(), 0, " "));
-		}
+		actor->data().push_back(ToString(p.x(), p.y(), color, " "));
 
 		actor->data().push_back("");
 		return actor;

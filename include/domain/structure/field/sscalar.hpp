@@ -170,7 +170,6 @@ public:
     	return _ghost->size_normal();
     }
 
-
 	const Grid& grid() const {
 		return (*_grid);
 	}
@@ -180,6 +179,17 @@ public:
 	const Order& order() const {
 		return (*_order);
 	}
+
+	spGrid spgrid() const{
+		return _grid;
+	}
+	spGhost spghost() const{
+		return _ghost;
+	}
+	spOrder sporder() const{
+		return _order;
+	}
+
 
     bool is_compatible(const Self& o) const{
     	return (  _grid  == o._grid

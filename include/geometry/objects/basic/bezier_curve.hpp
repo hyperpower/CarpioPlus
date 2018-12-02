@@ -141,14 +141,14 @@ protected:
 		St degree = cp.size();
 		for (St r = 0; r < degree - 1; ++r) {
 			for (St i = 0; i < degree - 1 - r; ++i) {
-				res[i] = _iter_t(res[i], res[i + 1], t);
+				res[i] = _inter_t(res[i], res[i + 1], t);
 			}
 		}
 		return res[0];
 
 	}
 
-	Point _iter_t(const Point& p1, const Point& p2, Cvt t){
+	Point _inter_t(const Point& p1, const Point& p2, Cvt t){
 		Point res;
 		for(St i = 0; i < Dim; ++i){
 			res[i] = (1.0 - t) * p1[i] + t * p2[i];

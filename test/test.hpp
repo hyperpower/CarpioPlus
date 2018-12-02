@@ -13,7 +13,7 @@
 //#include "geometry/test_segment.hpp"
 //#include "geometry/test_polygon_boolean.hpp"
 //#include "geometry/test_point_chain.hpp"
-#include "geometry/test_bezier.hpp"
+//#include "geometry/test_bezier.hpp"
 //#include "geometry/test_ts.hpp"
 //#include "geometry/test_box.hpp"
 //#include "algebra/test_multi_array.hpp"
@@ -27,6 +27,7 @@
 //#include "structure/test_ghost.hpp"
 //#include "structure/test_order.hpp"
 //#include "structure/test_scalar.hpp"
+#include "structure/test_sexpression.hpp"
 //#include "structure/test_operation.hpp"
 //#include "equation/test_convection.hpp"
 

@@ -160,26 +160,6 @@ public:
 	virtual ~SUdotNabla_TVD(){
 	}
 
-	//  A review on TVD schemes and a refined flux-limiter
-	//  for steady-state calculations
-	//  Di Zhang, Chunbo Jiang, Dongfang Liang, Liang Cheng
-	//  Journal of Computational Physics 302 (2015) 114–154
-	//
-	// k-scheme
-	//            1 + k           1 - k
-	// limiter = ------- r(CD) + -------
-	//              2               2
-	//          d(phi)/dx (CU)
-	// r(CD) = ----------------
-	//          d(phi)/dx (DC)
-	//
-	// SOU                      k = -1  (Second order upwind   upwind2)
-	// Fromm                    k = 0
-	// CUI                      k = 1/3
-	// QUICK                    k = 1/2
-	// CDS                      k = 1   (Center Difference Scheme,  center)
-
-
 	// Improved total variation diminishing schemes for advection
 	// simulation on arbitrary grids
 	// J. Hou , F. Simons and R. Hinkelmann

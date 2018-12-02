@@ -36,6 +36,9 @@ public:
 	LinearPolynomial_() : Base(), _num(0) {
 	}
 
+	LinearPolynomial_(const COE& c): Base(), _num(c){
+	}
+
 	LinearPolynomial_(const Self& other) : Base(other), _num(other._num) {
 	}
 
@@ -46,6 +49,12 @@ public:
 	Self& operator=(const Self& other){
 		this->Base::operator =(other);
 		_num = other._num;
+		return *this;
+	}
+
+	Self& operator=(const Coe& coe){
+		this->clear();
+		_num = coe;
 		return *this;
 	}
 
@@ -69,6 +78,19 @@ public:
 		} else {
 			this->operator [](t) = 1;
 		}
+		return *this;
+	}
+	ref_Self operator+=(const Self& a){
+		for (auto& ia : a){
+			if(this->find(ia.first)!= this->end()){
+				// has the item;
+				this->operator [](ia.first) += ia.second;
+			}else{
+				this->operator [](ia.first) = ia.second;
+			}
+		}
+		this->_num += a._num;
+		this->_trim_zero();
 		return *this;
 	}
 	ref_Self operator-=(const Coe& a){
@@ -100,19 +122,7 @@ public:
 		this->_num /= a;
 		return *this;
 	}
-	ref_Self operator+=(const Self& a){
-		for (auto& ia : a){
-			if(this->find(ia.first)!= this->end()){
-				// has the item;
-				this->operator [](ia.first) += ia.second;
-			}else{
-				this->operator [](ia.first) = ia.second;
-			}
-		}
-		this->_num += a._num;
-		this->_trim_zero();
-		return *this;
-	}
+
 	ref_Self operator-=(const Self& a) {
 		for (auto& ia : a) {
 			if (this->find(ia.first) != this->end()) {
