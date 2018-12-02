@@ -28,6 +28,7 @@ public:
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
+	typedef SExpression_<DIM>   Expression;
 
 protected:
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -51,7 +52,16 @@ public:
 
 	}
 
-	virtual Scalar operator()(const VectorFace& U, const Scalar& phi){
+	virtual Scalar operator()(
+			const VectorFace& U,
+			const Scalar&     phi,
+			const Vt&         t = 0.0){
+
+	}
+	virtual Expression operator()(
+			const VectorFace& U,
+			const Expression& phi,
+			const Vt&         t = 0.0){
 
 	}
 
@@ -71,6 +81,7 @@ public:
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
 	typedef std::shared_ptr<BoundaryIndex> spBI;
+	typedef SExpression_<DIM>   Expression;
 
 	typedef SValue_<DIM> Value;
 
@@ -121,6 +132,13 @@ public:
 		}
 
 		return res;
+	}
+
+	Expression operator()(
+				const VectorFace& U,
+				const Expression& phi,
+				const Vt&         t = 0.0){
+
 	}
 
 };
