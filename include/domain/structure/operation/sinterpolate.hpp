@@ -6,7 +6,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
@@ -23,9 +23,9 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 	typedef SIndex_<DIM>  Index;
-	typedef std::shared_ptr<Scalar> spScalar;
+	typedef std::shared_ptr<Field> spField;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;

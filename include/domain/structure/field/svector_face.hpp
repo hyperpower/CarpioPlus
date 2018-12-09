@@ -4,7 +4,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "sscalar.hpp"
+#include "sfield.hpp"
 #include "utility/tinyformat.hpp"
 
 #include "algebra/array/multi_array.hpp"

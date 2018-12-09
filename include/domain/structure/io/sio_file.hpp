@@ -2,7 +2,7 @@
 #define _S_IO_FILE_HPP
 
 #include "domain/structure/grid/sgrid.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "io/io_define.hpp"
 #include "domain/boundary/boundary_index.hpp"
 
@@ -18,10 +18,10 @@ public:
 	typedef BoundaryIndex BI;
 
 
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 
 public:
-	static void OutputScalar(const std::string& filename, const Scalar& data) {
+	static void OutputField(const std::string& filename, const Field& data) {
 		auto& grid = data.grid();
 		auto n = grid.n();
 		// Open a file

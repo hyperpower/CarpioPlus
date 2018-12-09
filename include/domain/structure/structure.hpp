@@ -13,7 +13,7 @@
 #include "order/order.hpp"
 #include "order/xyz.hpp"
 
-#include "field/sscalar.hpp"
+#include "field/sfield.hpp"
 #include "field/svector_center.hpp"
 #include "field/svector_face.hpp"
 #include "field/sexpression.hpp"
@@ -56,13 +56,13 @@ public:
 	typedef std::shared_ptr<Order>       spOrder;
 	typedef std::shared_ptr<const Order> spcOrder;
 
-	typedef SScalar_<DIM>                 Scalar;
-	typedef Scalar&                       ref_Scalar;
-	typedef const Scalar&                 const_ref_Scalar;
-	typedef Scalar*                       pScalar;
-	typedef const Scalar*                 pcScalar;
-	typedef std::shared_ptr<Scalar>       spScalar;
-	typedef std::shared_ptr<const Scalar> spcScalar;
+	typedef SField_<DIM>                 Field;
+	typedef Field&                       ref_Field;
+	typedef const Field&                 const_ref_Field;
+	typedef Field*                       pField;
+	typedef const Field*                 pcField;
+	typedef std::shared_ptr<Field>       spField;
+	typedef std::shared_ptr<const Field> spcField;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;

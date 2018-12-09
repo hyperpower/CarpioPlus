@@ -2,7 +2,7 @@
 #define _S_GNUPLOT_ACTOR_HPP
 
 #include "domain/structure/grid/sgrid.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "io/gnuplot.hpp"
 
 namespace carpio{
@@ -24,9 +24,9 @@ public:
 	typedef SGhost_<1>    Ghost1;
 	typedef SGhost_<2>    Ghost2;
 	typedef SGhost_<3>    Ghost3;
-	typedef SScalar_<DIM> Scalar;
-	typedef SScalar_<1>   Scalar1;
-	typedef SScalar_<2>   Scalar2;
+	typedef SField_<DIM> Field;
+	typedef SField_<1>   Field1;
+	typedef SField_<2>   Field2;
 
 	static spActor WireFrame(
 			const Grid2& grid, int color_idx = -1) {
@@ -70,7 +70,7 @@ public:
 	}
 
 
-	static spActor Lines(const Scalar1& s, int color_idx = -1) {
+	static spActor Lines(const Field1& s, int color_idx = -1) {
 		spActor actor    = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with line lc variable";

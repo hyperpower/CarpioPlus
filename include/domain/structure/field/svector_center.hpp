@@ -4,7 +4,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "sscalar.hpp"
+#include "sfield.hpp"
 #include "utility/tinyformat.hpp"
 
 #include "algebra/array/multi_array.hpp"
@@ -28,8 +28,8 @@ public:
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
 	typedef SVectorCenter_<DIM> Self;
-	typedef SScalar_<DIM> Scalar;
-	typedef std::shared_ptr<Scalar> spScalar;
+	typedef SField_<DIM> Field;
+	typedef std::shared_ptr<Field> spScalar;
 
 protected:
 	std::array<spScalar, DIM> _arrs;
@@ -68,11 +68,11 @@ public:
 		return _arrs[_X_]->ghost();
 	}
 
-	Scalar& operator[](St d){
+	Field& operator[](St d){
 		return *(_arrs[d]);
 	}
 
-	const Scalar& operator[](St d) const{
+	const Field& operator[](St d) const{
 		return *(_arrs[d]);
 	}
 

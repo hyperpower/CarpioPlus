@@ -12,13 +12,13 @@
 namespace carpio{
 
 template<St DIM>
-class SExpression_{
+class SExpField_{
 public:
 	typedef SIndex_<DIM> Index;
 	typedef SGrid_<DIM>  Grid;
 	typedef SGhost_<DIM> Ghost;
 	typedef SOrder_<DIM> Order;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 
 	typedef std::shared_ptr<SIndex_<DIM> > spIndex;
 	typedef std::shared_ptr<SGrid_<DIM>  > spGrid;
@@ -29,10 +29,11 @@ public:
 
 	typedef LinearPolynomial_<Vt, Index> Expression;
 	typedef Expression ValueType;
+
 	typedef MultiArrayV_<Expression, DIM> Mat;
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
-	typedef SExpression_<DIM> Self;
+	typedef SExpField_<DIM> Self;
 protected:
 	spGrid  _grid;
 	spGhost _ghost;
@@ -41,19 +42,19 @@ protected:
 	Mat _mat;
 
 public:
-	SExpression_(spGrid spg, spGhost spgh):
+	SExpField_(spGrid spg, spGhost spgh):
 	    _grid(spg), _ghost(spgh),
 		_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
 	    // Initall a default order_xyz
 	    _order = spOrder(new SOrderXYZ_<DIM>(spg,spgh));
 	}
 
-	SExpression_(spGrid spg, spGhost spgh, spOrder spor) :
+	SExpField_(spGrid spg, spGhost spgh, spOrder spor) :
 			_grid(spg), _ghost(spgh), _order(spor),
 			_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)) {
 	}
 
-	SExpression_(const Self& other) :
+	SExpField_(const Self& other) :
 			_grid(other._grid),
 			_ghost(other._ghost),
 			_order(other._order),
@@ -115,7 +116,7 @@ public:
 	    return *this;
 	}
 
-	Self& operator+=(const Scalar& rhs){
+	Self& operator+=(const Field& rhs){
 		ASSERT(is_compatible(rhs));
 		// actual addition of rhs to *this
 		for(auto& idx : *(_order)){
@@ -139,7 +140,7 @@ public:
 	    return *this;
 	}
 
-	Self& operator-=(const Scalar& rhs){
+	Self& operator-=(const Field& rhs){
 		ASSERT(is_compatible(rhs));
 		// actual addition of rhs to *this
 		for(auto& idx : *(_order)){
@@ -156,7 +157,7 @@ public:
 	    return *this;
 	}
 
-	Self& operator*=(const Scalar& rhs){
+	Self& operator*=(const Field& rhs){
 		ASSERT(is_compatible(rhs));
 		// actual addition of rhs to *this
 		for(auto& idx : *(_order)){
@@ -173,7 +174,7 @@ public:
 	    return *this;
 	}
 
-	Self& operator/=(const Scalar& rhs){
+	Self& operator/=(const Field& rhs){
 		ASSERT(is_compatible(rhs));
 		// actual addition of rhs to *this
 		for(auto& idx : *(_order)){
@@ -190,7 +191,7 @@ public:
 	    return *this;
 	}
 
-	bool is_compatible(const Scalar& o) const {
+	bool is_compatible(const Field& o) const {
 		return (   _grid  == o.spgrid()
 				&& _ghost == o.spghost());
 	}
@@ -216,69 +217,69 @@ protected:
 };
 
 template<St DIM>
-inline SExpression_<DIM> operator+(SExpression_<DIM> lhs, const SExpression_<DIM>& rhs){
+inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const SExpField_<DIM>& rhs){
 	lhs += rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator+(SExpression_<DIM> lhs, const Vt& rhs){
+inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const Vt& rhs){
 	lhs += rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator+(const Vt& lhs, SExpression_<DIM> rhs){
+inline SExpField_<DIM> operator+(const Vt& lhs, SExpField_<DIM> rhs){
 	rhs += lhs;
 	return rhs;
 }
 template<St DIM>
-inline SExpression_<DIM> operator-(SExpression_<DIM> lhs, const SExpression_<DIM>& rhs){
+inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const SExpField_<DIM>& rhs){
 	lhs -= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator-(SExpression_<DIM> lhs, const Vt& rhs){
+inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const Vt& rhs){
 	lhs -= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator-(const Vt& lhs, SExpression_<DIM> rhs){
+inline SExpField_<DIM> operator-(const Vt& lhs, SExpField_<DIM> rhs){
 	rhs -= lhs;
 	return rhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator*(SExpression_<DIM> lhs, const Vt& rhs){
+inline SExpField_<DIM> operator*(SExpField_<DIM> lhs, const Vt& rhs){
 	lhs *= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator*(const Vt& lhs, SExpression_<DIM> rhs){
+inline SExpField_<DIM> operator*(const Vt& lhs, SExpField_<DIM> rhs){
 	rhs *= lhs;
 	return rhs;
 }
 template<St DIM>
-inline SExpression_<DIM> operator*(SExpression_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SExpField_<DIM> operator*(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs *= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SExpression_<DIM> operator*(const SScalar_<DIM>& lhs, SExpression_<DIM> rhs){
+inline SExpField_<DIM> operator*(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
 	rhs *= lhs;
 	return rhs;
 }
 template<St DIM>
-inline SExpression_<DIM> operator/(SExpression_<DIM> lhs, const Vt& rhs){
+inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const Vt& rhs){
 	lhs /= rhs;
 	return lhs;
 }
 template<St DIM>
-inline SExpression_<DIM> operator/(SExpression_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs /= rhs;
 	return lhs;
 }

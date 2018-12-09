@@ -11,7 +11,7 @@
 namespace carpio{
 
 template<St DIM>
-class SScalar_{
+class SField_{
 public:
 	typedef SIndex_<DIM> Index;
 	typedef SGrid_<DIM>  Grid;
@@ -28,7 +28,7 @@ public:
 	typedef MultiArrayV_<Vt, DIM> Mat;
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
-	typedef SScalar_<DIM> Self;
+	typedef SField_<DIM> Self;
 protected:
 	spGrid  _grid;
 	spGhost _ghost;
@@ -37,18 +37,18 @@ protected:
 	Mat _mat;
 
 public:
-	SScalar_(spGrid spg, spGhost spgh): 
+	SField_(spGrid spg, spGhost spgh):
 	    _grid(spg), _ghost(spgh),
 		_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
 	    // Initall a default order_xyz
 	    _order = spOrder(new SOrderXYZ_<DIM>(spg,spgh));
 	}
-	SScalar_(spGrid spg, spGhost spgh, spOrder spor) :
+	SField_(spGrid spg, spGhost spgh, spOrder spor) :
 			_grid(spg), _ghost(spgh), _order(spor),
 			_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)) {
 	}
 
-	SScalar_(const Self& other):
+	SField_(const Self& other):
 	    _grid(other._grid), 
 	    _ghost(other._ghost), 
 	    _order(other._order), 
@@ -204,12 +204,12 @@ public:
 
 };
 template<St DIM>
-bool IsCompatible(const SScalar_<DIM>& lhs, const SScalar_<DIM>& rhs){
+bool IsCompatible(const SField_<DIM>& lhs, const SField_<DIM>& rhs){
 	return lhs.is_compatible(rhs);
 }
 
 template<St DIM>
-std::ostream& operator<<(std::ostream& stream, const SScalar_<DIM>& s) {
+std::ostream& operator<<(std::ostream& stream, const SField_<DIM>& s) {
 	for (St d = 0; d < DIM; ++d) {
 		tfm::format(stream, "%d", s.n(d));
 		if(d < DIM - 1){
@@ -254,74 +254,74 @@ std::ostream& operator<<(std::ostream& stream, const SScalar_<DIM>& s) {
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator+(SScalar_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SField_<DIM> operator+(SField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs += rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator+(SScalar_<DIM> lhs, const Vt& rhs){
+inline SField_<DIM> operator+(SField_<DIM> lhs, const Vt& rhs){
 	lhs += rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator+(const Vt& lhs, SScalar_<DIM> rhs){
+inline SField_<DIM> operator+(const Vt& lhs, SField_<DIM> rhs){
 	rhs += lhs;
 	return rhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator-(SScalar_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SField_<DIM> operator-(SField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs -= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator-(SScalar_<DIM> lhs, const Vt& rhs){
+inline SField_<DIM> operator-(SField_<DIM> lhs, const Vt& rhs){
 	lhs -= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator-(const Vt& lhs, SScalar_<DIM> rhs){
+inline SField_<DIM> operator-(const Vt& lhs, SField_<DIM> rhs){
 	rhs = -rhs + lhs;
 	return rhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator*(SScalar_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SField_<DIM> operator*(SField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs *= rhs;
   	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator*(SScalar_<DIM> lhs, const Vt& rhs){
+inline SField_<DIM> operator*(SField_<DIM> lhs, const Vt& rhs){
 	lhs *= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator*(const Vt& lhs, SScalar_<DIM> rhs){
+inline SField_<DIM> operator*(const Vt& lhs, SField_<DIM> rhs){
 	rhs *= lhs;
 	return rhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator/(SScalar_<DIM> lhs, const SScalar_<DIM>& rhs){
+inline SField_<DIM> operator/(SField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs /= rhs;
   	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator/(SScalar_<DIM> lhs, const Vt& rhs){
+inline SField_<DIM> operator/(SField_<DIM> lhs, const Vt& rhs){
 	lhs /= rhs;
 	return lhs;
 }
 
 template<St DIM>
-inline SScalar_<DIM> operator/(const Vt& lhs, const SScalar_<DIM>& rhs){
-	SScalar_<DIM> res(rhs);
+inline SField_<DIM> operator/(const Vt& lhs, const SField_<DIM>& rhs){
+	SField_<DIM> res(rhs);
 	res.assign(lhs);
 	res /= rhs;
 	return res;

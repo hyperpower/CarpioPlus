@@ -39,6 +39,10 @@ public:
 	LinearPolynomial_(const COE& c): Base(), _num(c){
 	}
 
+	LinearPolynomial_(const TERM& t): Base(), _num(0.0){
+		this->operator [](t) = 1.0;
+	}
+
 	LinearPolynomial_(const Self& other) : Base(other), _num(other._num) {
 	}
 

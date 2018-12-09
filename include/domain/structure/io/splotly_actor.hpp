@@ -3,7 +3,7 @@
 
 #include "io/plotly.hpp"
 #include "domain/structure/grid/sgrid.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 namespace carpio{
 namespace PlotlyActor{
 
@@ -60,9 +60,9 @@ spPA_scatter3d WireFrame(const SGrid_<DIM>& grid) {
 }
 
 template<St DIM>
-spPA_scatter ScalarCenter(const SScalar_<DIM>& v, St dim = 2, Idx i = 0) {
+spPA_scatter FieldCenter(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
 	typedef SGrid_<DIM> Grid;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 	typedef std::list<double> Listd;
 	Listd lx, ly, lz, lv;
 	for(auto& index : v.order()){
@@ -95,9 +95,9 @@ spPA_scatter ScalarCenter(const SScalar_<DIM>& v, St dim = 2, Idx i = 0) {
 }
 
 template<St DIM>
-spPA_scatter3d ScalarCenter3d(const SScalar_<DIM>& v, St dim = 2, Idx i = 0) {
+spPA_scatter3d FieldCenter3d(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
 	typedef SGrid_<DIM> Grid;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 	typedef std::list<double> Listd;
 	Listd lx, ly, lz, lv;
 	for(auto& index : v.order()){
@@ -127,7 +127,7 @@ spPA_scatter3d ScalarCenter3d(const SScalar_<DIM>& v, St dim = 2, Idx i = 0) {
 template<St DIM>
 spPA_heatmap Heatmap( //
 		const SGrid_<DIM>& grid, //
-		const SScalar_<DIM>& csfield, //
+		const SField_<DIM>& csfield, //
 		St dim1 = _X_, St dim2 = _Y_, Idx idx = 0) {
 	typedef SGrid_<DIM> Grid;
 	typedef SIndex_<DIM> Index;

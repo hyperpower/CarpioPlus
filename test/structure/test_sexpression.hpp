@@ -16,8 +16,8 @@ typedef std::shared_ptr<SGrid_<2> > spSGrid;
 typedef std::shared_ptr<SGhost_<2> > spSGhost;
 typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
 
-typedef SExpression_<2> Exp;
-typedef SScalar_<2> Scalar;
+typedef SExpField_<2> ExpField;
+typedef SField_<2> Field;
 
 
 TEST(sexpression, initial){
@@ -30,8 +30,8 @@ TEST(sexpression, initial){
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Exp exp(spsg, spgh);
-	Scalar s(spsg, spgh);
+	ExpField exp(spsg, spgh);
+	Field s(spsg, spgh);
 	s.assign(1.5);
 
 	Index idx(1,1);

@@ -6,7 +6,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
@@ -22,10 +22,15 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SScalar_<DIM> Scalar;
-	typedef Scalar*       pScalar;
+	typedef SField_<DIM>  Field;
+	typedef Field*       pField;
 	typedef SIndex_<DIM>  Index;
-	typedef std::shared_ptr<Scalar> spScalar;
+	typedef std::shared_ptr<Field> spField;
+
+	typedef SExpField_<DIM> ExpField;
+	typedef typename ExpField::Expression Exp;
+	typedef typename Exp::Term            Term;
+	typedef typename Exp::Coe             Coe;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
@@ -37,7 +42,7 @@ public:
 	}
 
 	static Vt Get(
-			const Scalar&        fc,
+			const Field&         fc,
 			const BoundaryIndex& bi,
 		    const Index&         idxc,
 			const Index&         idxg,
@@ -57,18 +62,39 @@ public:
 		}
 	}
 
-	static Vt Max(const Scalar& s){
+	static Vt Max(const Field& s){
 		return s.max();
 	}
 
-	static Vt Min(const Scalar& s) {
+	static Vt Min(const Field& s) {
 		return s.min();
+	}
+
+	static Exp Get(
+			const ExpField&      fc,
+			const BoundaryIndex& bi,
+		    const Index&         idxc,
+			const Index&         idxg,
+			const St&            axe,
+			const St&            ori,
+			const Vt&            time = 0.0){
+		if(fc.ghost().is_ghost(idxg)){
+			auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
+			auto spbc = bi.find(bid);
+			if (spbc->type() == BC::_BC1_) {
+				return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
+			} else if (spbc->type() == BC::_BC2_) {
+				return _value_type2(fc, *spbc, idxc, idxg, axe, ori, time);
+			}
+		} else {
+			return idxg;
+		}
 	}
 
 protected:
 
 	static Vt _value_type1(
-			        const Scalar&      fc,
+			        const Field&      fc,
 			        const BC&          bc,
 					const Index&       idxc,
 					const Index&       idxg,
@@ -104,7 +130,7 @@ protected:
 	}
 
 	static Vt _value_type2(
-			        const Scalar&      fc,
+			        const Field&      fc,
 			        const BC&          bc,
 					const Index&       idxc,
 					const Index&       idxg,

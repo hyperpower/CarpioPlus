@@ -6,7 +6,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
@@ -24,11 +24,12 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
-	typedef SExpression_<DIM>   Expression;
+
+	typedef SExpField_<DIM>     ExpField;
 
 protected:
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -52,15 +53,15 @@ public:
 
 	}
 
-	virtual Scalar operator()(
+	virtual Field operator()(
 			const VectorFace& U,
-			const Scalar&     phi,
+			const Field&     phi,
 			const Vt&         t = 0.0){
 
 	}
-	virtual Expression operator()(
+	virtual ExpField operator()(
 			const VectorFace& U,
-			const Expression& phi,
+			const ExpField& phi,
 			const Vt&         t = 0.0){
 
 	}
@@ -74,14 +75,15 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 
 	typedef SUdotNabla_<DIM> Base;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
 	typedef std::shared_ptr<BoundaryIndex> spBI;
-	typedef SExpression_<DIM>   Expression;
+
+	typedef SExpField_<DIM>     ExpField;
 
 	typedef SValue_<DIM> Value;
 
@@ -94,11 +96,11 @@ public:
 	virtual ~SUdotNabla_FOU(){
 	}
 
-	virtual Scalar operator()(
+	virtual Field operator()(
 			const VectorFace& U,
-			const Scalar& phi,
+			const Field& phi,
 			const Vt& t = 0.0){
-		Scalar res = phi.new_compatible();
+		Field res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
 			std::array<Vt, DIM> arr;
 			arr.fill(0.0);
@@ -137,13 +139,13 @@ public:
 		return res;
 	}
 
-	Expression operator()(
+	ExpField operator()(
 				const VectorFace& U,
-				const Expression& phi,
+				const ExpField&   phi,
 				const Vt&         t = 0.0){
-		Expression res = phi.new_compatible();
+		ExpField res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
-			std::array<typename Expression::ValueType, DIM> arr;
+			std::array<typename ExpField::ValueType, DIM> arr;
 			FOR_EACH_DIM
 			{
 				Vt up = U(d, _P_, idx);
@@ -151,7 +153,7 @@ public:
 				Vt uc = (up + um) * 0.5;      //average velocity to center
 				auto idxm = idx.m(d);
 				auto idxp = idx.p(d);
-				typename Expression::ValueType phi_u, phi_d;
+				typename ExpField::ValueType phi_u, phi_d;
 				Vt s = phi.grid().s_(d, idx);
 				if (uc >= 0) {
 					if(phi.ghost().is_ghost(idxm)){
@@ -192,7 +194,7 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SScalar_<DIM> Scalar;
+	typedef SField_<DIM> Field;
 	typedef SIndex_<DIM>  Index;
 	typedef SUdotNabla_<DIM> Base;
 
@@ -225,8 +227,8 @@ public:
 	// simulation on arbitrary grids
 	// J. Hou , F. Simons and R. Hinkelmann
 	// Int. J. Numer. Meth. Fluids 2012; 70:359–382
-	virtual Scalar operator()(const VectorFace& U, const Scalar& phi, const Vt& t = 0.0){
-		Scalar res = phi.new_compatible();
+	virtual Field operator()(const VectorFace& U, const Field& phi, const Vt& t = 0.0){
+		Field res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
 			std::array<Vt, DIM> arr;
 			arr.fill(0.0);
@@ -302,7 +304,7 @@ public:
 protected:
 
 	static Vt _rCD(
-				const Scalar& phi, St d,
+				const Field& phi, St d,
 				const Index&  U,
 				const Index&  C,
 				const Index&  D,
@@ -316,7 +318,7 @@ protected:
 			return (VC - VU) * (sD + sC) / (VD - VC + SMALL) / (sC + sU);
 		}
 
-	static Vt _RCD(const Scalar& phi, St d, const Index& C, const Index& D) {
+	static Vt _RCD(const Field& phi, St d, const Index& C, const Index& D) {
 		const Grid& grid = phi.grid();
 		Vt sC = grid.s_(d, C);
 		Vt sD = grid.s_(d, D);

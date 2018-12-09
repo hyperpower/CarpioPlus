@@ -6,7 +6,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
-#include "domain/structure/field/sscalar.hpp"
+#include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 
