@@ -28,6 +28,7 @@ public:
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 	typedef LinearPolynomial_<Vt, Index> Expression;
+	typedef Expression ValueType;
 	typedef MultiArrayV_<Expression, DIM> Mat;
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
@@ -45,13 +46,11 @@ public:
 		_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
 	    // Initall a default order_xyz
 	    _order = spOrder(new SOrderXYZ_<DIM>(spg,spgh));
-	    _initial();
 	}
 
 	SExpression_(spGrid spg, spGhost spgh, spOrder spor) :
 			_grid(spg), _ghost(spgh), _order(spor),
 			_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)) {
-		_initial();
 	}
 
 	SExpression_(const Self& other) :
@@ -201,7 +200,7 @@ public:
 				&& _ghost == o._ghost
 				&& _order == o._order);
 	}
-	// return a new scalar with compatible gird, ghost and order
+	// return a new expression with compatible gird, ghost and order
 	Self new_compatible() const {
 		Self res(this->_grid, this->_ghost, this->_order);
 		return res;

@@ -35,24 +35,25 @@ TEST(sexpression, initial){
 	s.assign(1.5);
 
 	Index idx(1,1);
+	std::cout << "expression : ";
 	std::cout << exp(idx) << std::endl;
 	// negative
 	std::cout << "nagative: " << std::endl;
 	auto expn = -(exp);
 	std::cout << expn(idx) << std::endl;
-	std::cout << "-exp + 1: " << std::endl;
+	std::cout << "expn = -exp + 1: " << std::endl;
 	expn = -(exp) + 1.0;
 	std::cout << expn(idx) << std::endl;
-	std::cout << "-exp - 2: " << std::endl;
+	std::cout << "expn = -exp - 2: " << std::endl;
 	expn = -(exp) - 2.0;
 	std::cout << expn(idx) << std::endl;
-	std::cout << "expn + expn: " << std::endl;
+	std::cout << "expnn = expn + expn: " << std::endl;
 	auto expnn = expn + expn;
 	std::cout << expnn(idx) << std::endl;
-	std::cout << "exp * 5: " << std::endl;
+	std::cout << "expnn = exp * 5: " << std::endl;
 	expnn = expn * 5;
 	std::cout << expnn(idx) << std::endl;
-	std::cout << "5 * exp * s: " << std::endl;
+	std::cout << "expnn = 5 * exp * s: " << std::endl;
 	expnn = 5 * expn * s;
 	std::cout << expnn(idx) << std::endl;
 

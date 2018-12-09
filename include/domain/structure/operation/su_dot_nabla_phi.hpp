@@ -94,7 +94,10 @@ public:
 	virtual ~SUdotNabla_FOU(){
 	}
 
-	virtual Scalar operator()(const VectorFace& U, const Scalar& phi, const Vt& t = 0.0){
+	virtual Scalar operator()(
+			const VectorFace& U,
+			const Scalar& phi,
+			const Vt& t = 0.0){
 		Scalar res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
 			std::array<Vt, DIM> arr;
@@ -138,7 +141,47 @@ public:
 				const VectorFace& U,
 				const Expression& phi,
 				const Vt&         t = 0.0){
+		Expression res = phi.new_compatible();
+		for (auto& idx : phi.order()) {
+			std::array<typename Expression::ValueType, DIM> arr;
+			FOR_EACH_DIM
+			{
+				Vt up = U(d, _P_, idx);
+				Vt um = U(d, _M_, idx);
+				Vt uc = (up + um) * 0.5;      //average velocity to center
+				auto idxm = idx.m(d);
+				auto idxp = idx.p(d);
+				typename Expression::ValueType phi_u, phi_d;
+				Vt s = phi.grid().s_(d, idx);
+				if (uc >= 0) {
+					if(phi.ghost().is_ghost(idxm)){
+						phi_u += Value::Get(phi,
+								*(this->_spbi),
+								idx, idxm,
+								d, _M_, t);
+					}else{
+						phi_u += idxm;
+					}
+					phi_d += idx;
+				} else { // uc < 0
+					phi_u += phi(idx);
+					if(phi.ghost().is_ghost(idxp)){
+						phi_d += Value::Get(phi, *(this->_spbi),
+								idx, idxp, d, _P_,t);
+					}else{
+						phi_d += idxp;
+					}
+				}
+				arr[d] = (phi_u - phi_d) * (uc / s);
+			}
 
+			Vt sum = 0;
+			FOR_EACH_DIM
+			{
+				sum += arr[d];
+			}
+			res(idx) = sum;
+		}
 	}
 
 };
