@@ -28,7 +28,6 @@ public:
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 	typedef LinearPolynomial_<Vt, Index> Expression;
-	typedef Expression ValueType;
 
 	typedef MultiArrayV_<Expression, DIM> Mat;
 	typedef typename Mat::reference reference;

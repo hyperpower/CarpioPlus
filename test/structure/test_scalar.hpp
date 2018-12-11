@@ -10,7 +10,7 @@
 namespace carpio {
 
 typedef SIndex_<2> Index;
-typedef SScalar_<2> Scalar;
+typedef SField_<2> Field;
 typedef SIOFile_<2> IOFile;
 typedef std::shared_ptr<SGrid_<2> > spSGrid;
 typedef std::shared_ptr<SGhost_<2> > spSGhost;
@@ -30,7 +30,7 @@ TEST(scalar, initial){
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Scalar sc(spsg,spgh, sporder);
+	Field sc(spsg,spgh, sporder);
 
 	Plotly plt;
 	plt.add(PlotlyActor::WireFrame(sc.grid()));
@@ -50,9 +50,44 @@ TEST(scalar, outputfile) {
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Scalar sc(spsg, spgh, sporder);
+	Field sc(spsg, spgh, sporder);
 
-	IOFile::OutputScalar("s.txt", sc);
+//	IOFile::OutputScalar("s.txt", sc);
+}
+
+TEST(field, plot1){
+	std::cout << "field_define 1d\n";
+	const St Dim = 1;
+	typedef SField_<Dim>                        Field1;
+	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	Point_<Vt, 1> pmin(0, 0, 0);
+	Point_<Vt, 1> pmax(1, 1, 1);
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5 }, 0.3, 2));
+
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Field1 sc(spsg, spgh, sporder);
+	sc.assign([](Vt x, Vt y, Vt z, Vt t){
+		return sin(x);
+	});
+
+	typedef SGnuplotActor_<1> GA;
+	Gnuplot gnu;
+	gnu.set_terminal_png("1d.png");
+	gnu.set_xrange(-0.1, 1.6);
+	auto awf = GA::WireFrame(*spsg);
+	auto acp = GA::CenterPoints(*spsg);
+	acp->style() = "with points pt 2 ps 2 lc variable";
+	auto af  = GA::LinesPoints(sc, 0);
+	af->style() = "with linespoints pt 7 ps 2 lc variable";
+	gnu.add(awf);
+	gnu.add(acp);
+	gnu.add(af);
+//	gnu.plot();
 }
 
 
@@ -68,10 +103,10 @@ TEST(scalar, add){
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Scalar sc(spsg,spgh, sporder);
+	Field sc(spsg,spgh, sporder);
 	sc.assign(2.0);
 
-	Scalar sc2(spsg,spgh, sporder);
+	Field sc2(spsg,spgh, sporder);
 	sc2.assign(3.0);
 
 	sc += sc2;

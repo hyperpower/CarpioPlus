@@ -166,12 +166,12 @@ public:
 	}
 
 	Poi f(St dim, int fb, Idx i, Idx j = 0, Idx k = 0) const {
-		Poi pc = c(i, j, k);
+		Poi pc   = c(i, j, k);
 		Vt halfs = _cs * 0.5;
 		if (fb == _P_) { //right face
-			pc[dim] = pc[dim] + halfs;
+			pc[dim] += halfs;
 		} else if (fb == _M_){  //left face
-			pc[dim] = pc[dim] - halfs;
+			pc[dim] -= halfs;
 		} else{
 			SHOULD_NOT_REACH;
 		}
