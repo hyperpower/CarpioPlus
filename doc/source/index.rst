@@ -28,6 +28,13 @@ Geometry
    1-1-1-point_position_to_segment
    1-1-2-segments_intersection
    1-1-5-point_in_polygon
+
+Structure Domain
+-----------------
+.. toctree::
+   :maxdepth: 1
+
+   3-1-1-field_define
    
 
 Convection

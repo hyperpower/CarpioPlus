@@ -32,11 +32,11 @@ TEST(scalar, initial){
 
 	Field sc(spsg,spgh, sporder);
 
-	Plotly plt;
-	plt.add(PlotlyActor::WireFrame(sc.grid()));
-	plt.add(PlotlyActor::Heatmap(sc.grid(), sc));
-	plt.size(800, 800);
-	plt.plot();
+//	Plotly plt;
+//	plt.add(PlotlyActor::WireFrame(sc.grid()));
+//	plt.add(PlotlyActor::Heatmap(sc.grid(), sc));
+//	plt.size(800, 800);
+//	plt.plot();
 }
 
 TEST(scalar, outputfile) {
@@ -52,7 +52,7 @@ TEST(scalar, outputfile) {
 
 	Field sc(spsg, spgh, sporder);
 
-//	IOFile::OutputScalar("s.txt", sc);
+	SIOFile_<2>::OutputField("s.txt", sc);
 }
 
 TEST(field, plot1){
@@ -87,7 +87,9 @@ TEST(field, plot1){
 	gnu.add(awf);
 	gnu.add(acp);
 	gnu.add(af);
-//	gnu.plot();
+	gnu.plot();
+
+	SIOFile_<1>::OutputField("1d.txt", sc);
 }
 
 

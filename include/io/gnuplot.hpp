@@ -516,6 +516,11 @@ public:
 		return *this;
 	}
 
+	Gnuplot& set_equal_aspect_ratio(){
+		cmd("set size ratio -1");
+		return *this;
+	}
+
 	//------------------------------------------------------------------------------
 	//
 	Gnuplot& set_terminal_pdf(const std::string& filename, double x = 400,

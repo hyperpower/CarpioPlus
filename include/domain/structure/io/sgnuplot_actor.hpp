@@ -28,47 +28,39 @@ public:
 	typedef SField_<DIM> Field;
 	typedef SField_<1>   Field1;
 	typedef SField_<2>   Field2;
+	typedef SIndex_<1>   Index1;
+	typedef SIndex_<2>   Index2;
 
 	static spActor WireFrame(
 			const Grid2& grid, int color_idx = -1) {
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
 
 		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
-
 		for (St j = 0; j < grid.n(_Y_); j++) {
 			for (St i = 0; i < grid.n(_X_); i++) {
 				typename Grid2::Index index(i, j);
 				for (short o = 0; o < grid.num_vertex(); ++o) {
 					typename Grid::Poi p = grid.v(order[o], index);
-					if (color_idx >= 0) {
-						actor->data().push_back(
+					actor->data().push_back(
 								ToString(p.value(_X_),
 										 p.value(_Y_),
-										 color_idx,
+										 c,
 										 " "));
-					} else {
-						actor->data().push_back(
-								ToString(p.value(_X_),
-										 p.value(_Y_),
-										 0, " "));
-					}
 				}
 				typename Grid2::Poi p = grid.v(0, index);
-				if (color_idx >= 0) {
-					actor->data().push_back(
-							ToString(p.value(_X_), p.value(_Y_), color_idx,
+				actor->data().push_back(
+							ToString(p.value(_X_), p.value(_Y_), c,
 									" "));
-				} else {
-					actor->data().push_back(
-							ToString(p.value(_X_), p.value(_Y_), 0, " "));
-				}
 				actor->data().push_back("");
 			}
 		}
 		return actor;
 	}
+
+
 
 	static spActor CenterPoints(const Grid1& grid, int color_idx = -1){
 		spActor actor = spActor(new Gnuplot_actor());
@@ -82,6 +74,25 @@ public:
 			actor->data().push_back(
 					ToString(p.value(_X_), 0.0, c, " "));
 			actor->data().push_back("");
+		}
+		return actor;
+	}
+
+	static spActor Contour(const Field2& f){
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3:4:5:6:7 title \"\" ";
+		actor->style()   = "with boxxy fs solid palette";
+		for (St i = 0; i < f.grid().n(_X_); i++) {
+			for (St j = 0; j < f.grid().n(_Y_); j++) {
+				Index2 index(i, j);
+				auto pc   = f.grid().c(index);
+				auto pmin = f.grid().v(0, index);
+				auto pmax = f.grid().v(3, index);
+				actor->data().push_back(
+						ToString(pc(_X_),   pc(_Y_),
+								 pmin(_X_), pmax(_X_),
+								 pmin(_Y_), pmax(_Y_), f(index), " "));
+			}
 		}
 		return actor;
 	}
