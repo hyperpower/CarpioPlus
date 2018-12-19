@@ -54,7 +54,7 @@ public:
 
 	list_pSur surfaces;
 
-	Any _any_data;
+//	Any _any_data;
 
 public:
 	TriFace_(pEdg a, pEdg b, pEdg c, pSur psur) :
@@ -299,13 +299,13 @@ public:
 //				*(this->vertex(2)));
 //	}
 
-	Any& data() {
-		return _any_data;
-	}
-
-	const Any& data() const {
-		return _any_data;
-	}
+//	Any& data() {
+//		return _any_data;
+//	}
+//
+//	const Any& data() const {
+//		return _any_data;
+//	}
 
 	/**
 	 * revert:

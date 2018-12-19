@@ -14,6 +14,36 @@
 
 namespace carpio {
 
+
+template<typename TYPE, St DIM>
+class InserterTS_ {
+public:
+	static const St Dim = DIM;
+	typedef TYPE Vt;
+	typedef Point_<TYPE, DIM>                  Point;
+	typedef Point_<TYPE, DIM>&             ref_Point;
+	typedef const Point_<TYPE, DIM>& const_ref_Point;
+
+	typedef Segment_<TYPE, DIM>      Segment;
+	typedef Segment&             ref_Segment;
+	typedef const Segment& const_ref_Segment;
+
+	typedef TriSurface_<TYPE, DIM>          TriSurface;
+	typedef TriFace_<TYPE, DIM, TriSurface> TriFace;
+	typedef Edge_<TYPE, DIM, TriFace>       Edge;
+	typedef Vertex_<TYPE, DIM, Edge>        Vertex;
+	typedef Vertex*                        pVertex;
+	typedef Edge*                          pEdge;
+	typedef TriFace*                       pTriFace;
+
+	typedef TriSurface_<TYPE, 2> TriSurface2;
+	typedef TriSurface_<TYPE, 3> TriSurface3;
+
+	pTriFace new_tri_face(){
+
+	}
+};
+
 template<typename TYPE, St DIM>
 class CreateTS_ {
 public:

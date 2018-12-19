@@ -34,5 +34,11 @@ A color contour is shown in following figure.
 
 3D field
 --------------------
-The 2D field is defined in [0.0, 2.5] :math:`\times` [0.0, 2.5] :math:`\times` [0.0, 2.5]. The mesh has 25 control volumes (5 :math:`\times` 5 :math:`\times` 5). 
+The 3D field is defined in [0.0, 2.5] :math:`\times` [0.0, 2.5] :math:`\times` [0.0, 2.5]. The mesh has 25 control volumes (5 :math:`\times` 5 :math:`\times` 5). 
+
+.. figure:: _static/{{folder_name}}/3d.png
+   :alt: Three dimension field
+   :align: center 
+
+   Three dimension field.
 

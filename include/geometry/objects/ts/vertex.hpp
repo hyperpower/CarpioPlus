@@ -37,7 +37,7 @@ public:
 
 public:
 	list_pEdg _ledges;
-	Any _any_data;
+//	Any _any_data;
 public:
 	Vertex_(const Base& poi) :
 		Base(poi), _ledges() {
