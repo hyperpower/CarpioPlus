@@ -21,15 +21,19 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGrid_<1>     Grid1;
 	typedef SGrid_<2>     Grid2;
+	typedef SGrid_<3>     Grid3;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SGhost_<1>    Ghost1;
 	typedef SGhost_<2>    Ghost2;
 	typedef SGhost_<3>    Ghost3;
-	typedef SField_<DIM> Field;
-	typedef SField_<1>   Field1;
-	typedef SField_<2>   Field2;
-	typedef SIndex_<1>   Index1;
-	typedef SIndex_<2>   Index2;
+	typedef SField_<DIM>  Field;
+	typedef SField_<1>    Field1;
+	typedef SField_<2>    Field2;
+	typedef SField_<3>    Field3;
+
+	typedef SIndex_<1>    Index1;
+	typedef SIndex_<2>    Index2;
+	typedef SIndex_<3>    Index3;
 
 	static spActor WireFrame(
 			const Grid2& grid, int color_idx = -1) {
@@ -168,6 +172,47 @@ public:
 		}
 		return actor;
 	}
+
+	static spActor WireFrame(
+				const Grid3& grid, int color_idx = -1) {
+			spActor actor = spActor(new Gnuplot_actor());
+			actor->command() = "using 1:2:3:4 title \"\" ";
+			actor->style()   = "with lines lc variable";
+			int c = (color_idx == -1) ? 0 : color_idx;
+
+			short order1[] = { 0, 1, 3, 2, 0 };
+			short order2[] = { 4, 5, 7, 6, 4 };
+			for (St k = 0; k < grid.n(_Z_); k++) {
+			for (St j = 0; j < grid.n(_Y_); j++) {
+			for (St i = 0; i < grid.n(_X_); i++) {
+				typename Grid3::Index index(i, j);
+				for (short o = 0; o < 5; ++o) {
+					typename Grid3::Poi p = grid.v(order1[o], index);
+					actor->data().push_back(
+							ToString(p.value(_X_),
+									 p.value(_Y_),
+									 p.value(_Z_),
+									 c,
+								     " "));
+				}
+				actor->data().push_back("");
+				for (short o = 0; o < 5; ++o) {
+					typename Grid3::Poi p = grid.v(order2[o], index);
+					actor->data().push_back(
+							ToString(p.value(_X_),
+							         p.value(_Y_),
+							         p.value(_Z_),
+						             c,
+							 " "));
+				}
+				actor->data().push_back("");
+			}
+			actor->data().push_back("");
+			}
+			actor->data().push_back("");
+			}
+			return actor;
+		}
 };
 
 

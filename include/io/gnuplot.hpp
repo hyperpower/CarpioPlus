@@ -873,7 +873,7 @@ public:
 		// inline data
 		std::ostringstream sst;
 		//
-		sst << "plot \"-\" " << actor._pcmd;
+		sst << "splot \"-\" " << actor._pcmd;
 		cmd(sst.str());
 		sst.str("");
 		cmd("\n");
@@ -885,6 +885,36 @@ public:
 			cmd("\n");
 		}
 		cmd("e\n");
+		return *this;
+	}
+
+	Gnuplot& splot(const std::list<std::shared_ptr<Gnuplot_actor> >& lga) {
+		if (lga.empty()) {
+			std::cerr << " >Warning! The Gnuplot actor is empty! \n";
+			return *this;
+		}
+		std::ostringstream ss;
+		ss << "splot ";
+		for (std::list<std::shared_ptr<Gnuplot_actor> >::const_iterator iter =
+				lga.begin(); iter != lga.end(); ++iter) {
+			const std::shared_ptr<Gnuplot_actor> spa = (*iter);
+			if (spa->empty_style()) {
+				ss << "\"-\" " << spa->command() << "with lines lw 1";
+			} else {
+				ss << "\"-\" " << spa->command() << spa->style();
+		}
+
+		if (lga.size() >= 2 && (iter != (--lga.end()))) {
+				ss << ",\\\n";
+			}
+		}
+		cmd(ss.str() + "\n");
+		ss.str("");
+		for (std::list<std::shared_ptr<Gnuplot_actor> >::const_iterator iter =
+				lga.begin(); iter != lga.end(); ++iter) {
+			const std::shared_ptr<Gnuplot_actor> spa = (*iter);
+			output_inline_data((*spa));
+		}
 		return *this;
 	}
 
@@ -910,6 +940,11 @@ public:
 		return *this;
 	}
 
+	Gnuplot& splot(){
+		this->splot(this->_actors);
+		this->clear();
+		return *this;
+	}
 
 	Gnuplot& plot(){
 		this->plot(this->_actors);

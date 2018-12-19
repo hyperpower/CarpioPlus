@@ -20,6 +20,10 @@ typedef std::shared_ptr<SGrid_<2> >     spGrid2;
 typedef std::shared_ptr<SGhost_<2> >    spGhost2;
 typedef std::shared_ptr<SOrderXYZ_<2> > spOrder2;
 
+typedef std::shared_ptr<SGrid_<3> >     spGrid3;
+typedef std::shared_ptr<SGhost_<3> >    spGhost3;
+typedef std::shared_ptr<SOrderXYZ_<3> > spOrder3;
+
 int field_1d(){
     std::cout << "field_define 1d\n";
     Point_<Vt, 1> pmin(0, 0, 0);
@@ -51,7 +55,7 @@ int field_1d(){
 }
 
 int field_2d(){
-    std::cout << "field_define 1d\n";
+    std::cout << "field_define 2d\n";
     Point_<Vt, 2> pmin(0, 0, 0);
     Point_<Vt, 2> pmax(1, 1, 1);
     spGrid2  spsg(   new SGridUniform_<2>(pmin, { 5, 5 }, 0.5, 2));
@@ -81,7 +85,40 @@ int field_2d(){
     return 0;
 }
 
+int field_3d(){
+    std::cout << "field_define 3d\n";
+    Point_<Vt, 3> pmin(0, 0, 0);
+    Point_<Vt, 3> pmax(1, 1, 1);
+    spGrid3  spsg(   new SGridUniform_<3>(pmin, { 5, 5, 5}, 0.5, 2));
+    spGhost3 spgh(   new SGhostRegular_<3>(spsg));
+    spOrder3 sporder(new SOrderXYZ_<3>(spsg, spgh));
+
+    Field3 sc(spsg, spgh, sporder);
+    sc.assign([](Vt x, Vt y, Vt z, Vt t){
+        return sin(x+y+z);
+    });
+
+    typedef SGnuplotActor_<2> GA;
+    Gnuplot gnu;
+    gnu.set_terminal_png("./fig/3d.png");
+    gnu.set_xrange(-0.1, 2.6);
+    gnu.set_yrange(-0.1, 2.6);
+    gnu.set_zrange(-0.1, 2.6);
+    gnu.set_ylabel("y");
+    gnu.set_xlabel("x");
+    gnu.set_equal_aspect_ratio();
+    auto awf = GA::WireFrame(*spsg);
+    // auto ac  = GA::Contour(sc);
+    
+    // gnu.add(ac);
+    gnu.add(awf);
+    gnu.splot();
+    
+    return 0;
+}
+
 int main(int argc, char** argv) {
     field_1d();
     field_2d();
+    field_3d();
 }
