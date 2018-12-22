@@ -180,12 +180,14 @@ public:
 			actor->style()   = "with lines lc variable";
 			int c = (color_idx == -1) ? 0 : color_idx;
 
-			short order1[] = { 0, 1, 3, 2, 0 };
-			short order2[] = { 4, 5, 7, 6, 4 };
+			short order1[] = { 0, 1, 3, 2, 0 }; //xm
+			short order2[] = { 4, 5, 7, 6, 4 }; //xp
+			short order3[] = { 0, 4, 5, 1, 0 }; //ym
+			short order4[] = { 2, 3, 7, 6, 2 }; //ym
 			for (St k = 0; k < grid.n(_Z_); k++) {
 			for (St j = 0; j < grid.n(_Y_); j++) {
 			for (St i = 0; i < grid.n(_X_); i++) {
-				typename Grid3::Index index(i, j);
+				typename Grid3::Index index(i, j, k);
 				for (short o = 0; o < 5; ++o) {
 					typename Grid3::Poi p = grid.v(order1[o], index);
 					actor->data().push_back(
@@ -195,6 +197,7 @@ public:
 									 c,
 								     " "));
 				}
+				actor->data().push_back(""); //splot sperated with two lines
 				actor->data().push_back("");
 				for (short o = 0; o < 5; ++o) {
 					typename Grid3::Poi p = grid.v(order2[o], index);
@@ -206,10 +209,31 @@ public:
 							 " "));
 				}
 				actor->data().push_back("");
+				actor->data().push_back("");
+				for (short o = 0; o < 5; ++o) {
+					typename Grid3::Poi p = grid.v(order3[o], index);
+					actor->data().push_back(
+								ToString(p.value(_X_),
+								         p.value(_Y_),
+								         p.value(_Z_),
+							             c,
+					  				    " "));
+				}
+				actor->data().push_back("");
+				actor->data().push_back("");
+				for (short o = 0; o < 5; ++o) {
+					typename Grid3::Poi p = grid.v(order4[o], index);
+					actor->data().push_back(
+								ToString(p.value(_X_),
+									     p.value(_Y_),
+										 p.value(_Z_),
+										 c,
+									  	 " "));
+				}
+				actor->data().push_back("");
+				actor->data().push_back("");
 			}
-			actor->data().push_back("");
 			}
-			actor->data().push_back("");
 			}
 			return actor;
 		}

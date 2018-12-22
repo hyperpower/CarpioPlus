@@ -54,13 +54,14 @@ public:
 
 public:
 	std::set<pFac> faces;
-
 public:
 	TriSurface_() {
 	}
+
 	TriSurface_(const std::string& filename) {
 		this->load_gts_file(filename);
 	}
+
 	void load_gts_file(const std::string& filename);
 
 	~TriSurface_() {
@@ -84,6 +85,12 @@ public:
 			return;
 		}
 	}
+
+//	void add_face(const pFac& spf) {
+//		pFac f = spf;
+//		f->attach_surface(this);
+//		faces.insert(spf);
+//	}
 
 	void erase(pFac f) {
 		_IF_TRUE_RETRUN(f == nullptr);
@@ -171,7 +178,6 @@ public:
 		for (auto& ver : ldver) {
 			delete ver;
 		}
-
 	}
 
 	size_type size_edge() const {
@@ -395,11 +401,6 @@ public:
 		return res;
 	}
 
-	void add_face(const pFac& spf) {
-		pFac f = spf;
-		f->attach_surface(this);
-		faces.insert(spf);
-	}
 
 // iterator
 	typename std::set<pFac>::iterator begin() {

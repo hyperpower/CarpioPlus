@@ -55,7 +55,7 @@ public:
 
 	list_pFace faces;
 
-	Any _any_data;
+//	Any _any_data;
 
 public:
 	Edge_(pVer a, pVer b) :
@@ -154,13 +154,13 @@ public:
 		return faces.size();
 	}
 
-	Any& data() {
-		return _any_data;
-	}
-
-	const Any& data() const{
-		return _any_data;
-	}
+//	Any& data() {
+//		return _any_data;
+//	}
+//
+//	const Any& data() const{
+//		return _any_data;
+//	}
 
 	// show =====================================
 	void show() const {

@@ -92,6 +92,40 @@ TEST(field, plot1){
 	SIOFile_<1>::OutputField("1d.txt", sc);
 }
 
+TEST(field, plot3){
+	std::cout << "field_define 3d\n";
+	const St Dim = 3;
+	typedef SField_<Dim>                        Field;
+	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	Point_<Vt, 3> pmin(0, 0, 0);
+	Point_<Vt, 3> pmax(1, 1, 1);
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5, 5}, 0.3, 2));
+
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Field sc(spsg, spgh, sporder);
+	sc.assign([](Vt x, Vt y, Vt z, Vt t){
+		return sin(x);
+	});
+
+	typedef SGnuplotActor_<Dim> GA;
+	Gnuplot gnu;
+	gnu.set_terminal_png("3d.png");
+	gnu.set_xrange(-0.1, 1.6);
+	gnu.set_yrange(-0.1, 1.6);
+	gnu.set_zrange(-0.1, 1.6);
+	auto awf = GA::WireFrame(*spsg);
+	gnu.add(awf);
+	awf->show_data();
+	gnu.splot();
+
+//	SIOFile_<1>::OutputField("1d.txt", sc);
+}
+
 
 TEST(scalar, add){
 

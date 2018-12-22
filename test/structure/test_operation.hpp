@@ -2,8 +2,8 @@
 #define STRUCTURE_TEST_OPERATION_HPP_
 
 #include "domain/structure/structure.hpp"
-#include "domain/structure/io/plotly_actor.hpp"
-#include "domain/structure/operation/operation.hpp"
+#include "domain/structure/io/splotly_actor.hpp"
+#include "domain/structure/operation/soperation.hpp"
 //#include "domain/structure/io/gnuplot_actor.hpp"
 #include "gtest/gtest.h"
 
@@ -11,7 +11,7 @@ namespace carpio {
 
 TEST(scalar, initial){
 	typedef SIndex_<2> Index;
-	typedef SScalar_<2> Scalar;
+	typedef SField_<2> Field;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
 	typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
@@ -26,7 +26,7 @@ TEST(scalar, initial){
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Scalar sc(spsg,spgh, sporder);
+	Field sc(spsg,spgh, sporder);
 
 	BoundaryIndex bi;
 
@@ -52,7 +52,7 @@ TEST(scalar, initial){
 
 TEST(scalar, value){
 	typedef SIndex_<2> Index;
-	typedef SScalar_<2> Scalar;
+	typedef SField_<2> Field;
 	typedef SValue_<2> Value;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
@@ -68,7 +68,7 @@ TEST(scalar, value){
 
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 
-	Scalar sc(spsg,spgh, sporder);
+	Field sc(spsg,spgh, sporder);
 	sc.assign(1);
 
 	BoundaryIndex bi;

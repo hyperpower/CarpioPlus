@@ -29,7 +29,7 @@
 //#include "structure/test_order.hpp"
 //#include "structure/test_scalar.hpp"
 //#include "structure/test_sexpression.hpp"
-//#include "structure/test_operation.hpp"
+#include "structure/test_operation.hpp"
 //#include "equation/test_convection.hpp"
 
 //#include "octree/test_node.hpp"

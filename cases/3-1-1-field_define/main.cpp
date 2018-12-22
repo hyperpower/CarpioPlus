@@ -98,7 +98,7 @@ int field_3d(){
         return sin(x+y+z);
     });
 
-    typedef SGnuplotActor_<2> GA;
+    typedef SGnuplotActor_<3> GA;
     Gnuplot gnu;
     gnu.set_terminal_png("./fig/3d.png");
     gnu.set_xrange(-0.1, 2.6);
