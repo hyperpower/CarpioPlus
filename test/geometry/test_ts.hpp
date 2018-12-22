@@ -8,7 +8,7 @@
 #ifndef GEOMETRY_TEST_TS_HPP_
 #define GEOMETRY_TEST_TS_HPP_
 #include "geometry/geometry.hpp"
-#include "geometry/io/gplotly_actor_ts.hpp"
+//#include "geometry/io/gplotly_actor_ts.hpp"
 #include "gtest/gtest.h"
 
 namespace carpio {
@@ -40,8 +40,23 @@ TEST(TS, ts_initial2){
 	CreateTS::Circle(ts, 50, 1.0);
 
 	Plotly plot;
+	std::cout << "Plotly Version : " << plot.version() << std::endl;
 	plot.add(PA::WireFrame(ts));
-	plot.plot();
+	// out put div
+	plot.set_output_type("div");
+	plot.set_include_plotlyjs(false);
+	auto str = plot.plot();
+
+	std::ofstream ofs ("test.div", std::ofstream::out);
+	ofs << str;
+	ofs.close();
+
+	// output html
+	plot.set_output_type("file");
+	plot.set_include_plotlyjs(true);
+	str = plot.plot();
+
+	std::cout << str << std::endl;
 
 }
 

@@ -1,5 +1,5 @@
-#ifndef _PLOTLY_H_
-#define _PLOTLY_H_
+#ifndef _PLOTLY_HPP_
+#define _PLOTLY_HPP_
 
 #include "io_define.hpp"
 #include "algebra/array/array_list.hpp"
@@ -60,6 +60,8 @@ public:
 		this->_map["opacity"] = pv;
 	}
 
+	// Any combination of ['lines', 'markers', 'text'] joined with '+' characters
+    // (e.g. 'lines+markers')
 	void set_mode(const std::string& mode) {
 		pPO pv = Py_BuildValue("s", mode.c_str());
 		this->_map["mode"] = pv;
@@ -319,15 +321,23 @@ public:
 
 	std::string version() const {
 		pPO version = PyObject_GetAttrString(_modulePlotly, "__version__");
-		//std::string a(PyString_AsString(version));
-		std::string a("ooooo");
-		return a;
+		pPO repr = PyObject_Repr(version);
+		pPO cstr = PyUnicode_AsEncodedString(repr, "utf-8", "~E~");
+		const char *bytes = PyBytes_AS_STRING(cstr);
+		ASSERT(cstr != nullptr);
+		std::string str(bytes);
+		str.erase(0, str.find_first_not_of('\''));     //prefixing '\''
+		str.erase(str.find_last_not_of('\'')+1);
+		Py_XDECREF(repr);
+		Py_XDECREF(cstr);
+		return str;
 	}
 
 	void add(spPA spa) {
 		this->_actors.push_back(spa);
 	}
-
+    //-- If True, open the saved file in a web browser after saving.
+    //    This argument only applies if `output_type` is 'file'.
 	void set_auto_open(bool flag) {
 		/// default is false
 		pPO val = Py_BuildValue("i", flag ? 1 : 0);
@@ -337,6 +347,20 @@ public:
 	void set_filename(const std::string& fn) {
 		pPO val = Py_BuildValue("s", fn.c_str());
 		_map_config["filename"] = val;
+	}
+
+	// default is output file
+	// if your want to embed in other html file
+	// the output type should be "div"
+	void set_output_type(const std::string& fn) {
+		ASSERT(fn == "file" || fn == "div");
+		pPO val = Py_BuildValue("s", fn.c_str());
+		_map_config["output_type"] = val;
+	}
+
+	void set_include_plotlyjs(bool b){
+		pPO val = Py_BuildValue("i", b ? 1 : 0);
+		_map_config["include_plotlyjs"] = val;
 	}
 
 	void title(const std::string& t) {
@@ -360,10 +384,22 @@ public:
 		this->height(h);
 	}
 
-	void plot() const {
+	std::string plot() const {
 		pPO args_fig = Py_BuildValue("(O)", _get_fig());
 		pPO args_o = Py_BuildValue("O", _get_config());
 		pPO pRet = PyObject_Call(_funPlot, args_fig, args_o);
+		// pPO to string
+		pPO repr = PyObject_Repr(pRet);
+		pPO cstr = PyUnicode_AsEncodedString(repr, "utf-8", "~E~");
+		const char *bytes = PyBytes_AS_STRING(cstr);
+		ASSERT(cstr != nullptr);
+		std::string str(bytes);
+		str.erase(0, str.find_first_not_of('\''));     //prefixing '\''
+		str.erase(str.find_last_not_of('\'')+1);
+		Py_XDECREF(repr);
+		Py_XDECREF(cstr);
+		//
+		return str;
 	}
 
 protected:

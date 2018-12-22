@@ -1,5 +1,5 @@
 #ifndef _GEOMETRY_PLOTLY_ACTOR_TS_HPP_
-#define _ACTOR_GNUPLOT_GEOMETRY_HPP_
+#define _GEOMETRY_PLOTLY_ACTOR_TS_HPP_
 
 #include "geometry/geometry_define.hpp"
 #include <array>

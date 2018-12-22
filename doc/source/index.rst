@@ -45,6 +45,12 @@ Convection
    4-1-1-one_step_1d
    4-1-2-gate_1d
 
+Restructure examples
+---------------------
+.. toctree::
+   :maxdepth: 1
+   
+   example
 
 
 Indices and tables
