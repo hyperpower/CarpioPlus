@@ -104,6 +104,40 @@ public:
 		return actor;
 	}
 
+	template<class ContainerSegments>
+	static spActor LinesPoints(
+			ContainerSegments con,
+			int color_idx      = -1,
+			bool close         = false,
+			Segment dummy      = typename ContainerSegments::value_type()) {
+			ASSERT(Dim == 2);
+			int color = color_idx > 0? color_idx : 0;
+			spActor actor = spActor(new Gnuplot_actor());
+			actor->command() = "using 1:2:3 title \"\" ";
+			actor->style()   = "with linespoints lc variable";
+
+			auto iter = con.begin();
+			for (; iter != con.end(); ++iter) {
+				actor->data().push_back(
+						ToString(iter->psx(), iter->psy(), color, " "));
+				actor->data().push_back(
+						ToString(iter->pex(), iter->pey(), color, " "));
+				actor->data().push_back("");
+			}
+
+			if (close) {
+				auto iter = con.begin();
+				actor->data().push_back(
+						ToString(iter->psx(), iter->psy(), color, " "));
+				actor->data().push_back(
+						ToString(iter->pex(), iter->pey(), color, " "));
+				actor->data().push_back("");
+			}
+
+			return actor;
+		}
+
+
 	template<class ITERPOINTS>
 	static spActor Lines(ITERPOINTS begin,
 			             ITERPOINTS end,

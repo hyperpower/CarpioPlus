@@ -11,6 +11,10 @@
 
 #include "objects/ts/vertex.hpp"
 
+#include "objects/bbtree/aabbox.hpp"
+#include "objects/bbtree/bbnode.hpp"
+#include "objects/bbtree/bbtree.hpp"
+
 #include "geometry/operation/intersection/segment_segment.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 

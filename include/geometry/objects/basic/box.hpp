@@ -50,6 +50,10 @@ public:
 			_max[i] = max;
 		}
 	}
+	Box_(const Self& o) {
+		_min = o._min;
+		_max = o._max;
+	}
 	Box_(Vt x_min, Vt y_min, Vt x_max, Vt y_max) {
 		ASSERT(Dim == 2);
 		_min[0] = x_min;
@@ -350,103 +354,103 @@ bool IsInOn(
 }
 
 
-struct TagBBox: public TagGeometry {
-	TagBBox() {
-	}
-};
-
-template<class TYPE, St DIM>
-class TriSurface_;
-
-template<class TYPE, St DIM, class SURFACE>
-class TriFace_;
-
-template<typename TYPE, St DIM>
-class BBox_: public Box_<TYPE, DIM> {
-public:
-	static const St Dim = DIM;
-	typedef Point_<TYPE, DIM> Point;
-	typedef Segment_<TYPE, DIM> Segment;
-	typedef BBox_<TYPE, DIM> Self;
-	typedef Box_<TYPE, DIM> Box;
-	typedef St size_type;
-	typedef TagBBox Tag;
-	typedef TYPE Vt;
-	typedef TYPE& reference;
-	typedef TYPE* pointer;
-	typedef const TYPE* const_pointer;
-	typedef const TYPE& const_reference;
-
-	typedef Operation_<TYPE, DIM> Op;
-
-	typedef TriSurface_<TYPE, DIM> TriSurface;
-	typedef TriFace_<TYPE, DIM, TriSurface> TriFace;
-
-protected:
-	Any _obj;
-
-public:
-	BBox_() {
-		_obj = nullptr;
-	}
-	BBox_(const Any& o) {
-		_obj = o;
-		_set_box();
-	}
-
-	BBox_(const Point& min, const Point& max) :
-			Box(min, max) {
-		_obj = nullptr;
-	}
-
-	BBox_(const Self& a, const Self& b) :
-			Box(a, b) { // union to one box without data
-		_obj = nullptr;
-	}
-
-	Any& get_obj() {
-		return _obj;
-	}
-
-	const Any& get_obj() const {
-		return _obj;
-	}
-
-protected:
-	void _set_box() {
-		if (_obj.type() == typeid(Segment)) {
-			Segment s = any_cast<Segment>(_obj);
-			Box bs = s.box();
-			this->_min = bs.min();
-			this->_max = bs.max();
-			return;
-		}
-		if ((_obj.type() == typeid(Segment*))) {
-			Segment* s = any_cast<Segment*>(_obj);
-			Box bs = s->box();
-			this->_min = bs.min();
-			this->_max = bs.max();
-			return;
-		}
-		if ((_obj.type() == typeid(TriFace))) {
-			TriFace s = any_cast<TriFace>(_obj);
-			Box bs = s.box();
-			this->_min = bs.min();
-			this->_max = bs.max();
-			return;
-		}
-		if ((_obj.type() == typeid(TriFace*))) {
-			TriFace* s = any_cast<TriFace*>(_obj);
-			Box bs = s->box();
-			this->_min = bs.min();
-			this->_max = bs.max();
-			return;
-		}
-
-	}
-
-}
-;
+//struct TagBBox: public TagGeometry {
+//	TagBBox() {
+//	}
+//};
+//
+//template<class TYPE, St DIM>
+//class TriSurface_;
+//
+//template<class TYPE, St DIM, class SURFACE>
+//class TriFace_;
+//
+//template<typename TYPE, St DIM>
+//class BBox_: public Box_<TYPE, DIM> {
+//public:
+//	static const St Dim = DIM;
+//	typedef Point_<TYPE, DIM> Point;
+//	typedef Segment_<TYPE, DIM> Segment;
+//	typedef BBox_<TYPE, DIM> Self;
+//	typedef Box_<TYPE, DIM> Box;
+//	typedef St size_type;
+//	typedef TagBBox Tag;
+//	typedef TYPE Vt;
+//	typedef TYPE& reference;
+//	typedef TYPE* pointer;
+//	typedef const TYPE* const_pointer;
+//	typedef const TYPE& const_reference;
+//
+//	typedef Operation_<TYPE, DIM> Op;
+//
+//	typedef TriSurface_<TYPE, DIM> TriSurface;
+//	typedef TriFace_<TYPE, DIM, TriSurface> TriFace;
+//
+//protected:
+//	Any _obj;
+//
+//public:
+//	BBox_() {
+//		_obj = nullptr;
+//	}
+//	BBox_(const Any& o) {
+//		_obj = o;
+//		_set_box();
+//	}
+//
+//	BBox_(const Point& min, const Point& max) :
+//			Box(min, max) {
+//		_obj = nullptr;
+//	}
+//
+//	BBox_(const Self& a, const Self& b) :
+//			Box(a, b) { // union to one box without data
+//		_obj = nullptr;
+//	}
+//
+//	Any& get_obj() {
+//		return _obj;
+//	}
+//
+//	const Any& get_obj() const {
+//		return _obj;
+//	}
+//
+//protected:
+//	void _set_box() {
+//		if (_obj.type() == typeid(Segment)) {
+//			Segment s = any_cast<Segment>(_obj);
+//			Box bs = s.box();
+//			this->_min = bs.min();
+//			this->_max = bs.max();
+//			return;
+//		}
+//		if ((_obj.type() == typeid(Segment*))) {
+//			Segment* s = any_cast<Segment*>(_obj);
+//			Box bs = s->box();
+//			this->_min = bs.min();
+//			this->_max = bs.max();
+//			return;
+//		}
+//		if ((_obj.type() == typeid(TriFace))) {
+//			TriFace s = any_cast<TriFace>(_obj);
+//			Box bs = s.box();
+//			this->_min = bs.min();
+//			this->_max = bs.max();
+//			return;
+//		}
+//		if ((_obj.type() == typeid(TriFace*))) {
+//			TriFace* s = any_cast<TriFace*>(_obj);
+//			Box bs = s->box();
+//			this->_min = bs.min();
+//			this->_max = bs.max();
+//			return;
+//		}
+//
+//	}
+//
+//}
+//;
 
 }
 
