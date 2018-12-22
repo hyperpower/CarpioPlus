@@ -68,4 +68,4 @@ The case will automatically run for you. The figures will put in fig folder, and
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details
