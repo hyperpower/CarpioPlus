@@ -27,7 +27,7 @@ The first specical case is that the point is *on the edge* of the polgon. The wi
    :alt: Point on the edge of a polygon
    :align: center 
 
-   Point on the edge of a polygon.
+   Points are on the edges of a polygon.
 
 
 The second specical case is that the point is *on the vertex* of the polgon. 
@@ -36,7 +36,7 @@ The second specical case is that the point is *on the vertex* of the polgon.
    :alt: Point on the vertex of a polygon
    :align: center 
 
-   Point on the vertex of a polygon.
+   Points are on the vertrices of a polygon.
 
 
 
