@@ -94,7 +94,7 @@ public:
 protected:
 
 	static Vt _value_type1(
-			        const Field&      fc,
+			        const Field&       fc,
 			        const BC&          bc,
 					const Index&       idxc,
 					const Index&       idxg,

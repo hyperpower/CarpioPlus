@@ -83,7 +83,8 @@ public:
 	typedef SVectorFace_<DIM>   VectorFace;
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 
-	typedef SExpField_<DIM>     ExpField;
+	typedef SExpField_<DIM>                      ExpField;
+	typedef typename SExpField_<DIM>::Expression Exp;
 
 	typedef SValue_<DIM> Value;
 
@@ -145,7 +146,7 @@ public:
 				const Vt&         t = 0.0){
 		ExpField res = phi.new_compatible();
 		for (auto& idx : phi.order()) {
-			std::array<typename ExpField::ValueType, DIM> arr;
+			std::array<Exp, DIM> arr;
 			FOR_EACH_DIM
 			{
 				Vt up = U(d, _P_, idx);
@@ -153,7 +154,7 @@ public:
 				Vt uc = (up + um) * 0.5;      //average velocity to center
 				auto idxm = idx.m(d);
 				auto idxp = idx.p(d);
-				typename ExpField::ValueType phi_u, phi_d;
+				Exp phi_u, phi_d;
 				Vt s = phi.grid().s_(d, idx);
 				if (uc >= 0) {
 					if(phi.ghost().is_ghost(idxm)){

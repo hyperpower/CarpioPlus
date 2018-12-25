@@ -8,6 +8,8 @@ Introduction
 =============
 The TVD schemes originally developed by Harten
 
+
+
 Semi-discrete steady-state TVD schemes
 =======================================
 The section describes the method for obtaining the solution of the **steady-state** of the advection equation. Essentially, Eq. :eq:`eq_con` is equivalent to 

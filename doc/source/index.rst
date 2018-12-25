@@ -12,10 +12,13 @@ Welcome to Carpio's documentation!
 
 Theory
 =================
-.. toctree::
-   :maxdepth: 2
 
-   theory/convection
+:doc:`Convection <theory/convection>`
+-----------------------------------------
+.. toctree::
+   :maxdepth: 1
+
+   theory/tvd
 
 Cases
 =================
@@ -52,6 +55,8 @@ Restructure examples
    
    example
    5-1-1-doc_test
+   api/library_root
+
 
 
 Indices and tables

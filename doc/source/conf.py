@@ -49,8 +49,37 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
-    'matplotlib.sphinxext.plot_directive',    
+    'matplotlib.sphinxext.plot_directive',
+    'breathe' 
+    # 'exhale'
 ]
+
+# # Setup the breathe extension
+breathe_projects = {
+    "carpiodoc": "./doxyoutput/xml"
+}
+breathe_default_project = "carpiodoc"
+
+# # Setup the exhale extension
+# exhale_args = {
+#     # These arguments are required
+#     "containmentFolder":     "./api",
+#     "rootFileName":          "library_root.rst",
+#     "rootFileTitle":         "API Documentation",
+#     "doxygenStripFromPath":  "../..",
+#     # Suggested optional arguments
+#     "createTreeView":        True,
+#     # TIP: if using the sphinx-bootstrap-theme, you need
+#     # "treeViewIsBootstrap": True,
+#     "exhaleExecutesDoxygen": True,
+#     "exhaleDoxygenStdin":    "INPUT = ../../include"
+# }
+
+# # Tell sphinx what the primary language being documented is.
+# primary_domain = 'cpp'
+
+# # Tell sphinx what the pygments highlight language should be.
+# highlight_language = 'cpp'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

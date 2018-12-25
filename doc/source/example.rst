@@ -152,3 +152,10 @@ See the matplotlib `pyplot tutorial
 the `gallery <http://matplotlib.sourceforge.net/gallery.html>`_ for
 lots of examples of matplotlib plots.
 
+
+Breath 
+------------
+
+.. doxygenclass:: Point_
+   :project: Carpio
+

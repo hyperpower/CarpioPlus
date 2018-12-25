@@ -169,13 +169,25 @@ public:
 			this->at(2) = this->at(2) * Vt(dz);
 		}
 	}
-	/** Distance to other point */
+	/**
+	 *  Distance to other point
+	 *
+	 *  The distance formula:
+	 *   \f$ d = \sqrt{(x - x_p)^2 + (y - y_p)^2 + (z - z_p)^2} \f$
+	 *
+	 *  \param p - other point
+	 *
+	 *  \return Vt - an distance from to this point
+	 */
 	Vt dist(const Point& p) const {
 		double dx = x() - p.x();
 		double dy = y() - p.y();
 		return sqrt(dx * dx + dy * dy);
 	}
 
+	/**
+	 *  Normalize the point as a vector from (0,0,0) to this point.
+	 */
 	void normalize() {
 		double n = 0;
 		for (St i = 0; i < Dim; i++) {
