@@ -70,6 +70,7 @@ public:
 		return s.min();
 	}
 
+
 	static Exp Get(
 			const ExpField&      fc,
 			const BoundaryIndex& bi,
@@ -82,9 +83,9 @@ public:
 			auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
 			auto spbc = bi.find(bid);
 			if (spbc->type() == BC::_BC1_) {
-				return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
+//				return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
 			} else if (spbc->type() == BC::_BC2_) {
-				return _value_type2(fc, *spbc, idxc, idxg, axe, ori, time);
+//				return _value_type2(fc, *spbc, idxc, idxg, axe, ori, time);
 			}
 		} else {
 			return idxg;

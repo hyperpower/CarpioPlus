@@ -14,7 +14,7 @@
 namespace carpio{
 
 template<St DIM, class D>
-class EventGnuplotScalar_ : public Event_<DIM, D>{
+class EventGnuplotField_ : public Event_<DIM, D>{
 public:
 	typedef Event_<DIM, D> Event;
 	typedef Equation_<DIM, D> Equ;
@@ -22,7 +22,7 @@ public:
 	typedef const Equ* const_pEqu;
 
 	typedef typename D::GnuplotActor GnuplotActor;
-	typedef typename D::Scalar       Scalar;
+	typedef typename D::Field        Field;
 
 protected:
 	std::string _sn;     // scalar name
@@ -37,7 +37,7 @@ protected:
 	St          _size_font;
 
 public:
-	EventGnuplotScalar_(const std::string& sname,
+	EventGnuplotField_(const std::string& sname,
 			int is    = -1, int ie   = -1,
 	        int istep = -1, int flag = 0) :
 		 _sn(sname),
@@ -59,7 +59,7 @@ public:
 			_set_terminal(_terminal_name, fn);
 			_plot((*pd)[_sn]);
 		}else{
-			std::cerr<< "EventGnuplotScalar : " << _sn << " not found!" << std::endl;
+			std::cerr<< "EventGnuplotField : " << _sn << " not found!" << std::endl;
 		}
 		return -1;
 	}
@@ -85,10 +85,10 @@ protected:
 			_spgnu->set_terminal_png(fn, _size_x, _size_y, _font, _size_font);
 			return;
 		}
-		std::cerr << "EventGnuplotScalar: " << "Wrong terminal!" << std::endl;
+		std::cerr << "EventGnuplotField: " << "Wrong terminal!" << std::endl;
 	}
 
-	void _plot(const Scalar& s){
+	void _plot(const Field& s){
 		if(DIM == 1){
 			_spgnu->add(GnuplotActor::Lines(s));
 		}

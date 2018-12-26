@@ -327,6 +327,48 @@ inline SField_<DIM> operator/(const Vt& lhs, const SField_<DIM>& rhs){
 	return res;
 }
 
+// a^2 + b^2
+template<St DIM>
+SField_<DIM> SquareSum(const SField_<DIM>& a, const SField_<DIM>& b){
+	ASSERT(a.is_compatible(b));
+	auto res = a.new_compatible();
+
+	for(auto& idx : res.order()){
+		auto va = a(idx);
+		auto vb = b(idx);
+		res(idx)= va * va + vb * vb;
+	}
+	return res;
+}
+
+template<St DIM>
+SField_<DIM> SquareSum(const SField_<DIM>& a,
+		               const SField_<DIM>& b,
+					   const SField_<DIM>& c){
+	ASSERT(a.is_compatible(b));
+	ASSERT(a.is_compatible(c));
+	auto res = a.new_compatible();
+
+	for(auto& idx : res.order()){
+		auto va = a(idx);
+		auto vb = b(idx);
+		auto vc = c(idx);
+		res(idx)= va * va + vb * vb + vc * vc;
+	}
+	return res;
+}
+
+template<St DIM>
+SField_<DIM> Sqrt(const SField_<DIM>& a){
+	auto res = a.new_compatible();
+
+	for(auto& idx : res.order()){
+		auto va = a(idx);
+		res(idx)= std::sqrt(va);
+	}
+	return res;
+}
+
 
 }
 

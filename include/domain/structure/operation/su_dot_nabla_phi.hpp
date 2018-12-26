@@ -181,7 +181,7 @@ public:
 			Vt sum = 0;
 			FOR_EACH_DIM
 			{
-				sum += arr[d];
+//				sum += arr[d];
 			}
 			res(idx) = sum;
 		}

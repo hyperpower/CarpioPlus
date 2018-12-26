@@ -79,13 +79,13 @@ inline bool IsPrime(St n) {
 
 // this function return a^2+b^2
 template<typename TYPE>
-TYPE SqareSum(const TYPE &a, const TYPE &b){
+TYPE SquareSum(const TYPE &a, const TYPE &b){
 	return a * a + b * b;
 }
 
 // this function return (a + b)*(a + b)
 template<typename TYPE>
-TYPE SumSqare(const TYPE &a, const TYPE &b) {
+TYPE SumSquare(const TYPE &a, const TYPE &b) {
 	return (a + b) * (a + b);
 }
 

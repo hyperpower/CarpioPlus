@@ -120,14 +120,14 @@ TEST(field, plot3){
 	gnu.set_zrange(-0.1, 1.6);
 	auto awf = GA::WireFrame(*spsg);
 	gnu.add(awf);
-	awf->show_data();
+//	awf->show_data();
 	gnu.splot();
 
 //	SIOFile_<1>::OutputField("1d.txt", sc);
 }
 
 
-TEST(scalar, add){
+TEST(scalar, DISABLED_add){
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
@@ -214,6 +214,13 @@ TEST(scalar, add){
 	std::cout << "sc3 = " << sc3(0, 0) << std::endl;
 	ASSERT_LE(std::abs(sc3(0, 0) - (2.3 / sc(0, 0))), 1e-4);
 }
+
+
+TEST(scalar, plot_vector_face){
+
+
+}
+
 
 
 

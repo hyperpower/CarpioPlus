@@ -21,7 +21,7 @@ public:
 	typedef typename Domain::Grid      Grid;
 	typedef typename Domain::Ghost     Ghost;
 	typedef typename Domain::Order     Order;
-	typedef typename Domain::Scalar    Scalar;
+	typedef typename Domain::Field    Field;
 	typedef Event_<DIM, Domain>        Event;
 	typedef TimeTerm_<DIM>             TimeTerm;
 
@@ -29,7 +29,7 @@ public:
 	typedef typename Domain::VectorFace   VectorFace;
 
 	typedef std::shared_ptr<Event>  spEvent;
-	typedef std::shared_ptr<Scalar> spScalar;
+	typedef std::shared_ptr<Field> spField;
 	typedef std::shared_ptr<Grid>   spGrid;
 	typedef std::shared_ptr<Ghost>  spGhost;
 	typedef std::shared_ptr<Order>  spOrder;
@@ -41,7 +41,7 @@ public:
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 	typedef std::map<std::string, Any>                AFlags;
-	typedef std::map<std::string, spScalar>           Scalars;
+	typedef std::map<std::string, spField>            Fields;
 	typedef std::map<std::string, spBoundaryIndex>    BIs;
 	typedef std::unordered_map<std::string, spEvent>  Events;
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
@@ -60,7 +60,7 @@ protected:
 	Values     _values;        // values for equation
 	AFlags     _aflags;        // other types of data put in this map
 
-	Scalars    _scalars;       //!< variables on the center of node
+	Fields    _scalars;       //!< variables on the center of node
 	BIs        _bis;           //!< each variable has a Boundary Index
 
 	spBoundaryIndex _default_spbi;
@@ -165,11 +165,11 @@ public:
 
 
 	// overload operators ===============================
-	Scalar& operator[](const std::string& name){
+	Field& operator[](const std::string& name){
 		return *(this->_scalars[name]);
 	}
 
-	const Scalar& operator[](const std::string& name) const{
+	const Field& operator[](const std::string& name) const{
 		return *(this->_scalars[name]);
 	}
 
@@ -267,7 +267,7 @@ public:
 
 	void new_scalar(const std::string& name){
 		if(!(this->has_scalar(name))){
-			this->_scalars[name] = spScalar(new Scalar(
+			this->_scalars[name] = spField(new Field(
 					this->_grid,
 					this->_ghost,
 					this->_order));

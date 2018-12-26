@@ -52,7 +52,7 @@ public:
 	typedef typename Domain::Grid      Grid;
 	typedef typename Domain::Ghost     Ghost;
 	typedef typename Domain::Order     Order;
-	typedef typename Domain::Scalar    Scalar;
+	typedef typename Domain::Field     Field;
 	typedef Event_<DIM,Domain>         Event;
 	typedef TimeTerm_<DIM>             TimeTerm;
 
@@ -60,7 +60,7 @@ public:
 	typedef typename Domain::VectorFace   VectorFace;
 
 	typedef std::shared_ptr<Event>  spEvent;
-	typedef std::shared_ptr<Scalar> spScalar;
+	typedef std::shared_ptr<Field>  spField;
 	typedef std::shared_ptr<Grid>   spGrid;
 	typedef std::shared_ptr<Ghost>  spGhost;
 	typedef std::shared_ptr<Order>  spOrder;
@@ -72,7 +72,7 @@ public:
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 	typedef std::map<std::string, Any>                AFlags;
-	typedef std::map<std::string, spScalar>           Scalars;
+	typedef std::map<std::string, spField>            Fields;
 	typedef std::map<std::string, spBoundaryIndex>    BIs;
 	typedef std::unordered_map<std::string, spEvent>  Events;
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
@@ -175,7 +175,7 @@ protected:
 		UdotNabla_FOU FOU(this->_bis["phi"]);
 		VectorFace&   vf  = *(this->_vf);
 		VectorCenter& vc  = *(this->_vc);
-		Scalar&       phi = *(this->_scalars["phi"]);
+		Field&       phi = *(this->_scalars["phi"]);
 		Vt            dt  = this->_time->dt();
 
 		Interpolate::VectorCenterToFace(vc, vf,

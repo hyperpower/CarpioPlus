@@ -30,6 +30,10 @@ public:
 	typedef SField_<1>    Field1;
 	typedef SField_<2>    Field2;
 	typedef SField_<3>    Field3;
+	typedef SVectorCenter_<DIM> VC;
+	typedef SVectorCenter_<1> VC1;
+	typedef SVectorCenter_<2> VC2;
+	typedef SVectorCenter_<3> VC3;
 
 	typedef SIndex_<1>    Index1;
 	typedef SIndex_<2>    Index2;
@@ -47,14 +51,14 @@ public:
 			for (St i = 0; i < grid.n(_X_); i++) {
 				typename Grid2::Index index(i, j);
 				for (short o = 0; o < grid.num_vertex(); ++o) {
-					typename Grid::Poi p = grid.v(order[o], index);
+					auto p = grid.v(order[o], index);
 					actor->data().push_back(
 								ToString(p.value(_X_),
 										 p.value(_Y_),
 										 c,
 										 " "));
 				}
-				typename Grid2::Poi p = grid.v(0, index);
+				auto p = grid.v(0, index);
 				actor->data().push_back(
 							ToString(p.value(_X_), p.value(_Y_), c,
 									" "));
@@ -82,6 +86,23 @@ public:
 		return actor;
 	}
 
+	static spActor CenterPoints(const Grid2& grid, int color_idx = -1){
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with points lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+		for (St j = 0; j < grid.n(_Y_); j++) {
+			for (St i = 0; i < grid.n(_X_); i++) {
+			typename Grid2::Index index(i, j);
+			auto p = grid.c(index);
+			actor->data().push_back(
+					ToString(p.value(_X_), p.value(_Y_), c, " "));
+			actor->data().push_back("");
+			}
+		}
+		return actor;
+	}
+
 	static spActor Contour(const Field2& f){
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3:4:5:6:7 title \"\" ";
@@ -102,7 +123,9 @@ public:
 	}
 
 	static spActor WireFrame(
-				const Grid1& grid, int color_idx = -1) {
+				const Grid1& grid,
+				const Vt&    tik  = 0.1,
+				int color_idx     = -1) {
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with line lc variable";
@@ -115,9 +138,9 @@ public:
 			typename Grid1::Index index(i);
 			auto p = grid.f(_X_, _M_, index);
 			actor->data().push_back(
-					ToString(p.value(_X_), -0.1, c, " "));
+					ToString(p.value(_X_), -0.0, c, " "));
 			actor->data().push_back(
-					ToString(p.value(_X_),  0.1, c, " "));
+					ToString(p.value(_X_),  tik, c, " "));
 			actor->data().push_back("");
 			if(i == 0){
 				xs = p.value(_X_);
@@ -127,9 +150,9 @@ public:
 		typename Grid1::Index index(grid.n(_X_) - 1);
 		auto p = grid.f(_X_, _P_, index);
 		actor->data().push_back(
-				ToString(p.value(_X_), -0.1, c, " "));
+				ToString(p.value(_X_), -0.0, c, " "));
 		actor->data().push_back(
-				ToString(p.value(_X_),  0.1, c, " "));
+				ToString(p.value(_X_),  tik, c, " "));
 		actor->data().push_back("");
 		xe = p.value(_X_);
 
@@ -169,6 +192,144 @@ public:
 			auto x = s.grid().c_(_X_, index);
 			auto v = s(index);
 			actor->data().push_back(ToString(x, v, c, " "));
+		}
+		return actor;
+	}
+
+	static spActor LinesPoints(const VC1& s, int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with linespoints lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		for (auto& index : s.order()) {
+			auto x = s.grid().c_(_X_, index);
+			auto v = s[_X_](index);
+			actor->data().push_back(ToString(x, v, c, " "));
+		}
+		return actor;
+	}
+
+	static spActor Arrows(
+			const VC1& s,
+			       Vt  unit_length = -1.0,
+			      int  color_idx   = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt      color = color_idx;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+		if(unit_length <= 0){
+			unit_length = s[_X_].max() * 2.0;
+		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+			auto x  = s.grid().c_(_X_, index);
+			Vt   y  = 0.0;
+			auto v  = s[_X_](index);
+			auto dx = v / unit_length * gmin_size;
+			Vt   dy = 0.0;
+			if(color_idx < 0){
+				color = v;
+			}
+			actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+		}
+
+		return actor;
+	}
+
+	static spActor ArrowsAxesAlign(
+				const VC2& s,
+				       Vt  unit_length = -1.0,
+				      int  color_idx   = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt      colorx = color_idx;
+		Vt      colory = color_idx;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+		if(unit_length <= 0){
+			auto xmax = s[_X_].max() * 2.0;
+			auto ymax = s[_Y_].max() * 2.0;
+			unit_length = std::max(xmax, ymax);
+		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+			auto x  = s.grid().c_(_X_, index);
+			auto y  = s.grid().c_(_Y_, index);
+			auto vx = s[_X_](index);
+			auto vy = s[_Y_](index);
+			auto dx = vx / unit_length * gmin_size;
+			auto dy = vy / unit_length * gmin_size;
+			if(color_idx < 0){
+				colorx = vx;
+				colory = vy;
+			}
+			actor->data().push_back(ToString(x, y, dx,  0.0, colorx, " "));
+			actor->data().push_back(ToString(x, y, 0.0, dy,  colory, " "));
+		}
+		return actor;
+	}
+
+	static spActor Arrows(
+					const VC2& s,
+					      Vt  unit_length = -1.0,
+					      int  color_idx  = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt color = color_idx;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style() = "with vectors lc variable";
+
+		auto ss = SquareSum(s[_X_], s[_Y_]);
+		if (unit_length <= 0) {
+			unit_length = std::sqrt(ss.max()) * 2.0;
+		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+			auto x = s.grid().c_(_X_, index);
+			auto y = s.grid().c_(_Y_, index);
+			auto vx = s[_X_](index);
+			auto vy = s[_Y_](index);
+			auto dx = vx / unit_length * gmin_size;
+			auto dy = vy / unit_length * gmin_size;
+			if (color_idx < 0) {
+				color = std::sqrt(ss(index));
+			}
+			actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+		}
+		return actor;
+	}
+
+	static spActor Arrows(
+					const VC3& s,
+					      Vt   unit_length = -1.0,
+					      int  color_idx  = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt color = color_idx;
+		actor->command() = "using 1:2:3:4:5:6:7 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+
+		auto ss = SquareSum(s[_X_], s[_Y_], s[_Z_]);
+		if (unit_length <= 0) {
+			unit_length = std::sqrt(ss.max()) * 2.0;
+		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+			auto x = s.grid().c_(_X_, index);
+			auto y = s.grid().c_(_Y_, index);
+			auto z = s.grid().c_(_Z_, index);
+			auto vx = s[_X_](index);
+			auto vy = s[_Y_](index);
+			auto vz = s[_Z_](index);
+			auto dx = vx / unit_length * gmin_size;
+			auto dy = vy / unit_length * gmin_size;
+			auto dz = vz / unit_length * gmin_size;
+			if (color_idx < 0) {
+				color = std::sqrt(ss(index));
+			}
+			actor->data().push_back(ToString(x, y, z, dx, dy, dz, color, " "));
 		}
 		return actor;
 	}

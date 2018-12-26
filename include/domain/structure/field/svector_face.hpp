@@ -59,7 +59,6 @@ public:
 			return _mat[a](index[0], index[1], index[2]);
 		} else {
 			SHOULD_NOT_REACH;
-			return 0.0;
 		}
 	}
 
@@ -74,7 +73,6 @@ public:
 			return _mat[a](index[0], index[1], index[2]);
 		} else {
 			SHOULD_NOT_REACH;
-			return 0.0;
 		}
 	}
 

@@ -9,6 +9,8 @@
 
 #include "algebra/array/multi_array.hpp"
 
+#include <limits>
+
 namespace carpio{
 
 template<St DIM>
@@ -29,10 +31,10 @@ public:
 	typedef typename Mat::const_reference const_reference;
 	typedef SVectorCenter_<DIM> Self;
 	typedef SField_<DIM> Field;
-	typedef std::shared_ptr<Field> spScalar;
+	typedef std::shared_ptr<Field> spField;
 
 protected:
-	std::array<spScalar, DIM> _arrs;
+	std::array<spField, DIM> _arrs;
 public:
 	SVectorCenter_() {
 		FOR_EACH_DIM{
@@ -41,17 +43,17 @@ public:
 	}
 
 	SVectorCenter_(
-			spScalar u,
-			spScalar v = nullptr,
-			spScalar w = nullptr){
-		spScalar a[] = {u,v,w};
+			spField u,
+			spField v = nullptr,
+			spField w = nullptr){
+		spField a[] = {u,v,w};
 		FOR_EACH_DIM{
 			ASSERT(a[d] != nullptr);
 			_arrs[d] = a[d];
 		}
 	}
 
-	void set(Axes a, spScalar sps){
+	void set(Axes a, spField sps){
 		ASSERT(a < DIM);
 		_arrs[a] = sps;
 	}
@@ -76,6 +78,28 @@ public:
 		return *(_arrs[d]);
 	}
 
+	Vt max() const{
+		Vt m = _arrs[_X_]->max();
+		for(St d = 1; d< DIM; d++){
+			Vt md = _arrs[d]->max();
+			if(m < md){
+				m = md;
+			}
+		}
+		return m;
+	}
+
+	Vt max_norm2() const{
+		if(DIM == 1){
+			return max();
+		}else if(DIM == 2){
+			auto sum = SqareSum(*(_arrs[_X_]), *(_arrs[_Y_]));
+			return std::sqrt(sum.max());
+		}else{
+			auto sum = SqareSum(_arrs[_X_], _arrs[_Y_], _arrs[_Z_]);
+			return std::sqrt(sum.max());
+		}
+	}
 
 
 
