@@ -50,15 +50,15 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
     'matplotlib.sphinxext.plot_directive',
-    'breathe' 
+    #'breathe' 
     # 'exhale'
 ]
 
 # # Setup the breathe extension
-breathe_projects = {
-    "carpiodoc": "./doxyoutput/xml"
-}
-breathe_default_project = "carpiodoc"
+# breathe_projects = {
+#     "carpiodoc": "./doxyoutput/xml"
+# }
+# breathe_default_project = "carpiodoc"
 
 # # Setup the exhale extension
 # exhale_args = {

@@ -36,8 +36,19 @@ This folder include all the test cases for Carpio project.
       2. Gate 1D
       3. One Step 2D
       4. Gate 2D
+      5. Sine Square
+      6. Semi Ellipse
+      7. Rotational One Step
+      8. Rotational Two Step
+      9. Rotational Smooth
    2. Poisson
    3. Navier-Stokes
+      1. Lid Driven Cavity
+      2. Backward Facing Step
+      3. Flow pass circle
+      4. Flow pass cylinder
+      5. Flow pass sphere
+
 
 ## Prerequisites
 
