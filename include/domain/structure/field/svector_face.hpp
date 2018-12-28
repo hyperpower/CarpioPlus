@@ -84,6 +84,48 @@ public:
 		return this->operator ()(a, o, index.i(), index.j(), index.k());
 	}
 
+	Vt max() const {
+		Vt m = _mat[_X_].max();
+		for(St d = 1; d< DIM; d++){
+			Vt md = _mat[d].max();
+			if(m < md){
+				m = md;
+			}
+		}
+		return m;
+	}
+	Vt min() const {
+		Vt m = _mat[_X_].min();
+		for(St d = 1; d< DIM; d++){
+			Vt md = _mat[d].min();
+			if(m > md){
+				m = md;
+			}
+		}
+		return m;
+	}
+
+	const Grid& grid() const {
+		return (*_grid);
+	}
+	const Ghost& ghost() const {
+		return (*_ghost);
+	}
+	const Order& order() const {
+		return (*_order);
+	}
+
+	spGrid spgrid() const {
+		return _grid;
+	}
+	spGhost spghost() const {
+		return _ghost;
+	}
+	spOrder sporder() const {
+		return _order;
+	}
+
+
 };
 
 

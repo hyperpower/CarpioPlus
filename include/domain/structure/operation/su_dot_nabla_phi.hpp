@@ -63,7 +63,6 @@ public:
 			const VectorFace& U,
 			const ExpField& phi,
 			const Vt&         t = 0.0){
-
 	}
 
 };

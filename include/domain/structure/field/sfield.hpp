@@ -190,7 +190,6 @@ public:
 		return _order;
 	}
 
-
     bool is_compatible(const Self& o) const{
     	return (  _grid  == o._grid
     			&&_ghost == o._ghost

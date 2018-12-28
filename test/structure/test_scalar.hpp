@@ -217,12 +217,20 @@ TEST(scalar, DISABLED_add){
 
 
 TEST(scalar, plot_vector_face){
-	std::cout << "field_define 3d\n";
+	std::cout << "field_define 1d\n";
 	const St Dim = 1;
 	typedef SField_<Dim>                        Field;
+	typedef std::shared_ptr<Field>            spField;
 	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
 	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
 	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	typedef BoundaryIndex                       BI;
+	typedef std::shared_ptr<BoundaryIndex>    spBI;
+	typedef BoundaryCondition                    BC;
+	typedef std::shared_ptr<BoundaryCondition> spBC;
+	typedef SVectorCenter_<Dim>                 VC;
+	typedef SVectorFace_<Dim>                   VF;
+	typedef SInterpolate_<Dim>                  Inter;
 	typedef Point_<Vt, Dim> Point;
 	Point pmin(0, 0, 0);
 	Point pmax(1, 1, 1);
@@ -232,24 +240,43 @@ TEST(scalar, plot_vector_face){
 
 	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
 
-	Field sc(spsg, spgh, sporder);
-	sc.assign([](Vt x, Vt y, Vt z, Vt t){
+	spField spf(new Field(spsg, spgh, sporder));
+	spf->assign([](Vt x, Vt y, Vt z, Vt t){
 		return sin(x);
 	});
 
+	VC vc(spf);
+
+	VF vf(spsg, spgh, sporder);
+
+	spBI bi(new BI());
+
+	spBC spbcm(new BoundaryConditionValue(BC::_BC1_, 0.3));
+	spBC spbcp(new BoundaryConditionValue(BC::_BC1_, 0.5));
+
+	bi->insert(0, spbcm);
+	bi->insert(1, spbcp);
+
+	Inter::VectorCenterToFace(vc, vf, bi);
+
 	typedef SGnuplotActor_<Dim> GA;
 	Gnuplot gnu;
-	gnu.set_terminal_png("3d.png");
+	gnu.set_terminal_png("vf_1d.png");
 	gnu.set_xrange(-0.1, 1.6);
 	gnu.set_yrange(-0.1, 1.6);
 	gnu.set_zrange(-0.1, 1.6);
 	auto awf = GA::WireFrame(*spsg);
+	auto aaf = GA::Arrows(vf);
+	aaf->style() = "with vector lc palette";
+	auto avc = GA::LinesPoints(vc);
+	avc->command() = "using 1:2:3 title \"Vector center\" ";
+	auto avf = GA::LinesPoints(vf, 2);
+	avf->command() = "using 1:2:3 title \"Vector face\" ";
 	gnu.add(awf);
-	//	awf->show_data();
+	gnu.add(aaf);
+	gnu.add(avc);
+	gnu.add(avf);
 	gnu.plot();
-
-	//	SIOFile_<1>::OutputField("1d.txt", sc);
-
 }
 
 

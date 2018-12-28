@@ -47,6 +47,7 @@ public:
 				auto vm   = Value::Get(vc[d], *(abi[d]), idx, idxm, d, _M_);
 				auto hs   = vc[d].grid().hs_(d, idx);
 				auto hsm  = vc[d].grid().hs_(d, idxm);
+
 				// m case
 				vf(Axes(d), _M_, idx) = (v * hsm + vm * hs) / (hs + hsm);
 				// p case, just for the last one

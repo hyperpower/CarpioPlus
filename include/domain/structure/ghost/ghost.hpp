@@ -22,8 +22,8 @@ public:
 	virtual bool is_ghost(const Index& index) const{};
 	virtual bool is_boundary(
 			const Index& index,
-			const St& a,
-			const St&) const{};
+			const St&    a,
+			const St&    o) const{};
 	virtual bool is_normal(const Index& index) const{};
 
 

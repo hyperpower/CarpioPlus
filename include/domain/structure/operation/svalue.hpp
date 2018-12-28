@@ -120,14 +120,14 @@ protected:
 		// ---x-----|-----g-----
 	    //    +--dx-+--dg-+
 		// equation:
-		//  vx - vg     vbc - vx
+		//  vg - vx     vbc - vx
 		// --------- = ----------  ==> vx - vg = (vbc - vx) * (dx + dg) / dx;
 		//  dx + dg        dx          vg = vx - (vbc - vx) * (dx + dg) / dx;
 		Vt dx  = std::abs(fc.grid().c_(axe, idxb) - fp[axe]);
 		Vt dg  = std::abs(fc.grid().c_(axe, idxg) - fp[axe]);
 		Vt vbc = bc.value(fp.value(_X_), fp.value(_Y_), fp.value(_Z_), time);
 		Vt vx  = fc(idxb);
-		return vx - (vbc - vx) * (dx + dg) / dx;
+		return vx + (vbc - vx) * (dx + dg) / dx;
 	}
 
 	static Vt _value_type2(

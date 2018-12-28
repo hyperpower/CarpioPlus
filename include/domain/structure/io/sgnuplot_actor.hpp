@@ -31,9 +31,14 @@ public:
 	typedef SField_<2>    Field2;
 	typedef SField_<3>    Field3;
 	typedef SVectorCenter_<DIM> VC;
-	typedef SVectorCenter_<1> VC1;
-	typedef SVectorCenter_<2> VC2;
-	typedef SVectorCenter_<3> VC3;
+	typedef SVectorCenter_<1>   VC1;
+	typedef SVectorCenter_<2>   VC2;
+	typedef SVectorCenter_<3>   VC3;
+
+	typedef SVectorFace_<DIM> VF;
+	typedef SVectorFace_<1>   VF1;
+	typedef SVectorFace_<2>   VF2;
+	typedef SVectorFace_<3>   VF3;
 
 	typedef SIndex_<1>    Index1;
 	typedef SIndex_<2>    Index2;
@@ -210,6 +215,25 @@ public:
 		return actor;
 	}
 
+	static spActor LinesPoints(const VF1& s, int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with linespoints lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		for (auto& index : s.order()) {
+			if(s.ghost().is_boundary(index, _X_, _M_)){
+				auto p = s.grid().f(_X_,_M_, index);
+				auto v = s(_X_, _M_, index);
+				actor->data().push_back(ToString(p.x(), v, c, " "));
+			}
+			auto p = s.grid().f(_X_,_P_, index);
+			auto v = s(_X_, _P_, index);
+			actor->data().push_back(ToString(p.x(), v, c, " "));
+		}
+		return actor;
+	}
+
 	static spActor Arrows(
 			const VC1& s,
 			       Vt  unit_length = -1.0,
@@ -237,6 +261,47 @@ public:
 
 		return actor;
 	}
+
+	static spActor Arrows(
+				const VF1& s,
+				       Vt  unit_length = -1.0,
+				      int  color_idx   = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt      color = color_idx;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+		if(unit_length <= 0){
+			unit_length = s.max() * 2.0;
+		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+if(s.ghost().is_boundary(index, _X_, _M_)){
+				auto fm = s.grid().f(_X_, _M_, index);
+				auto v  = s(_X_, _M_, index);
+				auto dx = v / unit_length * gmin_size;
+				Vt   x  = fm(_X_) - (dx * 0.5);
+				Vt   y  = 0.0;
+				Vt   dy = 0.0;
+				if(color_idx < 0){
+					color = v;
+				}
+				actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+			}
+			auto fp = s.grid().f(_X_, _P_, index);
+			auto v  = s(_X_, _P_, index);
+			auto dx = v / unit_length * gmin_size;
+			Vt x    = fp(_X_) - (dx * 0.5);
+			Vt y    = 0.0;
+			Vt dy   = 0.0;
+			if (color_idx < 0) {
+				color = v;
+			}
+			actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+		}
+
+		return actor;
+		}
 
 	static spActor ArrowsAxesAlign(
 				const VC2& s,
