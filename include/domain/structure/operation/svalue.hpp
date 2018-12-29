@@ -120,7 +120,7 @@ protected:
 		// ---x-----|-----g-----
 	    //    +--dx-+--dg-+
 		// equation:
-		//  vg - vx     vbc - vx
+		//  vx - vg     vbc - vx
 		// --------- = ----------  ==> vx - vg = (vbc - vx) * (dx + dg) / dx;
 		//  dx + dg        dx          vg = vx - (vbc - vx) * (dx + dg) / dx;
 		Vt dx  = std::abs(fc.grid().c_(axe, idxb) - fp[axe]);

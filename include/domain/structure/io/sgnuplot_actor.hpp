@@ -276,7 +276,7 @@ public:
 		auto gmin_size = s.grid().min_size();
 
 		for (auto& index : s.order()) {
-if(s.ghost().is_boundary(index, _X_, _M_)){
+			if(s.ghost().is_boundary(index, _X_, _M_)){
 				auto fm = s.grid().f(_X_, _M_, index);
 				auto v  = s(_X_, _M_, index);
 				auto dx = v / unit_length * gmin_size;
@@ -299,9 +299,52 @@ if(s.ghost().is_boundary(index, _X_, _M_)){
 			}
 			actor->data().push_back(ToString(x, y, dx, dy, color, " "));
 		}
-
 		return actor;
+	}
+
+	static spActor Arrows(
+				const VF2& s,
+				       Vt  unit_length = -1.0,
+				      int  color_idx   = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		Vt      color = color_idx;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+		if(unit_length <= 0){
+			unit_length = s.max() * 2.0;
 		}
+		auto gmin_size = s.grid().min_size();
+
+		for (auto& index : s.order()) {
+			for(St d = 0; d < 2; d++){
+			if(s.ghost().is_boundary(index, d, _M_)){
+				auto fm = s.grid().f(d, _M_, index);
+				auto v  = s(d, _M_, index);
+				auto dl = v / unit_length * gmin_size;
+				Vt   x  = (d == _X_) ? fm(d) - (dl * 0.5) : fm.x();
+				Vt   y  = (d == _X_) ? fm.y() : (fm(d) - (dl * 0.5));
+				Vt   dx = (d == _X_) ? dl : 0.0;
+				Vt   dy = (d == _X_) ? 0.0: dl;
+				if(color_idx < 0){
+					color = v;
+				}
+				actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+			}
+			auto fp = s.grid().f(d, _P_, index);
+			auto v  = s(d, _P_, index);
+			auto dl = v / unit_length * gmin_size;
+			Vt   x  = (d == _X_) ? fp(d) - (dl * 0.5) : fp.x();
+			Vt   y  = (d == _X_) ? fp.y() : (fp(d) - (dl * 0.5));
+			Vt   dx = (d == _X_) ? dl : 0.0;
+			Vt   dy = (d == _X_) ? 0.0: dl;
+			if (color_idx < 0) {
+				color = v;
+			}
+			actor->data().push_back(ToString(x, y, dx, dy, color, " "));
+			}
+		}
+		return actor;
+	}
 
 	static spActor ArrowsAxesAlign(
 				const VC2& s,
