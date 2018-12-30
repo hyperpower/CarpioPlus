@@ -19,7 +19,7 @@ This cases is just a simple illustration of the definition of the structure vect
          ...
    };
 
-The **VectorFace** is for holding the data on the Cell faces. Unlike **VectorCenter**, **VectorFace** stores all the data. The pesudo code is:
+The **VectorFace** is for holding the data on the Cell faces. Unlike **VectorCenter**, **VectorFace** stores all the data. The pseudo code is:
 
 
 .. code:: c++
@@ -88,9 +88,36 @@ Vector Face
 
 1D Vector Face
 -------------------
+We have One-dimension field from x = 0 to x = 1.5. There are 5 control volumes. The vector face comes from vector center. The boundary condition has been imposed.
+
+.. math::
+   
+   u = \sin(x)
+
+
+.. figure:: _static/{{folder_name}}/vf_1d.png
+   :alt: One dimension vector center
+   :align: center 
+
+   One dimension vector face.
 
 2D Vector Face
 -------------------
+The 2D vector face is defined in [0.0, 1.5] :math:`\times` [0.0, 1.5]. The mesh has 25 control volumes (5 :math:`\times` 5). The intial values for the field are difined as:
 
-3D Vector Face
--------------------
+.. math::
+   
+   u &= \sin(x + y) \\
+   v &= \sin(x + y)
+
+.. figure:: _static/{{folder_name}}/vf_2d.png
+   :alt: Two dimension vector face
+   :align: center 
+
+   Two dimension vector face.
+
+.. figure:: _static/{{folder_name}}/vf_2d3.png
+   :alt: Two dimension vector face
+   :align: center 
+
+   Two dimension vector face in 3D.

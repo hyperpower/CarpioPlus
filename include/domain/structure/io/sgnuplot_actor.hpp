@@ -92,7 +92,7 @@ public:
 	}
 
 	static spActor CenterPoints(const Grid2& grid, int color_idx = -1){
-		spActor actor = spActor(new Gnuplot_actor());
+spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with points lc variable";
 		int c = (color_idx == -1) ? 0 : color_idx;
@@ -103,6 +103,32 @@ public:
 			actor->data().push_back(
 					ToString(p.value(_X_), p.value(_Y_), c, " "));
 			actor->data().push_back("");
+			}
+		}
+		return actor;
+	}
+	//plot by splot
+	static spActor FacePoints(const VF2& vf, int color_idx = 1){
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3:4 title \"\" ";
+		actor->style()   = "with points lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+		for (auto& index : vf.order()) {
+			for(St d = 0; d < 2; d++){
+			if(vf.ghost().is_boundary(index, d, _M_)){
+				auto fm = vf.grid().f(d, _M_, index);
+				auto v  = vf(d, _M_, index);
+				if(color_idx < 0){
+					c = v;
+				}
+			actor->data().push_back(ToString(fm.x(), fm.y(), v, c, " "));
+			}
+			auto fp = vf.grid().f(d, _P_, index);
+			auto v  = vf(d, _P_, index);
+			if (color_idx < 0) {
+				c = v;
+			}
+			actor->data().push_back(ToString(fp.x(), fp.y(), v, c, " "));
 			}
 		}
 		return actor;

@@ -48,10 +48,10 @@ class VectorList_ {
     }
 
     // copy constructor : copy it
-    VectorList_(const VectorList_ & rhs) throw (const char*);
+    VectorList_(const VectorList_ & rhs);
 
     // non-default constructor : pre-allocate
-    VectorList_(St cap) throw (const char*);
+    VectorList_(St cap);
 
     ~VectorList_() {
         if (_data != nullptr) {
@@ -88,10 +88,10 @@ class VectorList_ {
     }
 
     // add an item to the vector
-    void push_back(const T& t) throw (const char*);
+    void push_back(const T& t);
 
     // remove an item from a vector
-    void pop_back() throw (const char*) {
+    void pop_back() {
         SHOULD_NOT_REACH;
     }
 
@@ -175,7 +175,7 @@ void VectorList_<T>::_allocate() {
  * VECTOR :: COPY CONSTRUCTOR
  *******************************************/
 template<class T>
-VectorList_<T>::VectorList_(const VectorList_<T>& rhs) throw (const char*) {
+VectorList_<T>::VectorList_(const VectorList_<T>& rhs)  {
     //*this = rhs;
     ASSERT(rhs._cap >= 0);
     // do nothing if there is nothing to do
@@ -202,7 +202,7 @@ VectorList_<T>::VectorList_(const VectorList_<T>& rhs) throw (const char*) {
  * Preallocate the vector to "n"
  **********************************************/
 template<class T>
-VectorList_<T>::VectorList_(St cap) throw (const char*) {
+VectorList_<T>::VectorList_(St cap)  {
     ASSERT(cap >= 0);
     // do nothing if there is nothing to do
     if (cap == 0) {
@@ -236,7 +236,7 @@ VectorList_<T>& VectorList_<T>::operator =(const VectorList_<T>& copy) {
  * Insert an item on the end of the container
  **************************************************/
 template<class T>
-void VectorList_<T>::push_back(const T& t) throw (const char*) {
+void VectorList_<T>::push_back(const T& t) {
     if (_num == 0) {
         _cap = 1;
         _allocate();

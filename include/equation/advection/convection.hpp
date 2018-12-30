@@ -45,7 +45,8 @@ namespace carpio {
 template<St DIM, class D>
 class Convection_: public Equation_<DIM, D>{
 public:
-	typedef D Domain;
+	typedef Convection_<DIM, D>        Self;
+	typedef D                          Domain;
 	typedef Equation_<DIM, D>          Equation;
 	typedef typename Domain::SizeType  St;
 	typedef typename Domain::ValueType Vt;
@@ -85,6 +86,9 @@ public:
 protected:
 	spVectorCenter _vc;
 	spVectorFace   _vf;
+
+	typedef void (Self::*FunOneStep)(St);
+	FunOneStep     _fun_one_step;
 public:
 	Convection_(spGrid spg, spGhost spgh, spOrder spo):
 		Equation(spg, spgh, spo){
@@ -94,6 +98,8 @@ public:
 		_new_uvw();
 
 		this->new_scalar("phi");
+		// default one step function
+		_fun_one_step = &Self::_one_step_fou_explicit;
 	}
 
 	int initialize() {
@@ -116,8 +122,16 @@ public:
 
 	int run_one_step(St step) {
 		std::cout << "    Convection: One Step "<< step <<" \n";
-		_one_step_fou_explicit(step);
+		(this->*_fun_one_step)(step);
 		return -1;
+	}
+
+	void set_space_scheme(const std::string& name){
+		if(name == "fou"){
+			_fun_one_step = Self::_one_step_fou_explicit;
+		}else{
+			_fun_one_step = Self::_one_step_fou_explicit;
+		}
 	}
 
 	void set_boundary_index_phi(spBoundaryIndex spbi){
@@ -175,7 +189,7 @@ protected:
 		UdotNabla_FOU FOU(this->_bis["phi"]);
 		VectorFace&   vf  = *(this->_vf);
 		VectorCenter& vc  = *(this->_vc);
-		Field&       phi = *(this->_scalars["phi"]);
+		Field&       phi  = *(this->_scalars["phi"]);
 		Vt            dt  = this->_time->dt();
 
 		Interpolate::VectorCenterToFace(vc, vf,

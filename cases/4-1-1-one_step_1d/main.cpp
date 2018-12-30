@@ -52,16 +52,16 @@ int main(int argc, char** argv) {
                                                       -1, -1, 1, Event::AFTER));
     equ.add_event("OutputTime", spetime);
 
-    typedef EventOutputScalar_<DIM, Domain> EventOutputScalar;
-    EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
+    typedef EventOutputField_<DIM, Domain> EventOutputField;
+    EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
-    equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
+    equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
 
-    typedef EventGnuplotScalar_<DIM, Domain> EventGnuplotScalar;
-    EventGnuplotScalar egs("phi", -1, -1, 1, Event::AFTER);
+    typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
+    EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
     egs.gnuplot().set_yrange(-0.3, 1.3);
     egs.set_path("./fig/");
-    equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotScalar>(egs));
+    equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
 
     // Run
     equ.run();

@@ -13,7 +13,7 @@
 namespace carpio{
 
 template<St DIM, class D>
-class EventOutputScalar_ : public Event_<DIM, D>{
+class EventOutputField_ : public Event_<DIM, D>{
 public:
 	typedef Event_<DIM, D> Event;
 	typedef Equation_<DIM, D> Equ;
@@ -28,7 +28,7 @@ protected:
 	std::string _path;   // path for output file
 
 public:
-	EventOutputScalar_(const std::string& sname,
+	EventOutputField_(const std::string& sname,
 			int is    = -1, int ie   = -1,
 	        int istep = -1, int flag = 0) :
 		 _sn(sname),
@@ -40,9 +40,9 @@ public:
 	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
 		auto fn = _file_name(step, t, fob);
 		if(pd->has_scalar(_sn)){
-			IOFile::OutputScalar(fn, (*pd)[_sn]);
+			IOFile::OutputField(fn, (*pd)[_sn]);
 		}else{
-			std::cerr<< "EventOutputScalar : " << _sn << " not found!" << std::endl;
+			std::cerr<< "EventOutputField : " << _sn << " not found!" << std::endl;
 		}
 		return -1;
 	}

@@ -24,7 +24,7 @@ This folder include all the test cases for Carpio project.
 3. Domain
    1. Structure
       1. :ballot_box_with_check: Field Define
-      2. Vector Center and Face Define
+      2. :ballot_box_with_check: Vector Center and Face Define
       3. Corner Define
       4. Center to Face
       5. Face to Center
