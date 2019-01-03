@@ -95,7 +95,6 @@ def run(path, runtime, origianl_files):
     file_data = file_info(path.this, origianl_files)
     data["files"]   = file_data 
     data["runtime"] = runtime
-    print(data)
     # copy fig ===================================================
     copy_fig_folder(path, data["folder_name"])
 

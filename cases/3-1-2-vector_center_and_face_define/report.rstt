@@ -88,7 +88,7 @@ Vector Face
 
 1D Vector Face
 -------------------
-We have One-dimension field from x = 0 to x = 1.5. There are 5 control volumes. The vector face comes from vector center. The boundary condition has been imposed.
+We have One-dimension field from x = 0 to x = 1.5. There are 5 control volumes. The vector face comes from vector center. The boundary condition has been imposed. :math:`x=0, u= 0.3` and :math:`x = 1.5`, :math:`u = 0.5`.
 
 .. math::
    
@@ -110,11 +110,13 @@ The 2D vector face is defined in [0.0, 1.5] :math:`\times` [0.0, 1.5]. The mesh 
    u &= \sin(x + y) \\
    v &= \sin(x + y)
 
+The boundary condition has been added. :math:`x=0, u= 0.3` and :math:`x = 1.5`, :math:`u = 0.5`. The Neuman boundary condition is implied in y direction (if :math:`y = 0` or :math:`y = 1.5`, :math:`\frac{\partial u}{\partial y} = 0`)
+
 .. figure:: _static/{{folder_name}}/vf_2d.png
    :alt: Two dimension vector face
    :align: center 
 
-   Two dimension vector face.
+   Two dimension vector face. 
 
 .. figure:: _static/{{folder_name}}/vf_2d3.png
    :alt: Two dimension vector face

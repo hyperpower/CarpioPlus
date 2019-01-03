@@ -20,6 +20,15 @@ Theory
 
    theory/tvd
 
+
+Imcompressible Flow
+-----------------------------------------
+.. toctree::
+   :maxdepth: 1
+
+   theory/projection_method
+
+
 Cases
 =================
 
