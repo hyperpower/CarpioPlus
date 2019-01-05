@@ -8,6 +8,7 @@
 #include "utility/tinyformat.hpp"
 
 #include "algebra/array/multi_array.hpp"
+#include "algebra/matrix/matrix_small.hpp"
 
 namespace carpio{
 
@@ -25,26 +26,26 @@ namespace carpio{
 // --------o---------o---------
 //         0         2
 //         i
-// 1D        di dj dk
+// 1D          di dj dk
 //  x
-// _M_  = 0, 0  0  0
-// _P_  = 1, 1  0  0
+// _M_  = 0,   0  0  0
+// _P_  = 1,   1  0  0
 // 2D
 //  yx
-// _MM_ = 0, 0  0  0
-// _MP_ = 1, 1  0  0
-// _PM_ = 2, 0  1  0
-// _PP_ = 3, 1  1  0
+// _MM_ = 0,   0  0  0
+// _MP_ = 1,   1  0  0
+// _PM_ = 2,   0  1  0
+// _PP_ = 3,   1  1  0
 // 3D
 //  zyx
-// _MMM_ = 0,0  0  0
-// _MMP_ = 1,1  0  0
-// _MPM_ = 2,0  1  0
-// _MPP_ = 3,1  1  0
-// _PMM_ = 4,0  0  1
-// _PMP_ = 5,1  0  1
-// _PPM_ = 6,0  1  1
-// _PPP_ = 7,1  1  1
+// _MMM_ = 0,  0  0  0
+// _MMP_ = 1,  1  0  0
+// _MPM_ = 2,  0  1  0
+// _MPP_ = 3,  1  1  0
+// _PMM_ = 4,  0  0  1
+// _PMP_ = 5,  1  0  1
+// _PPM_ = 6,  0  1  1
+// _PPP_ = 7,  1  1  1
 template<St DIM>
 class SCorner_{
 public:
@@ -71,6 +72,8 @@ protected:
 	spOrder _order;
 
 	Mat _mat;
+	
+	MatrixS_<St, 8, 3> _didx;  //delta index
 
 public:
 	SCorner_(spGrid spg, spGhost spgh, spOrder spo):
@@ -78,14 +81,37 @@ public:
 		_mat.reconstruct(spg->n(_X_) + 1,
 	             		 spg->n(_Y_) + 1,
 			             spg->n(_Z_) + 1);
+		initial_didx();
 	}
 
 	Vt& operator()(St o,
 				   St i, St j = 0, St k = 0) {
-
+		St index[] = { i, j, k };
+		FOR_EACH_DIM{
+			auto didx = _didx(o, d);
+			index[d] += didx;
 		}
+		return _mat(index[0], index[1], index[2]);
+	}
 
+	Vt& operator()(St o,
+			const Index& index) {
+		return this->operator ()(o, index.i(), index.j(), index.k());
+	}
 
+protected:
+	void initial_didx(){
+		//  order = 0,  index = i j k
+		_didx(0,0) = 0;  _didx(0,1) = 0; _didx(0,2) = 0;
+		_didx(1,0) = 1;  _didx(1,1) = 0; _didx(1,2) = 0;
+		_didx(2,0) = 0;  _didx(2,1) = 1; _didx(2,2) = 0;
+		_didx(3,0) = 1;  _didx(3,1) = 1; _didx(3,2) = 0;
+		_didx(4,0) = 0;  _didx(4,1) = 0; _didx(4,2) = 1;
+		_didx(5,0) = 1;  _didx(5,1) = 0; _didx(5,2) = 1;
+		_didx(6,0) = 0;  _didx(6,1) = 1; _didx(6,2) = 1;
+		_didx(7,0) = 1;  _didx(7,1) = 1; _didx(7,2) = 1;
+	}
 };
+}
 
 #endif

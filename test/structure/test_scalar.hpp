@@ -215,7 +215,28 @@ TEST(scalar, DISABLED_add){
 	ASSERT_LE(std::abs(sc3(0, 0) - (2.3 / sc(0, 0))), 1e-4);
 }
 
+TEST(scalar, corner){
+	std::cout << "corner test -----" << std::endl;
+	const St Dim = 3;
+	typedef SField_<Dim>                        Field;
+	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	typedef SCorner_<Dim>                       Corner;
+	typedef std::shared_ptr<SCorner_<Dim> >   spCorner;
+	Point_<Vt, 3> pmin(0, 0, 0);
+	Point_<Vt, 3> pmax(1, 1, 1);
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5, 5}, 0.3, 2));
 
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Corner c(spsg, spgh, sporder);
+
+	std::cout << c(0, 0, 0, 0) << std::endl;
+
+}
 
 
 

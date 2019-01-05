@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iterator>
 
-#include "algebra_define.hpp"
+#include "algebra/algebra_define.hpp"
 
 namespace carpio {
 
@@ -13,7 +13,7 @@ template<typename T, St DIM1, St DIM2>
 class MatrixS_ {
 public:
     // type definitions===================
-    typedef MatrixS_<T, DIM1, DIM2> self;
+    typedef MatrixS_<T, DIM1, DIM2> Self;
     typedef T value_type;
     typedef T* pointer;
     typedef const T* const_pointer;
@@ -40,7 +40,7 @@ public:
         }
     }
     //=============================================
-    self& operator=(const self &a) {
+    Self& operator=(const Self &a) {
         if (this == &a) {
             return *this;
         } else {

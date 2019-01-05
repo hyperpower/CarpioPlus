@@ -23,12 +23,13 @@ public:
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SField_<DIM> Field;
+	typedef SField_<DIM>  Field;
 	typedef SIndex_<DIM>  Index;
 	typedef std::shared_ptr<Field> spField;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
+	typedef SCorner_<DIM>       Corner;
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 	typedef BoundaryCondition BC;
 	typedef SValue_<DIM> Value;
@@ -61,8 +62,43 @@ public:
 		}
 	}
 
+	static void CenterToCorner(
+			const Field&     f,
+			      Corner&    c,
+		          spBI       bi) {
+		for(auto& idx : f.order()){
 
+		}
+	}
 
+protected:
+	typedef SField_<1>  Field1;
+	typedef SField_<2>  Field2;
+	typedef SField_<3>  Field3;
+
+	typedef SCorner_<1> Corner1;
+	typedef SCorner_<2> Corner2;
+	typedef SCorner_<3> Corner3;
+
+	static void CenterToCorner1(const Field1& f, Corner& c, spBI bi){
+		for(auto& idx : f.order()){
+			auto idxm = idx.m(_X_);
+			auto v    = f(idx);
+			auto vm   = Value::Get(f, *(bi), idx, idxm, _X_, _M_);
+			auto hs   = f.grid().hs_(_X_, idx);
+			auto hsm  = f.grid().hs_(_X_, idxm);
+
+			// m case
+			c(_X_, idx) = (v * hsm + vm * hs) / (hs + hsm);
+			// p case, just for the last one
+			if (c.ghost().is_boundary(idx, _X_, _P_)) {
+				auto idxp = idx.p(_X_);
+				auto hsp  = f.grid().hs_(_X_, idxp);
+				auto vp   = Value::Get(f, *(bi), idx, idxp, _X_, _P_);
+				c(_X_, idx) = (v * hsp + vp * hs) / (hs + hsp);
+			}
+		}
+	}
 
 };
 

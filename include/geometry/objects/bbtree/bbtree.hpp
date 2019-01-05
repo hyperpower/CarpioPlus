@@ -335,11 +335,7 @@ protected:
 public:
 	void print_tree();
 	void output_vtk_height(const std::string& fn, Int hei);
-
 };
-
-
-
 
 
 template<typename BOX>
@@ -354,6 +350,7 @@ void BBTree_<BOX>::_preorder_flag(Int& flag, pNode cur, pFun_BBTree_flag visit,
 		_preorder_flag(flag, cur->rchild, visit, utp);
 	}
 }
+
 template<typename BOX>
 void BBTree_<BOX>::_preorder_flag(bool& flag, pNode cur, Fun_flag visit) {
 	if (cur != nullptr) {
@@ -384,6 +381,7 @@ void BBTree_<BOX>::PreOrder_flag(Int& flag, pFun_BBTree_flag visit,
 		utPointer utp) {
 	_preorder_flag(flag, _root->lchild , visit, utp);
 }
+
 template<class BOX>
 void BBTree_<BOX>::PreOrder_flag(Fun_flag visit) {
 	bool flag = true;
@@ -418,6 +416,7 @@ void BBTree_<BOX>::_inorder(pNode cur, pFun_BBTree visit, utPointer utp) {
 		_inorder(cur->rchild, visit, utp);
 	}
 }
+
 template<typename BOX>
 void BBTree_<BOX>::_inorder(pNode cur, Fun visit) {
 	if (cur != nullptr) {
@@ -439,10 +438,12 @@ template<class BOX>
 void BBTree_<BOX>::InOrder(pFun_BBTree visit, utPointer utp) {
 	_inorder(_root->lchild , visit, utp);
 }
+
 template<class BOX>
 void BBTree_<BOX>::InOrder(Fun visit) {
 	_inorder(_root->lchild , visit);
 }
+
 template<class BOX>
 void BBTree_<BOX>::InOrder(Fun visit) const {
 	_inorder(_root->lchild , visit);
@@ -501,7 +502,8 @@ void BBTree_<BOX>::bottomup_build(std::list<pNode>& lc, std::list<pNode>& lf, In
 			}
 		}
 	} else {
-		for (auto iter = lc.rbegin(); iter != lc.rend(); ++iter, ++iter) {
+		for (auto iter  = lc.rbegin();
+				  iter != lc.rend(); ++iter, ++iter) {
 			auto iterp = iter;
 			iterp++;
 			if (iterp != lc.rend()) {
@@ -519,8 +521,6 @@ void BBTree_<BOX>::bottomup_build(std::list<pNode>& lc, std::list<pNode>& lf, In
 		}
 	}
 }
-
-
 
 }
 
