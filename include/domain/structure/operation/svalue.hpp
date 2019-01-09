@@ -10,6 +10,7 @@
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
+#include "algebra/misc/interpolate.hpp"
 
 #include <array>
 
@@ -37,6 +38,8 @@ public:
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 	typedef BoundaryIndex* pBI;
 	typedef BoundaryCondition BC;
+
+	typedef AInterpolate_<Vt, Vt> Interplate;
 public:
 	SValue_(){
 	}
@@ -45,7 +48,7 @@ public:
 			const Field&         fc,
 			const BoundaryIndex& bi,
 		    const Index&         idxc,
-			const Index&         idxg,
+			const Index&         idxg, //get value at idxg
 			const St&            axe,
 			const St&            ori,
 			const Vt&            time = 0.0){
@@ -59,6 +62,27 @@ public:
 			}
 		}else{
 			return fc(idxg);
+		}
+	}
+
+	static Vt GetFace(
+			const Field&         fc,
+			const BoundaryIndex& bi,
+			const Index&         idx,
+			const St&            axe,
+			const St&            ori,
+			const Vt&            time){
+		auto idxg = idx.shift(axe, ori);
+		auto fp   = fc.grid().f(axe, ori, idx);   // face point
+		if(fc.ghost().is_boundary(idx, axe, ori)){
+			auto bid  = fc.ghost().boundary_id(idx, idxg, axe, ori);
+			auto spbc = bi.find(bid);
+			Vt vbc    = spbc->value(fp.value(_X_), fp.value(_Y_), fp.value(_Z_), time);
+			return vbc;
+		}else{
+			auto pc	 = fc.grid().c(idx);
+			auto pg	 = fc.grid().c(idxg);
+			return Interplate::Linear(fp(axe), pc(axe), pg(axe), fc(idx), fc(idxg));
 		}
 	}
 
@@ -82,6 +106,7 @@ public:
 		if(fc.ghost().is_ghost(idxg)){
 			auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
 			auto spbc = bi.find(bid);
+
 			if (spbc->type() == BC::_BC1_) {
 //				return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
 			} else if (spbc->type() == BC::_BC2_) {

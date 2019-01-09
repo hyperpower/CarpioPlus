@@ -40,6 +40,11 @@ public:
 	typedef SVectorFace_<2>   VF2;
 	typedef SVectorFace_<3>   VF3;
 
+	typedef SCorner_<DIM>     Corner;
+	typedef SCorner_<1>       Corner1;
+	typedef SCorner_<2>       Corner2;
+	typedef SCorner_<3>       Corner3;
+
 	typedef SIndex_<1>    Index1;
 	typedef SIndex_<2>    Index2;
 	typedef SIndex_<3>    Index3;
@@ -223,6 +228,25 @@ spActor actor = spActor(new Gnuplot_actor());
 			auto x = s.grid().c_(_X_, index);
 			auto v = s(index);
 			actor->data().push_back(ToString(x, v, c, " "));
+		}
+		return actor;
+	}
+
+	static spActor LinesPoints(const Corner1& s, int color_idx = -1) {
+		spActor actor    = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with linespoints lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		for (auto& index : s.order()) {
+			if (s.ghost().is_boundary(index, _X_, _M_)) {
+				auto p = s.grid().v(0, index);
+				auto v = s(1, index);
+				actor->data().push_back(ToString(p.x(), v, c, " "));
+			}
+			auto p = s.grid().v(1, index);
+			auto v = s(1, index);
+			actor->data().push_back(ToString(p.x(), v, c, " "));
 		}
 		return actor;
 	}

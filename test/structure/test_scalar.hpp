@@ -215,17 +215,23 @@ TEST(scalar, DISABLED_add){
 	ASSERT_LE(std::abs(sc3(0, 0) - (2.3 / sc(0, 0))), 1e-4);
 }
 
-TEST(scalar, corner){
+TEST(scalar, DISABLED_corner){
 	std::cout << "corner test -----" << std::endl;
-	const St Dim = 3;
+	const St Dim = 1;
 	typedef SField_<Dim>                        Field;
 	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
 	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
 	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
 	typedef SCorner_<Dim>                       Corner;
 	typedef std::shared_ptr<SCorner_<Dim> >   spCorner;
-	Point_<Vt, 3> pmin(0, 0, 0);
-	Point_<Vt, 3> pmax(1, 1, 1);
+	typedef SInterpolate_<Dim>                  Inter;
+	typedef BoundaryIndex                        BI;
+	typedef std::shared_ptr<BoundaryIndex>     spBI;
+	typedef BoundaryCondition                    BC;
+	typedef std::shared_ptr<BoundaryCondition> spBC;
+	// type define
+	Point_<Vt, Dim> pmin(0, 0, 0);
+	Point_<Vt, Dim> pmax(1, 1, 1);
 	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5, 5}, 0.3, 2));
 
 	spGhost spgh(new SGhostRegular_<Dim>(spsg));
@@ -234,9 +240,94 @@ TEST(scalar, corner){
 
 	Corner c(spsg, spgh, sporder);
 
+	Field sc(spsg, spgh, sporder);
+	sc.assign([](Vt x, Vt y, Vt z, Vt t){
+		return sin(x);
+	});
+
+	// boundary define
+	spBI bi(new BI());
+	spBC spbcm(new BoundaryConditionValue(BC::_BC1_, 0.3));
+	spBC spbcp(new BoundaryConditionValue(BC::_BC1_, 0.5));
+	bi->insert(0, spbcm);
+	bi->insert(1, spbcp);
+
+	Inter::CenterToCorner(sc, c, bi);
+
 	std::cout << c(0, 0, 0, 0) << std::endl;
+	typedef SGnuplotActor_<Dim> GA;
+	Gnuplot gnu;
+	gnu.set_terminal_png("vc_1d.png");
+	gnu.set_xrange(-0.1, 1.6);
+	gnu.set_yrange(-0.1, 1.2);
+	auto awf = GA::WireFrame(*spsg);
+	auto asc = GA::LinesPoints(sc);
+	asc->command() = "using 1:2:3 title \"Value on Scalar center\" ";
+	auto asv = GA::LinesPoints(c, 2);
+	asv->command() = "using 1:2:3 title \"Valut on Vertex\" ";
+	gnu.add(awf);
+	gnu.add(asc);
+	gnu.add(asv);
+	gnu.plot();
 
 }
+
+TEST(scalar, corner2){
+	std::cout << "corner test -----" << std::endl;
+	const St Dim = 2;
+	typedef SField_<Dim>                        Field;
+	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	typedef SCorner_<Dim>                       Corner;
+	typedef std::shared_ptr<SCorner_<Dim> >   spCorner;
+	typedef SInterpolate_<Dim>                  Inter;
+	typedef BoundaryIndex                        BI;
+	typedef std::shared_ptr<BoundaryIndex>     spBI;
+	typedef BoundaryCondition                    BC;
+	typedef std::shared_ptr<BoundaryCondition> spBC;
+	// type define
+	Point_<Vt, Dim> pmin(0, 0, 0);
+	Point_<Vt, Dim> pmax(1, 1, 1);
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5, 5}, 0.3, 2));
+
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Corner c(spsg, spgh, sporder);
+
+	Field sc(spsg, spgh, sporder);
+	sc.assign([](Vt x, Vt y, Vt z, Vt t){
+		return sin(x);
+	});
+
+	// boundary define
+	spBI bi(new BI());
+	spBC spbcm(new BoundaryConditionValue(BC::_BC1_, 0.3));
+	spBC spbcp(new BoundaryConditionValue(BC::_BC1_, 0.5));
+	bi->insert(0, spbcm);
+	bi->insert(1, spbcp);
+
+//	Inter::CenterToCorner(sc, c, bi);
+//
+//	std::cout << c(0, 0, 0, 0) << std::endl;
+//	typedef SGnuplotActor_<Dim> GA;
+//	Gnuplot gnu;
+//	gnu.set_terminal_png("vc_1d.png");
+//	gnu.set_xrange(-0.1, 1.6);
+//	gnu.set_yrange(-0.1, 1.2);
+//	auto awf = GA::WireFrame(*spsg);
+//	auto asc = GA::LinesPoints(sc);
+//	asc->command() = "using 1:2:3 title \"Value on Scalar center\" ";
+//	auto asv = GA::LinesPoints(c, 2);
+//	asv->command() = "using 1:2:3 title \"Valut on Vertex\" ";
+//	gnu.add(awf);
+//	gnu.add(asc);
+//	gnu.add(asv);
+//	gnu.plot();
+}
+
 
 
 

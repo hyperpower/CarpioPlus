@@ -99,6 +99,40 @@ public:
 		return this->operator ()(o, index.i(), index.j(), index.k());
 	}
 
+	const Vt& operator()(St o,
+			             St i, St j = 0, St k = 0) const{
+		St index[] = { i, j, k };
+		FOR_EACH_DIM
+		{
+			auto didx = _didx(o, d);
+			index[d] += didx;
+		}
+		return _mat(index[0], index[1], index[2]);
+	}
+
+	const Vt& operator()(St o, const Index& index) const{
+		return this->operator ()(o, index.i(), index.j(), index.k());
+	}
+
+	const Grid& grid() const {
+			return (*_grid);
+	}
+	const Ghost& ghost() const {
+		return (*_ghost);
+	}
+	const Order& order() const {
+		return (*_order);
+	}
+	spGrid spgrid() const{
+		return _grid;
+	}
+	spGhost spghost() const{
+		return _ghost;
+	}
+	spOrder sporder() const{
+		return _order;
+	}
+
 protected:
 	void initial_didx(){
 		//  order = 0,  index = i j k

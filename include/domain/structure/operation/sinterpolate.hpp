@@ -66,8 +66,10 @@ public:
 			const Field&     f,
 			      Corner&    c,
 		          spBI       bi) {
-		for(auto& idx : f.order()){
-
+		if(DIM == 1){
+			CenterToCorner1(f, c, bi);
+		}else{
+			SHOULD_NOT_REACH;
 		}
 	}
 
@@ -80,7 +82,7 @@ protected:
 	typedef SCorner_<2> Corner2;
 	typedef SCorner_<3> Corner3;
 
-	static void CenterToCorner1(const Field1& f, Corner& c, spBI bi){
+	static void CenterToCorner1(const Field1& f, Corner1& c, spBI bi){
 		for(auto& idx : f.order()){
 			auto idxm = idx.m(_X_);
 			auto v    = f(idx);
@@ -89,14 +91,27 @@ protected:
 			auto hsm  = f.grid().hs_(_X_, idxm);
 
 			// m case
-			c(_X_, idx) = (v * hsm + vm * hs) / (hs + hsm);
+			c(0, idx) = (v * hsm + vm * hs) / (hs + hsm);
 			// p case, just for the last one
 			if (c.ghost().is_boundary(idx, _X_, _P_)) {
 				auto idxp = idx.p(_X_);
 				auto hsp  = f.grid().hs_(_X_, idxp);
 				auto vp   = Value::Get(f, *(bi), idx, idxp, _X_, _P_);
-				c(_X_, idx) = (v * hsp + vp * hs) / (hs + hsp);
+				std::cout << "vp = "  << vp << std::endl;
+				c(1, idx) = (v * hsp + vp * hs) / (hs + hsp);
 			}
+		}
+	}
+
+	static void CenterToCorner2(const Field2& f, Corner2& c, spBI bi){
+		for (auto& idx : f.order()) {
+			// on x dirction
+			auto idxmx = idx.m(_X_);
+			auto idxmy = idx.m(_Y_);
+			auto dixmc = idxmy.m(_X_);
+
+			auto v    = f(idx);
+
 		}
 	}
 
