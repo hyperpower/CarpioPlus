@@ -6,9 +6,6 @@
 Welcome to Carpio's documentation!
 ==================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
 
 Theory
 =================
@@ -16,8 +13,10 @@ Theory
 :doc:`Convection <theory/convection>`
 -----------------------------------------
 .. toctree::
+   :numbered:
    :maxdepth: 1
 
+   theory/convection
    theory/tvd
 
 
@@ -35,6 +34,7 @@ Cases
 Geometry
 -----------------
 .. toctree::
+   :numbered:
    :maxdepth: 1
 
    1-1-1-point_position_to_segment
@@ -44,6 +44,7 @@ Geometry
 Structure Domain
 -----------------
 .. toctree::
+   :numbered:
    :maxdepth: 1
 
    3-1-1-field_define

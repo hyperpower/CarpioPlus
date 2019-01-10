@@ -50,6 +50,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
     'matplotlib.sphinxext.plot_directive',
+    'sphinxcontrib.bibtex'
     #'breathe' 
     # 'exhale'
 ]

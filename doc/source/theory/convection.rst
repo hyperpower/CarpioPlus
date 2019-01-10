@@ -1,9 +1,7 @@
 =================
-Convection
+Introduction
 =================
 
-Introduction
-=============
 Numericla simulation of convection-dominated flow can be described as
 
 .. math::
@@ -15,10 +13,12 @@ where :math:`\phi = \phi(\mathbf{x}, t)` denotes the dependent varibable and :ma
 
 In the past decades, several different series of shemes have been developed, such as 
 
-.. toctree::
-   :maxdepth: 1
+- :doc:`TVD shemes <tvd>`
 
-   tvd
+.. .. toctree::
+..    :maxdepth: 1
+
+..    tvd
    
 :doc:`TVD shemes <tvd>`
 =========================

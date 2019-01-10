@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-fig, axes = plt.subplots()
+fig, axes = plt.subplots(figsize = (8, 3))
 x = [-2, -1, 0, 1, 2]
 y = [0,   0, 0, 0, 0]
 plt.axis('off')
