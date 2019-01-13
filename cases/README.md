@@ -18,7 +18,8 @@ This folder include all the test cases for Carpio project.
       2. Delauney Triangulation
 2. Algebra
    1. Array
-      1. Array operations
+      1. Array add equal
+      2. Array OpenMP
    2. Matrix
       1. Matrix operations
 3. Domain
