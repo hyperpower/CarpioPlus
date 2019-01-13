@@ -4,7 +4,11 @@ ENO
 
 Intorduction
 ==============
+The ENO (essentially non-oscilatory) schemes approximating systems of hyperbolic conservation laws of the type:
 
+.. math::
+   \mathbf{\phi} + \nabla \cdot f(\mathbf{\phi}) &= 0 \\
+   \mathbf{u}(\mathbf{x}, 0) &= \mathbf{u}^0(\mathbf{x})
 
 ENO-Roe
 ==============
@@ -12,9 +16,7 @@ ENO-Roe
 
 algotithm
 
-Step 1 Compute the divided difference table of :math:`f`
------------------------------------------------------------
-and identify
+**Step 1** Compute the divided difference table of :math:`f`, and identify
 
 .. math::
    H[x_{l-1/2}, x_{l+1/2}] = f[u(x_l)]

@@ -18,6 +18,7 @@ Theory
 
    theory/convection
    theory/tvd
+   theory/eno
 
 
 Imcompressible Flow
