@@ -42,6 +42,15 @@ Geometry
    1-1-2-segments_intersection
    1-1-5-point_in_polygon
 
+Algebra
+-----------------
+.. toctree::
+   :numbered:
+   :maxdepth: 1
+
+   2-1-2-array_openmp
+
+
 Structure Domain
 -----------------
 .. toctree::
