@@ -69,9 +69,10 @@ struct AInterpolate_ {
      *   0a -----3d
      *     u->
      */
-    static VT Bilinear_r(CVT u, CVT v, const VT& a, const VT& b, const VT& c,
-                         const VT& d) {
-        return ((a * (1 - u) * (1 - v)) + (d * (1 - u) * v) + (b * u * (1 - v))
+    static VT Bilinear_r(CVT u, CVT v,
+    		             const VT& a, const VT& b,
+						 const VT& c, const VT& d) {
+        return ((a * (1.0 - u) * (1.0 - v)) + (d * (1.0 - u) * v) + (b * u * (1.0 - v))
                 + (c * u * v));
     }
 
@@ -110,6 +111,41 @@ struct AInterpolate_ {
         CVT w = (z - z1) / (z2 - z1);
         return Trilinear_r(u, v, w, a, b, c, d, e, f, g, h);
     }
+
+    static VT WeightDistance2(
+        		  CVT x,  CVT y,  // unknow point
+    	   CVT a, CVT x1, CVT y1, // point1
+    	   CVT b, CVT x2, CVT y2  // point2
+        ){
+        	CVT d1 = SquareSum(x-x1, y-y1);
+        	CVT d2 = SquareSum(x-x2, y-y2);
+        	if(d1 == 0.0){return a;}
+        	if(d2 == 0.0){return b;}
+        	double w1 = 1./d1;
+        	double w2 = 1./d2;
+
+        	return (w1 * a + w2 * b ) / (w1 + w2 );
+        }
+
+    static VT WeightDistance3(
+    		 CVT x,  CVT y,  // unknow point
+	   VT a, CVT x1, CVT y1, // point1
+	   VT b, CVT x2, CVT y2, // point2
+	   VT c, CVT x3, CVT y3 // point3
+    	){
+    	CVT d1 = SquareSum(x-x1, y-y1);
+    	CVT d2 = SquareSum(x-x2, y-y2);
+    	CVT d3 = SquareSum(x-x3, y-y3);
+    	if(d1 == 0.0){return a;}
+    	if(d2 == 0.0){return b;}
+    	if(d3 == 0.0){return c;}
+    	double w1 = 1./d1;
+    	double w2 = 1./d2;
+    	double w3 = 1./d3;
+
+    	return (w1 * a + w2 * b + w3 * c) / (w1 + w2 + w3);
+    }
+
 
 };
 

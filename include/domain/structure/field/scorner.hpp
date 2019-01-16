@@ -91,6 +91,7 @@ public:
 			auto didx = _didx(o, d);
 			index[d] += didx;
 		}
+//		std::cout<<"op () idx = " << ToString(index[0], index[1],index[2], " ") << std::endl;
 		return _mat(index[0], index[1], index[2]);
 	}
 

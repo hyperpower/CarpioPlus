@@ -81,10 +81,16 @@ int ASum(ST n, const VT * sx, ST incx){
 
 template<typename ST, typename VT>
 int Copy(ST n, const VT * src, VT* dst) {
+#ifdef OPENMP
+# pragma omp for
+    for (ST i = 0; i < n; ++i) {
+        dst[i] = src[i];
+    }
+#else
     //make sure: the length of a and b is equal
     //           and n>0
-    ST LN = 7;
-    ST m = (n - 1) % LN;
+	ST LN = 7;
+	ST m = (n - 1) % LN;
     for (ST i = 0; i <= m; ++i) {
         dst[i] = src[i];
     }
@@ -102,6 +108,7 @@ int Copy(ST n, const VT * src, VT* dst) {
         dst[i + 6] = src[i + 6];
     }
     return 2;
+#endif
 }
 
 //construct givens plane rotation.
@@ -151,8 +158,8 @@ int Rotg(VT& sa, //
  * \return  int
  */
 template<class VT, class ST>
-VT Amax(      ST  n,        //size of the array, sx.size
-		const VT*  sx,    //
+VT Amax(      ST  n,       //size of the array, sx.size
+		const VT*  sx,     //
 		      ST  incx) {
 	VT max = 0.0e0;
 	if (n < 0 || incx <= 0) {

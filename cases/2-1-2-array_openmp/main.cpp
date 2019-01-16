@@ -24,12 +24,6 @@ struct ThreadInfo{
 	}
 };
 
-void fun(int n){
-	for(int i =0; i < 1000000; i++){
-		double r = n + i;
-		double c = r * n;
-	}
-}
 // input singal task time in milliseconds
 // ouput wall time of parallel runing
 double TimeTest(double tt, int nt){
@@ -92,6 +86,54 @@ void TimeTestPlot(){
 	gnu.plot();
 }
 
+double ArrayOp(int nt, double na){
+	ArrayListV_<double> a(na), b(na);
+	a.assign(2);
+	b.assign(1);
+	// a.show();
+	// b.show();
+	tick_t start = Clock::Tick();
+	omp_set_num_threads(nt);
+#pragma omp parallel
+	b = a + b - a * b + 5.0 * a;
+	tick_t end = Clock::Tick();
+	std::cout << "Num of threads = " << nt;
+	std::cout << " Num of Array = "  << na;
+ 	std::cout << " Time = " << Clock::TimespanToMillisecondsD(start, end) << "ms" << std::endl;
+ 	return Clock::TimespanToMillisecondsD(start, end);
+}
+
+void ArrayOpPlot(){
+	Gnuplot gnu;
+	gnu.set_terminal_png(
+            "./fig/arrayop.png", //const std::string& filename,
+            800,
+            600,
+            "Helvetica",
+            14);
+	gnu.set_grid();
+	gnu.set("key right top");
+	// gnu.set_yrange(80, 300.0);
+	gnu.set_xlabel("Number of threads (-)");
+	gnu.set_ylabel("Wall Time (ms)");
+	ArrayListV_<double> vna = {1e4, 1e6, 5e6};
+	ArrayListV_<double> vnt = {1, 2, 4, 6, 8, 10, 12, 14, 15, 16, 18, 20};
+	for(auto& na: vna){
+		std::cout << "Array Size = " << na << std::endl;
+		ArrayListV_<double> vdt;
+		for(auto& nt: vnt){
+			auto dt = ArrayOp(nt, na);
+			vdt.push_back(dt);
+		}
+		auto a = GnuplotActor::XY(vnt, vdt);
+		a->command() = "using 1:2 title \"Array Size = " + ToString(na) + "\" ";
+		a->style()   = "with lines lw 2";
+		gnu.add(a);
+	}
+	gnu.plot();
+}
+
 int main(int argc, char** argv) {
 	TimeTestPlot();
+	ArrayOpPlot();
 }

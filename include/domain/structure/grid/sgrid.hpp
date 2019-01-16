@@ -23,6 +23,9 @@ public:
 
 	virtual ~SGrid_(){}
 
+virtual std::string type_name() const{
+		return "SGrid";
+	};
 	// ghost layer ============================
 	virtual Idx ghost_layer() const{};
 	// index ==================================

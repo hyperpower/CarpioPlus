@@ -15,7 +15,17 @@ We set the number of threads, n = 2, 4, 10, 20, 40. The result is shown in follo
 
    Time test for OpenMP
 
-Two obvious conclusion can be reached:
+Two obvious conclusions can be reached:
 
 - More threads will take more time to manage.
 - Execution time of single function is better be more than 10 millisecond.
+
+Array Operation Test
+======================
+A simple array operation(+,-,*) execute in parallel. Following figure shows the result. The operation is acted on arrays with defferent length. The longer array takes more time to operate. The execution time should be longer than 10 millisecond. The parallel execution could save time. 
+
+.. figure:: _static/{{folder_name}}/arrayop.png
+   :alt: arrar test for OpenMP
+   :align: center 
+
+   Array test for OpenMP

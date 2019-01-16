@@ -24,10 +24,10 @@ Run time infomation:
    :align: center 
 
    ============= =====================
-    Functions      CPU Time            
+    Functions      Wall Time            
    ============= =====================
    {% for rt in runtime -%}
-   {{ '%12s' % rt[0] }}   {{'%15e' % rt[1]}}  
+   {{ '%12s' % rt[0] }}   {{'%15.2f' % rt[1]}}  
    {% endfor -%}
    ============= =====================
 

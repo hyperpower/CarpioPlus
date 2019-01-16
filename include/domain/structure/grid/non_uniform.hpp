@@ -55,6 +55,10 @@ public:
 		return _gl;
 	}
 
+	std::string type_name() const{
+		return "SGridNonUniform";
+	};
+
 	// index ==================================
 	const Index& n() const {
 		return _n;

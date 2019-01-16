@@ -119,7 +119,7 @@ ArrayListT_<T>::ArrayListT_() {
 template<typename T>
 ArrayListT_<T>::ArrayListT_(const ArrayListT_<T>& a) {
     m_Len = a.size();
-    m_p = new T[m_Len];
+    m_p   = new T[m_Len];
     //unrolled loop
     Copy(m_Len, a.m_p, this->m_p);
 }
@@ -783,23 +783,17 @@ ArrayListV_<V>& ArrayListV_<V>::operator+=(const ArrayListV_<V>::value_type &a) 
 }
 template<typename V>
 ArrayListV_<V>& ArrayListV_<V>::operator-=(const V &a) {
-    for (St i = 0; i < this->size(); ++i) {
-        this->at(i) -= a;
-    }
+	MinusEqual(this->size(), this->m_p, a);
     return *this;
 }
 template<typename V>
 ArrayListV_<V>& ArrayListV_<V>::operator*=(const V &a) {
-    for (St i = 0; i < this->size(); ++i) {
-        this->at(i) *= a;
-    }
+	MultiplyEqual(this->size(), this->m_p, a);
     return *this;
 }
 template<typename V>
 ArrayListV_<V>& ArrayListV_<V>::operator/=(const V &a) {
-    for (St i = 0; i < this->size(); ++i) {
-        this->at(i) /= a;
-    }
+	DivideEqual(this->size(), this->m_p, a);
     return *this;
 }
 template<typename V>

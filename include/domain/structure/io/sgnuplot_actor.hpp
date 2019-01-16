@@ -491,7 +491,37 @@ spActor actor = spActor(new Gnuplot_actor());
 		}
 		return actor;
 	}
+	static spActor WireFrame(
+			const Corner2& corner, int color_idx = -1
+			){
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3:4 title \"\" ";
+		actor->style()   = "with lines lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
 
+		for (auto& idx : corner.order()) {
+			short order[] = { 0, 1, 3, 2, 0};
+			for (short o = 0; o < 5; ++o) {
+				auto p = corner.grid().v(order[o], idx);
+				auto vc = corner(order[o], idx);
+				actor->data().push_back(
+							ToString(p.value(_X_),
+									 p.value(_Y_),
+									 vc,
+									 vc,
+									 " "));
+//				std::cout << ToString(p.value(_X_),
+//						 p.value(_Y_),
+//						 vc,
+//						 vc,
+//						 " ") << std::endl;
+			}
+			actor->data().push_back(""); //splot sperated with two lines
+			actor->data().push_back("");
+		}
+		return actor;
+	}
+	// splot
 	static spActor WireFrame(
 				const Grid3& grid, int color_idx = -1) {
 			spActor actor = spActor(new Gnuplot_actor());

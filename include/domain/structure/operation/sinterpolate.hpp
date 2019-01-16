@@ -11,6 +11,7 @@
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
 #include "svalue.hpp"
+#include "algebra/algebra.hpp"
 
 #include <array>
 
@@ -33,6 +34,11 @@ public:
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 	typedef BoundaryCondition BC;
 	typedef SValue_<DIM> Value;
+	typedef SValue_<1> Value1;
+	typedef SValue_<2> Value2;
+	typedef SValue_<3> Value3;
+
+	typedef AInterpolate_<Vt, Vt> AInter;
 
 	static void VectorCenterToFace(
 			const VectorCenter& vc,
@@ -62,17 +68,6 @@ public:
 		}
 	}
 
-	static void CenterToCorner(
-			const Field&     f,
-			      Corner&    c,
-		          spBI       bi) {
-		if(DIM == 1){
-			CenterToCorner1(f, c, bi);
-		}else{
-			SHOULD_NOT_REACH;
-		}
-	}
-
 protected:
 	typedef SField_<1>  Field1;
 	typedef SField_<2>  Field2;
@@ -81,12 +76,12 @@ protected:
 	typedef SCorner_<1> Corner1;
 	typedef SCorner_<2> Corner2;
 	typedef SCorner_<3> Corner3;
-
-	static void CenterToCorner1(const Field1& f, Corner1& c, spBI bi){
+public:
+	static void CenterToCorner(const Field1& f, Corner1& c, spBI bi){
 		for(auto& idx : f.order()){
 			auto idxm = idx.m(_X_);
 			auto v    = f(idx);
-			auto vm   = Value::Get(f, *(bi), idx, idxm, _X_, _M_);
+			auto vm   = Value1::Get(f, *(bi), idx, idxm, _X_, _M_);
 			auto hs   = f.grid().hs_(_X_, idx);
 			auto hsm  = f.grid().hs_(_X_, idxm);
 
@@ -96,22 +91,47 @@ protected:
 			if (c.ghost().is_boundary(idx, _X_, _P_)) {
 				auto idxp = idx.p(_X_);
 				auto hsp  = f.grid().hs_(_X_, idxp);
-				auto vp   = Value::Get(f, *(bi), idx, idxp, _X_, _P_);
-				std::cout << "vp = "  << vp << std::endl;
+				auto vp   = Value1::Get(f, *(bi), idx, idxp, _X_, _P_);
+//				std::cout << "vp = "  << vp << std::endl;
 				c(1, idx) = (v * hsp + vp * hs) / (hs + hsp);
 			}
 		}
 	}
 
-	static void CenterToCorner2(const Field2& f, Corner2& c, spBI bi){
+	static void CenterToCorner(const Field2& f, Corner2& c, spBI bi){
+		auto& grid = f.grid();
 		for (auto& idx : f.order()) {
-			// on x dirction
+			// get index
 			auto idxmx = idx.m(_X_);
 			auto idxmy = idx.m(_Y_);
-			auto dixmc = idxmy.m(_X_);
-
+			auto idxmc = idxmy.m(_X_);
+			// get point
+			auto p    = f.grid().c(idx);     // point center
+			auto pc   = f.grid().v(0, idx);  // mm corner
+			auto pmc  = f.grid().c(idxmc);   // point center of cell mm
+			// get value
 			auto v    = f(idx);
-
+			auto vmx  = Value2::Get(f, *(bi), idx, idxmx, _X_, _M_);
+			auto vmy  = Value2::Get(f, *(bi), idx, idxmy, _Y_, _M_);
+			if(f.ghost().is_ghost(idxmc)){
+				if(grid.type_name() == "SGridUniform"){
+					c(0, idx) = (v + vmx + vmy) / 3.0;
+				}else{
+					SHOULD_NOT_REACH; //unfinish
+				}
+			}else{
+				if(grid.type_name() == "SGridUniform"){
+					c(0, idx) = (v + vmx + vmy + f(idxmc)) / 4.0;
+				}else{
+					auto vmc = f(idxmc);
+					AInter::Bilinear(pc.x(), pc.y(),
+						pmc.x(), pmc.y(),
+						p.x(), p.y(),
+						vmc, vmx, v, vmy);
+					SHOULD_NOT_REACH; //unfinish
+				}
+			}
+			// p direction is not finished
 		}
 	}
 

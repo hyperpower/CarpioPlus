@@ -22,9 +22,9 @@ class MatrixSCC_ {
 public:
     typedef VALUE Vt;
 private:
-    ArrayListV<VALUE> val_;    // data values (nz_ elements)
-    ArrayListV<St> rowind_;    // row_ind     (nz_ elements)
-    ArrayListV<St> colptr_;    // col_ptr     (dim_[1]+1 elements)
+    ArrayListV_<VALUE> val_;    // data values (nz_ elements)
+    ArrayListV_<St> rowind_;    // row_ind     (nz_ elements)
+    ArrayListV_<St> colptr_;    // col_ptr     (dim_[1]+1 elements)
 
     St nz_;                    // number of nonzeros
     St dim_[2];                // number of rows, cols
@@ -56,9 +56,9 @@ public:
         St M, //
         St N, //
         St nz, //
-        const ArrayListV<Vt> &val,
-        const ArrayListV<St> &rid,
-        const ArrayListV<St> &cp) :
+        const ArrayListV_<Vt> &val,
+        const ArrayListV_<St> &rid,
+        const ArrayListV_<St> &cp) :
         val_(val), rowind_(rid), colptr_(cp), nz_(nz) {
         dim_[0] = M;
         dim_[1] = N;
@@ -71,7 +71,7 @@ public:
         dim_[1] = R.getjLen();
 
         int i, j;
-        ArrayListV<int> tally(R.getjLen() + 1, 0);
+        ArrayListV_<int> tally(R.getjLen() + 1, 0);
         //      First pass through nonzeros.  Tally entries in each column.
         //      And calculate colptr array.
         for (i = 0; i < nz_; i++) {
@@ -102,7 +102,7 @@ public:
         dim_[1] = CO.getjLen();
 
         int i, j;
-        ArrayListV<int> tally(CO.getjLen() + 1, 0);
+        ArrayListV_<int> tally(CO.getjLen() + 1, 0);
 //  First pass through nonzeros.  Tally entries in each column.
 //  And calculate colptr array.
         for (i = 0; i < nz_; i++) {
@@ -202,13 +202,13 @@ public:
         return 0.0;
     }
 
-    ArrayListV<Vt> operator*(
-        const ArrayListV<Vt> &x) const {
+    ArrayListV_<Vt> operator*(
+        const ArrayListV_<Vt> &x) const {
         int M = dim_[0];
         int N = dim_[1];
         //  Check for compatible dimensions:
         ASSERT(x.Len() == N);
-        ArrayListV<Vt> res(M);
+        ArrayListV_<Vt> res(M);
         for (int i = 0; i < N; i++) {
             for (int j = colptr_[i]; j < colptr_[i + 1]; j++) {
                 res[rowind_[j]] += x[i] * val_[j];
@@ -217,13 +217,13 @@ public:
         return res;
     }
 
-    ArrayListV<Vt> trans_mult(
-        const ArrayListV<Vt> &x) const {
+    ArrayListV_<Vt> trans_mult(
+        const ArrayListV_<Vt> &x) const {
         int Mt = dim_[1];
         int Nt = dim_[0];
         //  Check for compatible dimensions:
         ASSERT(x.Len() == Nt);
-        ArrayListT<Vt> res(Mt);
+        ArrayListT_<Vt> res(Mt);
         for (int i = 0; i < Nt; i++) {
             for (int j = colptr_[i]; j < colptr_[i + 1]; j++) {
                 res[rowind_[j]] += x[i] * val_[j];

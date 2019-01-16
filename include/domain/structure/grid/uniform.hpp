@@ -65,6 +65,9 @@ public:
 	Idx ghost_layer() const{
 		return _gl;
 	}
+	std::string type_name() const{
+		return "SGridUniform";
+	};
 
 	// index ==================================
 	const Index& n() const{

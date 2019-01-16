@@ -289,7 +289,7 @@ TEST(scalar, corner2){
 	// type define
 	Point_<Vt, Dim> pmin(0, 0, 0);
 	Point_<Vt, Dim> pmax(1, 1, 1);
-	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 5, 5, 5}, 0.3, 2));
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 50, 50, 5}, 0.03, 2));
 
 	spGhost spgh(new SGhostRegular_<Dim>(spsg));
 
@@ -299,33 +299,43 @@ TEST(scalar, corner2){
 
 	Field sc(spsg, spgh, sporder);
 	sc.assign([](Vt x, Vt y, Vt z, Vt t){
-		return sin(x);
+		return sin(x + y);
 	});
 
 	// boundary define
 	spBI bi(new BI());
-	spBC spbcm(new BoundaryConditionValue(BC::_BC1_, 0.3));
-	spBC spbcp(new BoundaryConditionValue(BC::_BC1_, 0.5));
+	spBC spbcm(new BoundaryConditionValue(BC::_BC1_, 0.0));
+	spBC spbcp(new BoundaryConditionValue(BC::_BC1_, 1.3));
 	bi->insert(0, spbcm);
 	bi->insert(1, spbcp);
 
-//	Inter::CenterToCorner(sc, c, bi);
+	Inter::CenterToCorner(sc, c, bi);
+	Index idx(0,0);
+	std::cout <<"0 " <<c(0, idx) << std::endl;
+	std::cout <<"1 " <<c(1, idx) << std::endl;
+	std::cout <<"3 " <<c(3, idx) << std::endl;
+	std::cout <<"2 " <<c(2, idx) << std::endl;
+	idx = {1,1};
+	std::cout <<"0 " <<c(0, idx) << std::endl;
+	std::cout <<"1 " <<c(1, idx) << std::endl;
+	std::cout <<"3 " <<c(3, idx) << std::endl;
+	std::cout <<"2 " <<c(2, idx) << std::endl;
 //
 //	std::cout << c(0, 0, 0, 0) << std::endl;
-//	typedef SGnuplotActor_<Dim> GA;
-//	Gnuplot gnu;
-//	gnu.set_terminal_png("vc_1d.png");
-//	gnu.set_xrange(-0.1, 1.6);
-//	gnu.set_yrange(-0.1, 1.2);
-//	auto awf = GA::WireFrame(*spsg);
+	typedef SGnuplotActor_<Dim> GA;
+	Gnuplot gnu;
+//	gnu.set_terminal_png("c2d.png");
+	gnu.set_xrange(-0.1, 1.6);
+	gnu.set_yrange(-0.1, 1.6);
+	auto awf = GA::WireFrame(c);
 //	auto asc = GA::LinesPoints(sc);
 //	asc->command() = "using 1:2:3 title \"Value on Scalar center\" ";
 //	auto asv = GA::LinesPoints(c, 2);
 //	asv->command() = "using 1:2:3 title \"Valut on Vertex\" ";
-//	gnu.add(awf);
+	gnu.add(awf);
 //	gnu.add(asc);
 //	gnu.add(asv);
-//	gnu.plot();
+	gnu.splot();
 }
 
 
