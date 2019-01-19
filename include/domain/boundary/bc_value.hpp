@@ -8,6 +8,7 @@ namespace carpio{
 
 class BoundaryConditionValue :public BoundaryCondition {
 public:
+	typedef BoundaryCondition       Base;
 	typedef BoundaryConditionValue Self;
 protected:
 	// data
@@ -16,16 +17,16 @@ protected:
 	Vt  _value;
 public:
 	// Constructor
-	BoundaryConditionValue() {
+	BoundaryConditionValue() : Base(){
 		// default boundary condition is symmetric boundary condition
 		_type = BoundaryCondition::_BC2_;
-		_value = 0;
+		_value = 0.0;
 	}
 	/*
 	 * this constructor should not used to BC2
 	 */
-	BoundaryConditionValue(int type, Vt v) :
-			_type(type), _value(v) {
+	BoundaryConditionValue(int type, Vt v) : Base(),
+		_type(type), _value(v) {
 	}
 
 	// get

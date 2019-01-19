@@ -8,8 +8,9 @@
 
 #include "event/event.hpp"
 #include "event/output_time.hpp"
-#include "event/output_scalar.hpp"
-#include "event/gnuplot_scalar.hpp"
+#include "event/output_field.hpp"
+#include "event/gnuplot_field.hpp"
+#include "event/field_norm.hpp"
 
 
 namespace carpio{

@@ -1,5 +1,5 @@
-#ifndef _EVENT_GNUPLOT_SCALAR_HPP
-#define _EVENT_GNUPLOT_SCALAR_HPP
+#ifndef _EVENT_GNUPLOT_FIELD_HPP
+#define _EVENT_GNUPLOT_FIELD_HPP
 
 #include <map>
 #include <utility>
@@ -55,7 +55,7 @@ public:
 
 	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
 		auto fn = _file_name(step, t, fob);
-		if(pd->has_scalar(_sn)){
+		if(pd->has_field(_sn)){
 			_set_terminal(_terminal_name, fn);
 			_plot((*pd)[_sn]);
 		}else{
@@ -91,6 +91,8 @@ protected:
 	void _plot(const Field& s){
 		if(DIM == 1){
 			_spgnu->add(GnuplotActor::Lines(s));
+		}else if(DIM == 2){
+			_spgnu->add(GnuplotActor::Contour(s));
 		}
 		_spgnu->plot();
 		_spgnu->clear();

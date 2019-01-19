@@ -1,5 +1,5 @@
-#ifndef STRUCTURE_TEST_SCALAR_HPP_
-#define STRUCTURE_TEST_SCALAR_HPP_
+#ifndef STRUCTURE_TEST_FIELD_HPP_
+#define STRUCTURE_TEST_FIELD_HPP_
 
 #include "domain/structure/structure.hpp"
 #include "domain/structure/io/splotly_actor.hpp"

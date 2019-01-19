@@ -1,5 +1,5 @@
-#ifndef _EVENT_SET_SCALAR_HPP
-#define _EVENT_SET_SCALAR_HPP
+#ifndef _EVENT_SET_FIELD_HPP
+#define _EVENT_SET_FIELD_HPP
 
 #include <map>
 #include <utility>

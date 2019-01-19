@@ -73,10 +73,12 @@ public:
 //	}
 
 	void show() const {
+		std::cout << "BI: ---->\n";
 		for (auto term : this->_BCmap) {
-			std::cout << term.first;
-			std::cout << " " << term.second->type() << "\n";
+			std::cout << "idx " <<term.first;
+			std::cout << " - type " << term.second->type() << "\n";
 		}
+		std::cout << "<--------\n";
 	}
 
 };

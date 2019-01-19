@@ -55,6 +55,12 @@ public:
 		if(fc.ghost().is_ghost(idxg)){
 			auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
 			auto spbc = bi.find(bid);
+//			if(axe == _Y_){
+//				std::cout << "Idx c = " << idxc  << " g=  "<< idxg << std::endl;
+//				std::cout << "axes  = " << axe   << " ori "<< ori  << std::endl;
+//				std::cout << "bid   = " << bid   << " bct "<< spbc->type()  << std::endl;
+//				bi.show();
+//			}
 			if(spbc->type() == BC::_BC1_){
 				return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
 			}else if(spbc->type() == BC::_BC2_){

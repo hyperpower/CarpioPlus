@@ -75,6 +75,14 @@ public:
 		return _mat.min();
 	}
 
+	Vt norm1() const {
+		return _mat.norm1();
+	}
+
+	void abs(){
+		_mat.abs();
+	}
+
 	Self& operator=(const Self& a) {
 		if (this == &a) {
 			return *this;
@@ -367,6 +375,16 @@ SField_<DIM> Sqrt(const SField_<DIM>& a){
 	}
 	return res;
 }
+
+template<St DIM>
+SField_<DIM> Abs(const SField_<DIM>& f){
+	auto res(f);
+	res.abs();
+	return res;
+}
+
+// sum(abs(e))
+
 
 
 }

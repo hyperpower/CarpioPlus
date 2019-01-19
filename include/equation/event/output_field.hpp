@@ -1,5 +1,5 @@
-#ifndef _EVENT_OUTPUT_SCALAR_HPP
-#define _EVENT_OUTPUT_SCALAR_HPP
+#ifndef _EVENT_OUTPUT_FIELD_HPP
+#define _EVENT_OUTPUT_FIELD_HPP
 
 #include <map>
 #include <utility>
@@ -30,7 +30,7 @@ protected:
 public:
 	EventOutputField_(const std::string& sname,
 			int is    = -1, int ie   = -1,
-	        int istep = -1, int flag = 0) :
+	        int istep = -1, int flag = Event::AFTER) :
 		 _sn(sname),
 		 Event(is, ie, istep, flag) {
 		_format = "%s_%d_%8.4e.txt";
@@ -39,7 +39,7 @@ public:
 
 	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
 		auto fn = _file_name(step, t, fob);
-		if(pd->has_scalar(_sn)){
+		if(pd->has_field(_sn)){
 			IOFile::OutputField(fn, (*pd)[_sn]);
 		}else{
 			std::cerr<< "EventOutputField : " << _sn << " not found!" << std::endl;

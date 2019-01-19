@@ -166,6 +166,11 @@ spActor actor = spActor(new Gnuplot_actor());
 		return actor;
 	}
 
+
+	static spActor Contour(const Field1& f){
+		SHOULD_NOT_REACH;
+	}
+
 	static spActor WireFrame(
 				const Grid1& grid,
 				const Vt&    tik  = 0.1,
@@ -224,6 +229,10 @@ spActor actor = spActor(new Gnuplot_actor());
 			}
 		}
 		return actor;
+	}
+
+	static spActor Lines(const Field2& s, int color_idx = -1) {
+		SHOULD_NOT_REACH;
 	}
 
 	static spActor LinesPoints(const Field1& s, int color_idx = -1) {

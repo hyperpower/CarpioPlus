@@ -392,6 +392,14 @@ class MultiArrayV_ {
 		return this->m_mp.min();
 	}
 
+	void abs(){
+		this->m_mp.abs();
+	}
+
+	T norm1() const{
+		return this->m_mp.norm1();
+	}
+
     //element access===============================
 
     inline bool check_idx(St dim, St idx) const {
@@ -453,8 +461,11 @@ class MultiArrayV_ {
 		return *this;
 	}
 };
+template<typename T, St DIM>
+MultiArrayV_<T, DIM> Abs(const MultiArrayV_<T, DIM> a){
+	MultiArrayV_<T, DIM> res(a);
 
-
+}
 
 }
 

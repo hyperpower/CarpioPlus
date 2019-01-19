@@ -196,7 +196,6 @@ protected:
 		    this->get_boundary_index("u"),
 			this->get_boundary_index("v"),
 			this->get_boundary_index("w"));
-
 		phi = FOU(vf, phi) * dt + phi;
 	}
 };

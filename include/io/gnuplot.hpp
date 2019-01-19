@@ -990,6 +990,22 @@ namespace GnuplotActor {
 	}
 //	actor->data().push_back("");
 	return actor;
+	}
+
+	template<typename Container>
+	spActor XY(const Container& con,
+			   const St& c1, const St& c2,
+			   const std::string &pcmd = "using 1:2 title \"\" ",
+			   const std::string& scmd = "") {
+	spActor actor = spActor(new Gnuplot_actor());
+	actor->command() = pcmd;
+	actor->style() = scmd;
+	for (auto& row : con) {
+		std::ostringstream sst;
+		sst << row[c1] << " " << row[c2];
+		actor->data().push_back(sst.str());
+	}
+	return actor;
 }
 
 }

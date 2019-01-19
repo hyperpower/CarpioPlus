@@ -506,9 +506,11 @@ public:
         Self operator/(const V &a);
 
     //other functions==============================
+    void abs();
     V sum() const;
     V min() const;
     V max() const;
+    V norm1() const;
     size_type findMinIdx() const;
     size_type findMaxIdx() const;
     //fill ----------------------------------------
@@ -676,6 +678,13 @@ ArrayListV_<V> ArrayListV_<V>::operator/(const V &a) {
     return sum;
 }
 template<typename V>
+void ArrayListV_<V>::abs(){
+    for (size_type i = 0; i < this->m_Len; i++) {
+        this->m_p[i] = std::abs(this->m_p[i]);
+    }
+}
+
+template<typename V>
 V ArrayListV_<V>::sum() const {
     V sum = 0;
     for (size_type i = 0; i < this->m_Len; i++) {
@@ -705,6 +714,16 @@ V ArrayListV_<V>::max() const {
     }
     return max;
 }
+template<typename V>
+V ArrayListV_<V>::norm1() const {
+    ASSERT(this->m_p!=NULL);
+    V sum = 0.0;
+    for (size_type i = 0; i < this->m_Len; i++) {
+    	sum += std::abs(this->m_p[i]);
+    }
+    return sum;
+}
+
 template<typename V>
 St ArrayListV_<V>::findMinIdx() const {
     ASSERT(this->m_p!=NULL);

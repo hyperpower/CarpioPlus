@@ -11,6 +11,7 @@ namespace carpio {
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class D> class Event_;
+template<St DIM, class D> class EventStop_;
 
 template<St DIM, class D>
 class Equation_{
@@ -131,6 +132,9 @@ public:
 				//
 				this->_time->advance();
 			}
+			if(this->has_event("_STOP_")){
+				this->_events["_STOP_"]->show();
+			}
 			// events after calculation
 			run_events(this->_time->current_step(),    //
 					this->_time->current_time(),       //
@@ -184,6 +188,13 @@ public:
 			return true;
 		}
 		return false;
+	}
+
+	void trigger_stop(const std::string& reason,
+					  int   step,
+					  Vt    time){
+		spEvent e(new EventStop_<DIM, D>(reason, step, time));
+		this->add_event("_STOP_", e);
 	}
 
 	void add_event(const std::string& key, spEvent spe){
@@ -257,7 +268,7 @@ public:
 		return false;
 	}
 
-	bool has_scalar(const std::string& key) const {
+	bool has_field(const std::string& key) const {
 		auto it = this->_scalars.find(key);
 		if (it != this->_scalars.end()) {
 			return true;
@@ -266,7 +277,7 @@ public:
 	}
 
 	void new_scalar(const std::string& name){
-		if(!(this->has_scalar(name))){
+		if(!(this->has_field(name))){
 			this->_scalars[name] = spField(new Field(
 					this->_grid,
 					this->_ghost,
