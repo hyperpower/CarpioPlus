@@ -127,7 +127,7 @@ TEST(field, plot3){
 }
 
 
-TEST(scalar, DISABLED_add){
+TEST(scalar, add){
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
@@ -269,10 +269,9 @@ TEST(scalar, DISABLED_corner){
 	gnu.add(asc);
 	gnu.add(asv);
 	gnu.plot();
-
 }
 
-TEST(scalar, corner2){
+TEST(scalar, DISABLED_corner2){
 	std::cout << "corner test -----" << std::endl;
 	const St Dim = 2;
 	typedef SField_<Dim>                        Field;
@@ -337,8 +336,6 @@ TEST(scalar, corner2){
 //	gnu.add(asv);
 	gnu.splot();
 }
-
-
 
 
 }

@@ -6,12 +6,14 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
+#include "domain/structure/operation/soperation.hpp"
 #include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
 #include "svalue.hpp"
 #include "algebra/algebra.hpp"
+
 
 #include <array>
 

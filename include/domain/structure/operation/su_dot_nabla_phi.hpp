@@ -71,21 +71,26 @@ public:
 template<St DIM>
 class SUdotNabla_FOU: public SUdotNabla_<DIM>{
 public:
+	typedef SIndex_<DIM>  Index;
 	typedef SGrid_<DIM>   Grid;
 	typedef SGhost_<DIM>  Ghost;
 	typedef SOrder_<DIM>  Order;
-	typedef SField_<DIM> Field;
+	typedef SField_<DIM>  Field;
 
 	typedef SUdotNabla_<DIM> Base;
+	typedef SUdotNabla_FOU<DIM> Self;
 
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
+	typedef BoundaryIndex       BI;
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 
 	typedef SExpField_<DIM>                      ExpField;
 	typedef typename SExpField_<DIM>::Expression Exp;
 
 	typedef SValue_<DIM> Value;
+
+	typedef SLoop_<DIM> Loop;
 
 	SUdotNabla_FOU(): Base(){
 	}
@@ -94,6 +99,42 @@ public:
 	}
 
 	virtual ~SUdotNabla_FOU(){
+	}
+
+	static Vt Local(const Index& idx,
+					const VectorFace& U,
+					const Field& phi,
+					const BI&    bi,
+					const Vt&    t = 0.0){
+		std::array<Vt, DIM> arr;
+		arr.fill(0.0);
+
+		FOR_EACH_DIM
+		{
+			Vt up = U(d, _P_, idx);
+			Vt um = U(d, _M_, idx);
+			Vt uc = (up + um) * 0.5;      //average velocity to center
+			auto idxm = idx.m(d);
+			auto idxp = idx.p(d);
+			Vt phi_u, phi_d;
+			Vt s = phi.grid().s_(d, idx);
+			if (uc >= 0) {
+				phi_u = Value::Get(phi, bi, idx, idxm, d, _M_, t);
+				phi_d = phi(idx);
+
+			} else { // uc < 0
+				phi_u = phi(idx);
+				phi_d = Value::Get(phi, bi, idx, idxp, d, _P_, t);
+			}
+			arr[d] = uc * (phi_u - phi_d) / s;
+		}
+
+		Vt sum = 0;
+		FOR_EACH_DIM
+		{
+			sum += arr[d];
+		}
+		return sum;
 	}
 
 	virtual Field operator()(

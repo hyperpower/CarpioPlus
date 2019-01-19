@@ -3,6 +3,7 @@
 
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/field/sfield.hpp"
+#include "domain/structure/operation/soperation.hpp"
 #include "io/gnuplot.hpp"
 
 namespace carpio{
@@ -26,6 +27,11 @@ public:
 	typedef SGhost_<1>    Ghost1;
 	typedef SGhost_<2>    Ghost2;
 	typedef SGhost_<3>    Ghost3;
+	typedef SOrder_<DIM>  Order;
+	typedef SOrderParallel_<DIM> OrderParallel;
+	typedef SOrder_<1>    Order1;
+	typedef SOrder_<2>    Order2;
+	typedef SOrder_<3>    Order3;
 	typedef SField_<DIM>  Field;
 	typedef SField_<1>    Field1;
 	typedef SField_<2>    Field2;
@@ -48,6 +54,8 @@ public:
 	typedef SIndex_<1>    Index1;
 	typedef SIndex_<2>    Index2;
 	typedef SIndex_<3>    Index3;
+
+	typedef SLoop_<DIM>   Loop;
 
 	static spActor WireFrame(
 			const Grid2& grid, int color_idx = -1) {
@@ -586,6 +594,38 @@ spActor actor = spActor(new Gnuplot_actor());
 			}
 			return actor;
 		}
+
+	static Gnuplot& OrderLabel(Gnuplot& gnu, const Order& order, int color_idx = -1){
+		spActor actor = spActor(new Gnuplot_actor());
+		auto& grid  = order.grid();
+		auto& ghost = order.ghost();
+		int c  = (color_idx<0)? 0 : color_idx;
+		auto fun = [&actor, &c, &grid, &ghost, &gnu, &order](const Index& idx){
+			auto cp = grid.c(idx);
+			auto o  = order.get_order(idx);
+
+			std::string adds = " center textcolor lt " + ToString(c);
+			gnu.set_label(o+1, ToString(o), cp.x(), cp.y(), adds);
+		};
+		Loop::ForEachIndex(order, fun);
+		return gnu;
+	}
+
+	static Gnuplot& OrderLabel(Gnuplot& gnu, const OrderParallel& order){
+		spActor actor = spActor(new Gnuplot_actor());
+		auto& grid  = order.grid();
+		auto& ghost = order.ghost();
+		auto fun = [&actor, &grid, &ghost, &gnu, &order](const Index& idx, St tn){
+			auto cp = grid.c(idx);
+			auto o  = order.get_order(idx);
+			std::string text = ToString(tn) + ", " + ToString(o);
+			std::string adds = " center textcolor lt " + ToString(tn + 1);
+			gnu.set_label(o+1, text, cp.x(), cp.y(), adds);
+		};
+		#pragma omp parallel
+		Loop::ForEachIndexParallel(order, fun);
+		return gnu;
+	}
 };
 
 
