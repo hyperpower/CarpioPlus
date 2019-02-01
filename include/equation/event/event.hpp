@@ -31,10 +31,6 @@ protected:
 	int _flag;
 	int _istart, _iend, _istep;
 
-	bool _has_flag(int f) const {
-		return (_flag | f) == _flag ? true : false;
-	}
-
 public:
 	/**
 	 *  @brief Event constructor
@@ -68,16 +64,16 @@ public:
 
 	virtual std::string flag_string() const {
 		std::string str = "";
-		if (this->_has_flag(START)) {
+		if (this->has_flag(START)) {
 			str += "START ";
 		}
-		if (this->_has_flag(END)) {
+		if (this->has_flag(END)) {
 			str += "END ";
 		}
-		if (this->_has_flag(BEFORE)) {
+		if (this->has_flag(BEFORE)) {
 			str += "BEFORE ";
 		}
-		if (this->_has_flag(AFTER)) {
+		if (this->has_flag(AFTER)) {
 			str += "AFTER";
 		}
 		return str;
@@ -91,12 +87,10 @@ public:
 	 *
 	 *  @param [step] is step right now
 	 *  @param [t]    is time right now
-	 *  @param [fob]  forward or backward,
-	 *                fob = -1 is before the step,
-	 *                fob = 1 is after the step
+	 *  @param [fob]  one of START END BEFORE or AFTER
 	 */
 	bool do_execute(St step, Vt t, int fob) const {
-		if (this->_has_flag(fob)) {
+		if (this->has_flag(fob)) {
 			bool res = ((step - this->_istart) % this->_istep == 0);
 			if (this->_iend != -1) {
 				res = res && int(step) <= this->_iend;
@@ -108,6 +102,10 @@ public:
 		} else {
 			return false;
 		}
+	}
+
+	bool has_flag(int f) const {
+		return (_flag | f) == _flag ? true : false;
 	}
 
 	virtual void show() const{

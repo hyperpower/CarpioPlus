@@ -46,7 +46,7 @@ public:
 				_fp(spg, spgh, spor),
 				Event(is, ie, istep, flag) {
 	}
-	~EventNorm1Previous_(){
+	virtual ~EventNorm1Previous_(){
 	}
 
 	virtual int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
