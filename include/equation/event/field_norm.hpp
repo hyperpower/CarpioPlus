@@ -30,10 +30,10 @@ public:
 	typedef std::list<std::array<Vt, 3> > List;
 protected:
 	std::string _fn;     //field name
-	Field _fp;           //field previous
-	int _stepp;        //step previous
-	int   _count;        //count
-	List _ln1;  //list of norm 1
+	Field       _fp;     //field previous
+	int         _stepp;  //step previous
+	int         _count;  //count
+	List        _ln1;    //list of norm 1
 public:
 	EventNorm1Previous_(
 			const std::string& fname,

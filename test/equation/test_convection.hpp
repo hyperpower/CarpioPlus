@@ -10,7 +10,7 @@
 namespace carpio {
 
 TEST(convection, DISABLED_initial){
-const St DIM = 1;
+    const St DIM = 1;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
 			new SGridUniform_<DIM>({0.0, 0.0}, // min point

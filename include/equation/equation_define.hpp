@@ -11,6 +11,7 @@ namespace carpio {
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class D> class Event_;
+template<St DIM, class D> class EventManager_;
 template<St DIM, class D> class EventStop_;
 
 template<St DIM, class D>
@@ -48,6 +49,8 @@ public:
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
+	typedef EventManager_<DIM, D>                     EventManager;
+
 
 protected:
 	spGrid  _grid;
@@ -55,13 +58,14 @@ protected:
 	spOrder _order;
 
 	// time relates variables
-	spTimeTerm _time;
-	Events     _events;        // _events
-	Functions  _functions;     // independent of grid
-	Values     _values;        // values for equation
-	AFlags     _aflags;        // other types of data put in this map
+	spTimeTerm   _time;
+	Events       _events;        // _events
+//	EventManager _event_manager;
+	Functions    _functions;     // independent of grid
+	Values       _values;        // values for equation
+	AFlags       _aflags;        // other types of data put in this map
 
-	Fields    _scalars;       //!< variables on the center of node
+	Fields    _scalars;        //!< variables on the center of node
 	BIs        _bis;           //!< each variable has a Boundary Index
 
 	spBoundaryIndex _default_spbi;
@@ -82,7 +86,6 @@ public:
 
 	virtual int initialize() {
 		std::cout << "  Equation: initial \n";
-		SHOULD_NOT_REACH;
 		return -1;
 	}
 

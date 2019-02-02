@@ -7,11 +7,15 @@
 #include "equation/advection/convection.hpp"
 
 #include "event/event.hpp"
+#include "event/event_manager.hpp"
 #include "event/output_time.hpp"
 #include "event/output_field.hpp"
 #include "event/gnuplot_field.hpp"
 #include "event/field_norm.hpp"
 
+#include "stop/stop.hpp"
+#include "stop/stop_manager.hpp"
+#include "stop/stop_field_norm.hpp"
 
 namespace carpio{
 
