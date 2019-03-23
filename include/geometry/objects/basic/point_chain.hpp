@@ -33,7 +33,9 @@ public:
 	typedef Segment_<TYPE, DIM> Segment;
 	typedef Segment& ref_Segment;
 	typedef Box_<TYPE, DIM> Box;
-	typedef PointChain_<TYPE, DIM>& PointChain;
+	typedef PointChain_<TYPE, DIM>     PointChain;
+	typedef PointChain                 Self;
+	typedef PointChain_<TYPE, DIM>& refPointChain;
 	typedef TYPE vt;
 	typedef typename std::list<Point>::iterator iterator;
 	typedef typename std::list<Point>::const_iterator const_iterator;
@@ -212,8 +214,12 @@ public:
 			count++;
 		}
 	}
-};
 
+	bool is_simple(const Self& pc){
+
+	}
+};
+// Only for 2D
 template<class TYPE>
 bool IsInOn(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
 	// winding number method
@@ -249,6 +255,8 @@ bool IsInOn(const Point_<TYPE, 2>& p, const PointChain_<TYPE, 2>& pc){
 	});
 	return wn > 0;
 }
+
+
 
 }
 

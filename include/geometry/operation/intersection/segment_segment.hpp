@@ -74,11 +74,10 @@ public:
 	typedef const Point* const_pPoint;
 
 protected:
-	ArrayListT_<const_pPoint> _arrp;
-	ArrayListV_<int> _pointpos;
+	ArrayListT_<const_pPoint> _arrp; //pPoint list
+	ArrayListV_<int> _pointpos;      //point position
 
-	std::shared_ptr<Point> _sppoint;
-
+	std::shared_ptr<Point> _sppoint; //new intersection point
 public:
 	IntersectionPairSS_(
 			const Point& p1,

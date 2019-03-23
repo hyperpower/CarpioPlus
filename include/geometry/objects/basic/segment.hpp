@@ -66,7 +66,8 @@ public:
 		this->ps() = s;
 		this->pe() = e;
 	}
-	void reconstruct(const Vt& ax, const Vt& bx, //
+	void reconstruct(
+			const Vt& ax, const Vt& bx,  //
 			const Vt& ay, const Vt& by,  //
 			const Vt& az = 0, const Vt& bz = 0) {
 		Point s(ax, ay, az);
@@ -425,7 +426,6 @@ PointToSegmentPosition OnWhichSide5(
 }
 
 // 2D
-
 template<typename TYPE>
 PointToSegmentPosition OnWhichSide7(
 		const Point_<TYPE, 2>& ps,
@@ -501,9 +501,6 @@ PointToSegmentPosition OnWhichSide7(
 		const Point_<TYPE, 2>& pe) {
 	return OnWhichSide7(seg.ps(), seg.pe(), pe);
 }
-
-
-
 
 // ------>
 //

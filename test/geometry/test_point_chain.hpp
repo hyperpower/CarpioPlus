@@ -21,9 +21,8 @@ TEST(point_chain, initial){
 	Gnuplot gnu;
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
-	gnu.add(GnuplotActor::Arrows(pc, 0));
+	gnu.add(GA::Arrows(pc, 0));
 //	gnu.plot();
-
 }
 
 TEST(point_chain, winding_number){
@@ -63,6 +62,10 @@ TEST(point_chain, winding_number){
 	a_arrows->style() = "with vectors lw 2 lc variable";
 	gnu.add(a_arrows);
 //	gnu.plot();
+}
+
+TEST(point_chain, is_simple){
+
 }
 
 
