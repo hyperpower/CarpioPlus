@@ -29,7 +29,7 @@ TEST(point_chain, winding_number){
 	std::list<Point> l =
 	{ Point(0,   0),
 	  Point(1,   0),
-	  Point(0.5 ,0.5),
+	  Point(-0.1 ,0.5),
 	  Point(1,   1),
 	  Point(0,   1)};
 
@@ -65,7 +65,19 @@ TEST(point_chain, winding_number){
 }
 
 TEST(point_chain, is_simple){
-
+	std::list<Point> l =
+		{ Point(0,   0),
+		  Point(1,   0),
+		  Point(-0.1 ,0.5),
+		  Point(1,   1),
+		  Point(0,   1)};
+	PC pc(l);
+	std::cout << "Is Simple = " << pc.is_simple() << std::endl;
+	Gnuplot gnu;
+	gnu.set_xrange(-0.5, 2);
+	gnu.set_yrange(-0.5, 2);
+	gnu.add(GA::Arrows(pc, 0));
+	gnu.plot();
 }
 
 

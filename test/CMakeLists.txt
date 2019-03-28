@@ -7,6 +7,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/)
 
 set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp)
 
+find_package(GTest)
+
 find_package(MPI)
 if (MPI_LIBRARY)
 	set(MPI_INCLUDE_DIR ${MPI_INCLUDE_PATH} CACHE STRING "MPI Include Path")
@@ -57,7 +59,11 @@ ELSE()
   MESSAGE(FATAL_ERROR "Unable to find PythonLibs.")
 ENDIF()
 
-
+find_package(Threads REQUIRED)
+if(THREADS_HAVE_PTHREAD_ARG)
+  set_property(TARGET carpio_test PROPERTY COMPILE_OPTIONS "-pthread")
+  set_property(TARGET carpio_test PROPERTY INTERFACE_COMPILE_OPTIONS "-pthread")
+endif()
 
 # end python ===
 # location of header files
@@ -82,6 +88,10 @@ if(PYTHON_LIBRARIES)
 ELSE()
   MESSAGE(FATAL_ERROR "Unable to link python libraries")
 ENDIF()
+
+if(CMAKE_THREAD_LIBS_INIT)
+  TARGET_LINK_LIBRARIES(carpio_test "${CMAKE_THREAD_LIBS_INIT}")
+endif()
 
 #if(VTK_LIBRARIES)
 #    target_link_libraries(carpio ${VTK_LIBRARIES})

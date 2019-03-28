@@ -32,7 +32,6 @@ protected:
 	Container _end;
 	Container _before;
 	Container _after;
-	Container _other;
 public:
 	EventManager_(){
 	}
@@ -43,25 +42,17 @@ public:
 		if(this->has(name)){
 			return;
 		}
-		int other_flag = 1;
 		if (spe->has_flag(Event::START)) {
 			_start.push_back(StringEventPair(name, spe));
-			other_flag = 0;
 		}
 		if (spe->has_flag(Event::END)) {
 			_end.push_back(StringEventPair(name, spe));
-			other_flag = 0;
 		}
 		if (spe->has_flag(Event::BEFORE)) {
 			_before.push_back(StringEventPair(name, spe));
-			other_flag = 0;
 		}
 		if (spe->has_flag(Event::AFTER)) {
 			_after.push_back(StringEventPair(name, spe));
-			other_flag = 0;
-		}
-		if(other_flag == 1){
-			_other.push_back(StringEventPair(name, spe));
 		}
 	}
 	/**
@@ -85,8 +76,6 @@ public:
 			run_a_container(_after, step, t, flag, pe);
 			break;
 		}
-		default:
-			run_a_container(_other, step, t, flag, pe);
 		}
 	}
 	/**
@@ -95,7 +84,7 @@ public:
 	 *  @param [name] name of Event
 	 */
 	bool has(std::string name) const{
-		std::array<const Container*, 5> arrc = {&_start, &_end, &_before, &_after, &_other};
+		std::array<const Container*, 4> arrc = {&_start, &_end, &_before, &_after};
 		for(auto& pc : arrc){
 			for(auto& pair : (*pc)){
 				if(pair.first == name){
@@ -130,8 +119,6 @@ public:
 			show_a_container(_after);
 			break;
 		}
-		default:
-			show_a_container(_other);
 		}
 		} else { // flag == -1 show all
 			tfm::format(std::cout, "Events START\n");
@@ -142,8 +129,6 @@ public:
 			show_a_container(_after, "  ");
 			tfm::format(std::cout, "Events END\n");
 			show_a_container(_end, "");
-			tfm::format(std::cout, "--Events OTHER\n");
-			show_a_container(_other, "--");
 		}
 	}
 protected:

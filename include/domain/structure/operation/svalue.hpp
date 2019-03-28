@@ -16,7 +16,6 @@
 
 namespace carpio{
 
-
 template<St DIM>
 class SValue_{
 public:
@@ -39,7 +38,7 @@ public:
 	typedef BoundaryIndex* pBI;
 	typedef BoundaryCondition BC;
 
-	typedef AInterpolate_<Vt, Vt> Interplate;
+	typedef AInterpolate_<Vt, Vt> Interpolate;
 public:
 	SValue_(){
 	}
@@ -88,7 +87,7 @@ public:
 		}else{
 			auto pc	 = fc.grid().c(idx);
 			auto pg	 = fc.grid().c(idxg);
-			return Interplate::Linear(fp(axe), pc(axe), pg(axe), fc(idx), fc(idxg));
+			return Interpolate::Linear(fp(axe), pc(axe), pg(axe), fc(idx), fc(idxg));
 		}
 	}
 

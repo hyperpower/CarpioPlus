@@ -23,6 +23,9 @@
 
 namespace carpio {
 
+template<typename TYPE, St DIM>
+class IntersectionPairSS_;
+
 template<class TYPE, St DIM>
 class PointChain_ {
 public:
@@ -149,7 +152,7 @@ public:
 	}
 
 	bool is_simple() const {
-		return Op::IsSimple(_lpoints.begin(), _lpoints.end(), closed());
+		return _is_simple(this->begin(), this->end(), this->closed());
 	}
 
 	double perimeter() const {
@@ -214,9 +217,76 @@ public:
 			count++;
 		}
 	}
+private:
+	bool _is_intersect(const Point& s1, const Point& e1,
+			           const Point& s2, const Point& e2) const{
+		IntersectionPairSS_<TYPE, DIM> inter(s1, e1, s2, e2);
+		auto t = inter.cal_intersection_type();
+		if(t != _SS_NO_){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
-	bool is_simple(const Self& pc){
+	template<typename _ForwardIterator>
+	bool _is_simple(_ForwardIterator begin,
+			_ForwardIterator end,
+			bool isclose = false) const{
+		bool sametype = std::is_same<typename _ForwardIterator::value_type,
+				Point>::value;
+		ASSERT(sametype == true);
 
+		typedef _ForwardIterator iterator;
+
+		long count = 0;
+		for (iterator iter = begin; iter != end; ++iter) {
+			count++;
+			if (count > 3) {
+				break;
+			}
+		}
+		if (count <= 3) {
+			return true;
+		}
+		//
+		iterator iter_end = end;
+		std::advance(iter_end, -1);
+		iterator iter_end2 = end;
+		std::advance(iter_end2, -1);
+		for (iterator iter0 = begin; iter0 != iter_end; ++iter0) {
+			iterator iter1 = std::next(iter0);
+
+			iterator iterm0 = std::prev(iter0);
+			for (iterator iter2 = begin; iter2 != iter_end; ++iter2) {
+				iterator iter3 = std::next(iter2);
+				if (iter2 == iterm0 || iter2 == iter0 || iter2 == iter1) {
+					continue;
+				}
+				bool res = _is_intersect(*iter0, *iter1, *iter2, *iter3);
+//				std::cout << " inter = " << res << "\n";
+				if (res == true) {
+					return false;
+				}
+			}
+		}
+		if (isclose) {
+			iter_end = end;
+			std::advance(iter_end, -2);
+			iterator iter0 = std::prev(end, 1);
+			iterator iter1 = begin;
+			for (iterator iter2 = std::next(iter1); iter2 != iter_end;
+					++iter2) {
+				iterator iter3 = std::next(iter2);
+
+				bool res = _is_intersect(*iter0, *iter1, *iter2, *iter3);
+//				std::cout << " inter = " << res << "\n";
+				if (res == true) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 };
 // Only for 2D

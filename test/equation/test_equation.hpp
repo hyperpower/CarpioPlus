@@ -28,8 +28,7 @@ TEST(event_manager, initial){
 	EventManager_<DIM, Domain> em;
 	Equation::spEvent spe(new Equation::Event(-1, -1, -1, Equation::Event::BEFORE));
 	Equation::spEvent spe2(new Equation::Event(-1, -1, -1, Equation::Event::START));
-	em.add("aaa", spe);
-	em.add("bbb", spe2);
+	em.add("bbb", spe);
 	std::cout << "Has event" << em.has("aaa") << std::endl;
 	em.show();
 }
