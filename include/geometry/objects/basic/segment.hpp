@@ -21,7 +21,6 @@ template<typename TYPE, St DIM> class Box_;
 template<typename TYPE, St DIM>
 class Segment_: public std::array< Point_<TYPE, DIM>, 2> {
 public:
-
 	static const St Dim = DIM;
 	typedef TagSegment Tag;
 	typedef TYPE Vt;
@@ -36,7 +35,8 @@ public:
 	typedef const Point& const_ref_Point;
 	typedef Box_<Vt, Dim> Box;
 	//typedef Operation_<Vt, Dim> Op;
-	public:
+
+public:
 	Segment_() :
 			std::array<Point, 2>() {
 		_set_empty();

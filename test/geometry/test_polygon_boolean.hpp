@@ -29,15 +29,15 @@ inline void two_pointchains(
 	gnu.set_yrange(-2, 4);
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
-//	for (auto& pc : inter) {
-//		gnu.add(GA::LinePoints(pc, 4));
-//	}
+	for (auto& pc : inter) {
+		gnu.add(GA::LinesPoints(pc, 4));
+	}
 	for (auto& pc : uni) {
 		gnu.add(GA::LinesPoints(pc, 6));
 	}
-//	for (auto& pc : sub) {
-//		gnu.add(GA::LinePoints(pc, 7));
-//	}
+	for (auto& pc : sub) {
+		gnu.add(GA::LinesPoints(pc, 7));
+	}
 
 	gnu.add(pb.actor_label(gnu));
 	gnu.plot();

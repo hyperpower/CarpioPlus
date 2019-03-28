@@ -46,7 +46,8 @@ public:
 	typedef typename std::list<Point>::const_reference const_reference;
 	typedef Operation_<TYPE, DIM> Op;
 	typedef Point value_type;
-	protected:
+
+protected:
 	/** Linked point chain */
 	std::list<Point> _lpoints;
 	bool _closed; // is the chain closed, that is, is the first point is linked with the last one?

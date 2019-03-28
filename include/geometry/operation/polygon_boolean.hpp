@@ -20,7 +20,6 @@ namespace carpio {
 
 template<class TYPE>
 class PolygonBoolean_{
-
 public:
 	static const int _PN_  = 0;  // new point
 	static const int _PC_  = 1;  // point from clip
@@ -79,8 +78,6 @@ public:
 					oin = oin->nexto;
 				}
 			} while (oin != nullptr);
-
-
 
 			std::set<pNode> used;
 			for (auto& in : lin) {
@@ -425,7 +422,7 @@ protected:
 		}
 
 		// this function find the first IN node on object
-		// It alse considered the two HALF_IN case
+		// It also considered the two HALF_IN case
 		pNode
 		_find_object_in(pNode start) {
 			if(start == nullptr) {
