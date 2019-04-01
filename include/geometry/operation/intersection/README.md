@@ -1,14 +1,31 @@
-# Intersection Related functions 
+# Boolean Related functions 
 
-Files in this folder define all of the functions 
+Files in this folder define all of the functions for Boolean operation.
 
-## Table of Functions
+The Boolean operations include:
 
-|          |        Segment          |  Box     | Line     |
-|----------|:-----------------------:|----------|----------|
-| Segment  | :ballot_box_with_check: |          |          |
-| Box      |                         |          |          |
-| Line     |                         |          |          |
+- Intersection
+- Union
+- Subtract
+
+Following tables show the functions which have been implemented
+
+## Table of Intersection
+|          |        Segment          |  Box         | Line         |
+|----------|:-----------------------:|--------------|--------------|
+| Segment  | :ballot_box_with_check: |:construction:|:construction:|
+| Box      |                         |:construction:|:construction:|
+| Line     |                         |              |:construction:|
+| Polygon  |                         |              |              |
+
+## Table of Union
+|          |             Segment          |  Box     | Line     |
+|----------|------------------------------|----------|----------|
+| Segment  |:negative_squared_cross_mark: |          |          |
+| Box      |                              |          |          |
+| Line     |                              |          |          |
+
+## Table of Subtract
 
 ## Segment vs. Segment
 
