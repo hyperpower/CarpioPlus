@@ -29,6 +29,8 @@ public:
 	typedef Segment& ref_Segment;
 	typedef const Segment& const_ref_Segment;
 
+	typedef Line_<TYPE> Line;
+
 	typedef PointChain_<TYPE, DIM> PointChain;
 
 	typedef std::shared_ptr<Gnuplot_actor> spActor;
@@ -169,6 +171,20 @@ public:
 			actor->data().push_back("");
 		}
 
+		return actor;
+	}
+
+	static spActor Lines(const Line& l, Vt xmin = 0.0, Vt xmax = 1.0, int color_idx = -1){
+		ASSERT(Dim == 2);
+		int color = color_idx > 0? color_idx : 0;
+		Vt ymin = l.cal_y(xmin);
+		Vt ymax = l.cal_y(xmax);
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with lines lc variable";
+		actor->data().push_back(ToString(xmin, ymin, color, " "));
+		actor->data().push_back(ToString(xmax, ymax, color, " "));
+		actor->data().push_back("");
 		return actor;
 	}
 

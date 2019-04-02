@@ -5,7 +5,7 @@
 #include "geometry/objects/basic/point.hpp"
 #include "geometry/objects/basic/segment.hpp"
 #include "geometry/objects/basic/point_chain.hpp"
-#include "geometry/operation/intersection/segment_segment.hpp"
+#include "geometry/operation/boolean/segment_segment.hpp"
 #include "algebra/array/array_list.hpp"
 
 #include "io/gnuplot.hpp"

@@ -15,7 +15,7 @@
 #include "objects/bbtree/bbnode.hpp"
 #include "objects/bbtree/bbtree.hpp"
 
-#include "geometry/operation/intersection/segment_segment.hpp"
+#include "geometry/operation/boolean/segment_segment.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 
 #include "geometry/io/ggnuplot_actor.hpp"
@@ -24,6 +24,8 @@
 #include "geometry/io/gfile.hpp"
 
 #include "geometry/operation/creation/create_ts.hpp"
+
+#include "geometry/voftool/voftool.hpp"
 
 namespace carpio {
 
