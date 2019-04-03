@@ -9,8 +9,6 @@
 
 namespace carpio{
 
-
-
 template<class TYPE>
 int SolveQuadraticEquation(const TYPE &a, const TYPE &b, const TYPE &c,
                            double &x1, double &x2) {

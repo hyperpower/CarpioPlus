@@ -135,7 +135,10 @@ enum Trinary {
 	_NEGATIVE_ = -1, //
 };
 
-
+template <class TYPE>
+inline int Heaviside(const TYPE& v){
+	return v<=0?0:1;
+}
 
 
 

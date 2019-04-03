@@ -8,6 +8,8 @@
 #include "array/vector.hpp"
 #include "algebra/misc/sort.hpp"
 
+#include "algebra/solver/direct.hpp"
+
 #include "misc/interpolate.hpp"
 
 namespace carpio {

@@ -146,7 +146,7 @@ template<typename TYPE>
 std::ostream& operator<<(std::ostream& stream, const Line_<TYPE>& line) {
 	stream << line.a() << " X + "
 		   << line.b() << " Y = "
-		   << line.alpha() << "\n";
+		   << line.alpha();
 	return stream;
 }
 
