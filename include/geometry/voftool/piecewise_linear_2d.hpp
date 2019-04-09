@@ -92,8 +92,20 @@ public:
 	 *****************************************************/
 	static spLine ConstructInterface(Vt n1, Vt n2, Vt C, Vt c1, Vt c2){
 		Vt area   = C * c1 * c2;
+		Vt alpha  = _CalAlpha(std::abs(n1), std::abs(n2), area, c1, c2);
 		int cases = _WhichCase4(n1,n2);
-
+		switch (cases) {
+		case 1:{
+			return spLine(new Line(n1, n2, alpha));
+		}
+		case 2:
+			return spLine(new Line(n1, n2, alpha));
+		case 3:
+			return spLine(new Line(n1, n2, alpha));
+		case 4:
+			return spLine(new Line(n1, n2, alpha));
+		}
+		return nullptr;
 	}
 
 	/**
@@ -136,29 +148,35 @@ public:
 		if (C >= 0 && C <= c1) {
 			alpha = std::sqrt(2.0 * C * m * n);
 		} else if (C > c1 && C < c2) {
-			alpha = (2 * C * n + m) / 2.0;
+			alpha = (2.0 * C * n + m) / 2.0;
 		} else { //(C>=c2 && C<=1)
 			alpha = m + n - std::sqrt(2.0 * (1.0 - C) * m * n);
 		}
 		return alpha;
 	}
-	static Vt _CalAlpha(Vt mx, Vt my, Vt A, Vt cx, Vt cy){
-		Vt an1 = std::abs(mx);
-		Vt an2 = std::abs(my);
-		Vt m1, m2, c1, c2;
-		if(mx * cx < my * cy){
-			m1 = mx;
-			c1 = cx;
-			m2 = my;
-			c2 = cy;
+	static Vt _CalAlpha(Vt m1, Vt m2, Vt A, Vt c1, Vt c2){
+		Vt n1, n2, d1, d2, alpha;
+		if(m1 * c1 > m2 * c2){
+			n2 = m1; d2 = c1;
+			n1 = m2; d1 = c2;
+			std::cout << "sub case 1\n";
 		}else{
-			m1 = my;
-			c1 = cy;
-			m2 = mx;
-			c2 = cx;
+			n2 = m2; d2 = c2;
+			n1 = m1; d1 = c1;
+			std::cout << "sub case 2\n";
 		}
-
-
+		Vt Ac1 = 0.5 * d1 * d1 * n1 / n2;
+		Vt Ac2 = d1 * d2 - Ac1;
+		if (A >= 0 && A <=Ac1){
+			return std::sqrt(2.0 * A * n1 * n2);
+		} else if (A > Ac1 && A <Ac2){
+			std::cout << "b 2 = " << (2.0 * A * n1 + n2 * d2 * d2) / 2.0 / d2 << std::endl;
+			return (2.0 * A * n1 + n2 * d2 * d2) / 2.0 / d2;
+		} else {
+			return n1 * d1 + n2 * d2 - std::sqrt(2.0 * (d1 * d2 - A) * n1 * n2);
+		}
+		SHOULD_NOT_REACH;
+		return 0;
 	}
 	/**
 	 * \brief   m1, m2 must be positive
@@ -185,6 +203,9 @@ public:
 		Vt amc2  = alpha - m2 * c2;
 		Vt term1 = Heaviside(amc1) * amc1 * amc1;
 		Vt term2 = Heaviside(amc2) * amc2 * amc2;
+		std::cout << "term1 = " << term1 << std::endl;
+		std::cout << "term2 = " << term2 << std::endl;
+		std::cout << "alpha = " << alpha << std::endl;
 		return 0.5 * (alpha * alpha - term1 - term2) / m1 / m2;
 	}
 	static Vt _CalArea(const Vt& m1, const Vt& m2, const Vt alpha) {
