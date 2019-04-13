@@ -97,7 +97,7 @@ public:
 	}
 	// _X_=v ---> value of _Y_
 	// _Y_=v ---> value of _X_
-	Vt cal(Axes a, Vt v) {
+	Vt cal(Axes a, Vt v) const{
 		if (a == _X_) {
 			return cal_y(v);
 		} else {

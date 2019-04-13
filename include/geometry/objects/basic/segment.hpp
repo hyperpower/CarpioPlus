@@ -79,6 +79,16 @@ public:
 		return (this->ps() == rhs.ps() && this->pe() == rhs.pe()) ? true : false;
 	}
 
+	ref_Point p(int i){
+		ASSERT( (i==0) || (i==1));
+		return this->operator [](i);
+	}
+
+    const_ref_Point& p(int i) const{
+		ASSERT( (i==0) || (i==1));
+		return this->operator [](i);
+	}
+
 	Point& ps() {
 		return this->at(0);
 	}

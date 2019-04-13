@@ -360,7 +360,7 @@ Point_<TYPE, DIM> Max(
 // for Point
 // @param    p1 Point1
 // @param    p2 Point1
-// @return      the resualt of cross multiply
+// @return      the result of cross multiply
 //              The scalar triple product
 //              (also called the mixed product, box product)
 //-----------------------------------------------

@@ -226,6 +226,18 @@ public:
 		actor->data().push_back(ToString(pc.front().x(), pc.front().y(), color, " "));
 		return actor;
 	}
+	static spActor Arrows(const Segment& seg, int color_idx = -1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		int color = color_idx > 0 ? color_idx : 0;
+		actor->command() = "using 1:2:3:4:5 title \"\" ";
+		actor->style()   = "with vectors lc variable";
+		actor->data().push_back(
+				ToString(seg.psx(), seg.psy(),
+						 seg.pex() - seg.psx(),
+						 seg.pey() - seg.psy(), color, " "));
+
+		return actor;
+	}
 
 	static spActor Arrows(
 			const PointChain& pc,
@@ -255,7 +267,6 @@ public:
 							 pc.front().y() - pc.back().y(), color,
 							 " "));
 		}
-
 		return actor;
 	}
 };

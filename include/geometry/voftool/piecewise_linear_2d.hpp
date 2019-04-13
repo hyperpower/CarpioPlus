@@ -5,6 +5,7 @@
 #include "geometry/geometry_define.hpp"
 #include "geometry/objects/basic/point.hpp"
 #include "geometry/objects/basic/line.hpp"
+#include "algebra/algebra.hpp"
 #include "algebra/array/array_list.hpp"
 
 #include <memory>
@@ -20,11 +21,15 @@ public:
 	typedef Point_<TYPE, Dim>&             ref_Point;
 	typedef const Point_<TYPE, Dim>& const_ref_Point;
 
-	typedef Line_<Vt>                          Line;
-	typedef Line*                             pLine;
-	typedef std::shared_ptr<Line>            spLine;
-	typedef const pLine                 const_pLine;
+	typedef Line_<Vt>                           Line;
+	typedef Line*                              pLine;
+	typedef std::shared_ptr<Line>             spLine;
+	typedef const pLine                  const_pLine;
 
+	typedef Segment_<Vt, Dim>                Segment;
+	typedef Segment*                        pSegment;
+	typedef std::shared_ptr<Segment>       spSegment;
+	typedef const pSegment            const_pSegment;
 	/*****************************************************
 	 * Forward Problem
 	 *
@@ -52,6 +57,8 @@ public:
 		case 4:
 			return _CalArea(m1, -m2, alpha - m2);
 		}
+		SHOULD_NOT_REACH;
+		return 0.0;
 	}
 	static Vt CalColorValue(const Line& l){
 		return CalArea(l);
@@ -79,6 +86,8 @@ public:
 		case 4:
 			return _CalArea(m1, -m2, alpha - m2 * c2, c1, c2);
 		}
+		SHOULD_NOT_REACH;
+		return 0.0;
 	}
 
 	static Vt CalColorValue(const Line& l, const Vt& c1, const Vt& c2){
@@ -95,15 +104,14 @@ public:
 		Vt alpha  = _CalAlpha(std::abs(n1), std::abs(n2), area, c1, c2);
 		int cases = _WhichCase4(n1,n2);
 		switch (cases) {
-		case 1:{
+		case 1:
 			return spLine(new Line(n1, n2, alpha));
-		}
 		case 2:
-			return spLine(new Line(n1, n2, alpha));
+			return spLine(new Line(n1, n2, alpha + n1 * c1));
 		case 3:
-			return spLine(new Line(n1, n2, alpha));
+			return spLine(new Line(n1, n2, alpha + n1 * c1 + n2 * c2));
 		case 4:
-			return spLine(new Line(n1, n2, alpha));
+			return spLine(new Line(n1, n2, alpha + n2 * c2));
 		}
 		return nullptr;
 	}
@@ -118,9 +126,45 @@ public:
 	 * \return  spLine
 	 */
 	static spLine ConstructInterface(Vt n1, Vt n2, Vt C) {
-
+		Vt alpha  = _CalAlphaInUnitBox(std::abs(n1), std::abs(n2), C);
+		int cases = _WhichCase4(n1,n2);
+		switch (cases) {
+		case 1:
+			return spLine(new Line(n1, n2, alpha));
+		case 2:
+			return spLine(new Line(n1, n2, alpha + n1));
+		case 3:
+			return spLine(new Line(n1, n2, alpha + n1 + n2));
+		case 4:
+			return spLine(new Line(n1, n2, alpha + n2));
+		}
+		return nullptr;
 	}
-
+	/*****************************************************
+	 * Middle Problem
+	 *
+	 * Known the Line, calculate Segment
+	 *****************************************************/
+	static spSegment CalSegment(const Line& line, Vt c1, Vt c2){
+		std::array<Axes, 4> ao = {_Y_, _Y_, _X_, _X_};
+		std::array<Vt, 4>   av = {0.0 , c2, 0.0, c1};
+		std::array<Vt, 4>   rv = {c1  , c1, c2,  c2};
+		int f = 0;
+		spSegment sps(new Segment());
+		for(int i = 0; i < 4; i++){
+			Vt cv = line.cal(ao[i], av[i]);
+			if(IsInRange(0.0, cv, rv[i], _cc_)){
+				sps->p(f)[_X_] = (ao[i] == _Y_) ? cv : av[i];
+				sps->p(f)[_Y_] = (ao[i] == _X_) ? cv : av[i];
+				f++;
+			}
+			if(f > 1){
+				break;
+			}
+		}
+		// orientation
+		return sps;
+	}
 //protected:
 	/**
 	 * \brief   known a,b in ax+by=alpha and C, calculate alpha \n
@@ -156,22 +200,19 @@ public:
 	}
 	static Vt _CalAlpha(Vt m1, Vt m2, Vt A, Vt c1, Vt c2){
 		Vt n1, n2, d1, d2, alpha;
-		if(m1 * c1 > m2 * c2){
-			n2 = m1; d2 = c1;
-			n1 = m2; d1 = c2;
-			std::cout << "sub case 1\n";
-		}else{
+		if(m1 * c1 < m2 * c2){
 			n2 = m2; d2 = c2;
 			n1 = m1; d1 = c1;
-			std::cout << "sub case 2\n";
+		} else {
+			n2 = m1; d2 = c1;
+			n1 = m2; d1 = c2;
 		}
 		Vt Ac1 = 0.5 * d1 * d1 * n1 / n2;
 		Vt Ac2 = d1 * d2 - Ac1;
-		if (A >= 0 && A <=Ac1){
+		if (A >= 0 && A <= Ac1){
 			return std::sqrt(2.0 * A * n1 * n2);
-		} else if (A > Ac1 && A <Ac2){
-			std::cout << "b 2 = " << (2.0 * A * n1 + n2 * d2 * d2) / 2.0 / d2 << std::endl;
-			return (2.0 * A * n1 + n2 * d2 * d2) / 2.0 / d2;
+		} else if (A > Ac1 && A < Ac2){
+			return (2.0 * A * n2 + n1 * d1 * d1) / 2.0 / d1;
 		} else {
 			return n1 * d1 + n2 * d2 - std::sqrt(2.0 * (d1 * d2 - A) * n1 * n2);
 		}
@@ -203,9 +244,6 @@ public:
 		Vt amc2  = alpha - m2 * c2;
 		Vt term1 = Heaviside(amc1) * amc1 * amc1;
 		Vt term2 = Heaviside(amc2) * amc2 * amc2;
-		std::cout << "term1 = " << term1 << std::endl;
-		std::cout << "term2 = " << term2 << std::endl;
-		std::cout << "alpha = " << alpha << std::endl;
 		return 0.5 * (alpha * alpha - term1 - term2) / m1 / m2;
 	}
 	static Vt _CalArea(const Vt& m1, const Vt& m2, const Vt alpha) {
