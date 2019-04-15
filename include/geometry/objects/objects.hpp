@@ -5,6 +5,8 @@
 //#include <geometry/objects/_box.hpp>
 #include "geometry/geometry_define.hpp"
 #include "basic/point.hpp"
+#include "basic/line.hpp"
+#include "basic/plane.hpp"
 #include "basic/point_chain.hpp"
 #include "basic/segment.hpp"
 #include "basic/bezier_curve.hpp"

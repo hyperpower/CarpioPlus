@@ -13,10 +13,11 @@
 namespace carpio {
 
 template<class TYPE>
-class VOFToolPL_:public VOFTool_<TYPE>{
+class VOFToolPL_:public VOFTool_<TYPE, 2>{
 public:
 	static const St Dim = 2;
 	typedef TYPE Vt;
+	typedef VOFTool_<TYPE, 2>                  Base;
 	typedef Point_<TYPE, Dim>                  Point;
 	typedef Point_<TYPE, Dim>&             ref_Point;
 	typedef const Point_<TYPE, Dim>& const_ref_Point;
@@ -30,6 +31,10 @@ public:
 	typedef Segment*                        pSegment;
 	typedef std::shared_ptr<Segment>       spSegment;
 	typedef const pSegment            const_pSegment;
+
+public:
+	VOFToolPL_():Base(){}
+
 	/*****************************************************
 	 * Forward Problem
 	 *
@@ -42,26 +47,26 @@ public:
 	 * \param   Line l the line
 	 * \return  area
 	 */
-	static Vt CalArea(const Line& l){
+	Vt cal_area(const Line& l) const{
 		Vt m1     = l.a();
 		Vt m2     = l.b();
 		Vt alpha  = l.alpha();
-		int cases = _WhichCase4(m1, m2);
+		int cases = this->_which_case_4(m1, m2);
 		switch(cases){
 		case 1:
-			return _CalArea(m1, m2, alpha);
+			return this->_cal_area(m1, m2, alpha);
 		case 2:
-			return _CalArea(-m1, m2, alpha - m1);
+			return this->_cal_area(-m1, m2, alpha - m1);
 		case 3:
-			return _CalArea(-m1, -m2, alpha - m1 - m2);
+			return this->_cal_area(-m1, -m2, alpha - m1 - m2);
 		case 4:
-			return _CalArea(m1, -m2, alpha - m2);
+			return this->_cal_area(m1, -m2, alpha - m2);
 		}
 		SHOULD_NOT_REACH;
 		return 0.0;
 	}
-	static Vt CalColorValue(const Line& l){
-		return CalArea(l);
+	Vt cal_color(const Line& l) const{
+		return this->cal_area(l);
 	}
 	/**
 	 * \brief   Calculate the negative area divided by the line
@@ -71,27 +76,27 @@ public:
 	 * \param   Vt c1 box edge length on Y
 	 * \return  area
 	 */
-	static Vt CalArea(const Line& l, const Vt& c1, const Vt& c2){
+	Vt cal_area(const Line& l, const Vt& c1, const Vt& c2) const{
 		Vt m1     = l.a();
 		Vt m2     = l.b();
 		Vt alpha  = l.alpha();
-		int cases = _WhichCase4(m1, m2);
+		int cases = this->_which_case_4(m1, m2);
 		switch(cases){
 		case 1:
-			return _CalArea(m1, m2, alpha, c1, c2);
+			return this->_cal_area(m1, m2, alpha, c1, c2);
 		case 2:
-			return _CalArea(-m1, m2, alpha - m1 * c1, c1, c2);
+			return this->_cal_area(-m1, m2, alpha - m1 * c1, c1, c2);
 		case 3:
-			return _CalArea(-m1, -m2, alpha - m1 * c1 - m2 * c2, c1, c2);
+			return this->_cal_area(-m1, -m2, alpha - m1 * c1 - m2 * c2, c1, c2);
 		case 4:
-			return _CalArea(m1, -m2, alpha - m2 * c2, c1, c2);
+			return this->_cal_area(m1, -m2, alpha - m2 * c2, c1, c2);
 		}
 		SHOULD_NOT_REACH;
 		return 0.0;
 	}
 
-	static Vt CalColorValue(const Line& l, const Vt& c1, const Vt& c2){
-		return CalArea(l, c1, c2) / c1 / c2;
+	Vt cal_color(const Line& l, const Vt& c1, const Vt& c2) const{
+		return this->cal_area(l, c1, c2) / c1 / c2;
 	}
 
 	/*****************************************************
@@ -99,10 +104,10 @@ public:
 	 *
 	 * Known the color function and normal vector, calculate Line
 	 *****************************************************/
-	static spLine ConstructInterface(Vt n1, Vt n2, Vt C, Vt c1, Vt c2){
+	spLine construct_interface(Vt n1, Vt n2, Vt C, Vt c1, Vt c2) const{
 		Vt area   = C * c1 * c2;
-		Vt alpha  = _CalAlpha(std::abs(n1), std::abs(n2), area, c1, c2);
-		int cases = _WhichCase4(n1,n2);
+		Vt alpha  = this->_cal_alpha(std::abs(n1), std::abs(n2), area, c1, c2);
+		int cases = this->_which_case_4(n1,n2);
 		switch (cases) {
 		case 1:
 			return spLine(new Line(n1, n2, alpha));
@@ -125,9 +130,9 @@ public:
 	 * \param   Vt C the color function
 	 * \return  spLine
 	 */
-	static spLine ConstructInterface(Vt n1, Vt n2, Vt C) {
-		Vt alpha  = _CalAlphaInUnitBox(std::abs(n1), std::abs(n2), C);
-		int cases = _WhichCase4(n1,n2);
+	spLine construct_interface(Vt n1, Vt n2, Vt C) const{
+		Vt alpha  = this->_cal_alpha_in_unit_box(std::abs(n1), std::abs(n2), C);
+		int cases = this->_which_case_4(n1,n2);
 		switch (cases) {
 		case 1:
 			return spLine(new Line(n1, n2, alpha));
@@ -145,7 +150,7 @@ public:
 	 *
 	 * Known the Line, calculate Segment
 	 *****************************************************/
-	static spSegment CalSegment(const Line& line, Vt c1, Vt c2){
+	spSegment cal_segment(const Line& line, Vt c1, Vt c2) const{
 		std::array<Axes, 4> ao = {_Y_, _Y_, _X_, _X_};
 		std::array<Vt, 4>   av = {0.0 , c2, 0.0, c1};
 		std::array<Vt, 4>   rv = {c1  , c1, c2,  c2};
@@ -180,7 +185,7 @@ public:
 	 * \param   Float C the color function
 	 * \return  alpha
 	 */
-	static Vt _CalAlphaInUnitBox(Vt a, Vt b, Vt C) {
+	Vt _cal_alpha_in_unit_box(Vt a, Vt b, Vt C) const{
 		Vt c1, c2, alpha;
 		Vt absa = std::abs(a);
 		Vt absb = std::abs(b);
@@ -198,7 +203,7 @@ public:
 		}
 		return alpha;
 	}
-	static Vt _CalAlpha(Vt m1, Vt m2, Vt A, Vt c1, Vt c2){
+	Vt _cal_alpha(Vt m1, Vt m2, Vt A, Vt c1, Vt c2) const{
 		Vt n1, n2, d1, d2, alpha;
 		if(m1 * c1 < m2 * c2){
 			n2 = m2; d2 = c2;
@@ -229,9 +234,9 @@ public:
 	 * \param   Float C the color function
 	 * \return  alpha
 	 */
-	static Vt _CalArea(
+	Vt _cal_area(
 			const Vt& m1, const Vt& m2, const Vt alpha,
-			const Vt& c1, const Vt& c2) {
+			const Vt& c1, const Vt& c2) const{
 		// m1, m2 and alpha must be positive
 		Vt amc1  = alpha - m1 * c1;
 		//trivial case
@@ -246,7 +251,7 @@ public:
 		Vt term2 = Heaviside(amc2) * amc2 * amc2;
 		return 0.5 * (alpha * alpha - term1 - term2) / m1 / m2;
 	}
-	static Vt _CalArea(const Vt& m1, const Vt& m2, const Vt alpha) {
+	Vt _cal_area(const Vt& m1, const Vt& m2, const Vt alpha) const{
 		// m1, m2 and alpha must be positive
 		Vt amc1 = alpha - m1;
 		//trivial case
@@ -282,7 +287,7 @@ public:
 	 * \param   Float b b in (a,b)
 	 * \return  the case
 	 */
-	inline static int _WhichCase4(Vt a, Vt b) {
+	inline int _which_case_4(Vt a, Vt b) const{
 		const int cVOF_whichcase4[2][2] = { { 1, 4 }, { 2, 3 } };
 		return cVOF_whichcase4[a >= 0 ? 0 : 1][b >= 0 ? 0 : 1];
 	}
