@@ -20,7 +20,7 @@ public:
 				                      Segment_<TYPE, 2>,
 									  Segment_<TYPE, 3> >::type Piecewise; //wrong!!!
 	typedef Piecewise*                    pPiecewise;
-	typedef std::shared_ptr<Piecewise>  spPiecewise;
+	typedef std::shared_ptr<Piecewise>   spPiecewise;
 	typedef const pAnalyticExp      const_pPiecewise;
 
 public:

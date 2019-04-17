@@ -31,7 +31,7 @@ This folder include all the test cases for Carpio project.
       5. Face to Center
       6. Center to Corner
    2. Octree
-3. Equation
+4. Equation
    1. Convection
       1. One Step 1D
       2. Gate 1D
@@ -49,7 +49,11 @@ This folder include all the test cases for Carpio project.
       3. Flow pass circle
       4. Flow pass cylinder
       5. Flow pass sphere
-
+   4. VOF
+      1. Reconstruct eclipse
+      2. Reconstruct rectangle
+      3. Zalesak Slotted Disk Rotation
+      4. Reversed Single Vortex Flow
 
 ## Prerequisites
 
