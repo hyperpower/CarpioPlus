@@ -21,6 +21,7 @@
 
 #include "operation/su_dot_nabla_phi.hpp"
 #include "operation/soperation.hpp"
+#include "operation/svof.hpp"
 
 #include "domain/structure/io/sio_file.hpp"
 #include "domain/structure/io/sgnuplot_actor.hpp"

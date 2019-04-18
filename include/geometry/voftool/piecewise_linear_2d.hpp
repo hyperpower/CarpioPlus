@@ -5,6 +5,7 @@
 #include "geometry/geometry_define.hpp"
 #include "geometry/objects/basic/point.hpp"
 #include "geometry/objects/basic/line.hpp"
+#include "geometry/objects/basic/box.hpp"
 #include "algebra/algebra.hpp"
 #include "algebra/array/array_list.hpp"
 
@@ -27,6 +28,11 @@ public:
 	typedef std::shared_ptr<Line>             spLine;
 	typedef const pLine                  const_pLine;
 
+	typedef Box_<Vt, Dim>                      Box;
+	typedef Box*                              pBox;
+	typedef std::shared_ptr<Box>             spBox;
+	typedef const pBox                  const_pBox;
+
 	typedef Segment_<Vt, Dim>                Segment;
 	typedef Segment*                        pSegment;
 	typedef std::shared_ptr<Segment>       spSegment;
@@ -40,6 +46,21 @@ public:
 	 *
 	 * Known the Line, calculate Area(color)
 	 *****************************************************/
+	Vt cal_area(const Line& l, const Point& pmin, const Point& pmax) const{
+		Vt c1 = pmax.x() - pmin.x();
+		Vt c2 = pmax.y() - pmin.y();
+		// pmin becomes the original point
+		Vt a = l.a();
+		Vt b = l.b();
+		Line ln(a, b, l.alpha() - a * pmin.x() - b * pmin.y());
+
+		return cal_area(ln, c1, c2);
+	}
+	Vt cal_color(const Line& l, const Point& pmin, const Point& pmax) const{
+		Vt c1 = pmax.x() - pmin.x();
+		Vt c2 = pmax.y() - pmin.y();
+		return this->cal_area(l, pmin, pmax) / c1 / c2;
+	}
 	/**
 	 * \brief   Calculate the negative area divided by the line
 	 *          in a unit box (Edge length = 1)

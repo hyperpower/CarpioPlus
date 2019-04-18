@@ -22,8 +22,6 @@ TEST(structure, initial){
 
 	spSGhost spgh(new SGhostMask_<2>(spsg));
 
-
-
 	Gnuplot gnu;
 	gnu.set_xrange(-0.5, 5.5);
 	gnu.set_yrange(-0.5, 5.5);

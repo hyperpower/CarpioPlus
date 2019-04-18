@@ -23,6 +23,7 @@ public:
 	static const St Dim = DIM;
 	typedef TYPE Vt;
 	typedef Point_<TYPE, DIM> Point;
+	typedef Box_<TYPE, DIM>   Box;
 	typedef Point_<TYPE, DIM>& ref_Point;
 	typedef const Point_<TYPE, DIM>& const_ref_Point;
 	typedef Segment_<TYPE, DIM> Segment;
@@ -172,6 +173,17 @@ public:
 		}
 
 		return actor;
+	}
+
+	static spActor Lines(const Box& box, int color_idx = -1){
+		ASSERT(Dim == 2);
+		std::vector<Point> ln = {
+			box.get_point(_M_, _M_, _M_),
+			box.get_point(_P_, _M_, _M_),
+			box.get_point(_P_, _P_, _M_),
+			box.get_point(_M_, _P_, _M_),
+		};
+		return Lines(ln.begin(), ln.end(), color_idx, true);
 	}
 
 	static spActor Lines(const Line& l, Vt xmin = 0.0, Vt xmax = 1.0, int color_idx = -1){

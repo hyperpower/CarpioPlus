@@ -23,8 +23,14 @@ public:
 	typedef std::shared_ptr<Piecewise>   spPiecewise;
 	typedef const pAnalyticExp      const_pPiecewise;
 
+	typedef Point_<TYPE, DIM>		Point;
+
 public:
 	VOFTool_() {
+	}
+	virtual Vt cal_area(const AnalyticExp&, const Point&, const Point&) const {
+		SHOULD_NOT_REACH;
+		return 0.0;
 	}
 	virtual Vt cal_area(const AnalyticExp&, const Vt&, const Vt&) const {
 		SHOULD_NOT_REACH;

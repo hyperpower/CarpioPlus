@@ -34,7 +34,7 @@ public:
 		}
 		for (St d = 0; d < Dim; ++d) {
 			_c[d].reconstruct(_ng[d]);
-			Vt orignal = _cs * (0.5 - _gl);
+			Vt orignal = _min[d] + _cs * (0.5 - _gl);
 			for (typename Arr::size_type ii = 0; ii < _c[d].size(); ++ii) {
 				_c[d][ii] = orignal + ii * _cs;
 			}
@@ -55,7 +55,7 @@ public:
 		}
 		for (St d = 0; d < Dim; ++d) {
 			_c[d].reconstruct(_ng[d]);
-			Vt orignal = _cs * (0.5 - _gl);
+			Vt orignal = _min[d] + _cs * (0.5 - _gl);
 			for (typename Arr::size_type ii = 0; ii < _c[d].size(); ++ii) {
 				_c[d][ii] = orignal + ii * _cs;
 			}

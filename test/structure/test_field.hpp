@@ -18,8 +18,6 @@ typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
 
 
 TEST(scalar, initial){
-
-
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,

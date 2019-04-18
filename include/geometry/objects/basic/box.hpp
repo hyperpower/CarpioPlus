@@ -222,7 +222,7 @@ public:
 	}
 
 	Point get_point(Orientation lx, Orientation ly, Orientation lz) const {
-		return Poi(get(_X_, lx), get(_Y_, ly), get(_Z_, lz));
+		return Point(get(_X_, lx), get(_Y_, ly), get(_Z_, lz));
 	}
 
 };
