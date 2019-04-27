@@ -164,12 +164,9 @@ TEST(builder, aabbtree){
 	auto a2 = TGA::WireFrame(tree);
 	gnu.add(a1);
 	gnu.add(a2);
-//	gnu.plot();
-
-	// free pointer
+	gnu.plot();
 
 }
-
 TEST(builder, aabbtree_plotly){
 	std::cout << "Generate random segments" <<std::endl;
 	typedef GPlotlyActor_<double, 2> PA;
@@ -188,9 +185,7 @@ TEST(builder, aabbtree_plotly){
 	}
 	auto a = PA::LinesPoints(lseg, typename std::list<Seg*>::value_type());
 	py.add(a);
-	py.plot();
-
-
+//	py.plot();
 }
 
 }

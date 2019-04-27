@@ -22,7 +22,7 @@ Two obvious conclusions can be reached:
 
 Array Operation Test
 ======================
-A simple array operation(+,-,*) execute in parallel. Following figure shows the result. The operation is acted on arrays with defferent length. The longer array takes more time to operate. The execution time should be longer than 10 millisecond. The parallel execution could save time. 
+A simple array operation(+,-,*) execute in parallel. Following figure shows the result. The operation is acted on arrays with different length. The longer array takes more time to operate. The execution time should be longer than 10 millisecond. The parallel execution could save time. 
 
 .. figure:: _static/{{folder_name}}/arrayop.png
    :alt: arrar test for OpenMP

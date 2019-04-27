@@ -19,11 +19,11 @@ Following tables show the functions which have been implemented
 | Polygon  |                         |              |              |
 
 ## Table of Union
-|          |             Segment          |  Box     | Line     |
-|----------|------------------------------|----------|----------|
-| Segment  |:negative_squared_cross_mark: |          |          |
-| Box      |                              |          |          |
-| Line     |                              |          |          |
+|          |             Segment          |  Box         | Line     |
+|----------|------------------------------|--------------|----------|
+| Segment  |:negative_squared_cross_mark: |              |          |
+| Box      |                              |:construction:|          |
+| Line     |                              |              |          |
 
 ## Table of Subtract
 
