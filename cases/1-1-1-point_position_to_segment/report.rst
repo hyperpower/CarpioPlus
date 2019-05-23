@@ -95,5 +95,3 @@ The point is outside the end point of the Segment, but the point is colinear wit
 
    An example of the Point located outside the end point of the Segment
 
-
-

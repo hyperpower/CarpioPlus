@@ -24,10 +24,10 @@ Run time infomation:
    :align: center 
 
    ============= =====================
-    Functions      Wall Time            
+    Functions      Wall Time (s)            
    ============= =====================
    {% for rt in runtime -%}
-   {{ '%12s' % rt[0] }}   {{'%15.2f' % rt[1]}}  
+   {{ '%12s' % rt[0] }}   {{'%15.6f' % rt[1]}}  
    {% endfor -%}
    ============= =====================
 
@@ -82,7 +82,7 @@ def copy_fig_folder(path, folder_name):
 def run(path, runtime, origianl_files):
     tmp  = filehead()
 
-    file = open(path.this + "/report.rstt", "r")
+    file = open(path.this + "/report.rst", "r")
     tmp += file.read()
     file.close()
 
