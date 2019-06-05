@@ -113,7 +113,7 @@ pygments_style = None
 # If true, figures, tables and code-blocks are automatically numbered if they has caption. For now, it works only with the HTML builder. Default is False.
 numfig = True
 # The scope of figure numbers, that is, the numfig feature numbers figures in which scope. 0 means “whole document”. 1 means “in a section”. Sphinx numbers like x.1, x.2, x.3... 2 means “in a subsection”. Sphinx numbers like x.x.1, x.x.2, x.x.3..., and so on. Default is 1.
-numfig_secnum_depth = 3
+numfig_secnum_depth = 1
 
 
 # -- Options for HTML output -------------------------------------------------
