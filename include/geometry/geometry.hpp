@@ -17,6 +17,7 @@
 
 #include "geometry/operation/boolean/segment_segment.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
+#include "geometry/operation/distance/distance.hpp"
 
 #include "geometry/io/ggnuplot_actor.hpp"
 #include "geometry/io/gplotly_actor.hpp"

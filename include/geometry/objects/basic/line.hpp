@@ -140,6 +140,20 @@ public:
 			return false;
 		}
 	}
+	// line can be written to Parametric Form
+	// Ref: Geometric tools for computer graphics P174
+	Point parametric_p() const{
+		const Vt& a = this->at(0);
+		const Vt& b = this->at(1);
+		const Vt& c = this->at(2);
+		Vt s = a * a + b * b;
+		s = (s == 0) ? SMALL : s;
+		return Point(-a * c / s, -b *c /s);
+	}
+
+	Point parametric_d() const{
+		return Point(-(this->at(1)), this->at(0));
+	}
 };
 
 template<typename TYPE>

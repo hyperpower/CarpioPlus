@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_DEFINE_H_
-#define GEOMETRY_DEFINE_H_
+#ifndef GEOMETRY_DEFINE_HPP_
+#define GEOMETRY_DEFINE_HPP_
 
 #include "type_define.hpp"
 
