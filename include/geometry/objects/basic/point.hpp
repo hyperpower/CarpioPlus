@@ -293,6 +293,29 @@ std::ostream& operator<<(std::ostream& stream, const Point_<TYPE, DIM>& point) {
 	return stream;
 }
 
+template <typename NUM>
+inline NUM Distance2_PointToPoint2d(const NUM& x0, const NUM& y0,
+		                            const NUM& x1, const NUM& y1){
+	NUM dx = x0 - x1;
+	NUM dy = y0 - y1;
+	return dx * dx + dy * dy;
+}
+
+template <typename NUM>
+inline NUM Distance2_PointToPoint3d(const NUM& x0, const NUM& y0, const NUM& z0,
+		                            const NUM& x1, const NUM& y1, const NUM& z1){
+	NUM dx = x0 - x1;
+	NUM dy = y0 - y1;
+	NUM dz = z0 - z1;
+	return dx * dx + dy * dy + dz * dz;
+}
+
+template <typename NUM>
+inline NUM Dot(const NUM& x0, const NUM& y0,
+		       const NUM& x1, const NUM& y1){
+	return x0 * x1 + y0 * y1;
+}
+
 template<typename TYPE, St DIM>
 double Distance2(const Point_<TYPE, DIM>& p1,
 		         const Point_<TYPE, DIM>& p2) {
@@ -302,14 +325,13 @@ double Distance2(const Point_<TYPE, DIM>& p1,
 	}
 	if (DIM == 2) {
 		return double(
-				(p1.x() - p2.x()) * (p1.x() - p2.x())
-						+ (p1.y() - p2.y()) * (p1.y() - p2.y()));
+				Distance2_PointToPoint2d(p1.x(), p1.y(),
+				                         p2.x(), p2.y()));
 	}
 	if (DIM == 3) {
 		return double(
-				(p1.x() - p2.x()) * (p1.x() - p2.x())
-						+ (p1.y() - p2.y()) * (p1.y() - p2.y())
-						+ (p1.z() - p2.z()) * (p1.z() - p2.z()));
+				Distance2_PointToPoint3d(p1.x(), p1.y(), p1.z(),
+								         p2.x(), p2.y(), p2.z()));
 	}
 	SHOULD_NOT_REACH;
 	return 0.0;
