@@ -193,7 +193,7 @@ public:
 		for (St i = 0; i < Dim; i++) {
 			n += double(this->at(i) * this->at(i));
 		}
-		n = sqrt(n);
+		n = std::sqrt(n);
 		for (St i = 0; i < Dim; i++) {
 			if (n != 0) {
 				this->at(i) /= n;

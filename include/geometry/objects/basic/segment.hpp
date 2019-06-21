@@ -12,8 +12,7 @@
 namespace carpio {
 struct TagSegment: public TagGeometry {
 	TagSegment() {
-	}
-	;
+	};
 };
 
 template<typename TYPE, St DIM> class Box_;

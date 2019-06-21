@@ -6,6 +6,7 @@
 #include "geometry/geometry_define.hpp"
 #include "basic/point.hpp"
 #include "basic/line.hpp"
+#include "basic/ray.hpp"
 #include "basic/plane.hpp"
 #include "basic/point_chain.hpp"
 #include "basic/segment.hpp"

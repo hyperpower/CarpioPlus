@@ -2,7 +2,7 @@
 #define GEOMETRY_POINT_TO_LINEAR_HPP_
 
 #include "geometry/geometry_define.hpp"
-#include "geometry/objects/basic/point.hpp"
+#include "geometry/objects/objects.hpp"
 
 
 namespace carpio {
@@ -22,8 +22,8 @@ NUM Distance2_PointToRay(const NUM&  x0, const NUM&   y0,
 	// Ray is defined as
 	// Ray origin point          P( x,  y)
 	//     direction unit vector V(vx, vy), ||V||=1
-	NUM dx = x0 - x;
-	NUM dy = y0 - y;
+	NUM dx  = x0 - x;
+	NUM dy  = y0 - y;
 	NUM dot = dx * vx + dy * vy;
 	if(dot > 0){
 		return Distance2_PointToPoint2d(x0,y0,x,y) - dot * dot;
@@ -54,6 +54,47 @@ NUM Distance2_PointToSegment(const NUM& x0, const NUM&   y0,
 	// closest point is interior to segment
 	return Dot(ps0[_X_], ps0[_Y_], ps0[_X_], ps0[_Y_] - t * t / dd);
 }
+
+
+// --------------------
+// high level function
+// --------------------
+template <typename NUM>
+NUM Distance2(const Point_<NUM, 2>& p, const Line_<NUM>& l){
+	return Distance_PointToLine(p.x(), p.y(), l.a(), l.b(), l.alpha());
+}
+
+template <typename NUM>
+NUM Distance(const Point_<NUM, 2>& p, const Line_<NUM>& l){
+	return std::sqrt(Distance2(p, l));
+}
+
+template <typename NUM>
+NUM Distance2(const Point_<NUM, 2>& p,
+		      const Ray_<NUM, 2>&   r){
+	return Distance_PointToRay(p.x(),   p.y(),
+			                   r.pox(), r.poy(),
+							   r.pvx(), r.pvy());
+}
+
+template <typename NUM>
+NUM Distance(const Point_<NUM, 2>& p, const Ray_<NUM, 2>& r){
+	return std::sqrt(Distance2(p, r));
+}
+
+
+template <typename NUM>
+NUM Distance2(const Point_<NUM, 2>& p, const Segment_<NUM, 2>& s){
+	return Distance2_PointToSegment(p.x(),   p.y(),
+			                        s.psx(), s.psy(),
+									s.pex(), s.pey());
+}
+
+template <typename NUM>
+NUM Distance(const Point_<NUM, 2>& p, const Segment_<NUM, 2>& s){
+	return std::sqrt(Distance2(p, s));
+}
+
 
 
 }
