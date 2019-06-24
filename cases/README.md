@@ -11,8 +11,9 @@ This folder include all the test cases for Carpio project.
       3. Segment vs box
       4. Triangle intersection
       5. :ballot_box_with_check: Point in polygon
-      6. Polygon collision detection
-      7. Polygon boolean
+      6. Distance and Closest Point
+      7. Polygon collision detection
+      8. Polygon boolean
    2. Triangle Surface
       1. Build triangle surface
       2. Delauney Triangulation
