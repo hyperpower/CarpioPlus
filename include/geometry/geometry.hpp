@@ -15,6 +15,8 @@
 #include "objects/bbtree/bbnode.hpp"
 #include "objects/bbtree/bbtree.hpp"
 
+#include "objects/objects.hpp"
+
 #include "geometry/operation/boolean/segment_segment.hpp"
 #include "geometry/operation/polygon_boolean.hpp"
 #include "geometry/operation/distance/distance.hpp"

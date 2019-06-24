@@ -149,12 +149,12 @@ protected:
 	}
 
 	Point _inter_t(const Point& p1, const Point& p2, Cvt t){
-		Point res;
-		for(St i = 0; i < Dim; ++i){
-			res[i] = (1.0 - t) * p1[i] + t * p2[i];
+			Point res;
+			for(St i = 0; i < Dim; ++i){
+				res[i] = (1.0 - t) * p1[i] + t * p2[i];
+			}
+			return res;
 		}
-		return res;
-	}
 
 };
 
