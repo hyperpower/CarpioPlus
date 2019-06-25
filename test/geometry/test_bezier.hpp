@@ -13,13 +13,12 @@
 
 namespace carpio {
 
-
 typedef Point_<double, 2> Point2;
 typedef Point_<double, 3> Point3;
 typedef Segment_<double, 2> Seg2;
 typedef Box_<double, 2> Box2;
 typedef Curve_<double, 2> Curve;
-typedef BezierC_<double, 2> BC;
+typedef BezierCurve_<double, 2> BC;
 typedef BezierCurveQuadratic_<double, 2> BC2;
 typedef BezierCurveCubic_<double, 2> BC3;
 typedef BezierHighOrder_<double, 2>  BCH;
@@ -89,10 +88,9 @@ TEST(bezier, high){
 	Point2(-0.3,   -0.1),
     Point2(0.8,      0),
     Point2(0.5,    1.0),
-	Point2(0.5,    0.5),
-	Point2(0.2,    0.2)};
+	Point2(0.5,    0.5)};
 
-	std::shared_ptr<BC> spc(new BCH(l, 10, "bernstein"));
+	std::shared_ptr<BC> spc(new BCH(l, 50, "bernstein"));
 
 	Gnuplot gnu;
 	gnu.set_xrange(-0.5, 1.5);

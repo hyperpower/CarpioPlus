@@ -13,16 +13,16 @@ namespace carpio {
 //
 
 template<class TYPE, St DIM>
-class BezierC_: public Curve_<TYPE, DIM>{
+class BezierCurve_: public Curve_<TYPE, DIM>{
 public:
 	static const St Dim = DIM;
 	typedef TYPE Cvt;
 
 	typedef Curve_<TYPE, DIM> Base;
 
-	typedef Point_<TYPE, DIM> Point;
-	typedef Point* pPoint;
-	typedef Point& ref_Point;
+	typedef Point_<TYPE, DIM>      Point;
+	typedef Point*                pPoint;
+	typedef Point&             ref_Point;
 	typedef const Point& const_ref_Point;
 
 	typedef std::vector<Point> VectorPoints;
@@ -32,7 +32,7 @@ public:
 protected:
 	VectorPoints _control_points;
 public:
-	BezierC_(const St& num_control_points, const St& precision):
+	BezierCurve_(const St& num_control_points, const St& precision):
 			Base(precision + 2), _control_points(num_control_points){
 	}
 
@@ -51,13 +51,8 @@ public:
 		SHOULD_NOT_REACH;
 	}
 
-//	template<class Container_Point>
-//	BezierC_(
-//			const Container_Point& ver,
-//			St precision = 10) :
-//	    Base(precision + 2){
-//		std::copy(ver.begin(), ver.end(), std::back_inserter(_control_points));
-//	}
+	virtual ~BezierCurve_(){
+	}
 };
 }
 #endif

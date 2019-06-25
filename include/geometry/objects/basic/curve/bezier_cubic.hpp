@@ -13,12 +13,12 @@ namespace carpio {
 //
 
 template<class TYPE, St DIM>
-class BezierCurveCubic_: public BezierC_<TYPE, DIM>{
+class BezierCurveCubic_: public BezierCurve_<TYPE, DIM>{
 public:
 	static const St Dim = DIM;
 	typedef TYPE Cvt;
 
-	typedef BezierC_<TYPE, DIM> Base;
+	typedef BezierCurve_<TYPE, DIM> Base;
 
 	typedef Point_<TYPE, DIM> Point;
 	typedef Point* pPoint;

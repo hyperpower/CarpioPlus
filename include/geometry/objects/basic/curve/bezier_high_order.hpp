@@ -2,6 +2,7 @@
 #define _BEZIER_HIGHORDER_HPP_
 
 #include "bezier.hpp"
+#include "algebra/algebra.hpp"
 #include <array>
 #include <vector>
 #include <math.h>
@@ -14,12 +15,12 @@ namespace carpio {
 //
 
 template<class TYPE, St DIM>
-class BezierHighOrder_: public BezierC_<TYPE, DIM>{
+class BezierHighOrder_: public BezierCurve_<TYPE, DIM>{
 public:
 	static const St Dim = DIM;
 	typedef TYPE Cvt;
 
-	typedef BezierC_<TYPE, DIM> Base;
+	typedef BezierCurve_<TYPE, DIM> Base;
 
 	typedef Point_<TYPE, 2> Point;
 	typedef Point* pPoint;
@@ -71,20 +72,7 @@ protected:
     	    Cvt t  = dt * i;
 			Point pres;
 			for (St m = 0; m < ncp; m++) {
-				auto bm = _bernstein(m, ncp, t);
-				std::cout << "i  = " << i<<std::endl;
-				std::cout << "t  = " << t<<std::endl;
-				std::cout << "bm = " << bm<<std::endl;
-				if( m == 0){
-				    std::cout << "1-t5 = " << std::pow(1.0 - t, 5) << std::endl;
-				}
-				if (m == 1) {
-					std::cout << "1-t5 = " << std::pow(1.0 - t, 4) * t * 5.0 << std::endl;
-				}
-				if (m == 2) {
-					std::cout << "1-t5 = " << std::pow(1.0 - t, 3) * t * t* 10.0
-							<< std::endl;
-				}
+				auto bm = _bernstein(m, ncp - 1, t);
 				for(St d = 0; d < Dim; d++){
 					pres[d] += bm * this->_control_points[m][d];
 				}

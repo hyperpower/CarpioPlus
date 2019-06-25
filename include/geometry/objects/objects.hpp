@@ -10,7 +10,6 @@
 #include "basic/plane.hpp"
 #include "basic/point_chain.hpp"
 #include "basic/segment.hpp"
-#include "basic/bezier_curve.hpp"
 #include "basic/curve/curve.hpp"
 #include "basic/curve/bezier.hpp"
 #include "basic/curve/bezier_quadratic.hpp"
