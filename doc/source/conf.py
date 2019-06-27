@@ -50,8 +50,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.intersphinx',
-    'matplotlib.sphinxext.plot_directive',
-    'sphinxcontrib.bibtex'
+    'matplotlib.sphinxext.plot_directive'
     #'breathe' 
     # 'exhale'
 ]

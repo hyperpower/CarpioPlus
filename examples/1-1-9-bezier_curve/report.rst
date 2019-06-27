@@ -73,3 +73,4 @@ Let :math:`\mathbf {B}_{\mathbf {P} _{0}\mathbf {P} _{1}\ldots \mathbf {P} _{n}}
 
 
 .. _Wiki: https://en.wikipedia.org/wiki/B%C3%A9zier_curve
+
