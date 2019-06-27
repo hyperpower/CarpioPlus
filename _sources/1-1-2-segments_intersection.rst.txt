@@ -1,0 +1,131 @@
+============================
+Segments Intersection
+============================
+
+Problem Description
+===================
+
+We want to find two segments intersection. Here, we define 6 possible cases for the intersect or not.
+
+.. table:: Segement vs. Segment Locations
+    :widths: auto
+    :align: center 
+
+    =====  ============
+     Num.    Type
+    =====  ============
+      0     NO       
+      1     CONNECT  
+      2     TOUCH    
+      3     OVERLAP  
+      4     SAME     
+      5     INTERSECT
+    =====  ============
+
+
+Results
+===================
+
+Location 0 NO
+--------------
+Two segments are seperated. There are no intersection between the two segments. But function of finding the intersection point is still working. The intersection point is on neither of the segments.
+
+.. figure:: _static/1-1-2-segments_intersection/NO.png
+   :alt: Figure intersection NO
+   :align: center 
+
+   An example of two segments has no intersection.
+
+Location 1 CONNET
+------------------
+Two segments are connected. 
+
+.. figure:: _static/1-1-2-segments_intersection/CONNECT.png
+   :alt: Figure intersection CONNECT
+   :align: center 
+
+   An example of two segments are connected.
+
+
+Location 2 TOUCH
+------------------
+Two segments are touched.
+
+.. figure:: _static/1-1-2-segments_intersection/TOUCH.png
+   :alt: Figure intersection TOUCH
+   :align: center 
+
+   An example of two segments are touched.
+
+
+Location 3 OVERLAP
+--------------------
+Two segments are overlap each other. 
+
+.. warning::
+    The intersection point can't be found. The point is (0,0) 
+
+.. figure:: _static/1-1-2-segments_intersection/OVERLAP.png
+   :alt: Figure intersection overlap
+   :align: center 
+
+   An example of two segments are overlap.
+
+
+Location 4 SAME
+--------------------
+Two segments are the same. 
+
+.. warning::
+    The intersection point can't be found. The point is (0,0)
+
+.. figure:: _static/1-1-2-segments_intersection/SAME.png
+   :alt: Figure intersection SAME
+   :align: center 
+
+   An example of two segments are same.
+
+Location 4 INTERSECT
+---------------------
+Two segments are intersect.
+
+.. figure:: _static/1-1-2-segments_intersection/INTERSECT.png
+   :alt: Figure intersection INTERSECT
+   :align: center 
+
+   An example of two segments are intersect.
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake          0.001637  
+        dt_make          0.000730  
+         dt_run          0.000984  
+        dt_plot          0.000092  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp| 2018-11-03 23:50:56.455512| 2018-11-03 23:50:56.455512| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt| 2018-11-03 23:03:39.714889| 2018-11-03 23:03:39.714889| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py| 2019-05-23 20:09:06.441393| 2019-05-23 20:09:06.441393| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst| 2019-05-23 20:09:00.941210| 2018-11-23 23:30:48.382934| 
+   +---------------+---------------------------+---------------------------+
+   

@@ -1,0 +1,8 @@
+=================
+Theory
+=================
+
+.. toctree::
+
+   convection
+   projection_method

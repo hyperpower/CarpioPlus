@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.3.1. Field Define &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2.3.2. Vector Center And Face Define" href="3-1-2-vector_center_and_face_define.html" />
+    <link rel="prev" title="2.3. Structure Grid and Domain Examples" href="structure.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.3.1. Field Define</a><ul>
+<li><a class="reference internal" href="#problem-description">2.3.1.1. Problem Description</a></li>
+<li><a class="reference internal" href="#illustration">2.3.1.2. Illustration</a><ul>
+<li><a class="reference internal" href="#d-field">2.3.1.2.1. 1D field</a></li>
+<li><a class="reference internal" href="#id1">2.3.1.2.2. 2D field</a></li>
+<li><a class="reference internal" href="#id2">2.3.1.2.3. 3D field</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#case-information">2.3.1.3. Case Information</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="field-define">
+<h1>2.3.1. Field Define<a class="headerlink" href="#field-define" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-description">
+<h2>2.3.1.1. Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<p>This cases just a simple illustration of the definition of the structure field. Every scalars is defined at the center of the control volume.</p>
+</div>
+<div class="section" id="illustration">
+<h2>2.3.1.2. Illustration<a class="headerlink" href="#illustration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="d-field">
+<h3>2.3.1.2.1. 1D field<a class="headerlink" href="#d-field" title="Permalink to this headline">¶</a></h3>
+<p>We have One-dimension field from x = 0 to x = 2.5. There are 5 control volumes.</p>
+<div class="figure align-center" id="id3">
+<img alt="One dimension field" src="_images/1d.png" />
+<p class="caption"><span class="caption-number">Fig. 2.23 </span><span class="caption-text">One dimension field.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>2.3.1.2.2. 2D field<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The 2D field is defined in [0.0, 2.5] <span class="math notranslate nohighlight">\(\times\)</span> [0.0, 2.5]. The mesh has 25 control volumes (5 <span class="math notranslate nohighlight">\(\times\)</span> 5). The intial values for the field are difined as:</p>
+<div class="math notranslate nohighlight">
+\[\sin(x + y)\]</div>
+<p>A color contour is shown in following figure.</p>
+<div class="figure align-center" id="id4">
+<img alt="Two dimension field" src="_images/2d.png" />
+<p class="caption"><span class="caption-number">Fig. 2.24 </span><span class="caption-text">Two dimension field.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>2.3.1.2.3. 3D field<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>The 3D field is defined in [0.0, 2.5] <span class="math notranslate nohighlight">\(\times\)</span> [0.0, 2.5] <span class="math notranslate nohighlight">\(\times\)</span> [0.0, 2.5]. The mesh has 25 control volumes (5 <span class="math notranslate nohighlight">\(\times\)</span> 5 <span class="math notranslate nohighlight">\(\times\)</span> 5).</p>
+<div class="figure align-center" id="id5">
+<img alt="Three dimension field" src="_images/3d.png" />
+<p class="caption"><span class="caption-number">Fig. 2.25 </span><span class="caption-text">Three dimension field.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="case-information">
+<h2>2.3.1.3. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<p>Run time infomation:</p>
+<table class="colwidths-auto docutils align-center" id="id6">
+<caption><span class="caption-number">Table 2.13 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Functions</p></th>
+<th class="head"><p>Wall Time (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dt_cmake</p></td>
+<td><p>0.001787</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_make</p></td>
+<td><p>0.000937</p></td>
+</tr>
+<tr class="row-even"><td><p>dt_run</p></td>
+<td><p>0.000779</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_plot</p></td>
+<td><p>0.000108</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto docutils align-center" id="id7">
+<caption><span class="caption-number">Table 2.14 </span><span class="caption-text">Files in this case.</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Creat Time</p></th>
+<th class="head"><p>Modified Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main.cpp</p></td>
+<td><p>2018-12-19 20:22:11.956501</p></td>
+<td><p>2018-12-19 20:22:11.956501</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMakeLists.txt</p></td>
+<td><p>2018-12-11 19:12:23.514256</p></td>
+<td><p>2018-11-10 22:18:44.403381</p></td>
+</tr>
+<tr class="row-even"><td><p>run.py</p></td>
+<td><p>2019-05-23 20:20:27.332053</p></td>
+<td><p>2019-05-23 20:20:27.332053</p></td>
+</tr>
+<tr class="row-odd"><td><p>report.rst</p></td>
+<td><p>2019-05-23 20:20:08.971441</p></td>
+<td><p>2018-12-19 20:41:14.128218</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/3-1-1-field_define.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,81 @@
+=================================
+Point In Polygon
+=================================
+
+Problem Description
+===================
+
+The classical **Winding Number** test for a point in a polygon. The function will return a bool value:
+
+  - **True** a point is in or on the polygon (inside or on the edge of the polygon).
+  - **False** a point is outside of the polgon. 
+
+Results
+===================
+
+Random points test
+-------------------
+Few points have been generated randomly. The funtion **IsInOn(Point, PointChain)** is used for test the point location. The results is shown as follows:
+
+.. figure:: _static/1-1-5-point_in_polygon/random_points.png
+   :alt: Points location to a polygon
+   :align: center 
+
+   Random points location to a polygon.
+
+Special case test
+------------------
+The first specical case is that the point is *on the edge* of the polgon. The winding number method will return **True**.
+
+.. figure:: _static/1-1-5-point_in_polygon/edge_points.png
+   :alt: Point on the edge of a polygon
+   :align: center 
+
+   Points are on the edges of a polygon.
+
+
+The second specical case is that the point is *on the vertex* of the polgon. 
+
+.. figure:: _static/1-1-5-point_in_polygon/vertex_points.png
+   :alt: Point on the vertex of a polygon
+   :align: center 
+
+   Points are on the vertrices of a polygon.
+
+
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake          0.001640  
+        dt_make          0.001082  
+         dt_run          0.001001  
+        dt_plot          0.000112  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp| 2018-11-10 22:18:44.403381| 2018-11-10 22:18:44.403381| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt| 2018-11-10 22:18:44.403381| 2018-11-10 22:18:44.403381| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py| 2019-05-23 20:14:53.512937| 2019-05-23 20:14:53.512937| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst| 2019-05-23 20:14:47.928751| 2018-12-25 18:13:36.111357| 
+   +---------------+---------------------------+---------------------------+
+   

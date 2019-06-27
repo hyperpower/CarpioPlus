@@ -1,2 +1,0 @@
-# CarpioPlus
-A new carpio

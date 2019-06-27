@@ -1,0 +1,83 @@
+============================
+Field Define
+============================
+
+Problem Description
+===================
+
+This cases just a simple illustration of the definition of the structure field. Every scalars is defined at the center of the control volume. 
+
+Illustration
+===================
+
+1D field
+-------------------
+We have One-dimension field from x = 0 to x = 2.5. There are 5 control volumes.
+
+.. figure:: _static/3-1-1-field_define/1d.png
+   :alt: One dimension field
+   :align: center 
+
+   One dimension field.
+
+2D field
+-------------------
+The 2D field is defined in [0.0, 2.5] :math:`\times` [0.0, 2.5]. The mesh has 25 control volumes (5 :math:`\times` 5). The intial values for the field are difined as:
+
+.. math::
+   
+   \sin(x + y)
+
+A color contour is shown in following figure.
+
+.. figure:: _static/3-1-1-field_define/2d.png
+   :alt: Two dimension field
+   :align: center 
+
+   Two dimension field.
+
+3D field
+--------------------
+The 3D field is defined in [0.0, 2.5] :math:`\times` [0.0, 2.5] :math:`\times` [0.0, 2.5]. The mesh has 25 control volumes (5 :math:`\times` 5 :math:`\times` 5). 
+
+.. figure:: _static/3-1-1-field_define/3d.png
+   :alt: Three dimension field
+   :align: center 
+
+   Three dimension field.
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake          0.001787  
+        dt_make          0.000937  
+         dt_run          0.000779  
+        dt_plot          0.000108  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp| 2018-12-19 20:22:11.956501| 2018-12-19 20:22:11.956501| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt| 2018-12-11 19:12:23.514256| 2018-11-10 22:18:44.403381| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py| 2019-05-23 20:20:27.332053| 2019-05-23 20:20:27.332053| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst| 2019-05-23 20:20:08.971441| 2018-12-19 20:41:14.128218| 
+   +---------------+---------------------------+---------------------------+
+   

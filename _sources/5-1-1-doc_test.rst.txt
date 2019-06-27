@@ -1,0 +1,75 @@
+============================
+Doc Test
+============================
+
+Problem Description
+===================
+
+The 1D gate profile has been initialized as:
+
+.. math::
+   x &\in [0.25, 0.75]   , \phi = 1,  \\
+   x &\notin [0.25, 0.75], \phi = 0
+   :label: eq_initial1
+
+The velocity is :math:`u=1` m/s. After 1 seconds (100 steps with :math:`\Delta t = 0.01`), the final profile should be 
+
+.. math::
+   x \in [1.25, 1.75]&, \phi = 1,  \\
+     else            &, \phi = 0
+   :label: eq_final1
+
+.. figure:: _static/5-1-1-doc_test/illustration.png
+   :alt: the gate profile
+   :align: center 
+
+   Illustration of the problem.
+
+Results
+===================
+
+Breath 
+------------
+
+.. doxygenclass:: carpio::Point_
+   :project: carpiodoc
+   :members:
+   :undoc-members:
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      CPU Time            
+   ============= =====================
+       dt_cmake      1.365000e-03  
+        dt_make      6.860000e-04  
+         dt_run      8.220000e-04  
+        dt_plot      7.160000e-04  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp| 2018-12-23 10:34:06.327995| 2018-12-23 10:34:06.327995| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt| 2018-12-23 10:32:27.869812| 2018-11-10 22:18:44.403381| 
+   +---------------+---------------------------+---------------------------+
+   |        plot.py| 2018-12-23 10:34:56.929146| 2018-12-23 10:34:56.929146| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py| 2018-12-23 10:32:01.549245| 2018-11-23 23:11:32.097435| 
+   +---------------+---------------------------+---------------------------+
+   |    report.rstt| 2018-12-23 10:37:44.812673| 2018-12-23 10:37:44.812673| 
+   +---------------+---------------------------+---------------------------+
+   

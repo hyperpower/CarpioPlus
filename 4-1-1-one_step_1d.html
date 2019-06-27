@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.4.1. One Step 1D &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2.4.2. Gate 1D" href="4-1-2-gate_1d.html" />
+    <link rel="prev" title="2.4. Convection Examples" href="convection.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.4.1. One Step 1D</a><ul>
+<li><a class="reference internal" href="#problem-description">2.4.1.1. Problem Description</a></li>
+<li><a class="reference internal" href="#results">2.4.1.2. Results</a><ul>
+<li><a class="reference internal" href="#first-order-upwind">2.4.1.2.1. First order upwind</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#case-information">2.4.1.3. Case Information</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="one-step-1d">
+<h1>2.4.1. One Step 1D<a class="headerlink" href="#one-step-1d" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-description">
+<h2>2.4.1.1. Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<p>The 1D gate profile has been initialized as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-initial">
+<span class="eqno">(2.5)<a class="headerlink" href="#equation-eq-initial" title="Permalink to this equation">¶</a></span>\[\begin{split}x &amp;&lt; 0.5, \phi = 1,  \\
+x &amp;&gt; 0.5, \phi = 0\end{split}\]</div>
+<p>The velocity is <span class="math notranslate nohighlight">\(u=1\)</span> m/s. After 1 seconds (100 steps with <span class="math notranslate nohighlight">\(\Delta t = 0.01\)</span>), the final profile should be</p>
+<div class="math notranslate nohighlight" id="equation-eq-final">
+<span class="eqno">(2.6)<a class="headerlink" href="#equation-eq-final" title="Permalink to this equation">¶</a></span>\[\begin{split}x &lt; 1.5&amp;, \phi = 1,  \\
+  else &amp;, \phi = 0\end{split}\]</div>
+<div class="figure align-center" id="id1">
+<img alt="the gate profile" src="_images/illustration.png" />
+<p class="caption"><span class="caption-number">Fig. 2.32 </span><span class="caption-text">Illustration of the problem.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="results">
+<h2>2.4.1.2. Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="first-order-upwind">
+<h3>2.4.1.2.1. First order upwind<a class="headerlink" href="#first-order-upwind" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="case-information">
+<h2>2.4.1.3. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<p>Run time infomation:</p>
+<table class="colwidths-auto docutils align-center" id="id2">
+<caption><span class="caption-number">Table 2.17 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Functions</p></th>
+<th class="head"><p>CPU Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dt_cmake</p></td>
+<td><p>1.468000e-03</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_make</p></td>
+<td><p>8.870000e-04</p></td>
+</tr>
+<tr class="row-even"><td><p>dt_run</p></td>
+<td><p>7.980000e-04</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_plot</p></td>
+<td><p>6.910000e-04</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto docutils align-center" id="id3">
+<caption><span class="caption-number">Table 2.18 </span><span class="caption-text">Files in this case.</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Creat Time</p></th>
+<th class="head"><p>Modified Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main.cpp</p></td>
+<td><p>2018-12-30 12:00:07.529606</p></td>
+<td><p>2018-12-30 12:00:07.529606</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMakeLists.txt</p></td>
+<td><p>2018-12-30 15:29:52.985651</p></td>
+<td><p>2018-12-30 15:29:52.985651</p></td>
+</tr>
+<tr class="row-even"><td><p>plot.py</p></td>
+<td><p>2018-10-31 23:49:21.285539</p></td>
+<td><p>2018-10-31 23:49:21.285539</p></td>
+</tr>
+<tr class="row-odd"><td><p>run.py</p></td>
+<td><p>2018-11-23 23:47:34.272199</p></td>
+<td><p>2018-11-23 23:47:34.272199</p></td>
+</tr>
+<tr class="row-even"><td><p>report.rstt</p></td>
+<td><p>2018-12-30 11:58:44.357779</p></td>
+<td><p>2018-12-30 11:58:44.357779</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/4-1-1-one_step_1d.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
