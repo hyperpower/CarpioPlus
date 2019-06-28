@@ -39,7 +39,6 @@ TEST(mpi, learnpi){
 //	MPI::Finalize();
 }
 
-
 TEST(mpi, p2p){
 
 //	MPI::Init();
@@ -57,7 +56,6 @@ TEST(mpi, p2p){
 
 	int number;
 	if (rank == 0) {
-
 	    number = -1;
 	    int dest = 1;
 	    tfm::format(std::cout, "S%d> Send %d to S%d", rank, number, dest);

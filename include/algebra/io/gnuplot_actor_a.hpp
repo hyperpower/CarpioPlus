@@ -8,8 +8,6 @@ namespace carpio{
 
 namespace GnuplotActor{
 
-
-
 template<class T>
 spActor TwoArrayList(
 		       const ArrayListT_<T>& arrx,

@@ -264,6 +264,7 @@ public:
 		ASSERT(x.size() == N);
 
 		ArrayListV_<Vt> res(M);
+#pragma omp parallel for
 		for (St i = 0; i < M; ++i) {
 			for (St j = rowptr_[i]; j < rowptr_[i + 1]; ++j) {
 				res[i] += x[colind_[j]] * val_[j];

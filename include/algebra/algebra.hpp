@@ -7,8 +7,10 @@
 #include "array/vector_list.hpp"
 #include "array/vector.hpp"
 #include "algebra/misc/sort.hpp"
+#include "algebra/io/mmio.hpp"
 
 #include "algebra/solver/direct.hpp"
+#include "algebra/solver/jacobi.hpp"
 
 #include "misc/interpolate.hpp"
 

@@ -8,6 +8,8 @@
 #ifndef _ARRAYLIST_H_
 #define _ARRAYLIST_H_
 
+
+
 #include "type_define.hpp"
 #include "algebra/blas/blas_0.hpp"
 #include "algebra/blas/blas_1.hpp"
@@ -248,6 +250,7 @@ void ArrayListT_<T>::set(size_type i, const T& value) {
 
 template<typename T>
 void ArrayListT_<T>::assign(const T& nd) {
+	#pragma omp for
     for (size_type i = 0; i < m_Len; i++) {
         m_p[i] = nd;
     }

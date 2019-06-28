@@ -79,7 +79,7 @@ def copy_fig_folder(path, folder_name):
     os.system("rm -r " + path.rstsource + "/_static/" + folder_name)
     os.system("cp -r " + path.fig + " " + path.rstsource + "/_static/" + folder_name)
 
-def run(path, runtime, origianl_files):
+def run(path, runtime, origianl_files, data_extra = None):
     tmp  = filehead()
 
     file = open(path.this + "/report.rst", "r")
@@ -95,6 +95,8 @@ def run(path, runtime, origianl_files):
     file_data = file_info(path.this, origianl_files)
     data["files"]   = file_data 
     data["runtime"] = runtime
+    if data_extra is not None:
+        data.update(data_extra)
     # copy fig ===================================================
     copy_fig_folder(path, data["folder_name"])
 

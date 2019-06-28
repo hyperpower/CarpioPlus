@@ -23,9 +23,9 @@ protected:
 	int _max_iter;   //max_iter
 	double _tol;     // Tolerance
 
-	int _num_iter;
-	double _residual;
-	Listr _lresid; //
+	int    _num_iter; // number of iteration
+	double _residual; // residual
+	Listr  _lresid;   // list of residual
 public:
 
 	Solver_(int max_iter = 100, Vt tol = 1e-6) {

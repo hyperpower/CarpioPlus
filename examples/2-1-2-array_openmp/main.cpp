@@ -42,7 +42,8 @@ double TimeTest(double tt, int nt){
 	return Clock::TimespanToMillisecondsD(start, end);
 }
 
-std::shared_ptr<Gnuplot_actor> TimeTestRun(int nt){
+std::shared_ptr<Gnuplot_actor> 
+TimeTestRun(int nt){
 	
 	std::vector<double> vt = {1,2,3,4,5,6,7,8,9,
 	                          10,20,30,40,50,60,70,80,90,
