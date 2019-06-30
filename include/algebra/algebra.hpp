@@ -11,6 +11,9 @@
 
 #include "algebra/solver/direct.hpp"
 #include "algebra/solver/jacobi.hpp"
+#include "algebra/solver/preconditioner.hpp"
+#include "algebra/solver/preconditioner_diagonal.hpp"
+
 
 #include "misc/interpolate.hpp"
 
