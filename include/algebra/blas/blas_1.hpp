@@ -32,7 +32,10 @@ template<class ST, class VT>
 VT Nrm2(ST n, const VT* x, ST incx);
 
 template<class VT, class VT2, class ST>
-VT Nrmp(ST n, const VT* x, VT2 p, ST incx);
+VT Nrmp(ST n, const VT* x, VT2 p, ST incx);\
+
+template<class ST, class VT>
+VT Dot(ST n, const VT* sx, ST incx, const VT* sy, ST incy);
 
 
 // High level functions
@@ -40,6 +43,7 @@ VT Nrmp(ST n, const VT* x, VT2 p, ST incx);
 template<class VT> VT Nrm1(const ArrayListV_<VT>& ax);
 template<class VT> VT Nrm2(const ArrayListV_<VT>& arr);
 template<class VT> VT Nrmp(const ArrayListV_<VT>& arr, float p);
+template<class VT> VT Dot(const ArrayListV_<VT>& arrx, const ArrayListV_<VT>& arry);
 
 
 // -----------------------------------------------------
@@ -242,6 +246,7 @@ VT Nrm2(ST n,           //size of the array, sx.size==sy.size
 	} else if (n == 1) {
 		norm = std::abs(x[0]);
 	} else {
+#pragma omp parallel for reduction(+:norm)
 		for (int i = 0; i < (n - 1) * incx; i += incx) {
 			if (x[i] != zero) {
 				norm += x[i] * x[i];
@@ -251,6 +256,59 @@ VT Nrm2(ST n,           //size of the array, sx.size==sy.size
 	}
 	return norm;
 }
+
+/**
+ * \brief   copies a vector, x, to a vector, y.
+ *
+ * \param   array
+ *
+ * \return  int
+ */
+template<class ST, class VT>
+VT Dot(ST n,         // size
+	   const VT* sx, // array sx
+	   ST incx,      // increase x
+	   const VT* sy, // array sy
+	   ST incy){     // increase y
+	VT dot = 0.0e0;
+	int ix,iy,m,mp1;
+	if (n <= 0)
+		return dot;
+	if (incx == 0 || incy == 0)
+		return dot;
+
+	if (incx == 1 && incy == 1) {
+		//increase = 1
+		int LN = 5;
+		m = (n - 1) % LN;
+		for (int i = 0; i <= m; ++i) {
+			dot = dot + sx[i] * sy[i];
+		}
+		if (n <= LN) {
+			return dot;
+		}
+		mp1 = m + 1;
+		for (int i = mp1; i < n; i += LN) {  //unrolled loop
+			dot = dot + sx[i] * sy[i] + sx[i + 1] * sy[i + 1]
+					+ sx[i + 2] * sy[i + 2] + sx[i + 3] * sy[i + 3]
+					+ sx[i + 4] * sy[i + 4];
+		}
+	} else {
+		ix = 0;
+		iy = 0;
+		if (incx < 0)
+			ix = (1 - n) * incx;
+		if (incy < 0)
+			iy = (1 - n) * incy;
+		for (int i = 0; i < n; ++i) {
+			dot = dot + sx[i] * sy[i];
+			ix = ix + incx;
+			iy = iy + incy;
+		}
+	}
+	return dot;
+}  // << ------------------------------------------
+//
 
 template<class VT>
 VT Nrm1(const ArrayListV_<VT>& ax) {
@@ -268,6 +326,14 @@ template<class VT>
 VT Nrmp(const ArrayListV_<VT>& arr, float p){
 	typedef typename ArrayListV_<VT>::size_type St;
 	return Nrmp(arr.size(), arr.data(), p, St(1));
+}
+
+template<class VT>
+VT Dot(const ArrayListV_<VT>& arrx, const ArrayListV_<VT>& arry){
+	typedef typename ArrayListV_<VT>::size_type St;
+	return Dot(arrx.size(),
+			   arrx.data(), St(1),
+			   arry.data(), St(1));
 }
 
 

@@ -241,7 +241,7 @@ inline Vector_<TYPE, DIM> operator/(const Vector_<TYPE, DIM>& l,
 }
 
 template<typename TYPE, St DIM>
-inline TYPE dot(const Vector_<TYPE, DIM>& l, const Vector_<TYPE, DIM>& r) {
+inline TYPE Dot(const Vector_<TYPE, DIM>& l, const Vector_<TYPE, DIM>& r) {
 	TYPE sum = 0;
 	for (St i = 0; i < DIM; ++i) {
 		sum += (l.at(i) * r.at(i));
@@ -250,7 +250,7 @@ inline TYPE dot(const Vector_<TYPE, DIM>& l, const Vector_<TYPE, DIM>& r) {
 }
 
 template<typename TYPE, St DIM>
-Vector_<TYPE, DIM> cross(const Vector_<TYPE, DIM>& l,
+Vector_<TYPE, DIM> Cross(const Vector_<TYPE, DIM>& l,
 		const Vector_<TYPE, DIM> & r) {
 	Vector_<TYPE, DIM> res(l);
 	res.cross(r);

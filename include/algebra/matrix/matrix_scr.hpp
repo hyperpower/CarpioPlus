@@ -338,9 +338,9 @@ public:
 			for (St j = rowptr_[i]; j < rowptr_[i + 1]; ++j) {
 				St col_idx = this->colind_(j);
 				if (i == col_idx) {
-					vdiag = Abs(this->val_[j]);
+					vdiag = std::abs(this->val_[j]);
 				} else {
-					sum_ += Abs(this->val_[j]);
+					sum_ += std::abs(this->val_[j]);
 				}
 			}
 			if (sum_ > vdiag) {

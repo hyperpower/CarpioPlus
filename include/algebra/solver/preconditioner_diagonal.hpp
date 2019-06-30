@@ -11,7 +11,7 @@ namespace carpio
 {
 
 template<class VALUE>
-class Preconditioner_Diagonal_: public Preconditioner_<VALUE>{
+class PreconditionerDiagonal_: public Preconditioner_<VALUE>{
 public:
 	typedef VALUE              Vt;
 	typedef MatrixV_<VALUE>    Matrix;
@@ -26,7 +26,7 @@ private:
 public:
 	//DiaPre (const CompCol_Mat_double &);
 	//DiaPre(const Matrix &M, int inv);
-	Preconditioner_Diagonal_(const MatrixSCR &M, int inv = 1) :
+	PreconditionerDiagonal_(const MatrixSCR &M, int inv = 1) :
 			diag_(M.size_i()) {
 		inv_ = inv;
 		int flagi = -1;
@@ -59,7 +59,7 @@ public:
 			exit(0);
 		}
 	}
-	~Preconditioner_Diagonal_()
+	~PreconditionerDiagonal_()
 	{
 	}
 	;

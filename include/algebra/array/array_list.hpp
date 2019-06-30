@@ -250,7 +250,7 @@ void ArrayListT_<T>::set(size_type i, const T& value) {
 
 template<typename T>
 void ArrayListT_<T>::assign(const T& nd) {
-	#pragma omp for
+#pragma omp parallel for
     for (size_type i = 0; i < m_Len; i++) {
         m_p[i] = nd;
     }

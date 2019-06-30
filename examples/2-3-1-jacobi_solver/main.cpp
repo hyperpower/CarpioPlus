@@ -55,7 +55,7 @@ void SolverTest(const MatSCR& mat){
 
 	Arr    b(mat.size_i());
 	b.assign(1.0);
-	Solver solver(100000, 1e-4);
+	Solver solver(10000, 1e-4);
 	solver.solve(mat, x, b);
 	tick_t end = Clock::Tick();
 	plot_residual("./fig/residual.png", solver);
@@ -64,7 +64,7 @@ void SolverTest(const MatSCR& mat){
 
 double SolverTimeTest(const MatSCR& mat, int nt){
 	tick_t start = Clock::Tick();
-	Solver solver(100000, 1e-4);
+	Solver solver(10000, 1e-4);
 #ifdef OPENMP
 	omp_set_num_threads(nt);
 	Arr    x(mat.size_i());

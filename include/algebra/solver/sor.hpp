@@ -62,7 +62,7 @@ public:
 		}
 
 		// construct T
-		St M = T.iLen();
+		St M = T.size_i();
 		//st N = T.jLen();
 
 		for (int i = 1; i <= this->_max_iter; ++i) {
