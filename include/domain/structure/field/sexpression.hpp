@@ -7,6 +7,7 @@
 #include "utility/tinyformat.hpp"
 
 #include "algebra/array/multi_array.hpp"
+#include "algebra/matrix/matrix_scr.hpp"
 #include "algebra/misc/linear_polynomial.hpp"
 
 namespace carpio{
@@ -30,7 +31,7 @@ public:
 	typedef LinearPolynomial_<Vt, Index> Expression;
 
 	typedef MultiArrayV_<Expression, DIM> Mat;
-	typedef typename Mat::reference reference;
+	typedef typename Mat::reference             reference;
 	typedef typename Mat::const_reference const_reference;
 	typedef SExpField_<DIM> Self;
 protected:
@@ -211,8 +212,6 @@ protected:
 			this->operator ()(idx) += idx;
 		}
 	}
-
-
 };
 
 template<St DIM>
@@ -282,6 +281,16 @@ inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs /= rhs;
 	return lhs;
 }
+
+
+
+template<typename VALUE, St DIM>
+void BuildMatrix(const SExpField_<DIM>& expf,
+		               MatrixSCR_<VALUE>& mat,
+					   ArrayListV_<VALUE>& b){
+
+}
+
 
 
 }

@@ -11,8 +11,8 @@
 #include <list>
 
 namespace carpio{
-// CGS solves the unsymmetric linear system Ax = b
-// using the Conjugate Gradient Squared method
+// BiCGSTAB solves the unsymmetric linear system Ax = b
+// using the Preconditioned BiConjugate Gradient Stabilized method
 
 template<class VALUE>
 class BiCGSTAB_: public Solver_<VALUE> {

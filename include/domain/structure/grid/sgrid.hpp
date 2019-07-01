@@ -64,6 +64,8 @@ virtual std::string type_name() const{
 	virtual Poi f(St dim,  int ori, const Index& index) const {}
 	virtual Poi f(St dim,  int fb, Idx i, Idx j = 0, Idx k = 0) const {}
 	virtual Vt  f_(St dim, int  ori, Idx idx) const {}
+	// face area
+	virtual Vt  fa(St dim,  int ori, const Index& index) const {}
 
 	// distance to face
 	virtual Vt df_(St dim, Idx idx) const {}

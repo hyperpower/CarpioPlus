@@ -194,6 +194,16 @@ public:
 		}
 	}
 
+	Vt fa(St dim,  int ori, const Index& index) const {
+		if (DIM == 1){
+			return 1.0;
+		}else if(DIM == 2){
+			return _cs;
+		}else{
+			return _cs * _cs;
+		}
+	}
+
 	// distance to face
 	Vt df_(St dim, Idx idx) const {
 		Vt halfs = hs_(dim, idx);

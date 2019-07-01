@@ -11,6 +11,22 @@
 
 namespace carpio {
 
+// BLAS Level 1 includes routines and functions, which perform vector-vector operations.
+// ?asum  1   Sum of vector magnitudes (functions)
+// ?axpy  0   Scalar-vector product (routines)
+// ?copy  1   Copy vector (routines)
+// ?dot   1   Dot product (functions)
+// ?nrm2  1   Vector 2-norm (Euclidean norm) (functions)
+// ?rot   0   Plane rotation of points (routines)
+// ?rotg  1   Generate Givens rotation of points (routines)
+// ?rotm  0   Modified Givens plane rotation of points (routines)
+// ?rotmg 0   Generate modified Givens plane rotation of points (routines)
+// ?scal  0   Vector-scalar product (routines)
+// ?swap  1   Vector-vector swap (routines)
+// i?amax 0   Index of the maximum absolute value element of a vector (functions)
+// i?amin 0   Index of the minimum absolute value element of a vector (functions)
+// ?cabs1 0   Auxiliary functions, compute the absolute value of a complex number of single or double precision
+
 //Forward Declaration
 template <class VT> class ArrayListV_;
 

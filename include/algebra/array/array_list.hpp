@@ -514,8 +514,8 @@ public:
     V min() const;
     V max() const;
     V norm1() const;
-    size_type findMinIdx() const;
-    size_type findMaxIdx() const;
+    size_type min_idx() const;
+    size_type max_idx() const;
     //fill ----------------------------------------
     void assign_forward(const V& be, const V& step);
     void assign_backward(const V& be, const V& step);
@@ -728,7 +728,7 @@ V ArrayListV_<V>::norm1() const {
 }
 
 template<typename V>
-St ArrayListV_<V>::findMinIdx() const {
+St ArrayListV_<V>::min_idx() const {
     ASSERT(this->m_p!=NULL);
     V min = this->m_p[0];
     size_type idx = 0;
@@ -741,7 +741,7 @@ St ArrayListV_<V>::findMinIdx() const {
     return idx;
 }
 template<typename V>
-St ArrayListV_<V>::findMaxIdx() const {
+St ArrayListV_<V>::max_idx() const {
     ASSERT(this->m_p!=NULL);
     V max = this->m_p[0];
     size_type idx = 0;

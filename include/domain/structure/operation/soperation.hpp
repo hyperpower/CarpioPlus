@@ -59,7 +59,7 @@ public:
 	}
 
 	static int ForEachIndexParallel(const OrderParallel& order, FunIndexThreadNum fun){
-		#pragma omp for
+		#pragma omp parallel for
 		for (St thread = 0; thread < order.num_threads(); thread++){
 			for (auto iter = order.begin(thread); iter != order.end(thread); iter++) {
 				auto& idx = (*iter);

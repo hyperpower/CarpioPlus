@@ -22,6 +22,7 @@
 #include "operation/su_dot_nabla_phi.hpp"
 #include "operation/soperation.hpp"
 #include "operation/svof.hpp"
+#include "operation/slaplacian.hpp"
 
 #include "domain/structure/io/sio_file.hpp"
 #include "domain/structure/io/sgnuplot_actor.hpp"
@@ -79,6 +80,7 @@ public:
 	// operation
 	typedef SValue_<DIM>       Value;
 	typedef SInterpolate_<DIM> Interpolate;
+	typedef SLaplacian_<DIM>   Laplacian;
 
 	// io file
 	typedef SIOFile_<DIM> IOFile;
