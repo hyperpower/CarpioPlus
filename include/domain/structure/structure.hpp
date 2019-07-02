@@ -23,6 +23,7 @@
 #include "operation/soperation.hpp"
 #include "operation/svof.hpp"
 #include "operation/slaplacian.hpp"
+#include "operation/sbuild_matrix.hpp"
 
 #include "domain/structure/io/sio_file.hpp"
 #include "domain/structure/io/sgnuplot_actor.hpp"
@@ -81,7 +82,7 @@ public:
 	typedef SValue_<DIM>       Value;
 	typedef SInterpolate_<DIM> Interpolate;
 	typedef SLaplacian_<DIM>   Laplacian;
-
+	typedef SBuildMatrix_<DIM> BuildMatrix;
 	// io file
 	typedef SIOFile_<DIM> IOFile;
 

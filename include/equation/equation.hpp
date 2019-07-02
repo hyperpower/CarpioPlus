@@ -5,6 +5,7 @@
 #include "time_term.hpp"
 #include "equation.hpp"
 #include "equation/advection/convection.hpp"
+#include "equation/poisson/laplace.hpp"
 
 #include "event/event.hpp"
 #include "event/event_manager.hpp"

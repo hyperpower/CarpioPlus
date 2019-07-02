@@ -40,6 +40,10 @@ public:
 		_build_om();
 	}
 
+	St size() const{
+		return _ov.size();
+	}
+
 	iterator begin(){
 		return _ov.begin();
 	}
@@ -65,7 +69,7 @@ public:
 		return 0;
 	}
 
-const Grid& grid() const {
+	const Grid& grid() const {
 		return (*_grid);
 	}
 	const Ghost& ghost() const {

@@ -90,11 +90,12 @@ public:
 
 		return res;
 	}
-	virtual ExpField operator()(const ExpField& phif,
-			                    const Vt&         t = 0.0){
-		ExpField res = phif.new_compatible();
-		const Grid& grid = phif.grid();
-		for (auto& idx : phif.order()) {
+	virtual ExpField expression_field(
+			                    const Field&    phis,
+			                    const Vt&       t = 0.0){
+		ExpField res(phis.spgrid(), phis.spghost(), phis.sporder());
+		const Grid& grid = phis.grid();
+		for (auto& idx : phis.order()) {
 			std::array<Exp, DIM> arr;
 			FOR_EACH_DIM
 			{
@@ -102,13 +103,14 @@ public:
 				Index idxm = idx.m(d);
 				Exp phi_m, phi_p;
 				Exp phi(idx);
-				if (phi.ghost().is_ghost(idxm)) {
-					phi_m += Value::Get(phi, *(this->_spbi), idx, idxm, d, _M_,t);
+				if (phis.ghost().is_ghost(idxm)) {
+					phi_m += Value::Get(phis, *(this->_spbi), idx, idxm, d, _M_,t);
+//					std::cout << "phim = " << phi_m <<std::endl;
 				} else {
 					phi_m += idxm;
 				}
-				if (phi.ghost().is_ghost(idxp)) {
-					phi_p += Value::Get(phi, *(this->_spbi), idx, idxp, d, _P_,t);
+				if (phis.ghost().is_ghost(idxp)) {
+					phi_p += Value::Get(phis, *(this->_spbi), idx, idxp, d, _P_,t);
 				} else {
 					phi_p += idxp;
 				}
@@ -118,11 +120,15 @@ public:
 								/ (grid.c_(d, idxp) - grid.c_(d, idx));
 
 				arr[d] = (dfdx_p * grid.fa(d,_P_,idx) - dfdx_m * grid.fa(d, _M_, idx));
+
 			}
 			FOR_EACH_DIM
 			{
 				res(idx) += arr[d];
 			}
+//			std::cout << "Index = " << idx << std::endl;
+//			std::cout << "order = " << phis.order().get_order(idx) << std::endl;
+//			std::cout << "exp   = \n" << res(idx) << std::endl;
 		}
 		return res;
 	}

@@ -48,18 +48,20 @@ public:
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
+	typedef MatrixSCR_<Vt>    Mat;
+	typedef ArrayListV_<Vt>   Arr;
+	typedef Jacobi_<Vt>       Solver_Jacobi;
+
 
 	typedef typename Domain::Laplacian                Laplacian;
+	typedef typename Domain::BuildMatrix              BuildMatrix;
 protected:
-	typedef void (Self::*FunOneStep)(St);
-	FunOneStep     _fun_one_step;
 public:
 	Laplace_(spGrid spg, spGhost spgh, spOrder spo):
 		Equation(spg, spgh, spo){
 		// new scalars
 		this->new_scalar("phi");
 		// default one step function
-		_fun_one_step = &Self::_one_step_fou_explicit;
 	}
 
 	int initialize() {
@@ -79,6 +81,7 @@ public:
 	}
 
 	int solve() {
+		_solve();
 		std::cout << "  Equation: solve \n";
 		return -1;
 	}
@@ -92,9 +95,20 @@ public:
 	}
 
 protected:
-
 	int _solve(){
-
+		Laplacian lap(this->_bis["phi"]);
+		Field&    phi  = *(this->_scalars["phi"]);
+		auto expf = lap.expression_field(phi);
+		Mat a;
+		Arr b;
+		BuildMatrix::Get(expf, a, b);
+		// prepare x
+		Arr x(phi.order().size());
+		BuildMatrix::CopyToArray(phi, x);
+		Solver_Jacobi solver(1000, 1e-4);
+		solver.solve(a, x, b);
+		BuildMatrix::CopyToField(x, phi);
+//		x.show();
 	}
 
 };

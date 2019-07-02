@@ -283,16 +283,6 @@ inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
 }
 
 
-
-template<typename VALUE, St DIM>
-void BuildMatrix(const SExpField_<DIM>& expf,
-		               MatrixSCR_<VALUE>& mat,
-					   ArrayListV_<VALUE>& b){
-
-}
-
-
-
 }
 
 #endif

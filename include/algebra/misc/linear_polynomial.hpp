@@ -26,11 +26,11 @@ public:
 
 	typedef typename Base::iterator iterator;
 
-	typedef COE Coe;
-	typedef TERM Term;
+	typedef COE     Coe;
+	typedef TERM    Term;
 	typedef IS_ZERO IsZero;
 protected:
-	COE _num;
+	COE    _num;
 	IsZero _is_zero;
 public:
 	LinearPolynomial_() : Base(), _num(0) {

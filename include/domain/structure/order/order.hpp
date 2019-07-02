@@ -23,7 +23,7 @@ public:
 
 	virtual ~SOrder_(){}
 
-	virtual St size() const{}
+	virtual St size() const{SHOULD_NOT_REACH;}
 
 	virtual iterator begin(){}
 
