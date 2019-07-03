@@ -14,8 +14,8 @@ TEST(equation, initial){
 	typename Domain::spGrid spgrid(
 			new SGridUniform_<DIM>(
 					{ 0.0, 0.0 }, // min point
-			        { 20,  20 },  // num on each direction
-			          0.05,       // cell size
+			        { 200,  200 },  // num on each direction
+			          0.005,       // cell size
 			          2));        // ghost layer
 	typename Domain::spGhost spghost(new SGhostRegular_<DIM>(spgrid));
 	typename Domain::spOrder sporder(new SOrderXYZ_<DIM>(spgrid, spghost));
@@ -29,12 +29,15 @@ TEST(equation, initial){
 	typedef std::shared_ptr<BoundaryCondition> spBC;
 	spBI spbi(new BoundaryIndex());
 	spBC spbcxm(new BoundaryConditionValue(BC::_BC1_, 1.0));
-	spbi->insert(0, spbcxm);
 	spBC spbcym(new BoundaryConditionValue(BC::_BC1_, 0.0));
+	spbi->insert(0, spbcym);
 	spbi->insert(1, spbcym);
 	spbi->insert(2, spbcym);
-	spbi->insert(3, spbcym);
+	spbi->insert(3, spbcxm);
 	equ.set_boundary_index_phi(spbi);
+
+	// Set solver
+	equ.set_solver("Jacobi", 10000, 1e-4);
 
 	// Add events
 	typedef Event_<DIM, Domain> Event;

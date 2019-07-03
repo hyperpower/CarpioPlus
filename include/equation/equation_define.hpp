@@ -11,7 +11,6 @@ namespace carpio {
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class D> class Event_;
-template<St DIM, class D> class EventManager_;
 template<St DIM, class D> class EventStop_;
 
 template<St DIM, class D>
@@ -31,7 +30,7 @@ public:
 	typedef typename Domain::VectorFace   VectorFace;
 
 	typedef std::shared_ptr<Event>  spEvent;
-	typedef std::shared_ptr<Field> spField;
+	typedef std::shared_ptr<Field>  spField;
 	typedef std::shared_ptr<Grid>   spGrid;
 	typedef std::shared_ptr<Ghost>  spGhost;
 	typedef std::shared_ptr<Order>  spOrder;
@@ -49,8 +48,6 @@ public:
 	typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
 	typedef std::unordered_map<std::string, Vt>       Values;
 
-	typedef EventManager_<DIM, D>                     EventManager;
-
 
 protected:
 	spGrid  _grid;
@@ -65,8 +62,8 @@ protected:
 	Values       _values;        // values for equation
 	AFlags       _aflags;        // other types of data put in this map
 
-	Fields    _scalars;        //!< variables on the center of node
-	BIs        _bis;           //!< each variable has a Boundary Index
+	Fields     _scalars;        //!< variables on the center of node
+	BIs        _bis;            //!< each variable has a Boundary Index
 
 	spBoundaryIndex _default_spbi;
 public:

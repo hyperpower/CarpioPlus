@@ -15,11 +15,9 @@ template<class VALUE>
 class SOR_: public Solver_<VALUE> {
 public:
 	typedef VALUE Vt;
-	typedef typename ArrayListV<Vt>::size_type St;
-	typedef MatrixSCR_<VALUE> MatSCR;
-	typedef ArrayListV<VALUE> Arr;
+	typedef MatrixSCR_<Vt> Mat;
+	typedef ArrayListV_<Vt> Arr;
 	typedef std::list<double> Listr;
-
 protected:
 	Vt _omega;
 public:
@@ -28,45 +26,44 @@ public:
 		_omega = omega;
 	}
 
-	int solve(const MatSCR &A, // A  The matrix
+	int solve(const Mat &A, // A  The matrix
 			Arr &x,          // x
 			const Arr& b    // b
 			) {
 		this->_init();
-
 		return this->_solve(A, x, b);
 	}
 
 	int _solve( //
-			const MatSCR &A, // A  The matrix
-			Arr &x,          // x
+			const Mat &A, // A  The matrix
+			      Arr &x,          // x
 			const Arr& b    // b
 			) {
 		Vt resid;
 
 		St n = b.size();
-		MatSCR T(A);
+		Mat T(A);
 		Arr C(n, 1.0 / SMALL);
 		//Arr newx(n);
 
-		Vt normb = nrm2(b);
+		Vt normb = Nrm2(b);
 		Arr r = b - A * x;
 		//
 		if (normb == 0.0)
 			normb = 1;
 
-		if ((resid = nrm2(r) / normb) <= this->_tol) {
-			this->_resid = resid;
+		if ((resid = Nrm2(r) / normb) <= this->_tol) {
+			this->_residual = resid;
 			this->_num_iter = 0;
 			return 0;
 		}
 
 		// construct T
 		St M = T.size_i();
-		//st N = T.jLen();
 
 		for (int i = 1; i <= this->_max_iter; ++i) {
 			//----
+#pragma omp parallel for
 			for (St i = 0; i < M; ++i) {  //row
 				Vt sumkp = 0;
 				Vt sumk = 0;
@@ -76,7 +73,7 @@ public:
 					if (j < i) {
 						sumkp += T.val(idx) * x[j];
 					} else if (j > i) {
-						sumk += T.val(idx) * x[j];
+						sumk  += T.val(idx) * x[j];
 					} else {
 						aa = T.val(idx);
 					}
@@ -86,16 +83,16 @@ public:
 			}
 			r = b - A * x;
 			//----
-			resid = nrm2(r) / normb;
+			resid = Nrm2(r) / normb;
 			this->_lresid.push_back(resid);
 			if (resid <= this->_tol) {
-				this->_resid = resid;
+				this->_residual = resid;
 				this->_num_iter = i;
 				return 0;
 			}
 		}
 
-		this->_resid = resid;
+		this->_residual = resid;
 		this->_num_iter = this->_max_iter;
 		return 1;
 	}

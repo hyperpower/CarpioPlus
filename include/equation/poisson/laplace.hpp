@@ -50,8 +50,11 @@ public:
 
 	typedef MatrixSCR_<Vt>    Mat;
 	typedef ArrayListV_<Vt>   Arr;
+	typedef Solver_<Vt>       Solver;
+	typedef std::shared_ptr<Solver> spSolver;
 	typedef Jacobi_<Vt>       Solver_Jacobi;
-
+	typedef SOR_<Vt>          Solver_SOR;
+	typedef CG_<Vt>           Solver_CG;
 
 	typedef typename Domain::Laplacian                Laplacian;
 	typedef typename Domain::BuildMatrix              BuildMatrix;
@@ -66,6 +69,7 @@ public:
 
 	int initialize() {
 		this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
+		this->_aflags["solver"] = _init_solver();
 		std::cout << "  Convection: initialize \n";
 		return -1;
 	}
@@ -94,21 +98,63 @@ public:
 		this->set_function("initial_phi", fun);
 	}
 
+	void set_solver( //
+				const std::string&    name,                 //
+				const int& max_iter = 1000,      //
+				const Vt&  tol      = 1e-4,       //
+				const Any& any      = 1.0   //
+				) {
+		// name should be
+		ASSERT(name == "Jacobi" //
+		    || name == "CG" //
+		    || name == "SOR");
+		this->_aflags["set_solver"]           = name;
+		this->_aflags["set_solver_max_iter"]  = max_iter;
+		this->_aflags["set_solver_tolerence"] = tol;
+		if (name == "SOR") {
+			this->_aflags["SOR_omega"] = any;
+		}
+	}
+
 protected:
 	int _solve(){
 		Laplacian lap(this->_bis["phi"]);
 		Field&    phi  = *(this->_scalars["phi"]);
-		auto expf = lap.expression_field(phi);
+		auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+		auto   expf    = lap.expression_field(phi);
 		Mat a;
 		Arr b;
 		BuildMatrix::Get(expf, a, b);
 		// prepare x
 		Arr x(phi.order().size());
 		BuildMatrix::CopyToArray(phi, x);
-		Solver_Jacobi solver(1000, 1e-4);
-		solver.solve(a, x, b);
+		this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
 		BuildMatrix::CopyToField(x, phi);
 //		x.show();
+	}
+
+	spSolver _init_solver() {
+		// initial solver
+		spSolver spsolver;
+		if (this->has_flag("set_solver")) {
+			std::string sn = any_cast<std::string>(
+					this->_aflags["set_solver"]);
+			Vt  tol      = any_cast<Vt>(this->_aflags["set_solver_tolerence"]);
+			int max_iter = any_cast<int>(this->_aflags["set_solver_max_iter"]);
+			if (sn == "Jacobi") {
+				spsolver = spSolver(new Solver_Jacobi(max_iter, tol));
+			} else if (sn == "CG") {
+				spsolver = spSolver(new Solver_CG(max_iter, tol));
+			} else if (sn == "SOR") {
+				ASSERT(this->has_flag("SOR_omega"));
+				Vt omega = any_cast<Vt>(this->_aflags["SOR_omega"]);
+				spsolver = spSolver(new Solver_SOR(max_iter, tol, omega));
+			}
+		} else {
+			// default solver
+			spsolver = spSolver(new Solver_CG(5000, 1e-4));
+		}
+		return spsolver;
 	}
 
 };

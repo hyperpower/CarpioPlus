@@ -8,7 +8,6 @@
 #include "equation/poisson/laplace.hpp"
 
 #include "event/event.hpp"
-#include "event/event_manager.hpp"
 #include "event/output_time.hpp"
 #include "event/output_field.hpp"
 #include "event/gnuplot_field.hpp"

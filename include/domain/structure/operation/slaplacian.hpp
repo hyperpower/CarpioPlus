@@ -104,13 +104,13 @@ public:
 				Exp phi_m, phi_p;
 				Exp phi(idx);
 				if (phis.ghost().is_ghost(idxm)) {
-					phi_m += Value::Get(phis, *(this->_spbi), idx, idxm, d, _M_,t);
+					phi_m += Value::GetExp(phis, *(this->_spbi), idx, idxm, d, _M_,t);
 //					std::cout << "phim = " << phi_m <<std::endl;
 				} else {
 					phi_m += idxm;
 				}
 				if (phis.ghost().is_ghost(idxp)) {
-					phi_p += Value::Get(phis, *(this->_spbi), idx, idxp, d, _P_,t);
+					phi_p += Value::GetExp(phis, *(this->_spbi), idx, idxp, d, _P_,t);
 				} else {
 					phi_p += idxp;
 				}
@@ -129,6 +129,47 @@ public:
 //			std::cout << "Index = " << idx << std::endl;
 //			std::cout << "order = " << phis.order().get_order(idx) << std::endl;
 //			std::cout << "exp   = \n" << res(idx) << std::endl;
+		}
+		return res;
+	}
+
+	virtual ExpField expression_field(
+				                    const Field&    phis,
+									const Vt&       beta,
+				                    const Vt&       t = 0.0){
+		ExpField res(phis.spgrid(), phis.spghost(), phis.sporder());
+		const Grid& grid = phis.grid();
+		for (auto& idx : phis.order()) {
+			std::array<Exp, DIM> arr;
+			FOR_EACH_DIM
+			{
+				Index idxp = idx.p(d);
+				Index idxm = idx.m(d);
+				Exp phi_m, phi_p;
+				Exp phi(idx);
+				if (phis.ghost().is_ghost(idxm)) {
+					phi_m += Value::GetExp(phis, *(this->_spbi), idx, idxm, d, _M_, t);
+				} else {
+					phi_m += idxm;
+				}
+				if (phis.ghost().is_ghost(idxp)) {
+					phi_p += Value::GetExp(phis, *(this->_spbi), idx, idxp, d, _P_, t);
+				} else {
+					phi_p += idxp;
+				}
+				auto dfdx_m = (phi - phi_m) * beta
+						/ (grid.c_(d, idx) - grid.c_(d, idxm));
+				auto dfdx_p = (phi_p - phi) * beta
+						/ (grid.c_(d, idxp) - grid.c_(d, idx));
+
+				arr[d] = (dfdx_p * grid.fa(d, _P_, idx)
+						- dfdx_m * grid.fa(d, _M_, idx));
+
+			}
+			FOR_EACH_DIM
+			{
+				res(idx) += arr[d];
+			}
 		}
 		return res;
 	}
