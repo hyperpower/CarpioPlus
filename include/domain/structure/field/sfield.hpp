@@ -208,6 +208,15 @@ public:
     	Self res(this->_grid, this->_ghost, this->_order);
     	return res;
     }
+    // returen a new scalar with cell volume
+    Self volume_field() const{
+    	Self res(this->_grid, this->_ghost, this->_order);
+    	auto& grid = res.grid();
+    	for(auto& idx : (*_order)){
+    		res(idx) = grid.volume(idx);
+    	}
+    	return res;
+    }
 
 };
 template<St DIM>

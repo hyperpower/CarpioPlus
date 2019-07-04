@@ -232,6 +232,17 @@ inline SExpField_<DIM> operator+(const Vt& lhs, SExpField_<DIM> rhs){
 	return rhs;
 }
 template<St DIM>
+inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+	lhs += rhs;
+	return lhs;
+}
+
+template<St DIM>
+inline SExpField_<DIM> operator+(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
+	rhs += lhs;
+	return rhs;
+}
+template<St DIM>
 inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const SExpField_<DIM>& rhs){
 	lhs -= rhs;
 	return lhs;
@@ -281,7 +292,14 @@ inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
 	lhs /= rhs;
 	return lhs;
 }
-
+template<St DIM>
+SExpField_<DIM> ExpressionField(const SField_<DIM>& lhs) {
+	SExpField_<DIM> res(lhs.spgrid(), lhs.spghost(), lhs.sporder());
+	for (auto& idx : res.order()) {
+		res(idx) = idx;
+	}
+	return res;
+}
 
 }
 

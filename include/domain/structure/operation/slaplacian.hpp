@@ -78,7 +78,9 @@ public:
 				dfdx_p = (phi_p - phi(idx))
 						/ (grid.c_(d, idxp) - grid.c_(d, idx));
 				arr[d] = (dfdx_p * grid.fa(d,_P_,idx) - dfdx_m * grid.fa(d, _M_, idx));
+//				std::cout << "arr [d] " << d <<"  = " << << std::endl;
 			}
+
 
 			Vt sum = 0;
 			FOR_EACH_DIM

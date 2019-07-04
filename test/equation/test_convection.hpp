@@ -26,7 +26,7 @@ TEST(convection, DISABLED_initial){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(10, 0.01);
+	equ.set_time_term(10, 0.001);
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;

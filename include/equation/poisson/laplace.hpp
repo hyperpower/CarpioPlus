@@ -75,18 +75,19 @@ public:
 	}
 
 	int finalize() {
-		std::cout << "  Convection: finalize \n";
+		std::cout << "  Laplace: finalize \n";
 		return -1;
 	}
 
 	int run_one_step(St step) {
-		std::cout << "    Convection: One Step "<< step <<" \n";
+		_one_step_cn(step);
+		std::cout << "    Laplace: One Step "<< step <<" \n";
 		return -1;
 	}
 
 	int solve() {
 		_solve();
-		std::cout << "  Equation: solve \n";
+		std::cout << "  Laplace: solve \n";
 		return -1;
 	}
 
@@ -117,6 +118,67 @@ public:
 	}
 
 protected:
+	int _one_step_explicit(St step){
+		Laplacian Lap(this->_bis["phi"]);
+		Field&    phi  = *(this->_scalars["phi"]);
+		Field     v    = phi.volume_field();
+		Vt        dt   = this->_time->dt();
+
+		phi = (Lap(phi) * dt) / v + phi;
+
+		return 1;
+	}
+
+	// Implicit
+	int _one_step_implicit(St step){
+		Laplacian Lap(this->_bis["phi"]);
+		Field& phi     = *(this->_scalars["phi"]);
+		auto  phif     = ExpressionField(phi);
+		auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+		auto  Lapexp   = Lap.expression_field(phi);
+		Field v        = phi.volume_field();
+		Vt dt          = this->_time->dt();
+
+		auto expf = (Lapexp * dt) / v - phif + phi;
+
+		Mat a;
+		Arr b;
+		BuildMatrix::Get(expf, a, b);
+		// prepare x
+		Arr x(phi.order().size());
+		BuildMatrix::CopyToArray(phi, x);
+		this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
+		BuildMatrix::CopyToField(x, phi);
+
+		return 1;
+	}
+
+	// Crank–Nicolson method
+	int _one_step_cn(St step){
+		Laplacian Lap(this->_bis["phi"]);
+		Field& phi    = *(this->_scalars["phi"]);
+		auto phif     = ExpressionField(phi);
+		auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+		auto Lapexp   = Lap.expression_field(phi);
+		auto Lapv     = Lap(phi);
+		Field v       = phi.volume_field();
+		Vt dt         = this->_time->dt();
+
+		auto expf = (Lapexp + Lapv) * (dt * 0.5) / v - phif + phi;
+
+		Mat a;
+		Arr b;
+		BuildMatrix::Get(expf, a, b);
+		// prepare x
+		Arr x(phi.order().size());
+		BuildMatrix::CopyToArray(phi, x);
+		this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
+		BuildMatrix::CopyToField(x, phi);
+
+		return 1;
+	}
+
+
 	int _solve(){
 		Laplacian lap(this->_bis["phi"]);
 		Field&    phi  = *(this->_scalars["phi"]);
