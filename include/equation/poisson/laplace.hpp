@@ -133,11 +133,12 @@ protected:
 	int _one_step_implicit(St step){
 		Laplacian Lap(this->_bis["phi"]);
 		Field& phi     = *(this->_scalars["phi"]);
-		auto  phif     = ExpressionField(phi);
 		auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+
+		auto  phif     = ExpressionField(phi);
 		auto  Lapexp   = Lap.expression_field(phi);
 		Field v        = phi.volume_field();
-		Vt dt          = this->_time->dt();
+		Vt    dt       = this->_time->dt();
 
 		auto expf = (Lapexp * dt) / v - phif + phi;
 

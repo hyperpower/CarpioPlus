@@ -11,6 +11,7 @@ namespace carpio {
 TEST(equation, DISABLED_initial){
 	const St DIM = 2;
 	typedef StructureDomain_<DIM> Domain;
+	typedef typename Domain::GnuplotActor GA;
 	typename Domain::spGrid spgrid(
 			new SGridUniform_<DIM>(
 					{ 0.0, 0.0 }, // min point
@@ -87,7 +88,7 @@ TEST(equation, explicit_run){
 	equ.set_boundary_index_phi(spbi);
 
 	// Set time term
-	equ.set_time_term(100, 1e-3);
+	equ.set_time_term(10, 1e-3);
 
 	// Set solver
 	equ.set_solver("CG", 200, 1e-4);
@@ -100,7 +101,18 @@ TEST(equation, explicit_run){
 	equ.add_event("OutputTime", spetime);
 
 	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
-	EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
+	EventGnuplotField::FunPlot fun = [](
+			               Gnuplot& gnu,
+			         const EventGnuplotField::Field& f,
+					 St step, Vt t, int fob,
+					 EventGnuplotField::pEqu pd){
+		typedef typename Domain::GnuplotActor GA;
+		gnu.add(GA::Contour(f));
+		gnu.plot();
+		gnu.clear();
+		return 1;
+	};
+	EventGnuplotField egs("phi", fun, -1, -1, 1, Event::AFTER);
 	egs.gnuplot().set_xrange(-0.1, 1.1);
 	egs.gnuplot().set_yrange(-0.1, 1.1);
 	egs.gnuplot().set_equal_aspect_ratio();

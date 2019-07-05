@@ -24,6 +24,7 @@ public:
 	typedef typename D::GnuplotActor GnuplotActor;
 	typedef typename D::Field        Field;
 
+	typedef std::function<int(Gnuplot&, const Field&, St, Vt, int, pEqu)> FunPlot;
 protected:
 	std::string _sn;     // scalar name
 	std::string _format; // format string
@@ -35,6 +36,9 @@ protected:
 	Vt          _size_y;
 	std::string _font;
 	St          _size_font;
+
+
+	FunPlot _fun;
 
 public:
 	EventGnuplotField_(const std::string& sname,
@@ -51,13 +55,34 @@ public:
 		_size_y        = 600;
 		_font          = "Helvetica";
 		_size_font     = 12;
+
+		_init_fun_plot();
+	}
+
+	EventGnuplotField_(const std::string& sname, FunPlot fun,
+				int is    = -1, int ie   = -1,
+		        int istep = -1, int flag = 0) :
+			 _sn(sname),
+			 Event(is, ie, istep, flag) {
+			_format = "%s_%d_%8.4e.png";
+			_path   = "./";
+
+			_spgnu         = std::shared_ptr<Gnuplot>(new Gnuplot());
+			_terminal_name = "png";
+			_size_x        = 800;
+			_size_y        = 600;
+			_font          = "Helvetica";
+			_size_font     = 12;
+
+			_fun = fun;
 	}
 
 	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
 		auto fn = _file_name(step, t, fob);
 		if(pd->has_field(_sn)){
 			_set_terminal(_terminal_name, fn);
-			_plot((*pd)[_sn]);
+//			_plot((*pd)[_sn]);
+			_fun(*(this->_spgnu), (*pd)[_sn], step, t, fob, pd);
 		}else{
 			std::cerr<< "EventGnuplotField : " << _sn << " not found!" << std::endl;
 		}
@@ -96,6 +121,19 @@ protected:
 		}
 		_spgnu->plot();
 		_spgnu->clear();
+	}
+
+	void _init_fun_plot(){
+		this->_fun = [](Gnuplot& gnu, const Field& f, St step , Vt t, int fob, pEqu pd){
+			if(DIM == 1){
+				gnu.add(GnuplotActor::Lines(f));
+			}else if(DIM == 2){
+				gnu.add(GnuplotActor::Contour(f));
+			}
+			gnu.plot();
+			gnu.clear();
+			return 1;
+		};
 	}
 
 	std::string _file_name(St step, Vt t, int fob) const{

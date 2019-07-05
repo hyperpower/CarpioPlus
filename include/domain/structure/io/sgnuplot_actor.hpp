@@ -105,7 +105,7 @@ public:
 	}
 
 	static spActor CenterPoints(const Grid2& grid, int color_idx = -1){
-spActor actor = spActor(new Gnuplot_actor());
+		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with points lc variable";
 		int c = (color_idx == -1) ? 0 : color_idx;

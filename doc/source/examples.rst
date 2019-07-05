@@ -7,4 +7,4 @@ Examples and Tests
    geometry
    algebra
    structure
-   convection
+   equation
