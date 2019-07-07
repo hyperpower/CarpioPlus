@@ -91,6 +91,7 @@ TEST(equation, explicit_run){
 	equ.set_time_term(10, 1e-3);
 
 	// Set solver
+	equ.set_time_scheme("CNgeneral", 0.9);
 	equ.set_solver("CG", 200, 1e-4);
 
 	// Add events

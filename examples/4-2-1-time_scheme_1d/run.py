@@ -5,7 +5,7 @@ import time
 FILE_ORIGINAL = [
     "main.cpp",
     "CMakeLists.txt",
-    # "plot.py",
+    "plot.py",
     "run.py",
     "report.rst"
 ]
@@ -26,9 +26,9 @@ def build(path):
     tprev = time.clock()
     print("cmake --------------------------------- ")
     # cmake ====
-    # os.system("mkdir data")
-    # os.system("mkdir fig")
-    # os.system("cmake .")
+    os.system("mkdir data")
+    os.system("mkdir fig")
+    os.system("cmake .")
     runtime.append(("dt_cmake",time.clock() - tprev))
     tprev = time.clock()
     print("make  --------------------------------- ")
@@ -40,6 +40,7 @@ def build(path):
     runtime.append(("dt_run",  time.clock() - tprev))
     tprev = time.clock()
     print("plot   -------------------------------- ")
+    os.system("python3 plot.py")
     runtime.append(("dt_plot", time.clock() - tprev))
     tprev = time.clock()
     print("report   ------------------------------ ")
@@ -50,7 +51,7 @@ def build(path):
 
 def main():
     path = RT.Path(__file__)
-    # RT.clean(path.this, FILE_ORIGINAL)
+    RT.clean(path.this, FILE_ORIGINAL)
     rt = build(path)
     # print(rt)
 

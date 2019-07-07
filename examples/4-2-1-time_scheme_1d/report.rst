@@ -76,15 +76,28 @@ We set a 1D domain, :math:`x \in [0,1]`, discrete by n = 20.
    plt.grid()
    plt.show()
 
-As shown in above figure, the explicit form should choose tiny time step to ensure obtaining the stable result.
+As shown in above figure, the explicit scheme should choose tiny time step to ensure obtaining the stable result.
 
+Here, we choose :math:`F_o = 0.6`. Explicit scheme will have ossilate results.
 
-We have One-dimension field from x = 0 to x = 2.5. There are 5 control volumes.
-
-.. figure:: _static/{{folder_name}}/1d.png
-   :alt: One dimension field
+.. figure:: _static/{{folder_name}}/explicit.gif
+   :alt: explicit result
    :align: center 
 
-   One dimension field.
+   One dimension result of explicit solver.
+
+Same configuration was set for implicit solver and CN solver. The results are better.
+
+.. figure:: _static/{{folder_name}}/implicit.gif
+   :alt: implicit result
+   :align: center 
+
+   One dimension result of implicit solver.
+
+.. figure:: _static/{{folder_name}}/CN.gif
+   :alt: CN result
+   :align: center 
+
+   One dimension result of CN solver.
 
 

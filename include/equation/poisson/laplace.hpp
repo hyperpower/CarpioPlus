@@ -23,17 +23,19 @@ public:
 	typedef typename Domain::Ghost     Ghost;
 	typedef typename Domain::Order     Order;
 	typedef typename Domain::Field     Field;
+	typedef typename Domain::ExpField  ExpField;
 	typedef Event_<DIM,Domain>         Event;
 	typedef TimeTerm_<DIM>             TimeTerm;
 
 	typedef typename Domain::VectorCenter VectorCenter;
 	typedef typename Domain::VectorFace   VectorFace;
 
-	typedef std::shared_ptr<Event>  spEvent;
-	typedef std::shared_ptr<Field>  spField;
-	typedef std::shared_ptr<Grid>   spGrid;
-	typedef std::shared_ptr<Ghost>  spGhost;
-	typedef std::shared_ptr<Order>  spOrder;
+	typedef std::shared_ptr<Event>    spEvent;
+	typedef std::shared_ptr<Field>    spField;
+	typedef std::shared_ptr<ExpField> spExpField;
+	typedef std::shared_ptr<Grid>     spGrid;
+	typedef std::shared_ptr<Ghost>    spGhost;
+	typedef std::shared_ptr<Order>    spOrder;
 	typedef std::shared_ptr<VectorCenter>  spVectorCenter;
 	typedef std::shared_ptr<VectorFace>    spVectorFace;
 	typedef std::shared_ptr<TimeTerm>      spTimeTerm;
@@ -65,6 +67,8 @@ public:
 		// new scalars
 		this->new_scalar("phi");
 		// default one step function
+		std::string name_time_scheme = "explicit";
+		this->_aflags["set_time_scheme"] = name_time_scheme;
 	}
 
 	int initialize() {
@@ -80,8 +84,20 @@ public:
 	}
 
 	int run_one_step(St step) {
-		_one_step_cn(step);
-		std::cout << "    Laplace: One Step "<< step <<" \n";
+		auto name = any_cast<std::string>(this->_aflags["set_time_scheme"]);
+		if(name == "explicit"){
+			_one_step_explicit(step);
+		}else if(name == "implicit"){
+			_one_step_implicit(step);
+		}else if(name == "CN"){
+			_one_step_cn(step);
+		}else if(name == "CNgeneral"){
+			_one_step_cng(step);
+		}else{
+			std::cout <<" >! Unknown time scheme " << name << std::endl;
+			SHOULD_NOT_REACH;
+		}
+		std::cout << "     Laplace: One Step "<< step <<" \n";
 		return -1;
 	}
 
@@ -117,6 +133,24 @@ public:
 		}
 	}
 
+	void set_time_scheme(
+			const std::string& name,
+			const Vt&          v = 0.5){
+		ASSERT(name == "explicit"
+		    || name == "implicit"
+			|| name == "CN"
+		    || name == "CNgeneral");
+		this->_aflags["set_time_scheme"] = name;
+		if(name != "explicit"){
+			Field& phi = *(this->_scalars["phi"]);
+			this->_aflags["field_volume"] = std::make_shared<Field>(phi.volume_field());
+			this->_aflags["field_exp"]    = std::make_shared<ExpField>(ExpressionField(phi));
+		}
+		if(name == "CNgeneral"){
+			this->_aflags["cn_omega"] = v;
+		}
+	}
+
 protected:
 	int _one_step_explicit(St step){
 		Laplacian Lap(this->_bis["phi"]);
@@ -135,12 +169,12 @@ protected:
 		Field& phi     = *(this->_scalars["phi"]);
 		auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
 
-		auto  phif     = ExpressionField(phi);
+		auto spphif    = any_cast<spExpField>(this->_aflags["field_exp"]);
+		auto v         = any_cast<spField>(this->_aflags["field_volume"]);
 		auto  Lapexp   = Lap.expression_field(phi);
-		Field v        = phi.volume_field();
 		Vt    dt       = this->_time->dt();
 
-		auto expf = (Lapexp * dt) / v - phif + phi;
+		auto expf = (Lapexp * dt) / (*v) - (*spphif) + phi;
 
 		Mat a;
 		Arr b;
@@ -158,14 +192,39 @@ protected:
 	int _one_step_cn(St step){
 		Laplacian Lap(this->_bis["phi"]);
 		Field& phi    = *(this->_scalars["phi"]);
-		auto phif     = ExpressionField(phi);
 		auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-		auto Lapexp   = Lap.expression_field(phi);
 		auto Lapv     = Lap(phi);
-		Field v       = phi.volume_field();
+		auto Lapexp   = Lap.expression_field(phi);
+		auto spphif    = any_cast<spExpField>(this->_aflags["field_exp"]);
+		auto v         = any_cast<spField>(this->_aflags["field_volume"]);
 		Vt dt         = this->_time->dt();
 
-		auto expf = (Lapexp + Lapv) * (dt * 0.5) / v - phif + phi;
+		auto expf = (Lapexp + Lapv) * (dt * 0.5) / (*v) - (*spphif) + phi;
+
+		Mat a;
+		Arr b;
+		BuildMatrix::Get(expf, a, b);
+		// prepare x
+		Arr x(phi.order().size());
+		BuildMatrix::CopyToArray(phi, x);
+		this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
+		BuildMatrix::CopyToField(x, phi);
+
+		return 1;
+	}
+
+	int _one_step_cng(St step){
+		Laplacian Lap(this->_bis["phi"]);
+		Field& phi    = *(this->_scalars["phi"]);
+		auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+		auto Lapv     = Lap(phi);
+		auto Lapexp   = Lap.expression_field(phi);
+		auto spphif   = any_cast<spExpField>(this->_aflags["field_exp"]);
+		auto v        = any_cast<spField>(this->_aflags["field_volume"]);
+		auto omega    = any_cast<Vt>(this->_aflags["cn_omega"]);
+		Vt dt = this->_time->dt();
+
+		auto expf = (Lapexp*(omega) + Lapv * (1.0 - omega)) * (dt) / (*v) - (*spphif) + phi;
 
 		Mat a;
 		Arr b;

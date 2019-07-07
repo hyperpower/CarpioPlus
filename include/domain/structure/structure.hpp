@@ -68,6 +68,8 @@ public:
 	typedef std::shared_ptr<Field>       spField;
 	typedef std::shared_ptr<const Field> spcField;
 
+	typedef SExpField_<DIM>              ExpField;
+
 	typedef SVectorCenter_<DIM> VectorCenter;
 	typedef SVectorFace_<DIM>   VectorFace;
 
