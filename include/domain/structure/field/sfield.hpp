@@ -218,6 +218,17 @@ public:
     	return res;
     }
 
+    // returen a new scalar with cell inverse volume
+    Self inverse_volume_field() const {
+		Self res(this->_grid, this->_ghost, this->_order);
+		auto& grid = res.grid();
+		for (auto& idx : (*_order)) {
+			res(idx) = 1.0 / grid.volume(idx);
+		}
+		return res;
+	}
+
+
 };
 template<St DIM>
 bool IsCompatible(const SField_<DIM>& lhs, const SField_<DIM>& rhs){

@@ -23,23 +23,38 @@ inline void two_pointchains(
 	auto sub   = pb.output(PB::_SUBSTRACT_);
 	pb.show_table();
 	Gnuplot gnu;
-	gnu.set_terminal_png(aname + ".png");
-	gnu.set_title(aname);
+	gnu.set_terminal_png(aname + ".png", 1200, 1200);
+	gnu.set("multiplot layout 2, 2 title \"\" font \",11\"");
 	gnu.set_xrange(-2, 4);
 	gnu.set_yrange(-2, 4);
+	gnu.set_title(aname + "Oringal");
 	gnu.add(pb.actor_clip(gnu));
 	gnu.add(pb.actor_object(gnu));
+	gnu.plot();
+
+	gnu.set_title(aname + "Intersection");
+//	gnu.add(pb.actor_clip(gnu));
+//	gnu.add(pb.actor_object(gnu));
 	for (auto& pc : inter) {
-		gnu.add(GA::LinesPoints(pc, 4));
+		gnu.add(GA::LinesPoints(pc, 7));
 	}
+	gnu.add(pb.actor_label(gnu));
+	gnu.plot();
+	//
+	gnu.set_title(aname + "Union");
+//	gnu.add(pb.actor_clip(gnu));
+//	gnu.add(pb.actor_object(gnu));
 	for (auto& pc : uni) {
-		gnu.add(GA::LinesPoints(pc, 6));
+		gnu.add(GA::LinesPoints(pc, 7));
 	}
+	gnu.plot();
+	//
+//	gnu.add(pb.actor_clip(gnu));
+//	gnu.add(pb.actor_object(gnu));
+	gnu.set_title(aname + "subtract");
 	for (auto& pc : sub) {
 		gnu.add(GA::LinesPoints(pc, 7));
 	}
-
-	gnu.add(pb.actor_label(gnu));
 	gnu.plot();
 }
 
@@ -60,7 +75,7 @@ TEST(polygon_boolean, test1) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-	two_pointchains("test1", pclip, pobject);
+//	two_pointchains("test1", pclip, pobject);
 }
 
 TEST(polygon_boolean, test2) {
@@ -80,7 +95,7 @@ TEST(polygon_boolean, test2) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-	two_pointchains("test2", pclip, pobject);
+//	two_pointchains("test2", pclip, pobject);
 }
 
 TEST(polygon_boolean, test3) {
@@ -100,7 +115,7 @@ TEST(polygon_boolean, test3) {
 	lo.push_back(Point(0.8, 2.5));
 	PC pobject(lo);
 
-	two_pointchains("test3", pclip, pobject);
+//	two_pointchains("test3", pclip, pobject);
 }
 
 TEST(polygon_boolean, test4) {
@@ -121,7 +136,7 @@ TEST(polygon_boolean, test4) {
 
 	PC pobject(lo);
 
-	two_pointchains("test4", pclip, pobject);
+//	two_pointchains("test4", pclip, pobject);
 }
 
 TEST(polygon_boolean, test5) {
@@ -188,7 +203,7 @@ TEST(polygon_boolean, test7) {
 
 	PC pobject(lo);
 
-//	two_pointchains("test7", pclip, pobject);
+	two_pointchains("test7", pclip, pobject);
 }
 TEST(polygon_boolean, test8) {
 	typedef Point_<double, 2> Point;
@@ -372,7 +387,7 @@ TEST(polygon_boolean, test14) {
 	lo.push_back(Point(-0.8, 1.8));
 	PC pobject(lo);
 
-	GF::WritePointChain("test13_clip", pclip);
+	GF::WritePointChain("test14_clip", pclip);
 
 //	two_pointchains("test14", pclip, pobject);
 }
@@ -396,7 +411,7 @@ TEST(polygon_boolean, test15) {
 	lo.push_back(Point(2.1,   3.5));
 	PC pobject(lo);
 
-	GF::WritePointChain("test13_clip", pclip);
+	GF::WritePointChain("test15_clip", pclip);
 
 //	two_pointchains("test15", pclip, pobject);
 }

@@ -58,7 +58,9 @@ public:
 		return _SUCCESS;
 	}
 
-	static int ForEachIndexParallel(const OrderParallel& order, FunIndexThreadNum fun){
+	static int ForEachIndexParallel(
+			const OrderParallel& order,
+			      FunIndexThreadNum fun){
 		#pragma omp parallel for
 		for (St thread = 0; thread < order.num_threads(); thread++){
 			for (auto iter = order.begin(thread); iter != order.end(thread); iter++) {

@@ -19,8 +19,8 @@ This folder include all the test cases for Carpio project.
       2. Delauney Triangulation
 2. Algebra
    1. Array
-      1. Array add equal
-      2. Array OpenMP
+      1. Array operations
+      2. :ballot_box_with_check: Array OpenMP
    2. Matrix
       1. Matrix operations
 3. Domain
@@ -44,7 +44,7 @@ This folder include all the test cases for Carpio project.
       8. Rotational Two Step
       9. Rotational Smooth
    2. Poisson
-      1. Time Scheme 1D
+      1. :ballot_box_with_check: Time Scheme 1D
       2. Source Term 2D
    3. Navier-Stokes
       1. Lid Driven Cavity

@@ -95,10 +95,11 @@ TEST(equation, explicit_run){
 	equ.set_solver("CG", 200, 1e-4);
 
 	// Add events
-	typedef Event_<DIM, Domain> Event;
-	typedef std::shared_ptr<Event_<DIM, Domain> >  spEvent;
-	spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
-		                                          -1, -1, 1, Event::AFTER | Event::END));
+	typedef Event_<DIM, Domain>                     Event;
+	typedef std::shared_ptr<Event_<DIM, Domain> > spEvent;
+	spEvent spetime(
+			new EventOutputTime_<DIM, Domain>(
+					std::cout, -1, -1, 1, Event::AFTER | Event::END));
 	equ.add_event("OutputTime", spetime);
 
 	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;

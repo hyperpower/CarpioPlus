@@ -11,7 +11,7 @@
 
 //#include "geometry/test_point.hpp"
 //#include "geometry/test_segment.hpp"
-//#include "geometry/test_polygon_boolean.hpp"
+#include "geometry/test_polygon_boolean.hpp"
 //#include "geometry/test_point_chain.hpp"
 //#include "geometry/test_bezier.hpp"
 //#include "geometry/test_ts.hpp"
@@ -34,7 +34,7 @@
 //#include "structure/test_operation.hpp"
 //#include "equation/test_convection.hpp"
 //#include "equation/test_equation.hpp"
-#include "equation/test_poisson.hpp"
+//#include "equation/test_poisson.hpp"
 
 //#include "octree/test_node.hpp"
 

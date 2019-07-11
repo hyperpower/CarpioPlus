@@ -64,10 +64,10 @@ public:
 		St nz = 0;
 		for(auto& index : order){
 			auto& exp = expf(index);
-			St   nr  = exp.size();
-			nz      += nr;
-			St   row = order.get_order(index);
-			b[row]   = -(exp.value());  // negative is here !!!
+			St   nr   = exp.size();
+			nz       += nr;
+			St   row  = order.get_order(index);
+			b[row]    = -(exp.value());  // negative is here !!!
 		}
 		// Loop 2 ================
 		//   1 build matrix
