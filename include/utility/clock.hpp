@@ -18,15 +18,6 @@
  *  @brief The Clock class. Supplies timing facilities.
  **/
 
-#ifdef __EMSCRIPTEN__
-// The native type for high-resolution timing is double, use
-// that instead of uint64, which is not natively supported but
-// must be emulated, which is slow.
-#define _TICK_IS_FLOAT
-#include <limits>
-#endif
-
-
 #include "tinyformat.hpp"
 #include <iostream>
 #include <iterator>
@@ -42,11 +33,7 @@
 #endif
 
 #ifdef WIN32
-#include "../Math/InclWindows.h"
-#endif
-
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
+#include <Windows.h>
 #endif
 
 #ifdef __APPLE__
