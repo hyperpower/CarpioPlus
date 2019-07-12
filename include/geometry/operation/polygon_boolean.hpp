@@ -63,8 +63,12 @@ public:
 
 	std::vector<PointChain> output(int op = _INTERSECTION_) {
 		if(!_isboxinon){
-			// clip and object are box seperate
-			return _output_box_seperate(op);
+			// clip and object are box separate
+			return _output_box_separate(op);
+		}else if(!_hasswitch){
+			// trivial case has no switch node
+			// object and clip are separate
+			return _output_separate(op);
 		}else{
 			std::vector<PointChain> vpc;
 			std::list<pNode> lin;
@@ -78,6 +82,10 @@ public:
 					oin = oin->nexto;
 				}
 			} while (oin != nullptr);
+
+			if(inf == false){
+				std::cout << "Not Found IN\n";
+			}
 
 			std::set<pNode> used;
 			for (auto& in : lin) {
@@ -105,7 +113,7 @@ public:
 
 protected:
 
-	std::vector<PointChain> _output_box_seperate(int op = _INTERSECTION_) {
+	std::vector<PointChain> _output_box_separate(int op = _INTERSECTION_) {
 		std::vector<PointChain> vpc;
 		// clip and object are box seperate
 		switch (op) {
@@ -136,9 +144,80 @@ protected:
 		return vpc;
 	}
 
-	std::vector<PointChain> _output_no_in(int op = _INTERSECTION_) {
-		std::vector<PointChain> vpc;
-
+	std::vector<PointChain> _output_separate(int op = _INTERSECTION_) {
+		std::vector<PointChain> res;
+		PointChain pc;
+		for_each_edge_clip([&pc](pNode ps, pNode pe) {
+			pc.push_back(ps->point);
+		});
+		PointChain po;
+		for_each_edge_object([&po](pNode ps, pNode pe) {
+			po.push_back(ps->point);
+		});
+		// object in clip
+		int num_case = 0;
+		for(auto& p : po){
+			if(IsInOn(p, pc)){
+				num_case = 1;
+				break;
+			}
+		}
+		// clip in object
+		for (auto& p : pc) {
+			if (IsInOn(p, po)) {
+				num_case = 2;
+				break;
+			}
+		}
+		// really separate
+		num_case = (num_case == 0 )? 3: num_case;
+		if (num_case == 1){
+			switch (op) {
+			case _INTERSECTION_:{
+				res.push_back(po);
+				return res;
+			};
+			case _UNION_: {
+				res.push_back(pc);
+				return res;
+			};
+			case _SUBSTRACT_: {
+				pc.reverse();
+				res.push_back(pc);
+				res.push_back(po);
+				return res;
+			};
+			}
+		}else if(num_case == 2){
+			switch (op) {
+			case _INTERSECTION_:{
+				res.push_back(pc);
+				return res;
+			};
+			case _UNION_: {
+				res.push_back(po);
+				return res;
+			};
+			case _SUBSTRACT_: {
+				return res;
+			};
+			}
+		}else{ // 3
+			switch (op) {
+			case _INTERSECTION_:{
+				return res;
+			};
+			case _UNION_: {
+				res.push_back(po);
+				res.push_back(pc);
+				return res;
+			};
+			case _SUBSTRACT_: {
+				return res;
+			};
+			}
+		}
+		return res;
 	}
 
 
@@ -207,32 +286,32 @@ protected:
 				}
 				if (op == _INTERSECTION_) {
 					if (cur->type == _IN_ || sflag == 2) {
-						ooc = 1;
-						dir = 1;
+						ooc   = 1;
+						dir   = 1;
 						sflag = 0;
 					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc = 0;
-						dir = 1;
+						ooc   = 0;
+						dir   = 1;
 						sflag = 0;
 					}
 				} else if (op == _UNION_) {
 					if (cur->type == _IN_ || sflag == 2) {
-						ooc = 0;
-						dir = 1;
+						ooc   = 0;
+						dir   = 1;
 						sflag = 0;
 					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc = 1;
-						dir = 1;
+						ooc   = 1;
+						dir   = 1;
 						sflag = 0;
 					}
 				} else if (op == _SUBSTRACT_) {
 					if (cur->type == _IN_ || sflag == 2) {
-						ooc = 0;
-						dir = 1;
+						ooc   = 0;
+						dir   = 1;
 						sflag = 0;
 					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc = 1;
-						dir = -1;
+						ooc   = 1;
+						dir   = -1;
 						sflag = 0;
 					}
 				}
@@ -287,6 +366,7 @@ protected:
 		IntersectionTable _table;
 
 		bool _isboxinon;
+		bool _hasswitch;
 
 		bool is_box_inon(const PointChain& clip,
 				const PointChain& object) {
@@ -373,8 +453,10 @@ protected:
 
 		void phase_4() {
 			// calculate the switch node
+			this->_hasswitch = false;
 			FunN fun = [this](pNode pn) {
 				if(this->_is_switch(pn)) {
+					this->_hasswitch = true;
 					pn->type = 100 + this->_cal_switch_type(pn);
 				}
 			};
@@ -386,13 +468,13 @@ protected:
 			if(cur == nullptr) {
 				return nullptr;
 			}
-			if(_ooc == 0) {
+			if(_ooc == 0) {  // walk on clip
 				if(cur->nextc == nullptr) {
 					return cli;
 				} else {
 					return cur->nextc;
 				}
-			} else {
+			} else {        // walk on object
 				if(cur->nexto == nullptr) {
 					return obj;
 				} else {
@@ -746,7 +828,11 @@ protected:
 			// OUT      -- -2
 			// HALF_IN  --  1
 			// HALF_OUT -- -1
-
+			// tri == POSVITIVE
+			//       ein  eon   eout
+			// sin   NOi  HOUTi OUT
+			// son   HINi NO    HOUTo
+			// sout  IN   HINo  NOo
 			// Step 1 clip is angle is acute or obtuse
 			int type = 0;
 			auto tri = OnWhichSide3(pc->point, p->point, nc->point);

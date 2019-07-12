@@ -156,6 +156,10 @@ public:
 		return _is_simple(this->begin(), this->end(), this->closed());
 	}
 
+	void reverse() {
+		this->_lpoints.reverse();
+	}
+
 	double perimeter() const {
 		if (empty()) {
 			return 0;

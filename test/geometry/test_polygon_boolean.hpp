@@ -313,28 +313,6 @@ TEST(polygon_boolean, test12) {
 //	two_pointchains("test12", pclip, pobject);
 }
 
-TEST(polygon_boolean, test121) {
-	typedef Point_<double, 2> Point;
-	typedef PointChain_<double, 2> PC;
-
-	std::list<Point> lc;
-	lc.push_back(Point(0, 0));
-	lc.push_back(Point(2, 0));
-	lc.push_back(Point(2, 2));
-	lc.push_back(Point(0, 2));
-	PC pclip(lc);
-
-	std::list<Point> lo;
-	lo.push_back(Point(0.5, -0.5));
-	lo.push_back(Point(2.5, -0.5));
-	lo.push_back(Point(2.5, 1.0));
-	lo.push_back(Point(2.0, 1.0));
-	lo.push_back(Point(2.0, 0.5));
-	lo.push_back(Point(1.0, 1.0));
-	PC pobject(lo);
-
-//	two_pointchains("test121", pclip, pobject);
-}
 
 TEST(polygon_boolean, test13) {
 	typedef Point_<double, 2> Point;
@@ -394,6 +372,7 @@ TEST(polygon_boolean, test14) {
 
 
 TEST(polygon_boolean, test15) {
+	// box seperate
 	typedef Point_<double, 2> Point;
 	typedef PointChain_<double, 2> PC;
 
@@ -415,6 +394,28 @@ TEST(polygon_boolean, test15) {
 
 //	two_pointchains("test15", pclip, pobject);
 }
+
+TEST(polygon_boolean, test16) {
+	typedef Point_<double, 2> Point;
+	typedef PointChain_<double, 2> PC;
+
+	std::list<Point> lc;
+	lc.push_back(Point(0, 0));
+	lc.push_back(Point(2, 0));
+	lc.push_back(Point(2, 2));
+	lc.push_back(Point(0, 2));
+	PC pclip(lc);
+
+	std::list<Point> lo;
+	lo.push_back(Point(1.5, 0.5));
+	lo.push_back(Point(1.5, 1.0));
+	lo.push_back(Point(1.0, 1.0));
+	lo.push_back(Point(0.3, 0.5));
+	PC pobject(lo);
+
+	two_pointchains("test16", pclip, pobject);
+}
+
 
 
 
