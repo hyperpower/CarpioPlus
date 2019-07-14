@@ -17,13 +17,13 @@ public:
 	typedef St size_type;
 	static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
-
+	typedef std::function<void(const Index&)> FunIndex;
 public:
 	SGrid_(){}
 
 	virtual ~SGrid_(){}
 
-virtual std::string type_name() const{
+	virtual std::string type_name() const{
 		return "SGrid";
 	};
 	// ghost layer ============================
@@ -63,7 +63,7 @@ virtual std::string type_name() const{
 	// face  ===================================
 	virtual Poi f(St dim,  int ori, const Index& index) const {}
 	virtual Poi f(St dim,  int fb, Idx i, Idx j = 0, Idx k = 0) const {}
-	virtual Vt  f_(St dim, int  ori, Idx idx) const {}
+	virtual Vt  f_(St dim, int ori, Idx idx) const {}
 	// face area
 	virtual Vt  fa(St dim,  int ori, const Index& index) const {}
 
@@ -113,10 +113,13 @@ virtual std::string type_name() const{
 	}
 
 	virtual inline St _IDX(const Idx& i) const {
-
 	}
 	virtual inline Idx _idx(const St& I) const {
 	}
+
+	virtual void for_each(FunIndex){
+	}
+
 
 
 };

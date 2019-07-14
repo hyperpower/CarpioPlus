@@ -90,6 +90,21 @@ enum Orientation {
 	_P_ = 1, //
 	_C_ = 2, //
 };
+inline Orientation ToOrientation(const St& i) {
+	ASSERT(i >= 0 && i < 3);
+	switch (i) {
+	case 0:
+		return _M_;
+	case 1:
+		return _P_;
+	case 2:
+		return _C_;
+	default:
+		ASSERT_MSG(false, "Error input Orientation");
+	}
+	SHOULD_NOT_REACH;
+	return _M_;
+}
 
 
 enum Plane {

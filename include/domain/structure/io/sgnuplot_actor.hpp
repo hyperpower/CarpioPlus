@@ -171,6 +171,79 @@ public:
 		SHOULD_NOT_REACH;
 	}
 
+
+	static spActor WireFrame(const Ghost2& g,  int color_idx = 1) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style()   = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		auto gl    = grid.ghost_layer();
+		for (int j = -gl; j < grid.n(_Y_) + gl; j++) {
+			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
+				typename Grid2::Index index(i, j);
+				if (g.is_ghost(index)) {
+					for (short o = 0; o < grid.num_vertex(); ++o) {
+						auto p = grid.v(order[o], index);
+						actor->data().push_back(
+								ToString(p.value(_X_), p.value(_Y_), c, " "));
+					}
+					auto p = grid.v(0, index);
+					actor->data().push_back(
+							ToString(p.value(_X_), p.value(_Y_), c, " "));
+					actor->data().push_back("");
+				}
+			}
+		}
+		return actor;
+	}
+
+	static spActor Boundary(const Ghost2& g) {
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with line lc variable";
+		int c = 0;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		auto gl = grid.ghost_layer();
+		for (int j = 0; j < grid.n(_Y_); j++) {
+			for (int i = 0; i < grid.n(_X_); i++) {
+				typename Grid2::Index index(i, j);
+				for (St d = 0; d < 2; d++) {
+					for (St o = 0; o < 2; o++) {
+						if (g.is_boundary(index, d, o)) {
+							auto idxg = index.shift(d, o);
+//							std::cout << "index = " << index << std::endl;
+//							std::cout << "in  g = " << idxg << std::endl;
+							auto bid  = g.boundary_id(index, idxg, d, o);
+
+							auto fc   = grid.f(d, o, index);
+							auto dalt = (d==_X_)? _Y_:_X_;
+							auto hs   = grid.hs_(dalt, index);
+							if(dalt == _X_){
+								actor->data().push_back(
+									ToString(fc.x() - hs, fc.y(), bid, " "));
+								actor->data().push_back(
+									ToString(fc.x() + hs, fc.y(), bid, " "));
+								actor->data().push_back("");
+							}else{
+								actor->data().push_back(
+									ToString(fc.x(), fc.y() - hs, bid, " "));
+								actor->data().push_back(
+									ToString(fc.x(), fc.y() + hs, bid, " "));
+								actor->data().push_back("");
+							}
+						}
+					}
+				}
+			}
+		}
+		return actor;
+	}
+
 	static spActor WireFrame(
 				const Grid1& grid,
 				const Vt&    tik  = 0.1,

@@ -11,7 +11,7 @@
 
 //#include "geometry/test_point.hpp"
 //#include "geometry/test_segment.hpp"
-#include "geometry/test_polygon_boolean.hpp"
+//#include "geometry/test_polygon_boolean.hpp"
 //#include "geometry/test_point_chain.hpp"
 //#include "geometry/test_bezier.hpp"
 //#include "geometry/test_ts.hpp"
@@ -26,7 +26,7 @@
 //#include "substance/test_atmosphere.hpp"
 
 //#include "structure/test_grid.hpp"
-//#include "structure/test_ghost.hpp"
+#include "structure/test_ghost.hpp"
 //#include "structure/test_order.hpp"
 //#include "structure/test_field.hpp"
 //#include "structure/test_vof.hpp"

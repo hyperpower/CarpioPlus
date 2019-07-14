@@ -24,16 +24,16 @@ protected:
 	int _type;
 	std::array<int,NumFace> _bid;
 public:
-	SCellMask_(): _type(_NORMAL_){
-		_bid.fill(_NORMAL_);
+	SCellMask_(): _type(_GHOST_){
+		_bid.fill(10);
 	}
 
-	SCellMask_(const int& t): _type(t){
-		_bid.fill(_NORMAL_);
+	SCellMask_(const int& id): _type(_GHOST_){
+		_bid.fill(id);
 	}
 
-	SCellMask_(const Self& self):_type(self._type){
-		_bid = self._bid;
+	SCellMask_(const Self& self):
+		_type(self._type), _bid(self._bid){
 	}
 
 	Self& operator=(const Self& o) {
@@ -52,18 +52,18 @@ public:
 		return this->_type;
 	}
 
-	void set_boundary_id(Axes a, Orientation o, int id){
+	void set_boundary_id(int a, int o, int id){
 		ASSERT(a < DIM);
 		ASSERT(o == _M_ || o == _P_);
 		int _IDX[][2] = {{0, 1},{2, 3},{4, 5}};
-		_bid[_IDX[int(a)][int(o)]] = id;
+		_bid[_IDX[a][o]] = id;
 	}
 
-	int get_boundary_id(Axes a, Orientation o) {
+	int get_boundary_id(int a, int o) {
 		ASSERT(a < DIM);
 		ASSERT(o == _M_ || o == _P_);
 		int _IDX[][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
-		return _bid[_IDX[int(a)][int(o)]];
+		return _bid[_IDX[a][o]];
 	}
 };
 
@@ -74,9 +74,12 @@ public:
 	typedef SGrid_<DIM> Grid;
 	typedef std::shared_ptr<Grid> spGrid;
 
-	typedef SCellMask_<DIM> CellMask;
+	typedef typename Grid::FunIndex  FunIndex;
 
-	typedef MultiArray_<CellMask, DIM> Mat;
+	typedef SCellMask_<DIM> CellMask;
+	typedef std::shared_ptr<CellMask> spCellMask;
+
+	typedef MultiArray_<spCellMask, DIM> Mat;
 	typedef typename Mat::reference reference;
 	typedef typename Mat::const_reference const_reference;
 
@@ -87,17 +90,27 @@ protected:
 public:
 	SGhostMask_(spGrid spg): _grid(spg),
 		_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
+		_init_mat();
 	}
-	~SGhostMask_(){
+	virtual ~SGhostMask_(){
 
 	}
 
 	Grid& grid(){
-		return _grid;
+		return *(this->_grid);
 	}
 
 	const Grid& grid() const{
-		return _grid;
+		return *(this->_grid);
+	}
+
+	spCellMask&
+	operator()(const Index& idx){
+	    return (_mat.at(idx.i(), idx.j(), idx.k()));
+	}
+	const spCellMask&
+	operator()(const Index& idx) const{
+	    return (_mat.at(idx.i(), idx.j(), idx.k()));
 	}
 
 	bool is_ghost(const Index& index) const{
@@ -109,7 +122,7 @@ public:
 				return true;
 			}
 		}
-		if(_mat(index.i(), index.j(), index.k()).type() != _NORMAL_){
+		if(_mat(index.i(), index.j(), index.k()) != nullptr){
 			return true;
 		}
 		return false;
@@ -125,20 +138,10 @@ public:
 		ASSERT(idx >= 0 && idx < _grid->n(a));
 
 		auto& mask = _mat(index.i(), index.j(), index.k()); // cell mask
-		if(mask.type() == _GHOST_){
-			return false;
-		}else if(mask.type() == _CUT_){
-			return true;
-		}else{ // NORMAL
-			FOR_EACH_DIM{
-				auto idxm = index.m(d);
-				if(this->is_ghost(idxm)){
-					return true;
-				}
-				auto idxp = index.p(d);
-				if(this->is_ghost(idxp)){
-					return true;
-				}
+		if (is_normal(index)) {
+			auto idxs = index.shift(a,o);
+			if (this->is_ghost(idxs)) {
+				return true;
 			}
 		}
 		return false;
@@ -154,11 +157,30 @@ public:
 				const Index& idxg,
 				const St& axe,
 			    const St& ori) const{
-
+		St ABI[3][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
+		Index n = this->_grid->n();
+		for (St d = 0; d < DIM; ++d) {
+			Idx res = idxg.value(d);
+			if (res < 0) {
+				return ABI[d][0];
+			} else if (res >= n.value(d)) {
+				return ABI[d][1];
+			}
+		}
+		auto op   = Opposite(ToOrientation(ori));
+		auto spcm = this->operator ()(idxg);
+		ASSERT(spcm != nullptr);
+		return spcm->get_boundary_id(axe, op);
 	};
 
 	St size_normal() const{
 
+	}
+protected:
+	void _init_mat(){
+		for(auto& v : this->_mat){
+			v = nullptr;
+		}
 	}
 };
 

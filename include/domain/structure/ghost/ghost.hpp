@@ -11,12 +11,20 @@ template<St DIM>
 class SGhost_ {
 public:
 	typedef	SIndex_<DIM> Index;
+	typedef SGrid_<DIM>  Grid;
 
 	SGhost_(){
 
 	}
 	virtual ~SGhost_(){
 
+	}
+
+
+	virtual Grid& grid() {
+	}
+
+	virtual const Grid& grid() const {
 	}
 
 	virtual bool is_ghost(const Index& index) const{};

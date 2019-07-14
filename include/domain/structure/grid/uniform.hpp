@@ -17,6 +17,7 @@ public:
 	typedef SIndex_<Dim> Index;
 	static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
+	typedef std::function<void(const Index&)> FunIndex;
 protected:
 	Poi   _min;
 	Index _n, _ng;    // number of node and number of node and ghost
@@ -321,6 +322,20 @@ public:
 
 	inline Idx _idx(const St& I) const {
 		return Idx(I - _gl);
+	}
+
+	void for_each(FunIndex fun){
+		St nx = this->n(_X_);
+		St ny = Dim > 1? this->n(_Y_):1;
+		St nz = Dim > 2? this->n(_Z_):1;
+		for (St i = 0; i < nx; i++) {
+			for (St j = 0; j < ny; j++) {
+				for (St k = 0; k < nz; k++){
+					Index idx(i,j,k);
+					fun(idx);
+				}
+			}
+		}
 	}
 
 };

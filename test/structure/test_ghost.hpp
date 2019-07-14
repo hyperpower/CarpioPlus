@@ -27,23 +27,46 @@ TEST(structure, initial){
 	gnu.set_yrange(-0.5, 5.5);
 	gnu.set_equal_ratio();
 	gnu.add(GA::WireFrame(*spsg));
-	gnu.plot();
+//	gnu.plot();
 }
 
 TEST(structure, initial2){
-	typedef std::shared_ptr<SGrid_<2> > spSGrid;
+	typedef SGrid_<2>                          SGrid;
+	typedef typename SGrid::Index              SIndex;
+	typedef SCellMask_<2>                    SCellMask;
+	typedef std::shared_ptr<SCellMask_<2> >  spSCellMask;
+	typedef std::shared_ptr<SGrid_<2> >      spSGrid;
+	typedef std::shared_ptr<SGhost_<2> >     spSGhost;
+	typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,
-			                          20,
+			                          80,
 									  3, 2 ));
-//	Gnuplot gnu;
-//	ply.set_xrange(-0.5, 3.5);
-//	ply.set_yrange(-0.5, 3.5);
-//	ply.set_equal_ratio();
-//	ply.add(GnuplotActor::WireFrame(*spsg));
-//	ply.plot();
+	spSGhostMask spgm(new SGhostMask_<2>(spsg));
+	spSCellMask  spcm(new SCellMask(6));
+	typename SGrid::FunIndex fun = [spgm, spsg, spcm](const SIndex& index){
+		auto& gm = *spgm;
+		auto& g  = *spsg;
+		auto cp  = g.c(index);
+		auto x = cp.x();
+		auto y = cp.y();
+		if(x * x + y* y < 1){
+			gm(index) = spcm;
+		}
+	};
+	spsg->for_each(fun);
+	Gnuplot gnu;
+	gnu.set_xrange(-0.5, 3.5);
+	gnu.set_yrange(-0.5, 3.5);
+	gnu.set_equal_ratio();
+	gnu.add(GA::WireFrame(*spsg));
+	gnu.add(GA::WireFrame(*spgm, 3));
+	auto acb = GA::Boundary(*spgm);
+	acb->style() = "with line lw 3 lc variable";
+	gnu.add(acb);
+	gnu.plot();
 }
 
 

@@ -31,12 +31,6 @@ public:
 	static const int _UNION_        = 11;
 	static const int _SUBSTRACT_    = 12;
 
-//	static const int _NOTHING_  =  100; //  0
-//	static const int _IN_       =  102; //  2
-//	static const int _OUT_      =  98;  // -2
-//	static const int _HALF_IN_  =  101; //  1
-//	static const int _HALF_OUT_ =  99;  // -1
-
 	static const int _REFLECT_in_ = 1011;
 	static const int _REFLECT_out_ = 1033;
 	static const int _OVERLAP_ = 1022;
@@ -96,18 +90,50 @@ public:
 				// find Half IN in
 				std::list<pNode> lin;
 				pNode oin = obj;
+				bool fii = false;
 				do {
 					oin = _find_object_half_in(oin);
 					if (oin != nullptr) {
+						if(oin->type == _HALF_IN_in_){
+							fii = true;
+						}
 						lin.push_back(oin);
 						oin = oin->nexto;
 					}
 				} while (oin != nullptr);
 
 				if(lin.size() > 0){
-					return _output_no_in(lin, op);
+					if(fii == true){
+						return _output_no_in(lin, op);
+					}else{
+						// clip is inside object
+						std::cout << "no half IN in\n";
+						PointChain pc;
+						for_each_edge_clip([&pc](pNode ps, pNode pe) {
+							pc.push_back(ps->point);
+						});
+						PointChain po;
+						for_each_edge_object([&po](pNode ps, pNode pe) {
+							po.push_back(ps->point);
+						});
+						// clip in object
+						bool cino = true;
+						for (auto& p : pc) {
+							if (!IsInOn(p, po)) {
+								cino = false;
+								break;
+							}
+						}
+						if(cino == true){
+							return _output_no_in(lin, op);
+						}else{
+							// clip out side object
+							// has no HALF IN in
+							return _output_box_separate(op);
+						}
+					}
 				}else{
-					std::cout << "no half IN in\n";
+					std::cout << "no half IN\n";
 					return std::vector<PointChain>();
 				}
 			}
@@ -115,9 +141,6 @@ public:
 	}
 
 protected:
-
-
-
 	std::vector<PointChain> _output_box_separate(int op = _INTERSECTION_) {
 		std::vector<PointChain> vpc;
 		// clip and object are box seperate
@@ -570,8 +593,7 @@ protected:
 			for_each_node(fun);
 		}
 
-		pNode
-		_next_loop(pNode cur, int _ooc) const {
+		pNode _next_loop(pNode cur, int _ooc) const {
 			if(cur == nullptr) {
 				return nullptr;
 			}
@@ -590,8 +612,7 @@ protected:
 			}
 		}
 
-		pNode
-		_prev_loop(pNode cur, int _ooc) const {
+		pNode _prev_loop(pNode cur, int _ooc) const {
 			if (cur == nullptr) {
 				return nullptr;
 			}
@@ -658,8 +679,29 @@ protected:
 		pNode bgn = nullptr;
 		while (true) {
 			if (cur->type == _HALF_IN_in_
-//			 || cur->type == _HALF_IN_out_
+			 || cur->type == _HALF_IN_out_
 			 ) {
+				bgn = cur;
+				break;
+			}
+			if (cur->nexto != nullptr) {
+				cur = cur->nexto;
+			} else {
+				break;
+			}
+		}
+		return bgn;
+	}
+
+	pNode _find_object_reflect_in(pNode start) {
+		if (start == nullptr) {
+			return nullptr;
+		}
+		int hinflag = 0;
+		pNode cur = start;
+		pNode bgn = nullptr;
+		while (true) {
+			if (cur->type == _REFLECT_in_) {
 				bgn = cur;
 				break;
 			}
