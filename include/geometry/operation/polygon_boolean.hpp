@@ -31,11 +31,21 @@ public:
 	static const int _UNION_        = 11;
 	static const int _SUBSTRACT_    = 12;
 
-	static const int _NOTHING_  =  100; //  0
-	static const int _IN_       =  102; //  2
-	static const int _OUT_      =  98;  // -2
-	static const int _HALF_IN_  =  101; //  1
-	static const int _HALF_OUT_ =  99;  // -1
+//	static const int _NOTHING_  =  100; //  0
+//	static const int _IN_       =  102; //  2
+//	static const int _OUT_      =  98;  // -2
+//	static const int _HALF_IN_  =  101; //  1
+//	static const int _HALF_OUT_ =  99;  // -1
+
+	static const int _REFLECT_in_ = 1011;
+	static const int _REFLECT_out_ = 1033;
+	static const int _OVERLAP_ = 1022;
+	static const int _IN_           = 1031;
+	static const int _OUT_          = 1013;
+	static const int _HALF_IN_in_ = 1021;
+	static const int _HALF_IN_out_ = 1032;
+	static const int _HALF_OUT_in_ = 1012;
+	static const int _HALF_OUT_out_ = 1023;
 
 	typedef TYPE Vt;
 	typedef Point_<TYPE, 2> Point;
@@ -70,48 +80,43 @@ public:
 			// object and clip are separate
 			return _output_separate(op);
 		}else{
-			std::vector<PointChain> vpc;
 			std::list<pNode> lin;
 			pNode oin = obj;
-			bool inf = false;
 			do {
 				oin = _find_object_in(oin);
 				if (oin != nullptr) {
-					inf = true;
 					lin.push_back(oin);
 					oin = oin->nexto;
 				}
 			} while (oin != nullptr);
 
-			if(inf == false){
-				std::cout << "Not Found IN\n";
-			}
-
-			std::set<pNode> used;
-			for (auto& in : lin) {
-				if (used.find(in) == used.end()) {
-					Probe pb(this, in, op);
-					std::list<pNode> lpn;
-					PointChain pc;
-					do {
-						used.insert(pb.cur);
-						lpn.push_back(pb.cur);
-						pb.walk();
-					} while (pb.cur != pb.bgn);
-
-					_delete_overlap_edge(lpn);
-					for(auto& pn : lpn){
-						pc.push_back(pn->point);
+			if(lin.size() > 0){
+				return _output_normal(lin, op);
+			} else {
+				// find Half IN in
+				std::list<pNode> lin;
+				pNode oin = obj;
+				do {
+					oin = _find_object_half_in(oin);
+					if (oin != nullptr) {
+						lin.push_back(oin);
+						oin = oin->nexto;
 					}
-					vpc.push_back(pc);
-				}
+				} while (oin != nullptr);
 
+				if(lin.size() > 0){
+					return _output_no_in(lin, op);
+				}else{
+					std::cout << "no half IN in\n";
+					return std::vector<PointChain>();
+				}
 			}
-			return vpc;
 		}
 	}
 
 protected:
+
+
 
 	std::vector<PointChain> _output_box_separate(int op = _INTERSECTION_) {
 		std::vector<PointChain> vpc;
@@ -221,111 +226,213 @@ protected:
 	}
 
 
-		struct Node {
-			int type;
-			Point point;
 
-			typedef Node* pNode;
-
-			pNode prevc; // previous clip
-			pNode nextc;// next clip
-			pNode prevo;// previous object
-			pNode nexto;// previous object
-
-			Node(const Point& p, int t):point(p) {
-				type = t;
-
-				prevc = nullptr;
-				nextc = nullptr;
-				prevo = nullptr;
-				nexto = nullptr;
-			}
-		};
+	struct Node {
+		int   type;
+		Point point;
 
 		typedef Node* pNode;
 
-		typedef std::function<void(pNode)> FunN;
-		typedef std::function<void(pNode, pNode)> FunNN;
-		typedef std::function<void(pNode&, pNode&, pNode&, pNode&)> FunNNNN;
+		pNode prevc; // previous clip
+		pNode nextc; // next clip
+		pNode prevo; // previous object
+		pNode nexto; // previous object
 
-		struct Probe {
-			typedef PolygonBoolean_<Vt>* pPB;
-			pPB ppb;
-			int op;  // operation type
-			pNode bgn;
-			pNode cur;
-			int sflag;
-			int ooc; // object or clip
-			int dir; // direction  1 next
-					 //           -1 prev
+		Node(const Point& p, int t) :
+				point(p) {
+			type = t;
 
-			Probe(pPB _ppb, pNode in, int t) :
-					ppb(_ppb), op(t), bgn(in) {
-				cur = bgn;
-				if (op == _INTERSECTION_) {
-					sflag = 0;
-					ooc = 1; //on object = 1
-							 //on clip   = 0
+			prevc = nullptr;
+			nextc = nullptr;
+			prevo = nullptr;
+			nexto = nullptr;
+		}
+	};
+
+	typedef Node* pNode;
+
+	typedef std::function<void(pNode)> FunN;
+	typedef std::function<void(pNode, pNode)> FunNN;
+	typedef std::function<void(pNode&, pNode&, pNode&, pNode&)> FunNNNN;
+
+	struct Probe {
+		typedef PolygonBoolean_<Vt>* pPB;
+		pPB   ppb;
+		int   op;  // operation type
+		pNode bgn;
+		pNode cur;
+		int   sflag;
+		int   ooc; // object or clip
+		int   dir; // direction  1 next
+				 //           -1 prev
+
+		Probe(pPB _ppb, pNode in, int t) :
+				ppb(_ppb), op(t), bgn(in) {
+			cur = bgn;
+			if (op == _INTERSECTION_) {
+				sflag = 0;
+				ooc = 1; //on object = 1
+						 //on clip   = 0
+				dir = 1;
+			} else if (op == _UNION_) {
+				sflag = 0;
+				ooc = 0;
+				dir = 1;
+			} else if (op == _SUBSTRACT_) {
+				sflag = 0;
+				ooc = 0;
+				dir = 1;
+			}
+		}
+
+		pNode walk() {
+			if (cur->type == _HALF_IN_in_ ||
+			    cur->type == _HALF_IN_out_) {
+				sflag += 1;
+			} else if (cur->type == _HALF_OUT_in_
+					|| cur->type == _HALF_OUT_out_) {
+				sflag += -1;
+			}
+			if (op == _INTERSECTION_) {
+				if (cur->type == _IN_ || sflag == 2) {
+					ooc = 1;
 					dir = 1;
-				} else if (op == _UNION_) {
 					sflag = 0;
+				} else if (cur->type == _OUT_ || sflag == -2) {
 					ooc = 0;
 					dir = 1;
-				} else if (op == _SUBSTRACT_) {
 					sflag = 0;
+				}
+			} else if (op == _UNION_) {
+				if (cur->type == _IN_ || sflag == 2) {
+					ooc = 0;
+					dir = 1;
+					sflag = 0;
+				} else if (cur->type == _OUT_ || sflag == -2) {
+					ooc = 1;
+					dir = 1;
+					sflag = 0;
+				}
+			} else if (op == _SUBSTRACT_) {
+				if (cur->type == _IN_ || sflag == 2) {
+					ooc = 0;
+					dir = 1;
+					sflag = 0;
+				} else if (cur->type == _OUT_ || sflag == -2) {
+					ooc = 1;
+					dir = -1;
+					sflag = 0;
+				}
+			}
+			//
+			if (dir == 1) {
+				cur = ppb->_next_loop(cur, ooc);
+			} else {
+				cur = ppb->_prev_loop(cur, ooc);
+			}
+			return cur;
+		}
+
+		pNode walk2(){
+			// no IN
+			// HALF IN is IN
+			// HALF OUT is OUT
+			if (op == _INTERSECTION_) {
+				if (cur->type == _HALF_IN_in_ ||
+					cur->type == _HALF_IN_out_) {
+					ooc = 1;
+					dir = 1;
+				} else if (
+					cur->type == _HALF_OUT_in_ ||
+					cur->type == _HALF_OUT_out_ ) {
 					ooc = 0;
 					dir = 1;
 				}
+			} else if (op == _UNION_) {
+				if (cur->type == _HALF_IN_in_ ||
+					cur->type == _HALF_IN_out_) {
+					ooc = 0;
+					dir = 1;
+				} else if (
+					cur->type == _HALF_OUT_in_ ||
+					cur->type == _HALF_OUT_out_ ) {
+					ooc = 1;
+					dir = 1;
+				}
+			} else if (op == _SUBSTRACT_) {
+				if (cur->type == _HALF_IN_in_ ||
+					cur->type == _HALF_IN_out_) {
+					ooc = 0;
+					dir = 1;
+				} else if (
+					cur->type == _HALF_OUT_in_ ||
+					cur->type == _HALF_OUT_out_ ) {
+					ooc = 1;
+					dir = -1;
+				}
 			}
-
-			pNode walk() {
-				if (cur->type == _HALF_IN_) {
-					sflag += 1;
-				} else if (cur->type == _HALF_OUT_) {
-					sflag += -1;
-				}
-				if (op == _INTERSECTION_) {
-					if (cur->type == _IN_ || sflag == 2) {
-						ooc   = 1;
-						dir   = 1;
-						sflag = 0;
-					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc   = 0;
-						dir   = 1;
-						sflag = 0;
-					}
-				} else if (op == _UNION_) {
-					if (cur->type == _IN_ || sflag == 2) {
-						ooc   = 0;
-						dir   = 1;
-						sflag = 0;
-					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc   = 1;
-						dir   = 1;
-						sflag = 0;
-					}
-				} else if (op == _SUBSTRACT_) {
-					if (cur->type == _IN_ || sflag == 2) {
-						ooc   = 0;
-						dir   = 1;
-						sflag = 0;
-					} else if (cur->type == _OUT_ || sflag == -2) {
-						ooc   = 1;
-						dir   = -1;
-						sflag = 0;
-					}
-				}
-				//
-				if (dir == 1) {
-					cur = ppb->_next_loop(cur, ooc);
-				} else {
-					cur = ppb->_prev_loop(cur, ooc);
-				}
-				return cur;
+			//
+			if (dir == 1) {
+				cur = ppb->_next_loop(cur, ooc);
+			} else {
+				cur = ppb->_prev_loop(cur, ooc);
 			}
-		};
+			return cur;
+		}
+	};
 
-		struct IntersectionGroup {
+	std::vector<PointChain> _output_normal(
+			std::list<pNode>& lin, int op = _INTERSECTION_) {
+		std::vector<PointChain> vpc;
+		std::set<pNode> used;
+		for (auto& in : lin) {
+			if (used.find(in) == used.end()) { // IN has NOT been used
+				Probe pb(this, in, op);
+				std::list<pNode> lpn;
+				do {
+					used.insert(pb.cur);
+					lpn.push_back(pb.cur);
+					pb.walk();
+				} while (pb.cur != pb.bgn);
+
+				_delete_overlap_edge(lpn);
+				PointChain pc;
+				for (auto& pn : lpn) {
+					pc.push_back(pn->point);
+				}
+				vpc.push_back(pc);
+			}
+		}
+		return vpc;
+	}
+
+	std::vector<PointChain> _output_no_in(
+			std::list<pNode>& lin,
+			int op = _INTERSECTION_) {
+		std::vector<PointChain> vpc;
+		std::set<pNode> used;
+		for (auto& in : lin) {
+			if (used.find(in) == used.end()) { // IN has NOT been used
+				Probe pb(this, in, op);
+				std::list<pNode> lpn;
+				do {
+					used.insert(pb.cur);
+					lpn.push_back(pb.cur);
+					pb.walk2();
+				} while (pb.cur != pb.bgn);
+
+				_delete_overlap_edge(lpn);
+				PointChain pc;
+				for (auto& pn : lpn) {
+					pc.push_back(pn->point);
+				}
+				vpc.push_back(pc);
+			}
+		}
+		return vpc;
+	}
+
+	struct IntersectionGroup {
 			pNode cs;     // clip start
 			pNode ce;     // clip end
 			pNode os;     // object start
@@ -457,7 +564,7 @@ protected:
 			FunN fun = [this](pNode pn) {
 				if(this->_is_switch(pn)) {
 					this->_hasswitch = true;
-					pn->type = 100 + this->_cal_switch_type(pn);
+					pn->type = 1000 + this->_cal_switch_type(pn);
 				}
 			};
 			for_each_node(fun);
@@ -505,8 +612,7 @@ protected:
 
 		// this function find the first IN node on object
 		// It also considered the two HALF_IN case
-		pNode
-		_find_object_in(pNode start) {
+		pNode _find_object_in(pNode start) {
 			if(start == nullptr) {
 				return nullptr;
 			}
@@ -519,14 +625,18 @@ protected:
 						bgn = cur;
 						break;
 					}
-					if (cur->type == _HALF_IN_) {
+					if (cur->type == _HALF_IN_in_ ||
+						cur->type == _HALF_IN_out_) {
 						hinflag = 1;
 					}
 				} else { //hinflag = 1
-					if (cur->type == _HALF_IN_) {
+					if (cur->type == _HALF_IN_in_ ||
+						cur->type == _HALF_IN_out_) {
 						bgn = cur;
 						break;
-					} else if (cur->type == _HALF_OUT_) {
+					} else if (
+							cur->type == _HALF_OUT_in_ ||
+							cur->type == _HALF_OUT_out_) {
 						hinflag = 0;
 					}
 				}
@@ -538,6 +648,29 @@ protected:
 			}
 			return bgn;
 		}
+
+	pNode _find_object_half_in(pNode start) {
+		if (start == nullptr) {
+			return nullptr;
+		}
+		int hinflag = 0;
+		pNode cur = start;
+		pNode bgn = nullptr;
+		while (true) {
+			if (cur->type == _HALF_IN_in_
+//			 || cur->type == _HALF_IN_out_
+			 ) {
+				bgn = cur;
+				break;
+			}
+			if (cur->nexto != nullptr) {
+				cur = cur->nexto;
+			} else {
+				break;
+			}
+		}
+		return bgn;
+	}
 
 		void for_each_node(FunN fun) {
 			std::set<pNode> setp;
@@ -765,8 +898,7 @@ protected:
 			delete po;
 		}
 
-		pNode
-		_last(int _ooc) const {
+		pNode _last(int _ooc) const {
 			if(_ooc == 0) {
 				return _last_c();
 			} else {
@@ -774,8 +906,7 @@ protected:
 			}
 		}
 
-		pNode
-		_last_o()
+		pNode _last_o()
 		const {
 			pNode p = obj;
 			while (p->nexto != nullptr) {
@@ -784,8 +915,7 @@ protected:
 			return p;
 		}
 
-		pNode
-		_last_c()
+		pNode _last_c()
 		const {
 			pNode p = cli;
 			while (p->nextc != nullptr) {
@@ -830,9 +960,13 @@ protected:
 			// HALF_OUT -- -1
 			// tri == POSVITIVE
 			//       ein  eon   eout
-			// sin   NOi  HOUTi OUT
-			// son   HINi NO    HOUTo
-			// sout  IN   HINo  NOo
+			// sin   Ri   HOUTi OUT
+			//       11   12    13
+			// son   HINi O     HOUTo
+			//       21   22    23
+			// sout  IN   HINo  Ro
+			//       31   32    33
+
 			// Step 1 clip is angle is acute or obtuse
 			int type = 0;
 			auto tri = OnWhichSide3(pc->point, p->point, nc->point);
@@ -841,12 +975,12 @@ protected:
 				auto os2 = OnWhichSide3( p->point, nc->point, po->point);
 				if( os1 == _POSITIVE_
 						&& os2 == _POSITIVE_) {
-					type +=-1;    //object start is inside
+					type += 10;    //object start is inside
 				} else if( (os1 == _ZERO_ && os2 == _POSITIVE_)
 						||(os1 == _POSITIVE_ && os2 == _ZERO_ )) {
-					type += 0;    //object start is online
+					type += 20;    //object start is online
 				} else {
-					type += 1;    // object start is outside
+					type += 30;    // object start is outside
 				}
 				// ----- end point ---
 				auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
@@ -855,46 +989,46 @@ protected:
 					type += 1;    //object end is inside
 				} else if ((oe1 == _ZERO_ && oe2 == _POSITIVE_)
 						|| (oe1 == _POSITIVE_ && oe2 == _ZERO_)) {
-					type += 0;    //object end is online
+					type += 2;    //object end is online
 				} else {
-					type += -1;   // object end is outside
+					type += 3;   // object end is outside
 				}
 			} else if( tri == _ZERO_) {
 				auto os1 = OnWhichSide3(pc->point, p->point, po->point);
 				if (os1 == _POSITIVE_) {
-					type += -1;   //object start is inside
+					type += 10;   //object start is inside
 				} else if (os1 == _ZERO_) {
-					type += 0;    //object start is online
+					type += 20;    //object start is online
 				} else {
-					type += 1;    // object start is outside
+					type += 30;    // object start is outside
 				}
 				auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
 				if (oe1 == _POSITIVE_) {
 					type += 1;    //object end is inside
 				} else if (oe1 == _ZERO_) {
-					type += 0;    //object end is online
+					type += 2;    //object end is online
 				} else {
-					type += -1;   // object end is outside
+					type += 3;   // object end is outside
 				}
 			} else { // clip is obtuse angle
 				auto os1 = OnWhichSide3(pc->point, p->point, po->point);
 				auto os2 = OnWhichSide3(p->point, nc->point, po->point);
 				if (os1 == _NEGATIVE_ && os2 == _NEGATIVE_) {
-					type += 1;   //object start is outside
+					type += 30;   //object start is outside
 				} else if ((os1 == _ZERO_ && os2 == _NEGATIVE_)
 						|| (os1 == _NEGATIVE_ && os2 == _ZERO_ )) {
-					type += 0;    //object start is online
+					type += 20;   //object start is online
 				} else {
-					type += -1;   // object start is inside
+					type += 10;  // object start is inside
 				}
 				//
 				auto oe1 = OnWhichSide3(pc->point, p->point, no->point);
 				auto oe2 = OnWhichSide3(p->point, nc->point, no->point);
 				if (oe1 == _NEGATIVE_ && oe2 == _NEGATIVE_) {
-					type += -1;    //object end is outside
+					type += 3;    //object end is outside
 				} else if ((oe1 == _ZERO_ && oe2 == _NEGATIVE_)
 						|| (oe1 == _NEGATIVE_ && oe2 == _ZERO_)) {
-					type += 0;     //object end is online
+					type += 2;     //object end is online
 				} else {
 					type += 1;     // object end is inside
 				}
@@ -925,8 +1059,7 @@ protected:
 			}
 		}
 
-		std::string
-		_to_string_node_type(int type) {
+		std::string _to_string_node_type(int type) {
 			if(type < 10) {
 				switch (type) {
 					case _PN_ : return "N";
@@ -938,12 +1071,16 @@ protected:
 			} else { //Switch type
 				const int base = 100;
 				switch(type) {
-					case _NOTHING_ :  return "NO";
-					case _HALF_IN_ :  return "HIN";
-					case _IN_ :       return "IN";
-					case _HALF_OUT_ : return "HOUT";
-					case _OUT_ :      return "OUT";
-					default:          return "ERROR TYPE";
+					case _OVERLAP_     : return "ON";
+					case _REFLECT_in_  : return "Rin";
+					case _REFLECT_out_ : return "Rout";
+					case _HALF_IN_in_  : return "HINi";
+					case _HALF_IN_out_ : return "HINo";
+					case _IN_          : return "IN";
+					case _HALF_OUT_in_ : return "HOUTi";
+					case _HALF_OUT_out_: return "HOUTo";
+					case _OUT_         : return "OUT";
+					default            : return "ERROR TYPE";
 				}
 			}
 		}
