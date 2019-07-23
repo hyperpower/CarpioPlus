@@ -76,7 +76,12 @@ def render(template, renderdata):
 
 
 def copy_fig_folder(path, folder_name):
-    os.system("rm -r " + path.rstsource + "/_static/" + folder_name)
+    # check before copy
+    if not os.path.isdir(path.rstsource + "/_static"):
+      os.system("mkdir "+ path.rstsource + "/_static")
+    if os.path.isdir(path.rstsource + "/_static/" + folder_name):
+      os.system("rm -r " + path.rstsource + "/_static/" + folder_name)
+    # copy
     os.system("cp -r " + path.fig + " " + path.rstsource + "/_static/" + folder_name)
 
 def run(path, runtime, origianl_files, data_extra = None):

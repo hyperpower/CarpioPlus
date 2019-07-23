@@ -7,4 +7,5 @@ Examples and Tests
    geometry
    algebra
    structure
-   equation
+   convection
+   poisson
