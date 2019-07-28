@@ -74,7 +74,7 @@ public:
 	int initialize() {
 		this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
 		this->_aflags["solver"] = _init_solver();
-		std::cout << "  Convection: initialize \n";
+		std::cout << "  Laplace: initialize \n";
 		return -1;
 	}
 
@@ -195,8 +195,8 @@ protected:
 		auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
 		auto Lapv     = Lap(phi);
 		auto Lapexp   = Lap.expression_field(phi);
-		auto spphif    = any_cast<spExpField>(this->_aflags["field_exp"]);
-		auto v         = any_cast<spField>(this->_aflags["field_volume"]);
+		auto spphif   = any_cast<spExpField>(this->_aflags["field_exp"]);
+		auto v        = any_cast<spField>(this->_aflags["field_volume"]);
 		Vt dt         = this->_time->dt();
 
 		auto expf = (Lapexp + Lapv) * (dt * 0.5) / (*v) - (*spphif) + phi;

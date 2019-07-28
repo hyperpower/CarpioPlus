@@ -73,11 +73,20 @@ public:
 	typedef	SIndex_<DIM> Index;
 	typedef SGrid_<DIM> Grid;
 	typedef std::shared_ptr<Grid> spGrid;
+	typedef SCellMask_<DIM> CellMask;
+	typedef std::shared_ptr<CellMask> spCellMask;
 
 	typedef typename Grid::FunIndex  FunIndex;
 
-	typedef SCellMask_<DIM> CellMask;
-	typedef std::shared_ptr<CellMask> spCellMask;
+	typedef std::function<
+			spCellMask(const Index&, const Grid&)
+			> FunSetByIndex;
+
+	typedef std::function<
+		  //input cell center coordinates (x,y,z)
+			spCellMask(const Vt&, const Vt&, const Vt&)
+			> FunSetByXYZ;
+
 
 	typedef MultiArray_<spCellMask, DIM> Mat;
 	typedef typename Mat::reference reference;
@@ -173,8 +182,30 @@ public:
 		return spcm->get_boundary_id(axe, op);
 	};
 
-	St size_normal() const{
+	void set_mask(FunSetByIndex fun){
+		FunIndex funi = [&fun, this](const Index& idx){
+			auto& grid = *(this->_grid);
+			auto res = fun(idx, grid);
+			this->operator ()(idx) = res;
+		};
+		this->_grid->for_each(funi);
+	}
 
+	void set_mask(FunSetByXYZ fun){
+		FunIndex funi = [&fun, this](const Index& idx){
+			auto& grid = *(this->_grid);
+			auto cp  = grid.c(idx);
+			auto x   = cp.value(_X_);
+			auto y   = cp.value(_Y_);
+			auto z   = cp.value(_Z_);
+			auto res = fun(x, y, z);
+			this->operator ()(idx) = res;
+		};
+		this->_grid->for_each(funi);
+	}
+
+	St size_normal() const{
+		SHOULD_NOT_REACH;
 	}
 protected:
 	void _init_mat(){
