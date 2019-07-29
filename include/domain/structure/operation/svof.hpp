@@ -21,42 +21,42 @@ namespace carpio{
 template<St DIM>
 class SVOF_{
 public:
-	typedef SGrid_<DIM>   Grid;
-	typedef SGhost_<DIM>  Ghost;
-	typedef SOrder_<DIM>  Order;
-	typedef SField_<DIM>  Field;
-	typedef SField_<1>  Field1;
-	typedef SField_<2>  Field2;
-	typedef SField_<3>  Field3;
-	typedef Field*       pField;
-	typedef SIndex_<DIM>  Index;
-	typedef std::shared_ptr<Field> spField;
+    typedef SGrid_<DIM>   Grid;
+    typedef SGhost_<DIM>  Ghost;
+    typedef SOrder_<DIM>  Order;
+    typedef SField_<DIM>  Field;
+    typedef SField_<1>  Field1;
+    typedef SField_<2>  Field2;
+    typedef SField_<3>  Field3;
+    typedef Field*       pField;
+    typedef SIndex_<DIM>  Index;
+    typedef std::shared_ptr<Field> spField;
 
-	typedef SVectorCenter_<DIM> VectorCenter;
-	typedef SVectorFace_<DIM>   VectorFace;
-	typedef std::shared_ptr<BoundaryIndex> spBI;
-	typedef BoundaryIndex* pBI;
-	typedef BoundaryCondition BC;
+    typedef SVectorCenter_<DIM> VectorCenter;
+    typedef SVectorFace_<DIM>   VectorFace;
+    typedef std::shared_ptr<BoundaryIndex> spBI;
+    typedef BoundaryIndex* pBI;
+    typedef BoundaryCondition BC;
 
-	typedef VOFTool_<Vt, DIM> VOFTool;
-	typedef VOFToolPL_<Vt>    VOFToolPL;
-	typedef Point_<Vt, DIM>   Point;
-	typedef Line_<Vt>		  Line;
+    typedef VOFTool_<Vt, DIM> VOFTool;
+    typedef VOFToolPL_<Vt>    VOFToolPL;
+    typedef Point_<Vt, DIM>   Point;
+    typedef Line_<Vt>          Line;
 
-	typedef AInterpolate_<Vt, Vt> Interpolate;
+    typedef AInterpolate_<Vt, Vt> Interpolate;
 public:
-	SVOF_(){
-	}
+    SVOF_(){
+    }
 
-	static void SetColor(Field2& field, const Line& line){
-		VOFToolPL tool;
-		auto& grid = field.grid();
-		for (auto& idx : field.order()) {
-			Point pmin = grid.v(0, idx);
-			Point pmax = grid.v(3, idx);
-			field(idx) = tool.cal_color(line, pmin, pmax);
-		}
-	}
+    static void SetColor(Field2& field, const Line& line){
+        VOFToolPL tool;
+        auto& grid = field.grid();
+        for (auto& idx : field.order()) {
+            Point pmin = grid.v(0, idx);
+            Point pmax = grid.v(3, idx);
+            field(idx) = tool.cal_color(line, pmin, pmax);
+        }
+    }
 
 
 

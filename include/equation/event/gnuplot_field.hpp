@@ -16,132 +16,132 @@ namespace carpio{
 template<St DIM, class D>
 class EventGnuplotField_ : public Event_<DIM, D>{
 public:
-	typedef Event_<DIM, D> Event;
-	typedef Equation_<DIM, D> Equ;
-	typedef Equ* pEqu;
-	typedef const Equ* const_pEqu;
+    typedef Event_<DIM, D> Event;
+    typedef Equation_<DIM, D> Equ;
+    typedef Equ* pEqu;
+    typedef const Equ* const_pEqu;
 
-	typedef typename D::GnuplotActor GnuplotActor;
-	typedef typename D::Field        Field;
+    typedef typename D::GnuplotActor GnuplotActor;
+    typedef typename D::Field        Field;
 
-	typedef std::function<int(Gnuplot&, const Field&, St, Vt, int, pEqu)> FunPlot;
+    typedef std::function<int(Gnuplot&, const Field&, St, Vt, int, pEqu)> FunPlot;
 protected:
-	std::string _sn;     // scalar name
-	std::string _format; // format string
-	std::string _path;   // path for output file
+    std::string _sn;     // scalar name
+    std::string _format; // format string
+    std::string _path;   // path for output file
 
-	std::shared_ptr<Gnuplot> _spgnu;
-	std::string _terminal_name;
-	Vt          _size_x;
-	Vt          _size_y;
-	std::string _font;
-	St          _size_font;
+    std::shared_ptr<Gnuplot> _spgnu;
+    std::string _terminal_name;
+    Vt          _size_x;
+    Vt          _size_y;
+    std::string _font;
+    St          _size_font;
 
 
-	FunPlot _fun;
+    FunPlot _fun;
 
 public:
-	EventGnuplotField_(const std::string& sname,
-			int is    = -1, int ie   = -1,
-	        int istep = -1, int flag = 0) :
-		 _sn(sname),
-		 Event(is, ie, istep, flag) {
-		_format = "%s_%d_%8.4e.png";
-		_path   = "./";
+    EventGnuplotField_(const std::string& sname,
+            int is    = -1, int ie   = -1,
+            int istep = -1, int flag = 0) :
+         _sn(sname),
+         Event(is, ie, istep, flag) {
+        _format = "%s_%d_%8.4e.png";
+        _path   = "./";
 
-		_spgnu         = std::shared_ptr<Gnuplot>(new Gnuplot());
-		_terminal_name = "png";
-		_size_x        = 800;
-		_size_y        = 600;
-		_font          = "Helvetica";
-		_size_font     = 12;
+        _spgnu         = std::shared_ptr<Gnuplot>(new Gnuplot());
+        _terminal_name = "png";
+        _size_x        = 800;
+        _size_y        = 600;
+        _font          = "Helvetica";
+        _size_font     = 12;
 
-		_init_fun_plot();
-	}
+        _init_fun_plot();
+    }
 
-	EventGnuplotField_(const std::string& sname, FunPlot fun,
-				int is    = -1, int ie   = -1,
-		        int istep = -1, int flag = 0) :
-			 _sn(sname),
-			 Event(is, ie, istep, flag) {
-			_format = "%s_%d_%8.4e.png";
-			_path   = "./";
+    EventGnuplotField_(const std::string& sname, FunPlot fun,
+                int is    = -1, int ie   = -1,
+                int istep = -1, int flag = 0) :
+             _sn(sname),
+             Event(is, ie, istep, flag) {
+            _format = "%s_%d_%8.4e.png";
+            _path   = "./";
 
-			_spgnu         = std::shared_ptr<Gnuplot>(new Gnuplot());
-			_terminal_name = "png";
-			_size_x        = 800;
-			_size_y        = 600;
-			_font          = "Helvetica";
-			_size_font     = 12;
+            _spgnu         = std::shared_ptr<Gnuplot>(new Gnuplot());
+            _terminal_name = "png";
+            _size_x        = 800;
+            _size_y        = 600;
+            _font          = "Helvetica";
+            _size_font     = 12;
 
-			_fun = fun;
-	}
+            _fun = fun;
+    }
 
-	int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
-		auto fn = _file_name(step, t, fob);
-		if(pd->has_field(_sn)){
-			_set_terminal(_terminal_name, fn);
-//			_plot((*pd)[_sn]);
-			_fun(*(this->_spgnu), (*pd)[_sn], step, t, fob, pd);
-		}else{
-			std::cerr<< "EventGnuplotField : " << _sn << " not found!" << std::endl;
-		}
-		return -1;
-	}
+    int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
+        auto fn = _file_name(step, t, fob);
+        if(pd->has_field(_sn)){
+            _set_terminal(_terminal_name, fn);
+//            _plot((*pd)[_sn]);
+            _fun(*(this->_spgnu), (*pd)[_sn], step, t, fob, pd);
+        }else{
+            std::cerr<< "EventGnuplotField : " << _sn << " not found!" << std::endl;
+        }
+        return -1;
+    }
 
-	void set_format_string(const std::string& format){
-		_format = format;
-	}
+    void set_format_string(const std::string& format){
+        _format = format;
+    }
 
-	void set_path(const std::string& path){
-		_path = path;
-	}
+    void set_path(const std::string& path){
+        _path = path;
+    }
 
-	Gnuplot& gnuplot(){
-		return *(_spgnu);
-	}
+    Gnuplot& gnuplot(){
+        return *(_spgnu);
+    }
 
 protected:
-	void _set_terminal(
-			const std::string& tn, // terminal name
-			const std::string& fn  // file name
-			){
-		if(tn == "png"){
-			_spgnu->set_terminal_png(fn, _size_x, _size_y, _font, _size_font);
-			return;
-		}
-		std::cerr << "EventGnuplotField: " << "Wrong terminal!" << std::endl;
-	}
+    void _set_terminal(
+            const std::string& tn, // terminal name
+            const std::string& fn  // file name
+            ){
+        if(tn == "png"){
+            _spgnu->set_terminal_png(fn, _size_x, _size_y, _font, _size_font);
+            return;
+        }
+        std::cerr << "EventGnuplotField: " << "Wrong terminal!" << std::endl;
+    }
 
-	void _plot(const Field& s){
-		if(DIM == 1){
-			_spgnu->add(GnuplotActor::Lines(s));
-		}else if(DIM == 2){
-			_spgnu->add(GnuplotActor::Contour(s));
-		}
-		_spgnu->plot();
-		_spgnu->clear();
-	}
+    void _plot(const Field& s){
+        if(DIM == 1){
+            _spgnu->add(GnuplotActor::Lines(s));
+        }else if(DIM == 2){
+            _spgnu->add(GnuplotActor::Contour(s));
+        }
+        _spgnu->plot();
+        _spgnu->clear();
+    }
 
-	void _init_fun_plot(){
-		this->_fun = [](Gnuplot& gnu, const Field& f, St step , Vt t, int fob, pEqu pd){
-			if(DIM == 1){
-				gnu.add(GnuplotActor::Lines(f));
-			}else if(DIM == 2){
-				gnu.add(GnuplotActor::Contour(f));
-			}
-			gnu.plot();
-			gnu.clear();
-			return 1;
-		};
-	}
+    void _init_fun_plot(){
+        this->_fun = [](Gnuplot& gnu, const Field& f, St step , Vt t, int fob, pEqu pd){
+            if(DIM == 1){
+                gnu.add(GnuplotActor::Lines(f));
+            }else if(DIM == 2){
+                gnu.add(GnuplotActor::Contour(f));
+            }
+            gnu.plot();
+            gnu.clear();
+            return 1;
+        };
+    }
 
-	std::string _file_name(St step, Vt t, int fob) const{
-		std::stringstream ss;
-		ss << _path;
-		tfm::format(ss, _format.c_str() , _sn, step, t);
-		return ss.str();
-	}
+    std::string _file_name(St step, Vt t, int fob) const{
+        std::stringstream ss;
+        ss << _path;
+        tfm::format(ss, _format.c_str() , _sn, step, t);
+        return ss.str();
+    }
 };
 
 

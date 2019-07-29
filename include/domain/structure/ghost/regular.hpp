@@ -22,81 +22,81 @@ namespace carpio{
 template<St DIM>
 class SGhostRegular_ : public SGhost_<DIM>{
 public:
-	typedef	SIndex_<DIM> Index;
-	typedef SGrid_<DIM> Grid;
-	typedef std::shared_ptr<Grid> spGrid;
+    typedef    SIndex_<DIM> Index;
+    typedef SGrid_<DIM> Grid;
+    typedef std::shared_ptr<Grid> spGrid;
 
 protected:
-	spGrid _grid;
+    spGrid _grid;
 
 public:
-	SGhostRegular_(spGrid spg): _grid(spg){
+    SGhostRegular_(spGrid spg): _grid(spg){
 
-	}
-	~SGhostRegular_(){
+    }
+    ~SGhostRegular_(){
 
-	}
+    }
 
-	St ghost_layer() const{
-		return _grid->ghost_layer();
-	}
+    St ghost_layer() const{
+        return _grid->ghost_layer();
+    }
 
-	bool is_ghost(const Index& index) const{
-		for (St d = 0; d < DIM; ++d) {
-			Idx res = index.value(d);
-			if (res < 0) {
-				return true;
-			} else if (res >= this->_grid->n().value(d)) {
-				return true;
-			}
-		}
-		return false;
-	};
+    bool is_ghost(const Index& index) const{
+        for (St d = 0; d < DIM; ++d) {
+            Idx res = index.value(d);
+            if (res < 0) {
+                return true;
+            } else if (res >= this->_grid->n().value(d)) {
+                return true;
+            }
+        }
+        return false;
+    };
 
-	bool is_boundary(
-				const Index& index,
-				const St& a,
-				const St& o) const{
-		ASSERT(a < DIM);
-		Idx idx = index.value(a);
-		if(o == _M_){
-			return idx == 0;
-		}else if(o == _P_){
-			return idx == (_grid->n().value(a) - 1);
-		}else{
-			SHOULD_NOT_REACH;
-			return false;
-		}
-	}
+    bool is_boundary(
+                const Index& index,
+                const St& a,
+                const St& o) const{
+        ASSERT(a < DIM);
+        Idx idx = index.value(a);
+        if(o == _M_){
+            return idx == 0;
+        }else if(o == _P_){
+            return idx == (_grid->n().value(a) - 1);
+        }else{
+            SHOULD_NOT_REACH;
+            return false;
+        }
+    }
 
-	bool is_normal(const Index& index) const{
-		return !(is_ghost(index));
-	}
+    bool is_normal(const Index& index) const{
+        return !(is_ghost(index));
+    }
 
 
-	int boundary_id(
-				const Index& indexc,
-				const Index& indexg,
-				const St& axe,
-			    const St& ori) const{
-		// get seg idx in BCID
-		St ABI[3][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
-		Index n = this->_grid->n();
-		for (St d = 0; d < DIM; ++d) {
-			Idx res = indexg.value(d);
-			if (res < 0) {
-				return ABI[d][0];
-			} else if (res >= n.value(d)) {
-				return ABI[d][1];
-			}
-		}
-		SHOULD_NOT_REACH;
-		return 0;
-	};
+    int boundary_id(
+                const Index& indexc,
+                const Index& indexg,
+                const St& axe,
+                const St& ori) const{
+        // get seg idx in BCID
+        St ABI[3][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
+        Index n = this->_grid->n();
+        for (St d = 0; d < DIM; ++d) {
+            Idx res = indexg.value(d);
+            if (res < 0) {
+                return ABI[d][0];
+            } else if (res >= n.value(d)) {
+                return ABI[d][1];
+            }
+        }
+        SHOULD_NOT_REACH;
+        return 0;
+    };
 
-	St size_normal() const{
-		return _grid->num_cells();
-	}
+    St size_normal() const{
+        return _grid->num_cells();
+    }
 };
 
 
