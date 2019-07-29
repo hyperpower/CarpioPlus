@@ -14,7 +14,7 @@ namespace carpio {
 template<St DIM, class D>
 class Laplace_: public Equation_<DIM, D>{
 public:
-    typedef Convection_<DIM, D>        Self;
+    typedef Laplace_<DIM, D>           Self;
     typedef D                          Domain;
     typedef Equation_<DIM, D>          Equation;
     typedef typename Domain::SizeType  St;
