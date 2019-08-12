@@ -35,7 +35,6 @@ TEST(vof, initial){
 	spOrder sporder(new SOrderXYZ_<2>(spsg, spgh));
 	Field sc(spsg,spgh, sporder);  //color field
 
-
 	// set field
 	VOF::SetColor(sc, line);
 
