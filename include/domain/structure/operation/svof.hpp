@@ -38,8 +38,8 @@ public:
     typedef BoundaryIndex* pBI;
     typedef BoundaryCondition BC;
 
-    typedef VOFTool_<Vt, DIM> VOFTool;
-    typedef VOFToolPL_<Vt>    VOFToolPL;
+    typedef CuboidTool_<Vt, DIM> CuboidTool;
+    typedef CuboidToolPL_<Vt>    CuboidToolPL;
     typedef Point_<Vt, DIM>   Point;
     typedef Line_<Vt>          Line;
 
@@ -49,7 +49,7 @@ public:
     }
 
     static void SetColor(Field2& field, const Line& line){
-        VOFToolPL tool;
+    	CuboidToolPL tool;
         auto& grid = field.grid();
         for (auto& idx : field.order()) {
             Point pmin = grid.v(0, idx);

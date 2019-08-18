@@ -3,6 +3,7 @@
 
 #include "type_define.hpp"
 #include "geometry/objects/objects.hpp"
+#include <tuple>
 #include <type_traits>  //include this
 
 namespace carpio {
@@ -20,6 +21,12 @@ namespace carpio {
 // |       |
 // |       |
 // 0------>1
+const std::array<const std::array<Orientation, 2>, 4> VORDER2O2= {{
+	{ _M_, _M_ }, // 0
+    { _P_, _M_ }, // 1
+    { _M_, _P_ }, // 2
+    { _P_, _P_ }  // 3
+}};
 // edge order
 //     3
 // *------>*
@@ -28,23 +35,43 @@ namespace carpio {
 // |       |
 // *------>*
 //     2
+const std::array<const std::array<int, 2>, 2> FAO2ORDER2 = {{
+	{0, 1}, // _X_
+	{2, 3}  // _Y_
+}};
 // face order == edge order
 
 // cuboid 3D
 // vertex order
-//      x    y    z
-//   { _M_, _M_, _M_ }, // 0
-//   { _P_, _M_, _M_ }, // 1
-//   { _M_, _P_, _M_ }, // 2
-//   { _P_, _P_, _M_ }, // 3
-//   { _M_, _M_, _P_ }, // 4
-//   { _P_, _M_, _P_ }, // 5
-//   { _M_, _P_, _P_ }, // 6
-//   { _P_, _P_, _P_ }  // 7
+const std::array<const std::array<Orientation, 3>, 8> VORDER2O3= {{
+	{ _M_, _M_, _M_ }, // 0
+	{ _P_, _M_, _M_ }, // 1
+	{ _M_, _P_, _M_ }, // 2
+	{ _P_, _P_, _M_ }, // 3
+	{ _M_, _M_, _P_ }, // 4
+	{ _P_, _M_, _P_ }, // 5
+	{ _M_, _P_, _P_ }, // 6
+	{ _P_, _P_, _P_ }  // 7
+}};
+// face order
+const std::array<const std::array<int, 2>, 3> FAO2ORDER3 = {{
+	{0, 1},
+	{2, 3},
+	{4, 5}
+}};
+const std::array<Axes, 6> FORDER2A3 = {
+	_X_, _X_, _Y_, _Y_, _Z_, _Z_
+};
+const std::array<Orientation, 6> FORDER2O3 = {
+	_M_, _P_, _M_, _P_, _M_, _P_
+};
+
 // edge order
 
+
+
 template <typename TYPE, St DIM>
-class VOFTool_ {
+class CuboidTool_ {
 public:
 	typedef typename std::conditional<DIM == 2,
 			                          Line_<TYPE>,
@@ -62,9 +89,61 @@ public:
 
 	typedef Point_<TYPE, DIM>		Point;
 
-
+	typedef std::tuple<Axes, Orientation> TupleAO;
 public:
-	VOFTool_() {
+	CuboidTool_() {
+	}
+	int vertex_order(Orientation ox, Orientation oy, Orientation oz){
+		SHOULD_NOT_REACH;
+	}
+	Orientation vertex_orientation_x(int order){
+		if(DIM == 1){
+			ASSERT(order < 2);
+			return (order == 0) ? _M_ : _P_;
+		}
+		if(DIM == 2){
+			ASSERT(order < 4);
+			return VORDER2O2[order][_X_];
+		}
+		if(DIM == 3){
+			ASSERT(order < 8);
+			return VORDER2O3[order][_X_];
+		}
+		return _M_;
+	}
+	Orientation vertex_orientation_y(const int& order) {
+		if (DIM == 1) {
+			return _M_;
+		}
+		if (DIM == 2) {
+			ASSERT(order < 4);
+			return VORDER2O2[order][_Y_];
+		}
+		if (DIM == 3) {
+			ASSERT(order < 8);
+			return VORDER2O3[order][_Y_];
+		}
+		return _M_;
+	}
+	Orientation vertex_orientation_z(const int& order) {
+		if (DIM == 3) {
+			ASSERT(order < 8);
+			return VORDER2O3[order][_Z_];
+		} else {
+			return _M_;
+		}
+	}
+	Orientation vertex_orientation(const int& order, Axes a){
+		if(a == _X_){
+			return vertex_orientation_x(order);
+		}
+		if(a == _Y_){
+			return vertex_orientation_y(order);
+		}
+		if(a == _Z_) {
+			return vertex_orientation_z(order);
+		}
+		return _M_;
 	}
 	virtual Vt cal_area(const Interface&, const Point&, const Point&) const {
 		SHOULD_NOT_REACH;
@@ -107,7 +186,7 @@ public:
 		SHOULD_NOT_REACH;
 		return Point();
 	}
-	virtual ~VOFTool_() {
+	virtual ~CuboidTool_() {
 }
 };
 

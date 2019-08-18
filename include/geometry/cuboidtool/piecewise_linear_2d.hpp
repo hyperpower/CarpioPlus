@@ -1,7 +1,7 @@
 #ifndef _PIECEWISE_LINEAR_2D_HPP_
 #define _PIECEWISE_LINEAR_2D_HPP_
 
-#include "voftool_define.hpp"
+#include "cuboidtool_define.hpp"
 #include "geometry/geometry_define.hpp"
 #include "geometry/objects/basic/point.hpp"
 #include "geometry/objects/basic/line.hpp"
@@ -14,11 +14,11 @@
 namespace carpio {
 
 template<class TYPE>
-class VOFToolPL_:public VOFTool_<TYPE, 2>{
+class CuboidToolPL_:public CuboidTool_<TYPE, 2>{
 public:
 	static const St Dim = 2;
 	typedef TYPE Vt;
-	typedef VOFTool_<TYPE, 2>                  Base;
+	typedef CuboidTool_<TYPE, 2>                Base;
 	typedef Point_<TYPE, Dim>                  Point;
 	typedef Point_<TYPE, Dim>&             ref_Point;
 	typedef const Point_<TYPE, Dim>& const_ref_Point;
@@ -39,7 +39,7 @@ public:
 	typedef const pSegment            const_pSegment;
 
 public:
-	VOFToolPL_():Base(){}
+	CuboidToolPL_():Base(){}
 
 	/*****************************************************
 	 * Forward Problem

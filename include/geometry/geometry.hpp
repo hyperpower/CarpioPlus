@@ -28,7 +28,7 @@
 
 #include "geometry/operation/creation/create_ts.hpp"
 
-#include "geometry/cuboidtool/voftool.hpp"
+#include "geometry/cuboidtool/cuboidtool.hpp"
 
 namespace carpio {
 
