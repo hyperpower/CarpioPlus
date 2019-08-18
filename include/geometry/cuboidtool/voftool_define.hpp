@@ -6,6 +6,43 @@
 #include <type_traits>  //include this
 
 namespace carpio {
+
+// cuboid 1d is a line
+//               *----------->*
+// vertex number 0            1
+// edge   number       0
+// face   number       0
+
+// cuboid 2d is a rectangle
+// vertex order in z order
+// 2------>3
+// ^       ^
+// |       |
+// |       |
+// 0------>1
+// edge order
+//     3
+// *------>*
+// ^       ^
+// |0      |1
+// |       |
+// *------>*
+//     2
+// face order == edge order
+
+// cuboid 3D
+// vertex order
+//      x    y    z
+//   { _M_, _M_, _M_ }, // 0
+//   { _P_, _M_, _M_ }, // 1
+//   { _M_, _P_, _M_ }, // 2
+//   { _P_, _P_, _M_ }, // 3
+//   { _M_, _M_, _P_ }, // 4
+//   { _P_, _M_, _P_ }, // 5
+//   { _M_, _P_, _P_ }, // 6
+//   { _P_, _P_, _P_ }  // 7
+// edge order
+
 template <typename TYPE, St DIM>
 class VOFTool_ {
 public:
