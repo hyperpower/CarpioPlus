@@ -82,6 +82,26 @@ std::string ToString(V1 a, V2 b, V3 c, V4 d, V5 e, V6 f, V7 g,
 	return sst.str();
 }
 
+inline std::string ToString(const Axes& a) {
+	if (a == _X_) {
+		return "_X_";
+	}
+	if (a == _Y_) {
+		return "_Y_";
+	}
+	return "_Z_";
+}
+inline std::string ToString(const Orientation& a) {
+	if (a == _M_) {
+		return "_M_";
+	}
+	if (a == _P_) {
+		return "_P_";
+	}
+	return "_C_";
+}
+
+
 inline bool FileAccessCheck( //
 		const std::string &filename, //
 		int mode //

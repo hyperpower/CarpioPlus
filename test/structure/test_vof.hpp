@@ -45,8 +45,9 @@ TEST(vof, initial){
 	gnu.set_equal_aspect_ratio();
 	gnu.add(SGA::Contour(sc));
 	gnu.add(GGA::Lines(line, -0.5, 0.5, 2));
-	gnu.plot();
+//	gnu.plot();
 }
+
 
 }
 #endif

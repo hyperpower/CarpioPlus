@@ -280,24 +280,6 @@ inline Direction DirectionInOrder(const St& i) {
 	return XYZDirectionInOrder(i - 18);
 }
 
-inline std::string ToString(const Axes& a) {
-	if (a == _X_) {
-		return "x";
-	}
-	if (a == _Y_) {
-		return "y";
-	}
-	return "z";
-}
-inline std::string ToString(const Orientation& a) {
-	if (a == _M_) {
-		return "m";
-	}
-	if (a == _P_) {
-		return "p";
-	}
-	return "c";
-}
 inline std::string ToString(const Direction& d) {
 	std::stringstream sst;
 	std::stringstream sst2;

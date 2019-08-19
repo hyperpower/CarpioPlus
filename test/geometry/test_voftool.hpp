@@ -7,8 +7,8 @@ namespace carpio {
 
 typedef GGnuplotActor_<double, 2> GA;
 
-typedef VOFTool_<Vt, 2> Tool;
-typedef VOFToolPL_<Vt>  ToolPL;
+typedef CuboidTool_<Vt, 2> Tool;
+typedef CuboidToolPL_<Vt>  ToolPL;
 typedef Line_<Vt> Line;
 typedef Point_<Vt, 2> Point;
 typedef Box_<Vt, 2>   Box;
@@ -20,11 +20,11 @@ TEST(GEOVOF, DISABLED_case1){
 	Vt c1 = 1.5;
 	Vt c2 = 1.0;
 	std::vector<Point> box{
-			Point(0,0),
+			Point(0, 0),
 			Point(c1,0),
 			Point(c1,c2),
-			Point(0,c2),
-			Point(0,0)
+			Point(0, c2),
+			Point(0, 0)
 		};
 	Line l1(m1, m2, alpha);
 	std::cout<< "l1    : " << l1 << std::endl;
@@ -57,7 +57,7 @@ TEST(GEOVOF, DISABLED_case1){
 	gnu.add(GA::Lines(l1, -1, 5));
 	gnu.add(GA::Lines((*spl), -1, 5, 2));
 	gnu.add(GA::LinesPoints((*sps), 3));
-	gnu.plot();
+//	gnu.plot();
 }
 
 TEST(GEOVOF, DISABLED_case2){
@@ -227,6 +227,17 @@ TEST(GEOVOF, case5){
 	gnu.add(GA::Lines(l, -1, 5));
 	gnu.add(GA::Lines(ln, -1, 4, 2));
 //	gnu.plot();
+}
+
+TEST(CuboidTool, case5){
+	Tool tool;
+	std::cout << "Tool dim = " << tool.Dim << std::endl;
+	std::cout << "Ori = " << ToString(_M_) << ToString(_P_)
+			  << " Order = " << tool.vertex_order(_M_,_P_) << std::endl;
+	std::cout << "Face order ----------------------\n";
+	std::cout << "a = " << ToString(_X_) << " o = " << ToString(_P_);
+	std::cout << " Order = " << tool.face_order(_X_, _P_) <<std::endl;
+
 }
 
 

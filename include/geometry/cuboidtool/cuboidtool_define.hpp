@@ -27,6 +27,11 @@ const std::array<const std::array<Orientation, 2>, 4> VORDER2O2= {{
     { _M_, _P_ }, // 2
     { _P_, _P_ }  // 3
 }};
+const std::array<const std::array<int, 2>, 2> VO2ORDER2 = {{
+	{0, 2}, // _M_
+	{1, 3}, // _P_
+}};
+
 // edge order
 //     3
 // *------>*
@@ -53,6 +58,12 @@ const std::array<const std::array<Orientation, 3>, 8> VORDER2O3= {{
 	{ _M_, _P_, _P_ }, // 6
 	{ _P_, _P_, _P_ }  // 7
 }};
+const std::array<
+    const std::array<
+        const std::array<int, 3>, 2>, 2> VO2ORDER3 = {{
+	{{{0, 4}, {2, 6}}}, // _M_
+	{{{1, 5}, {3, 7}}}, // _P_
+}};
 // face order
 const std::array<const std::array<int, 2>, 3> FAO2ORDER3 = {{
 	{0, 1},
@@ -73,6 +84,7 @@ const std::array<Orientation, 6> FORDER2O3 = {
 template <typename TYPE, St DIM>
 class CuboidTool_ {
 public:
+	static  const St Dim = 2;
 	typedef typename std::conditional<DIM == 2,
 			                          Line_<TYPE>,
 									  Plane_<TYPE> >::type Interface;
@@ -93,9 +105,37 @@ public:
 public:
 	CuboidTool_() {
 	}
-	int vertex_order(Orientation ox, Orientation oy, Orientation oz){
-		SHOULD_NOT_REACH;
+	// vertex 1d
+	int vertex_order(Orientation ox){
+		ASSERT(ox != _C_);
+//		ASSERT(Dim == 1);
+		return ox == _M_ ? 0 : 1;
 	}
+	// vertex 2d
+	int vertex_order(Orientation ox, Orientation oy){
+		ASSERT(ox != _C_);
+		ASSERT(oy != _C_);
+//		ASSERT(Dim == 2);
+		return VO2ORDER2[ox][oy];
+	}
+	// vertex 3d
+	int vertex_order(Orientation ox, Orientation oy, Orientation oz){
+		ASSERT(ox != _C_);
+		ASSERT(oy != _C_);
+		ASSERT(oz != _C_);
+//		ASSERT(Dim == 3);
+		return VO2ORDER3[ox][oy][oz];
+	}
+	int face_order(Axes ax, Orientation o){
+		if (DIM == 2){
+			return FAO2ORDER2[ax][o];
+		}
+		if (DIM == 3){
+			return FAO2ORDER3[ax][o];
+		}
+		return o;
+	}
+
 	Orientation vertex_orientation_x(int order){
 		if(DIM == 1){
 			ASSERT(order < 2);
