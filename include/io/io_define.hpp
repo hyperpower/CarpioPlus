@@ -101,7 +101,6 @@ inline std::string ToString(const Orientation& a) {
 	return "_C_";
 }
 
-
 inline bool FileAccessCheck( //
 		const std::string &filename, //
 		int mode //

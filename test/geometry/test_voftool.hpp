@@ -14,11 +14,11 @@ typedef Point_<Vt, 2> Point;
 typedef Box_<Vt, 2>   Box;
 
 TEST(GEOVOF, DISABLED_case1){
-	Vt m1 =  0.8;
-	Vt m2 =  1.0;
+	Vt m1    =  0.8;
+	Vt m2    =  1.0;
 	Vt alpha = 2.1;
-	Vt c1 = 1.5;
-	Vt c2 = 1.0;
+	Vt c1    = 1.5;
+	Vt c2    = 1.0;
 	std::vector<Point> box{
 			Point(0, 0),
 			Point(c1,0),
@@ -27,14 +27,14 @@ TEST(GEOVOF, DISABLED_case1){
 			Point(0, 0)
 		};
 	Line l1(m1, m2, alpha);
-	std::cout<< "l1    : " << l1 << std::endl;
-	std::cout<< "alpha =  " << l1.alpha() << std::endl;
-	std::cout<< "m1    =  " << l1.a() << std::endl;
-	std::cout<< "m2    =  " << l1.b() << std::endl;
-	std::cout<< "c1    =  " << c1 << std::endl;
-	std::cout<< "c2    =  " << c2 << std::endl;
-	std::cout<< "c2 / c1 =  " << c2 / c1 << std::endl;
-	std::cout<< "m1 / m2 =  " << m1 / m2 << std::endl;
+	std::cout << "l1    : " << l1 << std::endl;
+	std::cout << "alpha =  " << l1.alpha() << std::endl;
+	std::cout << "m1    =  " << l1.a() << std::endl;
+	std::cout << "m2    =  " << l1.b() << std::endl;
+	std::cout << "c1    =  " << c1 << std::endl;
+	std::cout << "c2    =  " << c2 << std::endl;
+	std::cout << "c2 / c1 =  " << c2 / c1 << std::endl;
+	std::cout << "m1 / m2 =  " << m1 / m2 << std::endl;
 	std::shared_ptr<Tool> sptool(new ToolPL());
 	auto area = sptool->cal_area(l1, c1, c2);
 	std::cout << "Area  = " << area << std::endl;
@@ -237,8 +237,8 @@ TEST(CuboidTool, case5){
 	std::cout << "Face order ----------------------\n";
 	std::cout << "a = " << ToString(_X_) << " o = " << ToString(_P_);
 	std::cout << " Order = " << tool.face_order(_X_, _P_) <<std::endl;
-
 }
+
 
 
 }
