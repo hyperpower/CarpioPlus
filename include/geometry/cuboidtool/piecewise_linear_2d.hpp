@@ -55,20 +55,92 @@ public:
 	 *          3 Distance
 	 *          4 FunXYZT
 	 *
+	 *          return
+	 *          aperture ratio is number with direction
+     *          *=====-----*  aperture ratio =  0.5
+     *          *-----=====*  aperture ratio = -0.5
+     *          *----------*  aperture ratio =  0.0
+     *          *==========*  aperture ratio =  1.0 or -1.0
+     *          |---------> positive direction
+	 *
 	 ******************/
 	Vt cal_edge_aperture_ratio(
 			const Point& po,
 			const Axes& a,
 			const Vt& dis,
 			const Vt& time,
-			FunXYZT_Value fun){
-		auto& pm = po;
-		Point pp(po);
-		pp(a) += dis;
-		Vt vm = fun(po.x(), po.y(), po.z(), time);
-		Vt vp = fun(pp.x(), pp.y(), pp.z(), time);
-		SHOULD_NOT_REACH;
+			const Vt& th,
+			FunXYZT_Value fun,
+			const Vt& tol){
+		int state = _cal_edge_aperture_state(po.x(), po.y(), a, _P_, dis, time, th, fun);
+		if(state == 2){
+			return 0.0;
+		}else if(state == -2){
+			return 1.0;
+		} else {
+			std::function<Vt(Vt)> funx = [fun, &po, &time](Vt v) {
+				Vt res = fun(v, po.y(), 0.0, time);
+				return res;
+			};
+			std::function<Vt(Vt)> funy = [fun, &po, &time](Vt v) {
+				Vt res = fun(po.x(), v, 0.0, time);
+				return res;
+			};
+			Vt loc = 0.0;
+			if (a == _X_) {
+				loc = SolveDichotomy(po.x(), po.x() + dis, th, tol, funx);
+				if(state == 1){
+					return (loc - po.x()) / dis;
+				}else{
+					return -(1.0 - (loc - po.x()) / dis);
+				}
+			} else {
+				loc = SolveDichotomy(po.y(), po.y() + dis, th, tol, funy);
+				if (state == 1) {
+					return (loc - po.y()) / dis;
+				} else {
+					return -(1.0 - (loc - po.y()) / dis);
+				}
+			}
+		}
 	}
+	/********************
+	 * \brief  if value vm and vp > th, then return  2
+	 *                            < th, then return -2
+	 *                  vm<th  vp>th,   then return  1
+	 *                  vm>th  vp<th,   then return -1
+	 */
+	int _cal_edge_aperture_state(
+			const Vt&    xo,
+			const Vt&    yo,
+			const Axes&  a,          // _X_ or _Y_
+			const Orientation& ori,  // _M_ or _P_
+			const Vt&    dis,
+			const Vt&    time,
+			const Vt&    th,
+			FunXYZT_Value fun){
+		Vt x  = (a == _X_) ? (ori == _M_ ? xo - dis : xo + dis) : xo;
+		Vt y  = (a == _Y_) ? (ori == _M_ ? yo - dis : yo + dis) : yo;
+		Vt vm = fun(xo, yo, 0.0, time);
+		Vt vp = fun(x,  y, 0.0, time);
+		if(vm >= th && vp >= th){
+			return 2;
+		}
+		if(vm <= th &&  vp <= th){
+			return -2;
+		}
+		if(vm <= th &&  vp >= th){
+			return 1;
+		}
+		if(vm >= th &&  vp <= th){
+			return -1;
+		}
+		SHOULD_NOT_REACH;
+		return 0;
+	}
+
+
+
 
 	/*****************************************************
 	 * Forward Problem

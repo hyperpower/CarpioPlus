@@ -6,8 +6,31 @@
 #include "algebra/array/array_list.hpp"
 #include "algebra/matrix/matrix.hpp"
 #include <cmath>
+#include <functional>
 
 namespace carpio{
+
+template<class TYPE>
+TYPE SolveDichotomy(TYPE left, TYPE right,
+		            const TYPE& thershold,
+					const TYPE& tol,
+		            std::function<TYPE(TYPE)> fun){
+	TYPE middle = (left + right) * 0.5;
+	while (std::abs(fun(middle) - thershold) > tol) {
+		if (IsSameSign(fun(middle) - thershold,
+				       fun(right)  - thershold)) {
+			right = middle;
+			middle = (middle + left) * 0.5;
+			continue;
+		} else {
+			left = middle;
+			middle = (middle + right) * 0.5;
+			continue;
+		}
+	}
+	return middle;
+}
+
 
 template<class TYPE>
 int SolveQuadraticEquation(const TYPE &a, const TYPE &b, const TYPE &c,

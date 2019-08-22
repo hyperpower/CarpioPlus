@@ -341,6 +341,17 @@ double Distance(const Point_<TYPE, DIM>& p1,
 		         const Point_<TYPE, DIM>& p2) {
 	return std::sqrt(Distance2(p1, p2));
 }
+template<typename TYPE, St DIM>
+Point_<TYPE, DIM> Mid(
+		         const Point_<TYPE, DIM>& p1,
+		         const Point_<TYPE, DIM>& p2) {
+	Point_<TYPE, DIM> res;
+	for (St i = 0; i < DIM; i++) {
+		res[i] = 0.5 * (p1[i] + p2[i]);
+	}
+	return res;
+}
+
 
 /**
  * Get minimun loaction of

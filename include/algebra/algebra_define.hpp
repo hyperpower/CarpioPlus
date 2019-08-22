@@ -23,8 +23,8 @@ inline int StepFun(Float x) {
 inline int StepFun(int x) {
 	return (x <= 0) ? 0 : 1;
 }
-
-inline int Sign(Float x) {
+template<class TYPE>
+inline int Sign(const TYPE& x) {
 	if (x < 0.0) {
 		return -1;
 	} else if (x > 0.0) {
@@ -33,7 +33,14 @@ inline int Sign(Float x) {
 		return 0;
 	}
 }
-
+template<class TYPE>
+inline bool IsSameSign(const TYPE& x, const TYPE& y){
+	if(Sign(x) == Sign(y)){
+		return true;
+	}else{
+		return false;
+	}
+}
 enum Range {
 	_oo_, _oc_, _co_, _cc_,
 };
