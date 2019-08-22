@@ -38,8 +38,37 @@ public:
 	typedef std::shared_ptr<Segment>       spSegment;
 	typedef const pSegment            const_pSegment;
 
+    typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
+
 public:
 	CuboidToolPL_():Base(){}
+	/*****************************************************
+	 * Cut cell functions
+	 * 1 calculate edge aperture ratio by FunXYZT
+	 ****************************************************/
+
+	/*******************
+	 * \brief   Calculate edge aperture ratio
+	 *          Edge defined as:
+	 *          1 Origin point
+	 *          2 Axes
+	 *          3 Distance
+	 *          4 FunXYZT
+	 *
+	 ******************/
+	Vt cal_edge_aperture_ratio(
+			const Point& po,
+			const Axes& a,
+			const Vt& dis,
+			const Vt& time,
+			FunXYZT_Value fun){
+		auto& pm = po;
+		Point pp(po);
+		pp(a) += dis;
+		Vt vm = fun(po.x(), po.y(), po.z(), time);
+		Vt vp = fun(pp.x(), pp.y(), pp.z(), time);
+		SHOULD_NOT_REACH;
+	}
 
 	/*****************************************************
 	 * Forward Problem

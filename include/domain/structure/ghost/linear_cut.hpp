@@ -17,6 +17,9 @@ template<St DIM>
 class SCellLinearCut_{
 protected:
     typedef SCellLinearCut_<DIM> Self;
+
+    typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
+    typedef std::function<Vt(Vt, Vt, Vt)>     FunXYZ_Value;
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
@@ -32,7 +35,7 @@ protected:
     // *==========*  aperture ratio =  1.0 or -1.0
     // |---------> positive direction
 
-// 2 dimensions
+    // 2 dimensions
     // *------>*
     // ^       ^
     // |       |
