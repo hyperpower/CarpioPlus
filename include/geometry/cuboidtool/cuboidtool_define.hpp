@@ -84,7 +84,7 @@ const std::array<Orientation, 6> FORDER2O3 = {
 template <typename TYPE, St DIM>
 class CuboidTool_ {
 public:
-	static  const St Dim = 2;
+	static  const St Dim = DIM;
 	typedef typename std::conditional<DIM == 2,
 			                          Line_<TYPE>,
 									  Plane_<TYPE> >::type Interface;

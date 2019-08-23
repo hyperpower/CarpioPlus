@@ -244,10 +244,15 @@ TEST(CuboidTool, case6){
 	typename ToolPL::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt t){
 		return x * x + y * y - 0.25;
 	};
-	typename ToolPL::Point po(0.3 ,0);
-	Vt ratio = tool.cal_edge_aperture_ratio(po, _X_, 2, 0, 0, fun, 1e-5);
-	std::cout << "Ratio = " << ratio << std::endl;
-
+	typename ToolPL::Point po(-1.0, -1.0);
+	Vt dx = 1.0;
+	Vt dy = 1.0;
+	auto aa = tool.cal_cell_aperture_ratios(
+			          po.x(),po.y(), dx, dy, 0.0, 0.0, fun, 1e-4);
+	std::cout << "a 0 = " << aa[0] << std::endl;
+	std::cout << "a 1 = " << aa[1] << std::endl;
+	std::cout << "a 2 = " << aa[2] << std::endl;
+	std::cout << "a 3 = " << aa[3] << std::endl;
 }
 
 

@@ -17,6 +17,9 @@ template<class TYPE>
 class CuboidToolPL_:public CuboidTool_<TYPE, 2>{
 public:
 	static const St Dim = 2;
+	static const St NumFaces = 4;
+	static const St NumVertexes = 4;
+
 	typedef TYPE Vt;
 	typedef CuboidTool_<TYPE, 2>                Base;
 	typedef Point_<TYPE, Dim>                  Point;
@@ -45,7 +48,57 @@ public:
 	/*****************************************************
 	 * Cut cell functions
 	 * 1 calculate edge aperture ratio by FunXYZT
+	 * 2 calculate cell aperture ratios by FunXYZT
 	 ****************************************************/
+	std::array<Vt, NumFaces> cal_cell_aperture_ratios(
+			const Vt& xo,
+			const Vt& yo,
+			const Vt& dx,
+			const Vt& dy,
+			const Vt& time,
+			const Vt& th,
+			FunXYZT_Value fun,
+			const Vt& tol){
+		std::array<Vt, NumVertexes> arrv;
+		arrv[0] = fun(xo,   yo,   0.0,time);
+		arrv[1] = fun(xo+dx,yo,   0.0,time);
+		arrv[2] = fun(xo,   yo+dy,0.0,time);
+		arrv[3] = fun(xo+dx,yo+dy,0.0,time);
+		return cal_cell_aperture_ratios(xo, yo, dx, dy, time, th, fun, tol, arrv);
+	}
+
+	std::array<Vt, NumFaces> cal_cell_aperture_ratios(
+			const Vt& xo,
+			const Vt& yo,
+			const Vt& dx,
+			const Vt& dy,
+			const Vt& time,
+			const Vt& th,
+			FunXYZT_Value fun,
+			const Vt& tol,
+			const std::array<Vt, NumVertexes>& arrv) const{
+		// v0 - 2 => e0
+		// v1 - 3 => e1
+		// v0 - 1 => e2
+		// v2 - 3 => e3
+		std::array<Vt, NumFaces> arrres;
+		auto se0  = _aperture_state(arrv[0], arrv[2], th);
+		arrres[0] = cal_edge_aperture_ratio(xo,   yo, _Y_, dy,
+				                            time, th, fun, tol, se0);
+
+		auto se1  = _aperture_state(arrv[1], arrv[3], th);
+		arrres[1] = cal_edge_aperture_ratio(xo + dx, yo, _Y_, dy,
+				                            time,    th, fun, tol, se1);
+
+		auto se2  = _aperture_state(arrv[0], arrv[1], th);
+		arrres[2] = cal_edge_aperture_ratio(xo, yo, _X_, dx,
+				                            time, th, fun, tol, se2);
+
+		auto se3  = _aperture_state(arrv[2], arrv[3], th);
+		arrres[3] = cal_edge_aperture_ratio(xo, yo + dy, _X_, dx,
+				                            time, th, fun, tol, se3);
+		return arrres;
+	}
 
 	/*******************
 	 * \brief   Calculate edge aperture ratio
@@ -65,41 +118,42 @@ public:
 	 *
 	 ******************/
 	Vt cal_edge_aperture_ratio(
-			const Point& po,
+			const Vt&   xo,
+			const Vt&   yo,
 			const Axes& a,
-			const Vt& dis,
-			const Vt& time,
-			const Vt& th,
+			const Vt&   dis,
+			const Vt&   time,
+			const Vt&   th,
 			FunXYZT_Value fun,
-			const Vt& tol){
-		int state = _cal_edge_aperture_state(po.x(), po.y(), a, _P_, dis, time, th, fun);
+			const Vt&   tol,
+			const int&  state) const{
 		if(state == 2){
 			return 0.0;
 		}else if(state == -2){
 			return 1.0;
 		} else {
-			std::function<Vt(Vt)> funx = [fun, &po, &time](Vt v) {
-				Vt res = fun(v, po.y(), 0.0, time);
+			std::function<Vt(Vt)> funx = [fun, &yo, &time](Vt v) {
+				Vt res = fun(v, yo, 0.0, time);
 				return res;
 			};
-			std::function<Vt(Vt)> funy = [fun, &po, &time](Vt v) {
-				Vt res = fun(po.x(), v, 0.0, time);
+			std::function<Vt(Vt)> funy = [fun, &xo, &time](Vt v) {
+				Vt res = fun(xo, v, 0.0, time);
 				return res;
 			};
 			Vt loc = 0.0;
 			if (a == _X_) {
-				loc = SolveDichotomy(po.x(), po.x() + dis, th, tol, funx);
+				loc = SolveDichotomy(xo, xo + dis, th, tol, funx);
 				if(state == 1){
-					return (loc - po.x()) / dis;
+					return (loc - xo) / dis;
 				}else{
-					return -(1.0 - (loc - po.x()) / dis);
+					return -(1.0 - (loc - xo) / dis);
 				}
 			} else {
-				loc = SolveDichotomy(po.y(), po.y() + dis, th, tol, funy);
+				loc = SolveDichotomy(yo, yo + dis, th, tol, funy);
 				if (state == 1) {
-					return (loc - po.y()) / dis;
+					return (loc - yo) / dis;
 				} else {
-					return -(1.0 - (loc - po.y()) / dis);
+					return -(1.0 - (loc - yo) / dis);
 				}
 			}
 		}
@@ -109,7 +163,7 @@ public:
 	 *                            < th, then return -2
 	 *                  vm<th  vp>th,   then return  1
 	 *                  vm>th  vp<th,   then return -1
-	 */
+	 *******************/
 	int _cal_edge_aperture_state(
 			const Vt&    xo,
 			const Vt&    yo,
@@ -118,21 +172,24 @@ public:
 			const Vt&    dis,
 			const Vt&    time,
 			const Vt&    th,
-			FunXYZT_Value fun){
+			FunXYZT_Value fun) const{
 		Vt x  = (a == _X_) ? (ori == _M_ ? xo - dis : xo + dis) : xo;
 		Vt y  = (a == _Y_) ? (ori == _M_ ? yo - dis : yo + dis) : yo;
 		Vt vm = fun(xo, yo, 0.0, time);
 		Vt vp = fun(x,  y, 0.0, time);
-		if(vm >= th && vp >= th){
+		return _aperture_state(vm, vp, th);
+	}
+	int _aperture_state(const Vt& vm, const Vt& vp, const Vt& th) const{
+		if (vm >= th && vp >= th) {
 			return 2;
 		}
-		if(vm <= th &&  vp <= th){
+		if (vm <= th && vp <= th) {
 			return -2;
 		}
-		if(vm <= th &&  vp >= th){
+		if (vm <= th && vp >= th) {
 			return 1;
 		}
-		if(vm >= th &&  vp <= th){
+		if (vm >= th && vp <= th) {
 			return -1;
 		}
 		SHOULD_NOT_REACH;
