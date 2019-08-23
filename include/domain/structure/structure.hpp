@@ -28,6 +28,7 @@
 #include "domain/structure/io/sio_file.hpp"
 #include "domain/structure/io/sgnuplot_actor.hpp"
 
+#include "creation/sghost_by_function.hpp"
 
 namespace carpio {
 
@@ -75,6 +76,8 @@ public:
 
     typedef SUdotNabla_<DIM>    UdotNabla;
     typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
+
+    // creation
 
     // function
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;

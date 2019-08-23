@@ -70,10 +70,10 @@ public:
 template<St DIM>
 class SGhostMask_ : public SGhost_<DIM>{
 public:
-    typedef    SIndex_<DIM> Index;
-    typedef SGrid_<DIM> Grid;
-    typedef std::shared_ptr<Grid> spGrid;
-    typedef SCellMask_<DIM> CellMask;
+    typedef SIndex_<DIM>                Index;
+    typedef SGrid_<DIM>                 Grid;
+    typedef std::shared_ptr<Grid>     spGrid;
+    typedef SCellMask_<DIM>             CellMask;
     typedef std::shared_ptr<CellMask> spCellMask;
 
     typedef typename Grid::FunIndex  FunIndex;
@@ -86,7 +86,6 @@ public:
           //input cell center coordinates (x,y,z)
             spCellMask(const Vt&, const Vt&, const Vt&)
             > FunSetByXYZ;
-
 
     typedef MultiArray_<spCellMask, DIM> Mat;
     typedef typename Mat::reference reference;
