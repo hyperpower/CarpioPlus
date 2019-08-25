@@ -20,6 +20,8 @@ protected:
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
     typedef std::function<Vt(Vt, Vt, Vt)>     FunXYZ_Value;
+
+    typedef CuboidTool_<Vt, DIM>   Tool;
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
@@ -45,10 +47,10 @@ protected:
 
     // Number is edge order
     // For 2D edge order is face order
-    // y   ___3___
-    // ^  |       |
+    // y  *---3-->*
+    // ^  ^       ^
     // | 0|       |1
-    // |  |_______|
+    // |  *------>*
     // |      2
     // O-----> x
 
@@ -81,24 +83,37 @@ public:
     int& type(){
         return this->_type;
     }
-    void set_type(int t) const{
+    void set_type(int t){
     	this->_type = t;
     }
     void set_boundary_id(int id){
        _bid = id; // boundary id only on cut interfaces
     }
 
-    int get_boundary_id() {
+    int get_boundary_id() const{
         return _bid;
     }
 
-    Vt get_aperture_ratio(int axe, int o){
+    void set_aperture_ratio(const std::array<Vt, NumEdge>& arr){
+    	for(St i = 0; i< NumEdge; i++){
+    		_ers[i] = arr[i];
+    	}
+    }
+
+    Vt get_aperture_ratio(int axe, int o) const{
 		if (DIM == 1) {
 			return _ers;
+		}
+		Tool tool;
+		if (DIM == 2) {
+			auto fo = tool.face_order(ToAxes(axe), ToOrientation(o));
+			return _ers[fo];
 		}
 		SHOULD_NOT_REACH;
 		return 0;
     }
+
+
 };
 
 template<St DIM>
@@ -153,27 +168,33 @@ public:
 		bool bres = Base::is_ghost(index);
 		if(bres == false){
 			auto& pc = this->operator ()(index);
-			if(pc!=nullptr){
+			if(pc !=nullptr ){
 				return (pc->type() == _GHOST_) ? true : false;
 			}else{ //pc == nullptr
 				return false;
 			}
 		}
+		return bres;
 	};
 	bool is_boundary(const Index& index, const St& a,
 			const St& o) const {
-
+		SHOULD_NOT_REACH;
 	};
 	bool is_normal(const Index& index) const {
 		return (!is_ghost(index) && !is_cut(index));
 	}
 	;
 	bool is_cut(const Index& index) const{
-		auto& pc = this->operator ()(index);
-		if(pc != nullptr){
-			return (pc->type() == _CUT_) ? true : false;
-		}else{ //pc == nullptr
+		bool bres = Base::is_ghost(index);
+		if (bres == true) {
 			return false;
+		} else {
+			auto& pc = this->operator ()(index);
+			if (pc != nullptr) {
+				return (pc->type() == _CUT_) ? true : false;
+			} else { //pc == nullptr
+				return false;
+			}
 		}
 	}
 
@@ -186,8 +207,7 @@ public:
 
 	void set(FunSetByIndex fun) {
 		FunIndex funi = [&fun, this](const Index& idx) {
-			auto& grid = *(this->_grid);
-			auto res = fun(idx, grid);
+			auto res = fun(idx);
 			this->operator ()(idx) = res;
 		};
 		this->_grid->for_each(funi);

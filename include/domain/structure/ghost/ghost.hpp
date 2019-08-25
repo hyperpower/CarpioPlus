@@ -10,7 +10,7 @@ namespace carpio{
 template<St DIM>
 class SGhost_ {
 public:
-    typedef    SIndex_<DIM> Index;
+    typedef SIndex_<DIM> Index;
     typedef SGrid_<DIM>  Grid;
 
     SGhost_(){
@@ -22,9 +22,11 @@ public:
 
 
     virtual Grid& grid() {
+    	SHOULD_NOT_REACH;
     }
 
     virtual const Grid& grid() const {
+    	SHOULD_NOT_REACH;
     }
 
     virtual bool is_ghost(const Index& index) const{};

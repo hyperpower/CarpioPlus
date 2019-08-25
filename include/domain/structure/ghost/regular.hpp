@@ -37,6 +37,14 @@ public:
 
     }
 
+    virtual Grid& grid() {
+       	return *_grid;
+    }
+
+    virtual const Grid& grid() const {
+       	return *_grid;
+    }
+
     St ghost_layer() const{
         return _grid->ghost_layer();
     }

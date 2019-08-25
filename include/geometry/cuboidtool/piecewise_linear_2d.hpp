@@ -58,7 +58,7 @@ public:
 			const Vt& time,
 			const Vt& th,
 			FunXYZT_Value fun,
-			const Vt& tol){
+			const Vt& tol) const{
 		std::array<Vt, NumVertexes> arrv;
 		arrv[0] = fun(xo,   yo,   0.0,time);
 		arrv[1] = fun(xo+dx,yo,   0.0,time);

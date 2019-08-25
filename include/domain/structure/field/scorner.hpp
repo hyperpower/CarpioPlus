@@ -82,7 +82,7 @@ public:
     SCorner_(spGrid spg, spGhost spgh, spOrder spo):
         _grid(spg), _ghost(spgh), _order(spo) {
         _mat.reconstruct(spg->n(_X_) + 1,
-                          spg->n(_Y_) + 1,
+                         spg->n(_Y_) + 1,
                          spg->n(_Z_) + 1);
         initial_didx();
     }

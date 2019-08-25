@@ -27,6 +27,11 @@ public:
     typedef SGhost_<1>    Ghost1;
     typedef SGhost_<2>    Ghost2;
     typedef SGhost_<3>    Ghost3;
+
+    typedef SCellLinearCut_<DIM> CellLinearCut;
+    typedef SCellLinearCut_<1> CellLinearCut1;
+    typedef SCellLinearCut_<2> CellLinearCut2;
+    typedef SCellLinearCut_<3> CellLinearCut3;
     typedef SOrder_<DIM>  Order;
     typedef SOrderParallel_<DIM> OrderParallel;
     typedef SOrder_<1>    Order1;
@@ -195,6 +200,17 @@ public:
                             ToString(p.value(_X_), p.value(_Y_), c, " "));
                     actor->data().push_back("");
                 }
+				if (g.is_cut(index)) {
+					for (short o = 0; o < grid.num_vertex(); ++o) {
+						auto p = grid.v(order[o], index);
+						actor->data().push_back(
+								ToString(p.value(_X_), p.value(_Y_), c, " "));
+					}
+					auto p = grid.v(0, index);
+					actor->data().push_back(
+							ToString(p.value(_X_), p.value(_Y_), c, " "));
+					actor->data().push_back("");
+				}
             }
         }
         return actor;
@@ -216,8 +232,6 @@ public:
                     for (St o = 0; o < 2; o++) {
                         if (g.is_boundary(index, d, o)) {
                             auto idxg = index.shift(d, o);
-//                            std::cout << "index = " << index << std::endl;
-//                            std::cout << "in  g = " << idxg << std::endl;
                             auto bid  = g.boundary_id(index, idxg, d, o);
 
                             auto fc   = grid.f(d, o, index);
@@ -242,6 +256,10 @@ public:
             }
         }
         return actor;
+    }
+
+    static void _AppendCutBoundary(spActor actor, const Grid2& grid, const Index2& index, const CellLinearCut2& cell){
+
     }
 
     static spActor WireFrame(

@@ -8,12 +8,14 @@
 #include "domain/structure/ghost/ghost.hpp"
 #include "geometry/geometry.hpp"
 
+#include <array>
+
 namespace carpio{
 template<typename TYPE, St DIM>
 class SCreatGhostByFunction_{
 public:
-	static const St Dim = 2;
-	static const St NumFaces = 4;
+	static const St Dim         = 2;
+	static const St NumFaces    = 4;
 	static const St NumVertexes = 4;
 
 	typedef SIndex_<DIM>                Index;
@@ -45,10 +47,10 @@ public:
 	typedef SCellMask_<DIM>               CellMask;
 	typedef std::shared_ptr<CellMask>   spCellMask;
 
-	typedef SGhostLinearCut_<DIM>         GhostLinearCut;
-	typedef std::shared_ptr<GhostMask>  spGhostLinearCut;
-	typedef SCellLinearCut_<DIM>          CellLinearCut;
-	typedef std::shared_ptr<CellMask>   spCellLinearCut;
+	typedef SGhostLinearCut_<DIM>              GhostLinearCut;
+	typedef std::shared_ptr<GhostLinearCut>  spGhostLinearCut;
+	typedef SCellLinearCut_<DIM>               CellLinearCut;
+	typedef std::shared_ptr<CellLinearCut>   spCellLinearCut;
 
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
@@ -81,28 +83,91 @@ public:
 	}
 
 	spGhostLinearCut ghost_linear_cut(spGrid spg, FunXYZT_Value fun, Vt time, Vt th){
-		spGhostLinearCut spgh(new GhostLinearCut());
-		spCellLinearCut spcc(new CellLinearCut());
-		spcc->set_type(_CUT_);
+		spGhostLinearCut spgh(new GhostLinearCut(spg));
+
 		spCellLinearCut spcg(new CellLinearCut());
-		spcc->set_type(_GHOST_);
+		spcg->set_type(_GHOST_);
 
 		auto spcorner = this->_corner_value(spg, fun, time);
 
-		typename CellLinearCut::FunSetByIndex funindex =
-				[spg,fun,&time,&th,&spcc,&spcg,&spcorner]
+		typename GhostLinearCut::FunSetByIndex funindex =
+				[this, spg,fun,&time,&th,&spcg,&spcorner]
 				 (const Index& index){
-
+			std::array<Vt, NumVertexes> arrvv;
+			auto& corner = *spcorner;
+			short vf = 0;
+			for(int vo = 0; vo < NumVertexes; vo++){
+				arrvv[vo] = corner(vo, index);
+				if(arrvv[vo] >= th){
+					vf++;
+				}else{
+					vf--;
+				}
+			}
+			if(vf == NumVertexes){
+				// a normal cell
+				return spCellLinearCut(nullptr);
+			}else if(-vf == NumVertexes){
+				// a ghost cell
+				return spcg;
+			}else{
+				// a cut cell
+				if(DIM == 2){
+					return this->_new_cell_linear_cut_2(*spg, index, time, th, fun, 1e-5, arrvv);
+				}
+				SHOULD_NOT_REACH;
+			}
 		};
+
+		spgh->set(funindex);
+
+		return spgh;
 
 	}
 
 protected:
+	spCellLinearCut _new_cell_linear_cut_2(
+			const Grid& grid, const Index& index,
+			const Vt&   time, const Vt& th, FunXYZT_Value fun,
+			const Vt&   tol,  const std::array<Vt, NumVertexes>& arrv){
+		spCellLinearCut spcc(new CellLinearCut());
+		spcc->set_type(_CUT_);
+		auto po = grid.v(0, index);
+		Tool t;
+		std::array<Vt, NumFaces> arre = t.cal_cell_aperture_ratios(
+				po.value(_X_), po.value(_Y_),
+				grid.s_(_X_, index), grid.s_(_Y_, index),
+				time, th, fun, tol, arrv);
+		short vf = 0;
+		for(auto& ev : arre){
+			if(ev == 0.0){
+				vf++;
+			}
+			if(ev == 1.0 || ev == -1.0){
+				vf--;
+			}
+		}
+		if(vf == NumVertexes){
+			// a normal cell
+			return spCellLinearCut(nullptr);
+		}else if(-vf == NumVertexes){
+			// a ghost cell
+			spCellLinearCut spg(new CellLinearCut());
+			spg->set_type(_GHOST_);
+			return spg;
+		} else {
+			spCellLinearCut spc(new CellLinearCut());
+			spc->set_type(_CUT_);
+			spc->set_aperture_ratio(arre);
+			return spc;
+		}
+
+	}
 	spCorner _corner_value(spGrid spg, FunXYZT_Value fun, Vt time){
 		spGhost  spgh(new GhostRegular(spg));
 		spOrder  spo(new OrderXYZ(spg,spgh));
 		spCorner spc(new Corner(spg, spgh, spo));
-		spc->assgin(fun, time);
+		spc->assign(fun, time);
 		return spc;
 	}
 
