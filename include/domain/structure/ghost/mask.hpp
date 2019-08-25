@@ -51,6 +51,9 @@ public:
     int& type(){
         return this->_type;
     }
+    void set_type(int t) const{
+    	this->_type = t;
+    }
 
     void set_boundary_id(int a, int o, int id){
         ASSERT(a < DIM);

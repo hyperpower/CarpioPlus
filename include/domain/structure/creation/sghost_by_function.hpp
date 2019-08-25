@@ -16,6 +16,7 @@ public:
 	static const St NumFaces = 4;
 	static const St NumVertexes = 4;
 
+	typedef SIndex_<DIM>                Index;
 	typedef SGrid_<DIM>                 Grid;
 	typedef Grid&                       ref_Grid;
 	typedef const Grid&                 const_ref_Grid;
@@ -43,6 +44,11 @@ public:
 	typedef std::shared_ptr<GhostMask>   spGhostMask;
 	typedef SCellMask_<DIM>               CellMask;
 	typedef std::shared_ptr<CellMask>   spCellMask;
+
+	typedef SGhostLinearCut_<DIM>         GhostLinearCut;
+	typedef std::shared_ptr<GhostMask>  spGhostLinearCut;
+	typedef SCellLinearCut_<DIM>          CellLinearCut;
+	typedef std::shared_ptr<CellMask>   spCellLinearCut;
 
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
@@ -72,6 +78,23 @@ public:
 		};
 		spgm->set_mask(fun2, time);
 		return spgm;
+	}
+
+	spGhostLinearCut ghost_linear_cut(spGrid spg, FunXYZT_Value fun, Vt time, Vt th){
+		spGhostLinearCut spgh(new GhostLinearCut());
+		spCellLinearCut spcc(new CellLinearCut());
+		spcc->set_type(_CUT_);
+		spCellLinearCut spcg(new CellLinearCut());
+		spcc->set_type(_GHOST_);
+
+		auto spcorner = this->_corner_value(spg, fun, time);
+
+		typename CellLinearCut::FunSetByIndex funindex =
+				[spg,fun,&time,&th,&spcc,&spcg,&spcorner]
+				 (const Index& index){
+
+		};
+
 	}
 
 protected:

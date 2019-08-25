@@ -41,7 +41,7 @@ public:
         return _grid->ghost_layer();
     }
 
-    bool is_ghost(const Index& index) const{
+    virtual bool is_ghost(const Index& index) const{
         for (St d = 0; d < DIM; ++d) {
             Idx res = index.value(d);
             if (res < 0) {
@@ -53,7 +53,7 @@ public:
         return false;
     };
 
-    bool is_boundary(
+    virtual bool is_boundary(
                 const Index& index,
                 const St& a,
                 const St& o) const{
@@ -69,11 +69,11 @@ public:
         }
     }
 
-    bool is_cut(const Index& index) const{
+    virtual bool is_cut(const Index& index) const{
     	return false;
     }
 
-    bool is_normal(const Index& index) const{
+    virtual bool is_normal(const Index& index) const{
         return !(is_ghost(index));
     }
 

@@ -9,6 +9,7 @@
 #include "ghost/ghost.hpp"
 #include "ghost/regular.hpp"
 #include "ghost/mask.hpp"
+#include "ghost/linear_cut.hpp"
 
 #include "order/order.hpp"
 #include "order/xyz.hpp"

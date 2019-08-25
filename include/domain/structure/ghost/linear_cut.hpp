@@ -5,7 +5,7 @@
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
 #include "domain/structure/grid/sgrid.hpp"
-#include "ghost.hpp"
+#include "regular.hpp"
 
 namespace carpio{
 /**
@@ -81,7 +81,9 @@ public:
     int& type(){
         return this->_type;
     }
-
+    void set_type(int t) const{
+    	this->_type = t;
+    }
     void set_boundary_id(int id){
        _bid = id; // boundary id only on cut interfaces
     }
@@ -100,35 +102,80 @@ public:
 };
 
 template<St DIM>
-class SGhostLinearCut_: public SGhost_<DIM> {
+class SGhostLinearCut_: public SGhostRegular_<DIM> {
 public:
+	typedef SGhostRegular_<DIM>   Base;
 	typedef SIndex_<DIM> Index;
-	typedef SGrid_<DIM> Grid;
+	typedef SGrid_<DIM>  Grid;
+	typedef std::shared_ptr<Grid> spGrid;
+	typedef SCellLinearCut_<DIM>    Cell;
+	typedef std::shared_ptr<Cell> spCell;
+
+	typedef typename Grid::FunIndex FunIndex;
+
+	typedef MultiArray_<spCell, DIM> Mat;
+	typedef typename Mat::reference reference;
+	typedef typename Mat::const_reference const_reference;
+
+	typedef std::function<
+	             spCell(const Index&)
+	             > FunSetByIndex;
+
+	typedef std::function<
+	             //input cell center coordinates (x,y,z)
+	             spCell(const Vt&, const Vt&, const Vt&)
+	             > FunSetByXYZ;
+
+	typedef std::function<
+	    	     spCell(const Vt&, const Vt&, const Vt&, const Vt&)
+			     > FunSetByXYZT;
 
 
-	SGhostLinearCut_() {
-
+protected:
+	Mat _mat;
+public:
+	SGhostLinearCut_(spGrid spg): Base(spg),
+    	_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
 	}
-	virtual ~SGhostLinearCut_() {
-
+	~SGhostLinearCut_() {
 	}
 
-	virtual Grid& grid() {
+	spCell&
+	operator()(const Index& idx) {
+		return (_mat.at(idx.i(), idx.j(), idx.k()));
+	}
+	const spCell&
+	operator()(const Index& idx) const {
+		return (_mat.at(idx.i(), idx.j(), idx.k()));
 	}
 
-	virtual const Grid& grid() const {
-	}
-
-	virtual bool is_ghost(const Index& index) const {
-	}
-	;
-	virtual bool is_boundary(const Index& index, const St& a,
+	bool is_ghost(const Index& index) const {
+		bool bres = Base::is_ghost(index);
+		if(bres == false){
+			auto& pc = this->operator ()(index);
+			if(pc!=nullptr){
+				return (pc->type() == _GHOST_) ? true : false;
+			}else{ //pc == nullptr
+				return false;
+			}
+		}
+	};
+	bool is_boundary(const Index& index, const St& a,
 			const St& o) const {
+
+	};
+	bool is_normal(const Index& index) const {
+		return (!is_ghost(index) && !is_cut(index));
 	}
 	;
-	virtual bool is_normal(const Index& index) const {
+	bool is_cut(const Index& index) const{
+		auto& pc = this->operator ()(index);
+		if(pc != nullptr){
+			return (pc->type() == _CUT_) ? true : false;
+		}else{ //pc == nullptr
+			return false;
+		}
 	}
-	;
 
 	virtual int boundary_id(const Index& indexc, const Index& indexg,
 			const St& axe, const St& ori) const {
@@ -136,8 +183,19 @@ public:
 	;
 	virtual St size_normal() const {
 	}
+
+	void set(FunSetByIndex fun) {
+		FunIndex funi = [&fun, this](const Index& idx) {
+			auto& grid = *(this->_grid);
+			auto res = fun(idx, grid);
+			this->operator ()(idx) = res;
+		};
+		this->_grid->for_each(funi);
+	}
 };
 
 
 
 }
+
+#endif
