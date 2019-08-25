@@ -99,5 +99,45 @@ public:
     }
 };
 
+template<St DIM>
+class SGhostLinearCut_: public SGhost_<DIM> {
+public:
+	typedef SIndex_<DIM> Index;
+	typedef SGrid_<DIM> Grid;
+
+
+	SGhostLinearCut_() {
+
+	}
+	virtual ~SGhostLinearCut_() {
+
+	}
+
+	virtual Grid& grid() {
+	}
+
+	virtual const Grid& grid() const {
+	}
+
+	virtual bool is_ghost(const Index& index) const {
+	}
+	;
+	virtual bool is_boundary(const Index& index, const St& a,
+			const St& o) const {
+	}
+	;
+	virtual bool is_normal(const Index& index) const {
+	}
+	;
+
+	virtual int boundary_id(const Index& indexc, const Index& indexg,
+			const St& axe, const St& ori) const {
+	}
+	;
+	virtual St size_normal() const {
+	}
+};
+
+
 
 }

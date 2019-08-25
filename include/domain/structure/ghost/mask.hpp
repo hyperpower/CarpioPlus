@@ -87,6 +87,10 @@ public:
             spCellMask(const Vt&, const Vt&, const Vt&)
             > FunSetByXYZ;
 
+    typedef std::function<
+    		spCellMask(const Vt&, const Vt&, const Vt&, const Vt&)
+			> FunSetByXYZT;
+
     typedef MultiArray_<spCellMask, DIM> Mat;
     typedef typename Mat::reference reference;
     typedef typename Mat::const_reference const_reference;
@@ -202,6 +206,20 @@ public:
         };
         this->_grid->for_each(funi);
     }
+
+    void set_mask(FunSetByXYZT fun, const Vt& time) {
+		FunIndex funi = [&fun, this, &time](const Index& idx) {
+			auto& grid = *(this->_grid);
+			auto cp = grid.c(idx);
+			auto x = cp.value(_X_);
+			auto y = cp.value(_Y_);
+			auto z = cp.value(_Z_);
+			auto res = fun(x, y, z, time);
+			this->operator ()(idx) = res;
+		};
+		this->_grid->for_each(funi);
+	}
+
 
     St size_normal() const{
         SHOULD_NOT_REACH;

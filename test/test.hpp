@@ -17,7 +17,7 @@
 //#include "geometry/test_ts.hpp"
 //#include "geometry/test_box.hpp"
 //#include "geometry/test_aabbtree.hpp"
-#include "geometry/test_voftool.hpp"
+//#include "geometry/test_voftool.hpp"
 //#include "algebra/test_multi_array.hpp"
 //#include "algebra/test_solver_jacobi.hpp"
 //#include "algebra/test_matrix_sparse.hpp"
@@ -26,7 +26,7 @@
 //#include "substance/test_atmosphere.hpp"
 
 //#include "structure/test_grid.hpp"
-//#include "structure/test_ghost.hpp"
+#include "structure/test_ghost.hpp"
 //#include "structure/test_order.hpp"
 //#include "structure/test_field.hpp"
 //#include "structure/test_vof.hpp"

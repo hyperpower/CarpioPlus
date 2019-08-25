@@ -69,6 +69,10 @@ public:
         }
     }
 
+    bool is_cut(const Index& index) const{
+    	return false;
+    }
+
     bool is_normal(const Index& index) const{
         return !(is_ghost(index));
     }

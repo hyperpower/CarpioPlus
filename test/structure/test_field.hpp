@@ -17,7 +17,7 @@ typedef std::shared_ptr<SGhost_<2> > spSGhost;
 typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
 
 
-TEST(scalar, initial){
+TEST(scalar, DISABLED_initial){
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,
@@ -37,7 +37,7 @@ TEST(scalar, initial){
 //	plt.plot();
 }
 
-TEST(scalar, outputfile) {
+TEST(scalar, DISABLED_outputfile) {
 
 
 	Point_<Vt, 2> pmin(0, 0, 0);
@@ -53,7 +53,7 @@ TEST(scalar, outputfile) {
 	SIOFile_<2>::OutputField("s.txt", sc);
 }
 
-TEST(field, plot1){
+TEST(field, DISABLED_plot1){
 	std::cout << "field_define 1d\n";
 	const St Dim = 1;
 	typedef SField_<Dim>                        Field1;
@@ -90,7 +90,7 @@ TEST(field, plot1){
 	SIOFile_<1>::OutputField("1d.txt", sc);
 }
 
-TEST(field, plot3){
+TEST(field, DISABLED_plot3){
 	std::cout << "field_define 3d\n";
 	const St Dim = 3;
 	typedef SField_<Dim>                        Field;
@@ -125,7 +125,7 @@ TEST(field, plot3){
 }
 
 
-TEST(scalar, add){
+TEST(scalar, DISABLED_add){
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
@@ -332,9 +332,56 @@ TEST(scalar, DISABLED_corner2){
 	gnu.add(awf);
 //	gnu.add(asc);
 //	gnu.add(asv);
-	gnu.splot();
+//	gnu.splot();
 }
 
+TEST(scalar, corner_assign){
+	std::cout << "corner test -----" << std::endl;
+	const St Dim = 2;
+	typedef SField_<Dim>                        Field;
+	typedef std::shared_ptr<SGrid_<Dim> >     spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> >    spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	typedef SCorner_<Dim>                       Corner;
+	typedef std::shared_ptr<SCorner_<Dim> >   spCorner;
+	typedef SInterpolate_<Dim>                  Inter;
+	typedef BoundaryIndex                        BI;
+	typedef std::shared_ptr<BoundaryIndex>     spBI;
+	typedef BoundaryCondition                    BC;
+	typedef std::shared_ptr<BoundaryCondition> spBC;
+	// type define
+	Point_<Vt, Dim> pmin(0, 0, 0);
+	Point_<Vt, Dim> pmax(1, 1, 1);
+	spGrid  spsg(new SGridUniform_<Dim>(pmin, { 10, 10, 5}, 0.15, 2));
+
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder  sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Corner c(spsg, spgh, sporder);
+
+	typename Corner::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt t){
+		return sin(x + y);
+	};
+
+	c.assign(fun, 0);
+
+//	std::cout << c(0, 0, 0, 0) << std::endl;
+	typedef SGnuplotActor_<Dim> GA;
+	Gnuplot gnu;
+//	gnu.set_terminal_png("c2d.png");
+	gnu.set_xrange(-0.1, 1.6);
+	gnu.set_yrange(-0.1, 1.6);
+	auto awf = GA::WireFrame(c);
+//	auto asc = GA::LinesPoints(sc);
+//	asc->command() = "using 1:2:3 title \"Value on Scalar center\" ";
+//	auto asv = GA::LinesPoints(c, 2);
+//	asv->command() = "using 1:2:3 title \"Valut on Vertex\" ";
+	gnu.add(awf);
+//	gnu.add(asc);
+//	gnu.add(asv);
+	gnu.splot();
+}
 
 }
 

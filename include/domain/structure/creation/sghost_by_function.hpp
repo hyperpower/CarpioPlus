@@ -5,12 +5,12 @@
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
 #include "domain/structure/grid/sgrid.hpp"
-#include "domain/structure/ghost/mask.hpp"
-#include "ghost.hpp"
+#include "domain/structure/ghost/ghost.hpp"
+#include "geometry/geometry.hpp"
 
 namespace carpio{
 template<typename TYPE, St DIM>
-class SCreatGhostByFunction{
+class SCreatGhostByFunction_{
 public:
 	static const St Dim = 2;
 	static const St NumFaces = 4;
@@ -32,14 +32,58 @@ public:
 	typedef std::shared_ptr<Ghost>       spGhost;
 	typedef std::shared_ptr<const Ghost> spcGhost;
 
+	typedef SGhostRegular_<DIM>                       GhostRegular;
+	typedef std::shared_ptr<SGhostRegular_<DIM> >   spGhostRegular;
+	typedef SOrder_<DIM>                           Order;
+	typedef std::shared_ptr<SOrder_<DIM> >       spOrder;
+	typedef SOrderXYZ_<DIM>                        OrderXYZ;
+	typedef std::shared_ptr<SOrderXYZ_<DIM> >    spOrderXYZ;
+
 	typedef SGhostMask_<DIM>               GhostMask;
 	typedef std::shared_ptr<GhostMask>   spGhostMask;
+	typedef SCellMask_<DIM>               CellMask;
+	typedef std::shared_ptr<CellMask>   spCellMask;
 
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
-	spGhostMask ghost_mask(spGrid spg, FunXYZT_Value fun, Vt th){
+	typedef SCorner_<DIM>              Corner;
+	typedef std::shared_ptr<Corner>  spCorner;
 
+	typedef typename std::conditional<DIM == 2,
+                                      CuboidToolPL_<TYPE>,
+                                      CuboidToolPL_<TYPE>>::type Tool;
+	                                  // 3D is not correct
+
+	SCreatGhostByFunction_(){
 	}
+
+	spGhostMask ghost_mask(spGrid spg, FunXYZT_Value fun, Vt time, Vt th){
+		spGhostMask spgm(new GhostMask(spg));
+		spCellMask  spcm(new CellMask());
+
+		typename GhostMask::FunSetByXYZT fun2 = [spcm, fun, time, th](
+			const Vt& x, const Vt& y, const Vt& z, const Vt& time){
+			auto value = fun(x,y,z,time);
+			if(value < th){
+				return spcm;
+			}else{
+				return spCellMask(nullptr);
+			}
+		};
+		spgm->set_mask(fun2, time);
+		return spgm;
+	}
+
+protected:
+	spCorner _corner_value(spGrid spg, FunXYZT_Value fun, Vt time){
+		spGhost  spgh(new GhostRegular(spg));
+		spOrder  spo(new OrderXYZ(spg,spgh));
+		spCorner spc(new Corner(spg, spgh, spo));
+		spc->assgin(fun, time);
+		return spc;
+	}
+
+
 
 };
 

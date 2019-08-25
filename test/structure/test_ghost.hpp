@@ -82,21 +82,31 @@ TEST(structure, initial3){
 	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
 //	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,
-			                          80,
+			                          40,
 									  1, 2 ));
-	spSGhostMask spgm(new SGhostMask_<2>(spsg));
-	spSCellMask  spcm(new SCellMask(6));
+//	spSGhostMask spgm(new SGhostMask_<2>(spsg));
+//	spSCellMask  spcm(new SCellMask(6));
 
-	typename SGhostMask::FunSetByXYZ fun2 = [spcm](const Vt& x, const Vt& y, const Vt& z){
+	typedef SCreatGhostByFunction_<Vt, 2> CreatGhost;
+	CreatGhost cg;
+	CreatGhost::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt time){
 		auto r     = std::sqrt(x * x + y * y);
 		auto theta = std::asin(y / r);
-		if(0.3 + 0.15 * std::cos(6 * theta) < r){
-			return spcm;
-		}else{
-			return spSCellMask(nullptr);
-		}
+		return 0.3 + 0.15 * std::cos(6 * theta) - r;
 	};
-	spgm->set_mask(fun2);
+
+	auto spgm = cg.ghost_mask(spsg, fun, 0.0, 0.0);
+
+//	typename SGhostMask::FunSetByXYZ fun2 = [spcm](const Vt& x, const Vt& y, const Vt& z){
+//		auto r     = std::sqrt(x * x + y * y);
+//		auto theta = std::asin(y / r);
+//		if(0.3 + 0.15 * std::cos(6 * theta) < r){
+//			return spcm;
+//		}else{
+//			return spSCellMask(nullptr);
+//		}
+//	};
+//	spgm->set_mask(fun2);
 	Gnuplot gnu;
 	gnu.set_xrange(-0.5, 0.5);
 	gnu.set_yrange(-0.5, 0.5);
@@ -106,7 +116,25 @@ TEST(structure, initial3){
 	auto acb     = GA::Boundary(*spgm);
 	acb->style() = "with line lw 3 lc variable";
 	gnu.add(acb);
-	gnu.plot();
+//	gnu.plot();
+}
+
+TEST(structure, initial_cut){
+	typedef SGrid_<2>                          SGrid;
+	typedef typename SGrid::Index              SIndex;
+	typedef SCellMask_<2>                    SCellMask;
+	typedef SGhostMask_<2>                   SGhostMask;
+	typedef std::shared_ptr<SCellMask_<2> >  spSCellMask;
+	typedef std::shared_ptr<SGrid_<2> >      spSGrid;
+	typedef std::shared_ptr<SGhost_<2> >     spSGhost;
+	typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
+
+	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
+//	Point_<Vt, 2> pmax(1, 1, 1);
+	spSGrid spsg(new SGridUniform_<2>(pmin,
+			                          30,
+									  1, 2 ));
+
 }
 
 

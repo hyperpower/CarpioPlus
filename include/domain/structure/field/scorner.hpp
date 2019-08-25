@@ -16,16 +16,16 @@ namespace carpio{
 //    i-1        i        i+1       center index
 //          i        i+1       i+2  corner index
 //
-//         1         3
+//         2         3
 // --------o---------o---------|
 //         |         |
 //         |         |
 //         |    x    |
-//         |    i    |
-//         |         |
-// --------o---------o---------
-//         0         2
-//         i
+//      ^  |    i    |
+//      |  |         |
+// -----j--o---------o---------
+//         0         1
+//         i -->
 // 1D          di dj dk
 //  x
 // _M_  = 0,   0  0  0
@@ -62,10 +62,13 @@ public:
     typedef std::shared_ptr<SGhost_<DIM> > spGhost;
     typedef std::shared_ptr<SOrder_<DIM> > spOrder;
 
+    typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
+
     typedef MultiArrayV_<Vt, DIM> Mat;
     typedef typename Mat::reference reference;
     typedef typename Mat::const_reference const_reference;
     typedef SCorner_<DIM> Self;
+
 protected:
     spGrid  _grid;
     spGhost _ghost;
@@ -134,9 +137,34 @@ public:
         return _order;
     }
 
+    void assign(const Vt& value){
+        _mat.assign(value);
+    }
+
+	void assign(FunXYZT_Value fun, Vt t = 0.0) {
+		auto& grid = *(_grid);
+		for (auto& idx : (*_order)) {
+			auto pv     = grid.v(0, idx);
+			auto value  = fun(pv.value(_X_), pv.value(_Y_), pv.value(_Z_), t);
+			this->operator ()(0,idx) = value;
+			FOR_EACH_DIM{
+				if(_ghost->is_boundary(idx, d, _P_)){
+					for(int vo = 1; vo < NumVertex; vo++){ // vertex order
+						auto pv = grid.v(vo, idx);
+						auto value = fun(pv.value(_X_),
+								         pv.value(_Y_),
+										 pv.value(_Z_), t);
+						this->operator ()(vo,idx) = value;
+					}
+					// this loop is not efficient
+				}
+			}
+		}
+	}
+
 protected:
     void initial_didx(){
-        //  order = 0,  index = i j k
+        //  order = 0,   index = i j k
         _didx(0,0) = 0;  _didx(0,1) = 0; _didx(0,2) = 0;
         _didx(1,0) = 1;  _didx(1,1) = 0; _didx(1,2) = 0;
         _didx(2,0) = 0;  _didx(2,1) = 1; _didx(2,2) = 0;
