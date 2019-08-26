@@ -54,6 +54,7 @@ protected:
     // |      2
     // O-----> x
 
+
 public:
 	SCellLinearCut_() :_type(_CUT_) {
 		_bid = 10;

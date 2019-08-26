@@ -13,6 +13,16 @@
 
 namespace carpio {
 
+// Number is edge order
+// For 2D edge order is face order
+// y  *---3-->*
+// ^  ^       ^
+// | 0|       |1
+// |  *------>*
+// |      2
+// O-----> x
+static const std::array<Vt, 4> CCEDGEORDER2 = {2,1,3,0};  //count-clock wise edge order 2D
+
 template<class TYPE>
 class CuboidToolPL_:public CuboidTool_<TYPE, 2>{
 public:
@@ -49,7 +59,51 @@ public:
 	 * Cut cell functions
 	 * 1 calculate edge aperture ratio by FunXYZT
 	 * 2 calculate cell aperture ratios by FunXYZT
+	 * 3 get start point of the piecewise linear -- 2D
 	 ****************************************************/
+	Point cal_start_point(
+			const Vt& xo,
+			const Vt& yo,
+			const Vt& dx,
+			const Vt& dy,
+			const std::array<Vt, 4>& arr
+			){
+		// 0 p
+		// 1 n
+		// 2 n
+		// 3 p
+		for(int i = 0; i< 4; i++){
+			int eo = CCEDGEORDER2[i];
+			Vt  ar = arr[eo];  // get aperture ratio
+			if(ar > 0.0 && std::abs(ar) != 1.0){
+				if (eo == 0) {
+					return Point(xo, yo + dy * ar);
+				}
+				if(eo == 3){
+					return Point(xo + dx * ar, yo + dy);
+				}
+			}
+			if(ar < 0.0 && std::abs(ar) != 1.0){
+				if (eo == 1) {
+					return Point(xo + dx, yo + dy * (1 + ar));
+				}
+				if (eo == 2) {
+					return Point(xo + dx * (1 + ar), yo);
+				}
+			}
+		}
+	}
+
+	Point cal_end_point(
+				const Vt& xo,
+				const Vt& yo,
+				const Vt& dx,
+				const Vt& dy,
+				const std::array<Vt, 4>& arr
+				){
+
+	}
+
 	std::array<Vt, NumFaces> cal_cell_aperture_ratios(
 			const Vt& xo,
 			const Vt& yo,
