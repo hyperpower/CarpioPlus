@@ -13,15 +13,6 @@
 
 namespace carpio {
 
-// Number is edge order
-// For 2D edge order is face order
-// y  *---3-->*
-// ^  ^       ^
-// | 0|       |1
-// |  *------>*
-// |      2
-// O-----> x
-static const std::array<Vt, 4> CCEDGEORDER2 = {2,1,3,0};  //count-clock wise edge order 2D
 
 template<class TYPE>
 class CuboidToolPL_:public CuboidTool_<TYPE, 2>{
@@ -51,6 +42,8 @@ public:
 	typedef std::shared_ptr<Segment>       spSegment;
 	typedef const pSegment            const_pSegment;
 
+	typedef PointChain_<Vt, Dim>          PointChain;
+
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 public:
@@ -79,7 +72,7 @@ public:
 				if (eo == 0) {
 					return Point(xo, yo + dy * ar);
 				}
-				if(eo == 3){
+				if (eo == 3){
 					return Point(xo + dx * ar, yo + dy);
 				}
 			}
@@ -92,6 +85,26 @@ public:
 				}
 			}
 		}
+		// trivial case : 1 or -1 follow 0
+		// trivial case : 1 or -1 follow 0
+		if ((std::abs(arr[0]) == 1 && arr[2] == 0)
+				|| (std::abs(arr[2]) == 1 && arr[0] == 0)) {
+			return Point(xo, yo);
+		}
+		if ((std::abs(arr[2]) == 1 && arr[1] == 0)
+				|| (std::abs(arr[1]) == 1 && arr[2] == 0)) {
+			return Point(xo + dy, yo);
+		}
+		if ((std::abs(arr[1]) == 1 && arr[3] == 0)
+				|| (std::abs(arr[3]) == 1 && arr[1] == 0)) {
+			return Point(xo + dy, yo + dy);
+		}
+		if ((std::abs(arr[3]) == 1 && arr[0] == 0)
+				|| (std::abs(arr[0]) == 1 && arr[3] == 0)) {
+			return Point(xo, yo + dy);
+		}
+
+//		SHOULD_NOT_REACH;
 	}
 
 	Point cal_end_point(
@@ -101,6 +114,58 @@ public:
 				const Vt& dy,
 				const std::array<Vt, 4>& arr
 				){
+		// 0 n
+		// 1 p
+		// 2 p
+		// 3 n
+		for (int i = 0; i < 4; i++) {
+			int eo = CCEDGEORDER2[i];
+			Vt ar = arr[eo];  // get aperture ratio
+			if (ar < 0.0 && std::abs(ar) != 1.0) {
+				if (eo == 0) {
+					return Point(xo, yo + dy * (1 + ar));
+				}
+				if (eo == 3) {
+					return Point(xo + dx * (1 + ar), yo + dy);
+				}
+			}
+			if (ar > 0.0 && std::abs(ar) != 1.0) {
+				if (eo == 1) {
+					return Point(xo + dx, yo + dy * ar);
+				}
+				if (eo == 2) {
+					return Point(xo + dx * ar, yo);
+				}
+			}
+		}
+		// trivial case : 1 or -1 follow 0
+		Point pres;  // get the second one
+		if ((std::abs(arr[0]) == 1 && arr[2] == 0)
+			|| (std::abs(arr[2]) == 1 && arr[0] == 0)) {
+			pres = Point(xo, yo);
+		}
+		if ((std::abs(arr[2]) == 1 && arr[1] == 0)
+			|| (std::abs(arr[1]) == 1 && arr[2] == 0)) {
+			pres = Point(xo + dy, yo);
+		}
+		if ((std::abs(arr[1]) == 1 && arr[3] == 0)
+			|| (std::abs(arr[3]) == 1 && arr[1] == 0)) {
+			pres = Point(xo + dy, yo + dy);
+		}
+		if ((std::abs(arr[3]) == 1 && arr[0] == 0)
+			|| (std::abs(arr[0]) == 1 && arr[3] == 0)) {
+			pres = Point(xo, yo + dy);
+		}
+		return pres;
+	}
+
+	PointChain cal_cut_point_chain(
+			const Vt& xo,
+			const Vt& yo,
+			const Vt& dx,
+			const Vt& dy,
+			const std::array<Vt, 4>& arr
+			){
 
 	}
 

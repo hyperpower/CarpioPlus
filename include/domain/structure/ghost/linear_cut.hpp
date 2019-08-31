@@ -114,6 +114,10 @@ public:
 		return 0;
     }
 
+    const std::array<Vt, NumEdge>& get_aperture_ratio() const{
+    	return _ers;
+    }
+
 
 };
 

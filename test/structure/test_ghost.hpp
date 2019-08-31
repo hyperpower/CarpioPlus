@@ -122,7 +122,7 @@ TEST(structure, initial_cut){
 	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
 //	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin,
-			                          30,
+			                          20,
 									  1, 2 ));
 	typedef SCreatGhostByFunction_<Vt, 2> CreatGhost;
 	CreatGhost cg;

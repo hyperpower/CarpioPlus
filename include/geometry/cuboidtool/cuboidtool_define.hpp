@@ -78,6 +78,15 @@ const std::array<Orientation, 6> FORDER2O3 = {
 };
 
 // edge order
+// Number is edge order
+// For 2D edge order is face order
+// y  *---3-->*
+// ^  ^       ^
+// | 0|       |1
+// |  *------>*
+// |      2
+// O-----> x
+static const std::array<Vt, 4> CCEDGEORDER2 = {2,1,3,0};  //count-clock wise edge order 2D
 
 
 
