@@ -78,7 +78,6 @@ public:
                   Idx k = 0, short ok = 0) const {
     }
 
-
     virtual Index to_Index(const Index& INDEX) const{
 
     }

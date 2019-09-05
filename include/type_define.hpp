@@ -140,8 +140,8 @@ inline void NormalPlane(const St&d, St& d1, St& d2){
 }
 
 inline St Normal(const St&d1, const St& d2){
-	ASSERT(d1 >=0 && d1 <=2);
-	ASSERT(d2 >=0 && d2 <=2);
+	ASSERT(0 <= d1 && d1 <=2);
+	ASSERT(0 <= d2 && d2 <=2);
 	ASSERT(d1 != d2);
 	return ToAxes(3 - d1 - d2);
 }

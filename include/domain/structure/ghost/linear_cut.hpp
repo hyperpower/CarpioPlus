@@ -5,6 +5,7 @@
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/index.hpp"
 #include "domain/structure/grid/sgrid.hpp"
+#include "domain/structure/grid/sgrid_face_data.hpp"
 #include "regular.hpp"
 
 namespace carpio{
