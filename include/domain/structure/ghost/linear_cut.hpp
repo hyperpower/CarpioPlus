@@ -98,7 +98,15 @@ public:
 
     void set_aperture_ratio(const std::array<Vt, NumEdge>& arr){
     	for(St i = 0; i< NumEdge; i++){
-    		_ers[i] = arr[i];
+    		if(IsCloseTo(arr[i], 0.0)){
+    			_ers[i] = 0.0;
+    		}else if(IsCloseTo(arr[i], 1.0)){
+    			_ers[i] = 1;
+    		}else if(IsCloseTo(arr[i], -1.0)){
+    			_ers[i] = -1;
+    		}else{
+    			_ers[i] = arr[i];
+    		}
     	}
     }
 
@@ -117,6 +125,13 @@ public:
 
     const std::array<Vt, NumEdge>& get_aperture_ratio() const{
     	return _ers;
+    }
+
+    void show_aperture_ratio(){
+    	Tool tool;
+    	for(St i = 0; i< NumEdge; i++){
+    		std::cout << " Edge idx = " << i << " ap = " << _ers[i] << std::endl;
+    	}
     }
 
 

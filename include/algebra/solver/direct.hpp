@@ -14,9 +14,20 @@ template<class TYPE>
 TYPE SolveDichotomy(TYPE left, TYPE right,
 		            const TYPE& thershold,
 					const TYPE& tol,
-		            std::function<TYPE(TYPE)> fun){
+		            std::function<TYPE(TYPE)> fun,
+					int maxiter = 1000){
+	// trivial case
+	if(std::abs(fun(left) - thershold) < tol){
+		return left;
+	}
+	if(std::abs(fun(right) - thershold) < tol){
+		return right;
+	}
 	TYPE middle = (left + right) * 0.5;
-	while (std::abs(fun(middle) - thershold) > tol) {
+	int iter = 0;
+	while ((std::abs(fun(middle) - thershold) > tol)
+			&& (iter < maxiter)) {
+		iter++;
 		if (IsSameSign(fun(middle) - thershold,
 				       fun(right)  - thershold)) {
 			right = middle;

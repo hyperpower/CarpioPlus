@@ -204,7 +204,6 @@ public:
 		auto se0  = _aperture_state(arrv[0], arrv[2], th);
 		arrres[0] = cal_edge_aperture_ratio(xo,   yo, _Y_, dy,
 				                            time, th, fun, tol, se0);
-
 		auto se1  = _aperture_state(arrv[1], arrv[3], th);
 		arrres[1] = cal_edge_aperture_ratio(xo + dx, yo, _Y_, dy,
 				                            time,    th, fun, tol, se1);

@@ -157,6 +157,11 @@ inline int Heaviside(const TYPE& v){
 	return v<=0?0:1;
 }
 
+template <class TYPE>
+inline bool IsCloseTo(const TYPE& v, const TYPE& dst, const Vt tol = 1e-5){
+	return std::abs(v - dst) < tol;
+}
+
 
 
 }

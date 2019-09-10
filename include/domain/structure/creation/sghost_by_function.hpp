@@ -15,8 +15,10 @@ template<typename TYPE, St DIM>
 class SCreatGhostByFunction_{
 public:
 	static const St Dim         = 2;
-	static const St NumFaces    = 4;
-	static const St NumVertexes = 4;
+    static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
+	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
+	static const St NumEdge   = DIM == 1 ? 1 : (DIM == 2 ? 4 : 12);
+
 
 	typedef SIndex_<DIM>                Index;
 	typedef SGrid_<DIM>                 Grid;
@@ -93,10 +95,10 @@ public:
 		typename GhostLinearCut::FunSetByIndex funindex =
 				[this, spg,fun,&time,&th,&spcg,&spcorner]
 				 (const Index& index){
-			std::array<Vt, NumVertexes> arrvv;
+			std::array<Vt, NumVertex> arrvv;
 			auto& corner = *spcorner;
 			short vf = 0;
-			for(int vo = 0; vo < NumVertexes; vo++){
+			for(int vo = 0; vo < NumVertex; vo++){
 				arrvv[vo] = corner(vo, index);
 				if(arrvv[vo] >= th){
 					vf++;
@@ -104,16 +106,18 @@ public:
 					vf--;
 				}
 			}
-			if(vf == NumVertexes){
+			if(vf == NumVertex){
 				// a normal cell
 				return spCellLinearCut(nullptr);
-			}else if(-vf == NumVertexes){
+			}else if(-vf == NumVertex){
 				// a ghost cell
 				return spcg;
 			}else{
 				// a cut cell
 				if(DIM == 2){
-					return this->_new_cell_linear_cut_2(*spg, index, time, th, fun, 1e-5, arrvv);
+					Vt tol = spg->min_size() * 1e-3;
+					return this->_new_cell_linear_cut_2(*spg,
+							index, time, th, fun, tol, arrvv);
 				}
 				SHOULD_NOT_REACH;
 			}
@@ -129,12 +133,12 @@ protected:
 	spCellLinearCut _new_cell_linear_cut_2(
 			const Grid& grid, const Index& index,
 			const Vt&   time, const Vt& th, FunXYZT_Value fun,
-			const Vt&   tol,  const std::array<Vt, NumVertexes>& arrv){
+			const Vt&   tol,  const std::array<Vt, NumVertex>& arrv){
 		spCellLinearCut spcc(new CellLinearCut());
 		spcc->set_type(_CUT_);
 		auto po = grid.v(0, index);
 		Tool t;
-		std::array<Vt, NumFaces> arre = t.cal_cell_aperture_ratios(
+		std::array<Vt, NumFace> arre = t.cal_cell_aperture_ratios(
 				po.value(_X_), po.value(_Y_),
 				grid.s_(_X_, index), grid.s_(_Y_, index),
 				time, th, fun, tol, arrv);
@@ -147,10 +151,15 @@ protected:
 				vf--;
 			}
 		}
-		if(vf == NumVertexes){
+		std::cout << "Index = " << index << std::endl;
+		for(St i = 0; i < NumEdge; i++){
+			std::cout << "i = " << i << " ap = " << arre[i] << std::endl;
+		}
+
+		if(vf == NumVertex){
 			// a normal cell
 			return spCellLinearCut(nullptr);
-		}else if(-vf == NumVertexes){
+		}else if(-vf == NumVertex){
 			// a ghost cell
 			spCellLinearCut spg(new CellLinearCut());
 			spg->set_type(_GHOST_);

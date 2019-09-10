@@ -145,6 +145,43 @@ TEST(structure, initial_cut){
 
 }
 
+TEST(structure, initial_cut_trivial){
+	typedef SGrid_<2>                          SGrid;
+	typedef typename SGrid::Index              SIndex;
+	typedef SGhostMask_<2>                   SGhostMask;
+	typedef SGhostLinearCut_<2>              SGhostLinearCut;
+
+	typedef std::shared_ptr<SCellMask_<2> >  spSCellMask;
+	typedef std::shared_ptr<SGrid_<2> >      spSGrid;
+	typedef std::shared_ptr<SGhost_<2> >     spSGhost;
+	typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
+	typedef std::shared_ptr<SGhostLinearCut_<2> > spSGhostLinearCut;
+
+	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
+//	Point_<Vt, 2> pmax(1, 1, 1);
+	spSGrid spsg(new SGridUniform_<2>(pmin,
+			                          20,
+									  1, 2 ));
+	typedef SCreatGhostByFunction_<Vt, 2> CreatGhost;
+	CreatGhost cg;
+	CreatGhost::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt time){
+		return  -x + y + 0.2;
+	};
+	auto spg = cg.ghost_linear_cut(spsg, fun, 0.0, 0.0);
+
+	Gnuplot gnu;
+	gnu.set_xrange(-0.5, 0.5);
+	gnu.set_yrange(-0.5, 0.5);
+	gnu.set_equal_ratio();
+	gnu.add(GA::WireFrame(*spsg));
+
+	gnu.add(GA::WireFrame(*spg, 3));
+//	auto acb = GA::Boundary(*spg);
+//	acb->style() = "with line lw 3 lc variable";
+//	gnu.add(acb);
+	gnu.plot();
+
+}
 
 
 
