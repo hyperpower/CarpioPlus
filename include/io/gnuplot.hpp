@@ -993,8 +993,9 @@ namespace GnuplotActor {
 	}
 
 	template<typename Container>
-	spActor XY(const Container& con,
-			   const St& c1, const St& c2,
+	spActor XY(const Container& con, // matrix like data structure
+			   const St& c1, // column index
+			   const St& c2, // column index
 			   const std::string &pcmd = "using 1:2 title \"\" ",
 			   const std::string& scmd = "") {
 	spActor actor = spActor(new Gnuplot_actor());

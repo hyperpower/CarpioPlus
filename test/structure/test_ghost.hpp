@@ -165,7 +165,7 @@ TEST(structure, initial_cut_trivial){
 	typedef SCreatGhostByFunction_<Vt, 2> CreatGhost;
 	CreatGhost cg;
 	CreatGhost::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt time){
-		return  -x + y + 0.2;
+		return  0.3 * sin(30 * x) -y;
 	};
 	auto spg = cg.ghost_linear_cut(spsg, fun, 0.0, 0.0);
 
@@ -173,9 +173,23 @@ TEST(structure, initial_cut_trivial){
 	gnu.set_xrange(-0.5, 0.5);
 	gnu.set_yrange(-0.5, 0.5);
 	gnu.set_equal_ratio();
+
+	// exact
+	ArrayListV_<Vt> x(1000);
+	x.assign_forward(-0.5, 0.001);
+	ArrayListV_<Vt> y(1000);
+	y.assign([&x](const St& i){
+		return 0.31 * sin(30 * x[i]);
+	});
+	auto spa_exact = GnuplotActor::XY(x,y);
+	spa_exact->style() = "with line lc 1";
+	gnu.add(spa_exact);
+
 	gnu.add(GA::WireFrame(*spsg));
 
 	gnu.add(GA::WireFrame(*spg, 3));
+	gnu.add(GA::WireFrameEmphasisCut(*spg, 5));
+
 //	auto acb = GA::Boundary(*spg);
 //	acb->style() = "with line lw 3 lc variable";
 //	gnu.add(acb);

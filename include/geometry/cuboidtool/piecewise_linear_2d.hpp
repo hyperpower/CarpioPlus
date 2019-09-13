@@ -53,8 +53,9 @@ public:
 	 * 1 calculate edge aperture ratio by FunXYZT
 	 * 2 calculate cell aperture ratios by FunXYZT
 	 * 3 get start point of the piecewise linear -- 2D
+	 * 4 get end point of the piecewise linear -- 2D
 	 ****************************************************/
-	Point cal_start_point(
+	Point start_point(
 			const Vt& xo,
 			const Vt& yo,
 			const Vt& dx,
@@ -107,7 +108,7 @@ public:
 //		SHOULD_NOT_REACH;
 	}
 
-	Point cal_end_point(
+	Point end_point(
 				const Vt& xo,
 				const Vt& yo,
 				const Vt& dx,
@@ -159,17 +160,33 @@ public:
 		return pres;
 	}
 
-	PointChain cal_cut_point_chain(
+	PointChain cut_cell_point_chain(
 			const Vt& xo,
 			const Vt& yo,
 			const Vt& dx,
 			const Vt& dy,
-			const std::array<Vt, 4>& arr
-			){
+			const std::array<Vt, 4>& arr){
 
 	}
 
-	std::array<Vt, NumFaces> cal_cell_aperture_ratios(
+	void _cut_cell_point_chain_each_edge(
+			const Point& p0, // vertex 0
+			const Point& p1, // vertex 1
+			const Vt&    r,
+			PointChain&  pc){
+		if (r == 0.0 || std::abs(r) == 1) {
+			return;
+		}
+		if (r < 0.0) {
+			pc.push_back(Between(p0, p1, r));
+			pc.push_back(p1);
+		} else { // r > 0.0
+			pc.push_back(Between(p0, p1, r));
+			pc.push_back(p0);
+		}
+	}
+
+	std::array<Vt, NumFaces> cut_cell_aperture_ratios(
 			const Vt& xo,
 			const Vt& yo,
 			const Vt& dx,
@@ -183,10 +200,10 @@ public:
 		arrv[1] = fun(xo+dx,yo,   0.0,time);
 		arrv[2] = fun(xo,   yo+dy,0.0,time);
 		arrv[3] = fun(xo+dx,yo+dy,0.0,time);
-		return cal_cell_aperture_ratios(xo, yo, dx, dy, time, th, fun, tol, arrv);
+		return cut_cell_aperture_ratios(xo, yo, dx, dy, time, th, fun, tol, arrv);
 	}
 
-	std::array<Vt, NumFaces> cal_cell_aperture_ratios(
+	std::array<Vt, NumFaces> cut_cell_aperture_ratios(
 			const Vt& xo,
 			const Vt& yo,
 			const Vt& dx,
@@ -202,18 +219,18 @@ public:
 		// v2 - 3 => e3
 		std::array<Vt, NumFaces> arrres;
 		auto se0  = _aperture_state(arrv[0], arrv[2], th);
-		arrres[0] = cal_edge_aperture_ratio(xo,   yo, _Y_, dy,
+		arrres[0] = edge_aperture_ratio(xo,   yo, _Y_, dy,
 				                            time, th, fun, tol, se0);
 		auto se1  = _aperture_state(arrv[1], arrv[3], th);
-		arrres[1] = cal_edge_aperture_ratio(xo + dx, yo, _Y_, dy,
+		arrres[1] = edge_aperture_ratio(xo + dx, yo, _Y_, dy,
 				                            time,    th, fun, tol, se1);
 
 		auto se2  = _aperture_state(arrv[0], arrv[1], th);
-		arrres[2] = cal_edge_aperture_ratio(xo, yo, _X_, dx,
+		arrres[2] = edge_aperture_ratio(xo, yo, _X_, dx,
 				                            time, th, fun, tol, se2);
 
 		auto se3  = _aperture_state(arrv[2], arrv[3], th);
-		arrres[3] = cal_edge_aperture_ratio(xo, yo + dy, _X_, dx,
+		arrres[3] = edge_aperture_ratio(xo, yo + dy, _X_, dx,
 				                            time, th, fun, tol, se3);
 		return arrres;
 	}
@@ -235,7 +252,7 @@ public:
      *          |---------> positive direction
 	 *
 	 ******************/
-	Vt cal_edge_aperture_ratio(
+	Vt edge_aperture_ratio(
 			const Vt&   xo,
 			const Vt&   yo,
 			const Axes& a,

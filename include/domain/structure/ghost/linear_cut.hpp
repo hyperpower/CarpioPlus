@@ -173,7 +173,7 @@ public:
 	SGhostLinearCut_(spGrid spg): Base(spg),
     	_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
 	}
-	~SGhostLinearCut_() {
+	virtual ~SGhostLinearCut_() {
 	}
 
 	spCell&

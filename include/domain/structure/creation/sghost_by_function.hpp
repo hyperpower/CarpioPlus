@@ -138,7 +138,7 @@ protected:
 		spcc->set_type(_CUT_);
 		auto po = grid.v(0, index);
 		Tool t;
-		std::array<Vt, NumFace> arre = t.cal_cell_aperture_ratios(
+		std::array<Vt, NumFace> arre = t.cut_cell_aperture_ratios(
 				po.value(_X_), po.value(_Y_),
 				grid.s_(_X_, index), grid.s_(_Y_, index),
 				time, th, fun, tol, arrv);

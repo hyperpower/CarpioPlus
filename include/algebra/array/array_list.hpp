@@ -20,6 +20,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <iostream>
+#include <functional>
 
 namespace carpio {
 
@@ -40,6 +41,8 @@ public:
     typedef const T& const_reference;
     typedef St size_type;
     typedef St difference_type;
+
+    typedef std::function<T(const St&)> FunIndex;
 
 protected:
     St m_Len;
@@ -89,6 +92,7 @@ public:
     T get(size_type i) const;
     void set(size_type i, const T& value);
     void assign(const T& nd);
+    void assign(FunIndex fun);
 
     // front() and back()
     reference front();
@@ -253,6 +257,12 @@ void ArrayListT_<T>::assign(const T& nd) {
 #pragma omp parallel for
     for (size_type i = 0; i < m_Len; i++) {
         m_p[i] = nd;
+    }
+}
+template<typename T>
+void ArrayListT_<T>::assign(ArrayListT_<T>::FunIndex fun) {
+    for (size_type i = 0; i < m_Len; i++) {
+        m_p[i] = fun(i);
     }
 }
 template<typename T>

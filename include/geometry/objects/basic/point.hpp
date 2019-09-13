@@ -388,6 +388,31 @@ Point_<TYPE, DIM> Max(
 	return res;
 }
 
+template<typename TYPE, St DIM>
+Point_<TYPE, DIM> Between(
+		const Point_<TYPE, DIM>& a,
+		const Point_<TYPE, DIM>& b,
+		const Vt& ratio) {
+	// -1 <= ratio <= 1
+	if (ratio == 1) {
+		return b;
+	}
+	if (ratio == -1) {
+		return a;
+	}
+	Point_<TYPE, DIM> res;
+	if (ratio < 0) {
+		for (St i = 0; i < DIM; i++) {
+			res[i] = b[i] + (b[i] - a[i]) * ratio;
+		}
+	} else if (ratio > 0) {
+		for (St i = 0; i < DIM; i++) {
+			res[i] = a[i] + (b[i] - a[i]) * ratio;
+		}
+	}
+	return res;
+}
+
 //===============================================
 // Cross product (v1 - v4) . ((v2-v4) x (v3-v4))
 // for Point
