@@ -212,50 +212,7 @@ public:
         return actor;
     }
 
-    static spActor WireFrame(const GhostLinearCut2& g,  int color_idx = 1) {
-    		typedef CuboidToolPL_<Vt> Tool;
-    		Tool tool;
-            spActor actor = spActor(new Gnuplot_actor());
-            actor->command() = "using 1:2:3 title \"\" ";
-            actor->style()   = "with line lc variable";
-            int c = (color_idx == -1) ? 0 : color_idx;
-
-            short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
-            auto& grid = g.grid();
-            auto gl    = grid.ghost_layer();
-            for (int j = -gl; j < grid.n(_Y_) + gl; j++) {
-                for (int i = -gl; i < grid.n(_X_) + gl; i++) {
-                    typename Grid2::Index index(i, j);
-                    if (g.is_ghost(index)) {
-                        for (short o = 0; o < grid.num_vertex(); ++o) {
-                            auto p = grid.v(order[o], index);
-                            actor->data().push_back(
-                                    ToString(p.value(_X_), p.value(_Y_), c, " "));
-                        }
-                        auto p = grid.v(0, index);
-                        actor->data().push_back(
-                                ToString(p.value(_X_), p.value(_Y_), c, " "));
-                        actor->data().push_back("");
-                    }
-                    if (g.is_cut(index)){
-                    	auto spcell = g(index);
-                    	auto arr = spcell->get_aperture_ratio();
-                    	auto po = grid.v(0, index);
-                    	auto sx = grid.s_(_X_, index);
-                    	auto sy = grid.s_(_Y_, index);
-                    	auto sp = tool.start_point(po.x(), po.y(), sx, sy, arr);
-                    	auto ep = tool.end_point(po.x(), po.y(), sx, sy, arr);
-                        actor->data().push_back("");
-                    	actor->data().push_back(ToString(sp.value(_X_), sp.value(_Y_), c, " "));
-                    	actor->data().push_back(ToString(ep.value(_X_), ep.value(_Y_), c, " "));
-                        actor->data().push_back("");
-                    }
-                }
-            }
-            return actor;
-        }
-
-    static spActor WireFrameEmphasisCut(
+    static spActor WireFrameCut(
     		const GhostLinearCut2& g,
 			int   color_idx = 1) {
 		typedef CuboidToolPL_<Vt> Tool;
@@ -272,8 +229,6 @@ public:
 			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
 				typename Grid2::Index index(i, j);
 				if (g.is_cut(index)) {
-					auto spcell = g(index);
-					auto arr    = spcell->get_aperture_ratio();
 					auto po     = grid.v(0, index);
 					auto sx     = grid.s_(_X_, index);
 					auto sy     = grid.s_(_Y_, index);
@@ -291,6 +246,120 @@ public:
 		}
 		return actor;
 	}
+
+
+	static spActor WireFrameCutInterface(
+			const GhostLinearCut2& g,
+			int   color_idx = 1) {
+		typedef CuboidToolPL_<Vt> Tool;
+		Tool tool;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		auto gl = grid.ghost_layer();
+		for (int j = -gl; j < grid.n(_Y_) + gl; j++) {
+			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
+				typename Grid2::Index index(i, j);
+				if (g.is_cut(index)) {
+					auto spcell = g(index);
+					auto arr = spcell->get_aperture_ratio();
+					auto po = grid.v(0, index);
+					auto sx = grid.s_(_X_, index);
+					auto sy = grid.s_(_Y_, index);
+					auto sp = tool.start_point(po.x(), po.y(), sx, sy, arr);
+					auto ep = tool.end_point(po.x(), po.y(), sx, sy, arr);
+					actor->data().push_back("");
+					actor->data().push_back(
+							ToString(sp.value(_X_), sp.value(_Y_), c, " "));
+					actor->data().push_back(
+							ToString(ep.value(_X_), ep.value(_Y_), c, " "));
+					actor->data().push_back("");
+				}
+			}
+		}
+		return actor;
+	}
+
+
+	static spActor WireFrameCutGhostSide(
+			const GhostLinearCut2& g, int color_idx = 1) {
+		typedef CuboidToolPL_<Vt> Tool;
+		Tool tool;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		auto gl = grid.ghost_layer();
+		for (int j = -gl; j < grid.n(_Y_) + gl; j++) {
+			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
+				typename Grid2::Index index(i, j);
+				if (g.is_cut(index)) {
+
+                    auto spcell = g(index);
+                    auto arr = spcell->get_aperture_ratio();
+					auto po = grid.v(0, index);
+					auto sx = grid.s_(_X_, index);
+					auto sy = grid.s_(_Y_, index);
+                    auto pc = tool.cut_cell_point_chain(po.x(), po.y(), sx, sy, arr);
+					for (auto p : pc) {
+						actor->data().push_back(
+								ToString(p.value(_X_), p.value(_Y_), c, " "));
+					}
+					auto p = pc.front();
+					actor->data().push_back(
+							ToString(p.value(_X_), p.value(_Y_), c, " "));
+					actor->data().push_back("");
+                }
+			}
+		}
+		return actor;
+	}
+    static spActor WireFrameCutNormalSide(
+			const GhostLinearCut2& g,
+			int color_idx = 1) {
+		typedef CuboidToolPL_<Vt> Tool;
+		Tool tool;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		auto gl = grid.ghost_layer();
+		for (int j = -gl; j < grid.n(_Y_) + gl; j++) {
+			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
+				typename Grid2::Index index(i, j);
+				if (g.is_cut(index)) {
+
+					auto spcell = g(index);
+					auto arr = spcell->get_aperture_ratio();
+					auto po = grid.v(0, index);
+					auto sx = grid.s_(_X_, index);
+					auto sy = grid.s_(_Y_, index);
+					auto pc = tool.cut_cell_point_chain_void_side(po.x(), po.y(), sx, sy,
+							arr);
+					for (auto p : pc) {
+						actor->data().push_back(
+								ToString(p.value(_X_), p.value(_Y_), c, " "));
+					}
+					auto p = pc.front();
+					actor->data().push_back(
+							ToString(p.value(_X_), p.value(_Y_), c, " "));
+					actor->data().push_back("");
+				}
+			}
+		}
+		return actor;
+	}
+
 
     static spActor Boundary(const Ghost2& g) {
         spActor actor = spActor(new Gnuplot_actor());

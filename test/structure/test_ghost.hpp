@@ -138,11 +138,13 @@ TEST(structure, initial_cut){
 	gnu.add(GA::WireFrame(*spsg));
 
 	gnu.add(GA::WireFrame(*spg, 3));
+	gnu.add(GA::WireFrameCutGhostSide(*spg, 3));
+	gnu.add(GA::WireFrameCutNormalSide(*spg, 5));
+	gnu.add(GA::WireFrameCutInterface(*spg, 4));
 //	auto acb = GA::Boundary(*spg);
 //	acb->style() = "with line lw 3 lc variable";
 //	gnu.add(acb);
-//	gnu.plot();
-
+	gnu.plot();
 }
 
 TEST(structure, initial_cut_trivial){
@@ -188,12 +190,14 @@ TEST(structure, initial_cut_trivial){
 	gnu.add(GA::WireFrame(*spsg));
 
 	gnu.add(GA::WireFrame(*spg, 3));
-	gnu.add(GA::WireFrameEmphasisCut(*spg, 5));
+	gnu.add(GA::WireFrameCutGhostSide(*spg, 3));
+	gnu.add(GA::WireFrameCutNormalSide(*spg, 5));
+	gnu.add(GA::WireFrameCutInterface(*spg, 4));
 
 //	auto acb = GA::Boundary(*spg);
 //	acb->style() = "with line lw 3 lc variable";
 //	gnu.add(acb);
-	gnu.plot();
+//	gnu.plot();
 
 }
 

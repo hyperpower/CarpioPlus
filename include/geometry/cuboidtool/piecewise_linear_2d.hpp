@@ -165,24 +165,129 @@ public:
 			const Vt& yo,
 			const Vt& dx,
 			const Vt& dy,
-			const std::array<Vt, 4>& arr){
-
+			const std::array<Vt, NumFaces>& arr){
+		auto ccarr = _to_cc_aperture_ratios(arr);
+		PointChain res;
+		_push_back_each_edge(
+				Point(xo, yo), Point(xo + dx, yo),
+				ccarr[3], ccarr[0], ccarr[1], res);
+		_push_back_each_edge(
+				Point(xo + dx, yo), Point(xo + dx, yo + dy),
+				ccarr[0], ccarr[1], ccarr[2], res);
+		_push_back_each_edge(
+				Point(xo + dx, yo + dy), Point(xo, yo + dy),
+				ccarr[1], ccarr[2], ccarr[3], res);
+		_push_back_each_edge(
+				Point(xo, yo + dy), Point(xo, yo),
+				ccarr[2], ccarr[3], ccarr[0], res);
+		return res;
 	}
 
-	void _cut_cell_point_chain_each_edge(
+
+	PointChain cut_cell_point_chain_void_side(
+			const Vt& xo, const Vt& yo,
+			const Vt& dx, const Vt& dy,
+			const std::array<Vt, NumFaces>& arr) {
+		auto ccarr = _to_cc_aperture_ratios(arr);
+		PointChain res;
+		_push_back_each_edge_void_side(
+				Point(xo, yo), Point(xo + dx, yo),
+				ccarr[3], ccarr[0], ccarr[1],
+				res);
+		_push_back_each_edge_void_side(
+				Point(xo + dx, yo), Point(xo + dx, yo + dy),
+				ccarr[0], ccarr[1], ccarr[2], res);
+		_push_back_each_edge_void_side(
+				Point(xo + dx, yo + dy), Point(xo, yo + dy),
+				ccarr[1], ccarr[2], ccarr[3], res);
+		_push_back_each_edge_void_side(
+				Point(xo, yo + dy), Point(xo, yo),
+				ccarr[2], ccarr[3], ccarr[0], res);
+		return res;
+	}
+
+
+
+	void _push_back_each_edge_void_side(
 			const Point& p0, // vertex 0
 			const Point& p1, // vertex 1
-			const Vt&    r,
-			PointChain&  pc){
-		if (r == 0.0 || std::abs(r) == 1) {
+			const Vt& prev,
+			const Vt& r,
+			const Vt& next, PointChain& pc) {
+		if (std::abs(r) == 1.0) {
 			return;
 		}
-		if (r < 0.0) {
+		if (r == 0.0) {
+			if (std::abs(prev) == 1 || prev == 0) {
+				pc.push_back(p0);
+			}
+			if (std::abs(next) == 1) {
+				pc.push_back(p1);
+			}
+		} else if (r < 0.0) {
+			pc.push_back(p0);
+			pc.push_back(Between(p0, p1, r));
+		} else { // r > 0.0
+			pc.push_back(Between(p0, p1, r));
+			pc.push_back(p1);
+		}
+	}
+
+
+	void _push_back_each_edge(
+			const Point& p0, // vertex 0
+			const Point& p1, // vertex 1
+			const Vt&    prev,
+			const Vt&    r,
+			const Vt&    next,
+			PointChain&  pc){
+		if (r == 0.0) {
+			return;
+		}
+		if (std::abs(r) == 1.0){
+			if(prev == 0 || std::abs(prev) == 1){
+				pc.push_back(p0);
+			}
+			if(next == 0){
+				pc.push_back(p1);
+			}
+		}else if (r < 0.0) {
 			pc.push_back(Between(p0, p1, r));
 			pc.push_back(p1);
 		} else { // r > 0.0
-			pc.push_back(Between(p0, p1, r));
 			pc.push_back(p0);
+			pc.push_back(Between(p0, p1, r));
+		}
+	}
+	// to count-clock wise aperture ratios
+	std::array<Vt, NumFaces> _to_cc_aperture_ratios(
+			const std::array<Vt, NumFaces>& arr
+			){
+		std::array<Vt, NumFaces> res;
+		// edge order   count-clock wise order
+		//     3              2
+		// *------>*      *<------*
+		// ^       ^      |       ^
+		// |0      |1     |3      |1
+		// |       |      _       |
+		// *------>*      *------>*
+		//     2              0
+		res[0] = arr[2];
+		res[1] = arr[1];
+		res[2] = _change_direction(arr[3]);
+		res[3] = _change_direction(arr[0]);
+		return res;
+	}
+
+	Vt _change_direction(const Vt& ap){
+		if(std::abs(ap) == 1){
+			return - ap;
+		}else if(ap > 0){
+			return - ap;
+		}else if(ap < 0){
+			return - ap;
+		}else{
+			return 0.0;
 		}
 	}
 

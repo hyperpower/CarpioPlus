@@ -151,11 +151,6 @@ protected:
 				vf--;
 			}
 		}
-		std::cout << "Index = " << index << std::endl;
-		for(St i = 0; i < NumEdge; i++){
-			std::cout << "i = " << i << " ap = " << arre[i] << std::endl;
-		}
-
 		if(vf == NumVertex){
 			// a normal cell
 			return spCellLinearCut(nullptr);

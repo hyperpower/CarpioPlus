@@ -162,6 +162,13 @@ inline bool IsCloseTo(const TYPE& v, const TYPE& dst, const Vt tol = 1e-5){
 	return std::abs(v - dst) < tol;
 }
 
+inline int LoopNext(const int& bgn, const int& end, const int& cur){
+	return (cur == end) ? bgn : cur + 1;
+}
+inline int LoopPrev(const int& bgn, const int& end, const int& cur){
+	return (cur == bgn) ? end : cur - 1;
+}
+
 
 
 }
