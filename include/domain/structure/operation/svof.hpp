@@ -39,7 +39,7 @@ public:
     typedef BoundaryCondition BC;
 
     typedef CuboidTool_<Vt, DIM> CuboidTool;
-    typedef CuboidToolPL_<Vt>    CuboidToolPL;
+    typedef CuboidToolPL2_<Vt>   CuboidToolPL;
     typedef Point_<Vt, DIM>   Point;
     typedef Line_<Vt>          Line;
 

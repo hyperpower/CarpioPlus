@@ -9,6 +9,7 @@ namespace PlotlyActor{
 
 template<St DIM>
 spPA_scatter3d WireFrame(const SGrid_<DIM>& grid) {
+	ASSERT(DIM != 1);
     typedef SGrid_<DIM> Grid;
     typedef std::list<double> Listd;
     typedef typename Grid::size_type St;

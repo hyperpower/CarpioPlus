@@ -3,6 +3,7 @@
 
 #include "stddef.h"
 #include <assert.h>
+#include <math.h>
 #ifdef OPENMP
 #include <omp.h>
 #endif

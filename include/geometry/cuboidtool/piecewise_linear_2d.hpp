@@ -15,7 +15,7 @@ namespace carpio {
 
 
 template<class TYPE>
-class CuboidToolPL_:public CuboidTool_<TYPE, 2>{
+class CuboidToolPL2_:public CuboidTool_<TYPE, 2>{
 public:
 	static const St Dim = 2;
 	static const St NumFaces = 4;
@@ -47,7 +47,7 @@ public:
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
 public:
-	CuboidToolPL_():Base(){}
+	CuboidToolPL2_():Base(){}
 	/*****************************************************
 	 * Cut cell functions
 	 * 1 calculate edge aperture ratio by FunXYZT
@@ -280,14 +280,10 @@ public:
 	}
 
 	Vt _change_direction(const Vt& ap){
-		if(std::abs(ap) == 1){
-			return - ap;
-		}else if(ap > 0){
-			return - ap;
-		}else if(ap < 0){
-			return - ap;
-		}else{
+		if(ap == 0.0){
 			return 0.0;
+		}else{
+			return -ap;
 		}
 	}
 
@@ -419,6 +415,7 @@ public:
 		Vt vp = fun(x,  y, 0.0, time);
 		return _aperture_state(vm, vp, th);
 	}
+
 	int _aperture_state(const Vt& vm, const Vt& vp, const Vt& th) const{
 		if (vm >= th && vp >= th) {
 			return 2;

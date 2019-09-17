@@ -184,7 +184,7 @@ public:
 
 
     static spActor WireFrame(const Ghost2& g,  int color_idx = 1) {
-		typedef CuboidToolPL_<Vt> Tool;
+		typedef CuboidToolPL2_<Vt> Tool;
         spActor actor = spActor(new Gnuplot_actor());
         actor->command() = "using 1:2:3 title \"\" ";
         actor->style()   = "with line lc variable";
@@ -215,7 +215,7 @@ public:
     static spActor WireFrameCut(
     		const GhostLinearCut2& g,
 			int   color_idx = 1) {
-		typedef CuboidToolPL_<Vt> Tool;
+		typedef CuboidToolPL2_<Vt> Tool;
 		Tool tool;
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
@@ -251,7 +251,7 @@ public:
 	static spActor WireFrameCutInterface(
 			const GhostLinearCut2& g,
 			int   color_idx = 1) {
-		typedef CuboidToolPL_<Vt> Tool;
+		typedef CuboidToolPL2_<Vt> Tool;
 		Tool tool;
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
@@ -287,7 +287,7 @@ public:
 
 	static spActor WireFrameCutGhostSide(
 			const GhostLinearCut2& g, int color_idx = 1) {
-		typedef CuboidToolPL_<Vt> Tool;
+		typedef CuboidToolPL2_<Vt> Tool;
 		Tool tool;
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
@@ -324,7 +324,7 @@ public:
     static spActor WireFrameCutNormalSide(
 			const GhostLinearCut2& g,
 			int color_idx = 1) {
-		typedef CuboidToolPL_<Vt> Tool;
+		typedef CuboidToolPL2_<Vt> Tool;
 		Tool tool;
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";

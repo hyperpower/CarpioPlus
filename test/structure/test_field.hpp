@@ -335,7 +335,7 @@ TEST(scalar, DISABLED_corner2){
 //	gnu.splot();
 }
 
-TEST(scalar, corner_assign){
+TEST(scalar, DISABLED_corner_assign){
 	std::cout << "corner test -----" << std::endl;
 	const St Dim = 2;
 	typedef SField_<Dim>                        Field;
@@ -381,6 +381,44 @@ TEST(scalar, corner_assign){
 //	gnu.add(asc);
 //	gnu.add(asv);
 	gnu.splot();
+}
+
+TEST(scalar, corner_plotly) {
+	std::cout << "corner test plotly -----" << std::endl;
+	const St Dim = 3;
+	typedef SField_<Dim> Field;
+	typedef std::shared_ptr<SGrid_<Dim> > spGrid;
+	typedef std::shared_ptr<SGhost_<Dim> > spGhost;
+	typedef std::shared_ptr<SOrderXYZ_<Dim> > spOrder;
+	typedef SCorner_<Dim> Corner;
+	typedef std::shared_ptr<SCorner_<Dim> > spCorner;
+	typedef SInterpolate_<Dim> Inter;
+	typedef BoundaryIndex BI;
+	typedef std::shared_ptr<BoundaryIndex> spBI;
+	typedef BoundaryCondition BC;
+	typedef std::shared_ptr<BoundaryCondition> spBC;
+	// type define
+	Point_<Vt, Dim> pmin(0, 0, 0);
+	Point_<Vt, Dim> pmax(1, 1, 1);
+	spGrid spsg(new SGridUniform_<Dim>(pmin, { 10, 10, 5 }, 0.15, 2));
+
+	spGhost spgh(new SGhostRegular_<Dim>(spsg));
+
+	spOrder sporder(new SOrderXYZ_<Dim>(spsg, spgh));
+
+	Corner c(spsg, spgh, sporder);
+
+	typename Corner::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt t) {
+		return sin(x + y + z);
+	};
+
+	c.assign(fun, 0);
+
+	Plotly ply;
+	ply.add(PlotlyActor::WireFrame(*spsg));
+	ply.plot();
+
+
 }
 
 }

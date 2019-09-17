@@ -60,8 +60,8 @@ public:
 	typedef std::shared_ptr<Corner>  spCorner;
 
 	typedef typename std::conditional<DIM == 2,
-                                      CuboidToolPL_<TYPE>,
-                                      CuboidToolPL_<TYPE>>::type Tool;
+                                      CuboidToolPL2_<TYPE>,
+                                      CuboidToolPL3_<TYPE>>::type Tool;
 	                                  // 3D is not correct
 
 	SCreatGhostByFunction_(){
