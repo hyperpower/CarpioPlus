@@ -10,7 +10,7 @@
 #include "domain/structure/field/svector_face.hpp"
 #include "domain/boundary/boundary_index.hpp"
 
-#include "domain/structure/operation/soperation.hpp"
+#include "domain/structure/operation/soperation_define.hpp"
 
 #include <array>
 

@@ -144,7 +144,7 @@ TEST(structure, initial_cut){
 //	auto acb = GA::Boundary(*spg);
 //	acb->style() = "with line lw 3 lc variable";
 //	gnu.add(acb);
-	gnu.plot();
+//	gnu.plot();
 }
 
 TEST(structure, initial_cut_trivial){
