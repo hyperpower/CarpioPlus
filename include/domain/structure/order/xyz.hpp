@@ -34,7 +34,7 @@ protected:
 
 public:
     SOrderXYZ_(spGrid spgrid, spGhost spghost):
-        _grid(spgrid), _ghost(spghost), _ov(_ghost->size_normal()),
+        _grid(spgrid), _ghost(spghost), _ov(_ghost->size_not_ghost()),
         _om(_grid->n(_X_), _grid->n(_Y_), _grid->n(_Z_)){
         _build_ov();
         _build_om();

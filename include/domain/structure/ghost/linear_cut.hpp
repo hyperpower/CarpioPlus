@@ -18,11 +18,22 @@ template<St DIM>
 class SCellLinearCut_{
 protected:
     typedef SCellLinearCut_<DIM> Self;
+    typedef SGrid_<DIM>          Grid;
+    typedef Point_<Vt, DIM>      Point;
+    typedef PointChain_<Vt, DIM> PointChain;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
     typedef std::function<Vt(Vt, Vt, Vt)>     FunXYZ_Value;
 
-    typedef CuboidTool_<Vt, DIM>   Tool;
+//    typedef CuboidTool_<Vt, DIM>   Tool;
+	typedef typename std::conditional<DIM == 2,
+				                      CuboidToolPL2_<Vt>,
+									  CuboidToolPL3_<Vt> >::type Tool;//
+
+
+	typedef typename std::conditional<DIM == 2,
+				                      Line_<Vt>,
+									  Plane_<Vt> >::type Front;//
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
@@ -55,6 +66,9 @@ protected:
     // |      2
     // O-----> x
 
+    // other data
+    PointChain _piecewise;
+    Front      _front;   // line or plane, original point is cell center
 
 public:
 	SCellLinearCut_() :_type(_CUT_) {
@@ -96,18 +110,12 @@ public:
         return _bid;
     }
 
-    void set_aperture_ratio(const std::array<Vt, NumEdge>& arr){
-    	for(St i = 0; i< NumEdge; i++){
-    		if(IsCloseTo(arr[i], 0.0)){
-    			_ers[i] = 0.0;
-    		}else if(IsCloseTo(arr[i], 1.0)){
-    			_ers[i] = 1;
-    		}else if(IsCloseTo(arr[i], -1.0)){
-    			_ers[i] = -1;
-    		}else{
-    			_ers[i] = arr[i];
-    		}
-    	}
+    void set_data(const Point& pmin,
+    		      const Point& pmax,
+				  const std::array<Vt, NumEdge>& arr){
+    	_set_aperture_ratio(arr);
+    	_set_piecewise(pmin, pmax, arr);
+    	_set_front(pmin, pmax);
     }
 
     Vt get_aperture_ratio(int axe, int o) const{
@@ -134,7 +142,56 @@ public:
     	}
     }
 
+    void _set_aperture_ratio(const std::array<Vt, NumEdge>& arr) {
+		for (St i = 0; i < NumEdge; i++) {
+			if (IsCloseTo(arr[i], 0.0)) {
+				_ers[i] = 0.0;
+			} else if (IsCloseTo(arr[i], 1.0)) {
+				_ers[i] = 1;
+			} else if (IsCloseTo(arr[i], -1.0)) {
+				_ers[i] = -1;
+			} else {
+				_ers[i] = arr[i];
+			}
+		}
+	}
 
+    void _set_piecewise(const Point& pmin,  // point min
+		                const Point& pmax,  // point max
+		                const std::array<Vt, NumEdge>& arr) {
+		// make sure the aperture ratios are set;
+		Tool t;
+		if (DIM == 2) {
+			auto pstart = t.start_point(
+					pmin.x(),
+					pmin.y(),
+					pmax.x() - pmin.x(),
+					pmax.y() - pmin.y(), arr);
+			_piecewise.push_back(pstart);
+			auto pend = t.start_point(
+					pmin.x(),
+					pmin.y(),
+					pmax.x() - pmin.x(),
+					pmax.y() - pmin.y(), arr);
+			_piecewise.push_back(pend);
+		} else {
+			SHOULD_NOT_REACH;
+		}
+	}
+
+    void _set_front(const Point& pmin,
+    		        const Point& pmax) {
+		// make sure the aperture ratios are set;
+		// make sure piecewise is set;
+    	Tool t;
+		if (DIM == 2) {
+			ASSERT(_piecewise.size() == 2);
+			Point mid = Mid(pmin, pmax);
+			_front = t.interface(_piecewise.front(),_piecewise.back(), mid);
+		} else {
+			SHOULD_NOT_REACH;
+		}
+	}
 };
 
 template<St DIM>
@@ -169,23 +226,30 @@ public:
 
 protected:
 	Mat _mat;
+	std::shared_ptr<St> _size;
 public:
-	SGhostLinearCut_(spGrid spg): Base(spg),
-    	_mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
+	SGhostLinearCut_(spGrid spg): Base(spg), _size(nullptr),
+    	_mat(spg->N(_X_), spg->N(_Y_), spg->N(_Z_)){
 	}
 	virtual ~SGhostLinearCut_() {
 	}
 
+	virtual std::string type() const {
+		return "SGhostLinearCut";
+	}
+
 	spCell&
 	operator()(const Index& idx) {
-		return (_mat.at(idx.i(), idx.j(), idx.k()));
+		auto IDX = this->_grid->to_INDEX(idx);
+		return (_mat.at(IDX.i(), IDX.j(), IDX.k()));
 	}
 	const spCell&
 	operator()(const Index& idx) const {
-		return (_mat.at(idx.i(), idx.j(), idx.k()));
+		auto IDX = this->_grid->to_INDEX(idx);
+		return _mat.at(IDX.i(), IDX.j(), IDX.k());
 	}
 
-	bool is_ghost(const Index& index) const {
+	virtual bool is_ghost(const Index& index) const {
 		bool bres = Base::is_ghost(index);
 		if(bres == false){
 			auto& pc = this->operator ()(index);
@@ -197,6 +261,11 @@ public:
 		}
 		return bres;
 	};
+	virtual bool is_not_ghost(const Index& index) const {
+		// cell can be normal or cut;
+		return (!is_ghost(index));
+	}
+
 	bool is_boundary(const Index& index, const St& a,
 			const St& o) const {
 		SHOULD_NOT_REACH;
@@ -219,11 +288,45 @@ public:
 		}
 	}
 
-	virtual int boundary_id(const Index& indexc, const Index& indexg,
-			const St& axe, const St& ori) const {
+	virtual int boundary_id(
+			const Index& indexc,
+			const Index& indexg,
+			const St& axe,
+			const St& ori) const {
+		SHOULD_NOT_REACH;
 	}
 	;
-	virtual St size_normal() const {
+	virtual St size_normal() const{
+		return _count_normal();
+	}
+
+	St _count_normal() const{
+		St count = 0;
+		for(auto& spc : this->_mat){
+			if(spc == nullptr){
+				count++;
+			}
+		}
+		return count;
+	}
+
+	virtual St size_not_ghost() const{
+		return _count_not_ghost();
+	}
+
+	St _count_not_ghost() const {
+		St count = 0;
+		for (auto spc : this->_mat) {
+			if (spc != nullptr) {
+				if(spc->type() == _CUT_){
+					count++;
+				}
+			}else{
+				count++;
+			}
+
+		}
+		return count;
 	}
 
 	void set(FunSetByIndex fun) {
@@ -231,7 +334,7 @@ public:
 			auto res = fun(idx);
 			this->operator ()(idx) = res;
 		};
-		this->_grid->for_each(funi);
+		this->_grid->for_each_INDEX(funi);
 	}
 };
 

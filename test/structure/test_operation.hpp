@@ -9,7 +9,7 @@
 
 namespace carpio {
 
-TEST(scalar, initial){
+TEST(scalar, DISABLED_initial){
 	typedef SIndex_<2> Index;
 	typedef SField_<2> Field;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
@@ -50,7 +50,7 @@ TEST(scalar, initial){
 //	plt.plot();
 }
 
-TEST(scalar, value){
+TEST(scalar, DISABLED_value){
 	typedef SIndex_<2> Index;
 	typedef SField_<2> Field;
 	typedef SValue_<2> Value;
@@ -96,7 +96,70 @@ TEST(scalar, value){
 //	plt.plot();
 }
 
+TEST(scalar, laplacian) {
+	typedef StructureDomain_<2> Domain;
+	typedef SGnuplotActor_<2> GA;
+	typedef SGrid_<2>                          SGrid;
+	typedef typename SGrid::Index SIndex;
+	typedef SGhostMask_<2> SGhostMask;
+	typedef SGhostLinearCut_<2> SGhostLinearCut;
+	typedef SField_<2> Field;
 
+	typedef std::shared_ptr<SCellMask_<2> > spSCellMask;
+	typedef std::shared_ptr<SGrid_<2> > spSGrid;
+	typedef std::shared_ptr<SGhost_<2> > spSGhost;
+	typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
+	typedef std::shared_ptr<SGhostLinearCut_<2> > spSGhostLinearCut;
+	typedef std::shared_ptr<SOrderXYZ_<2> > spOrder;
+
+	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
+	//	Point_<Vt, 2> pmax(1, 1, 1);
+	spSGrid spsg(new SGridUniform_<2>(pmin, 20, 1, 2));
+	typedef SCreatGhostByFunction_<Vt, 2> CreatGhost;
+	CreatGhost cg;
+	CreatGhost::FunXYZT_Value fun = [](Vt x, Vt y, Vt z, Vt time) {
+		return 0.3 * sin(30 * x) -y;
+	};
+	auto spg = cg.ghost_linear_cut(spsg, fun, 0.0, 0.0);
+	spOrder sporder(new SOrderXYZ_<2>(spsg, spg));
+	std::cout << "order size " << sporder->size()<< std::endl;
+
+	Field sc(spsg, spg, sporder);
+	sc.assign(1);
+
+	std::shared_ptr<BoundaryIndex> spbi(new BoundaryIndex());
+	// define operation
+	SLaplacianCut_<2> Lap(spbi);
+	Lap(sc);
+
+	Gnuplot gnu;
+	gnu.set_xrange(-0.5, 0.5);
+	gnu.set_yrange(-0.5, 0.5);
+	gnu.set_equal_ratio();
+
+	// exact
+	ArrayListV_<Vt> x(1000);
+	x.assign_forward(-0.5, 0.001);
+	ArrayListV_<Vt> y(1000);
+	y.assign([&x](const St& i) {
+		return 0.31 * sin(30 * x[i]);
+	});
+	auto spa_exact = GnuplotActor::XY(x, y);
+	spa_exact->style() = "with line lc 1";
+	gnu.add(spa_exact);
+
+	gnu.add(GA::WireFrame(*spsg));
+
+	gnu.add(GA::WireFrame(*spg, 3));
+	gnu.add(GA::WireFrameCutGhostSide(*spg, 3));
+	gnu.add(GA::WireFrameCutNormalSide(*spg, 5));
+	gnu.add(GA::WireFrameCutInterface(*spg, 4));
+
+	//	auto acb = GA::Boundary(*spg);
+	//	acb->style() = "with line lw 3 lc variable";
+	//	gnu.add(acb);
+	gnu.plot();
+}
 
 
 

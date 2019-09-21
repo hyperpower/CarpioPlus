@@ -92,9 +92,14 @@ public:
 
 		auto spcorner = this->_corner_value(spg, fun, time);
 
+		spGhostRegular spgr(new GhostRegular(spg));
+
 		typename GhostLinearCut::FunSetByIndex funindex =
-				[this, spg,fun,&time,&th,&spcg,&spcorner]
+				[this, spg, spgr, fun,&time,&th,&spcg,&spcorner]
 				 (const Index& index){
+			if(spgr->is_ghost(index)){
+				return spcg;
+			}
 			std::array<Vt, NumVertex> arrvv;
 			auto& corner = *spcorner;
 			short vf = 0;
@@ -136,10 +141,11 @@ protected:
 			const Vt&   tol,  const std::array<Vt, NumVertex>& arrv){
 		spCellLinearCut spcc(new CellLinearCut());
 		spcc->set_type(_CUT_);
-		auto po = grid.v(0, index);
+		auto pmin = grid.v(0, index);
+		auto pmax = grid.v(3, index);  // only for 2D
 		Tool t;
 		std::array<Vt, NumFace> arre = t.cut_cell_aperture_ratios(
-				po.value(_X_), po.value(_Y_),
+				pmin.value(_X_), pmin.value(_Y_),
 				grid.s_(_X_, index), grid.s_(_Y_, index),
 				time, th, fun, tol, arrv);
 		short vf = 0;
@@ -162,7 +168,7 @@ protected:
 		} else {
 			spCellLinearCut spc(new CellLinearCut());
 			spc->set_type(_CUT_);
-			spc->set_aperture_ratio(arre);
+			spc->set_data(pmin, pmax, arre);
 			return spc;
 		}
 

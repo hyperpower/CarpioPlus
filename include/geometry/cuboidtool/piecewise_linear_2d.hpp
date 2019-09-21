@@ -104,8 +104,6 @@ public:
 				|| (std::abs(arr[0]) == 1 && arr[3] == 0)) {
 			return Point(xo, yo + dy);
 		}
-
-//		SHOULD_NOT_REACH;
 	}
 
 	Point end_point(
@@ -158,6 +156,12 @@ public:
 			pres = Point(xo, yo + dy);
 		}
 		return pres;
+	}
+
+	Line interface(const Point& start, const Point& end, const Point& ori = Point()){
+		auto sstart = start - ori;  // shift start
+		auto send   = end   - ori;  // shift end
+		return Line(sstart, send);
 	}
 
 	PointChain cut_cell_point_chain(
@@ -351,7 +355,6 @@ public:
      *          *----------*  aperture ratio =  0.0
      *          *==========*  aperture ratio =  1.0 or -1.0
      *          |---------> positive direction
-	 *
 	 ******************/
 	Vt edge_aperture_ratio(
 			const Vt&   xo,
@@ -400,7 +403,7 @@ public:
 	 *                  vm<th  vp>th,   then return  1
 	 *                  vm>th  vp<th,   then return -1
 	 *******************/
-	int _cal_edge_aperture_state(
+	int _edge_aperture_state(
 			const Vt&    xo,
 			const Vt&    yo,
 			const Axes&  a,          // _X_ or _Y_

@@ -100,13 +100,11 @@ public:
     }
 
     reference operator()(const Index& index) {
-        ASSERT(_ghost->is_normal(index));
         return _mat.at(index.i(),
                        index.j(),
                        index.k());
     }
     const_reference operator()(const Index& index) const {
-        ASSERT(_ghost->is_normal(index));
         return _mat.at(index.i(),
                        index.j(),
                        index.k());

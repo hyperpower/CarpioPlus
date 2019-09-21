@@ -10,7 +10,7 @@ namespace carpio {
 
 typedef SGnuplotActor_<2> GA;
 
-TEST(structure, DISABLED_initial){
+TEST(structure, initial){
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
 
@@ -27,10 +27,10 @@ TEST(structure, DISABLED_initial){
 	gnu.set_yrange(-0.5, 5.5);
 	gnu.set_equal_ratio();
 	gnu.add(GA::WireFrame(*spsg));
-//	gnu.plot();
+	gnu.plot();
 }
 
-TEST(structure, DISABLED_initial2){
+TEST(structure, initial2){
 	typedef SGrid_<2>                          SGrid;
 	typedef typename SGrid::Index              SIndex;
 	typedef SCellMask_<2>                    SCellMask;

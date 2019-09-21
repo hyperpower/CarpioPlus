@@ -254,10 +254,6 @@ public:
         return res;
     }
 
-    Index to_Index(const Index& INDEX) const{
-        Index c(INDEX.value(0) - _gl, INDEX.value(1) - _gl, INDEX.value(2) - _gl);
-        return c;
-    }
 
     // Point is in the range
     inline bool is_in_on(Poi p) {
@@ -323,6 +319,14 @@ public:
     inline Idx _idx(const St& I) const {
         return Idx(I - _gl);
     }
+    Index to_Index(const Index& INDEX) const{
+        Index c(INDEX.value(0) - _gl, INDEX.value(1) - _gl, INDEX.value(2) - _gl);
+        return c;
+    }
+    Index to_INDEX(const Index& index) const{
+        Index c(index.value(0) + _gl, index.value(1) + _gl, index.value(2) + _gl);
+        return c;
+    }
 
     void for_each(FunIndex fun){
         St nx = this->n(_X_);
@@ -337,6 +341,21 @@ public:
             }
         }
     }
+
+    void for_each_INDEX(FunIndex fun) {
+		St nx = this->N(_X_);
+		St ny = Dim > 1 ? this->N(_Y_) : 1;
+		St nz = Dim > 2 ? this->N(_Z_) : 1;
+		for (St i = 0; i < nx; i++) {
+			for (St j = 0; j < ny; j++) {
+				for (St k = 0; k < nz; k++) {
+					Index INDEX(i, j, k);
+					Index idx = to_Index(INDEX);
+					fun(idx);
+				}
+			}
+		}
+	}
 
 };
 

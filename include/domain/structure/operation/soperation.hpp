@@ -6,6 +6,7 @@
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
 #include "domain/structure/order/order.hpp"
+#include "domain/structure/order/xyz.hpp"
 #include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
 #include "domain/structure/field/svector_face.hpp"
@@ -16,6 +17,11 @@
 
 #include "sinterpolate.hpp"
 #include "svalue.hpp"
+
+#include "soperation_define.hpp"
+#include "slaplacian.hpp"
+#include "slaplacian_cut.hpp"
+
 #ifdef OPENMP
 #include <omp.h>
 #endif

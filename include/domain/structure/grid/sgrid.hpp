@@ -78,9 +78,6 @@ public:
                   Idx k = 0, short ok = 0) const {
     }
 
-    virtual Index to_Index(const Index& INDEX) const{
-
-    }
 
     // Point is in the range
     virtual inline bool is_in_on(Poi p) {
@@ -115,9 +112,11 @@ public:
     }
     virtual inline Idx _idx(const St& I) const {
     }
+    virtual Index to_Index(const Index& INDEX) const{}
+    virtual Index to_INDEX(const Index& Index) const{}
 
-    virtual void for_each(FunIndex){
-    }
+    virtual void for_each(FunIndex){}
+    virtual void for_each_INDEX(FunIndex){}
 
 
 

@@ -33,7 +33,7 @@ public:
     SGhostRegular_(spGrid spg): _grid(spg){
 
     }
-    ~SGhostRegular_(){
+    virtual ~SGhostRegular_(){
 
     }
 
@@ -106,8 +106,11 @@ public:
         return 0;
     };
 
-    St size_normal() const{
+    virtual St size_normal() const{
         return _grid->num_cells();
+    }
+    virtual St size_not_ghost() const{
+    	return _grid->num_cells();
     }
 };
 

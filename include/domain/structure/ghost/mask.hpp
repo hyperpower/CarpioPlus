@@ -78,6 +78,7 @@ public:
     typedef std::shared_ptr<Grid>     spGrid;
     typedef SCellMask_<DIM>             CellMask;
     typedef std::shared_ptr<CellMask> spCellMask;
+//    typedef spCellMask                  Data;
 
     typedef typename Grid::FunIndex  FunIndex;
 
@@ -110,6 +111,10 @@ public:
     virtual ~SGhostMask_(){
 
     }
+
+    virtual std::string type() const {
+		return "SGhostMask";
+	}
 
     Grid& grid(){
         return *(this->_grid);
@@ -188,7 +193,8 @@ public:
         return spcm->get_boundary_id(axe, op);
     };
 
-    void set_mask(FunSetByIndex fun){
+
+    void set(FunSetByIndex fun){
         FunIndex funi = [&fun, this](const Index& idx){
             auto& grid = *(this->_grid);
             auto res = fun(idx, grid);
@@ -197,7 +203,7 @@ public:
         this->_grid->for_each(funi);
     }
 
-    void set_mask(FunSetByXYZ fun){
+    void set(FunSetByXYZ fun){
         FunIndex funi = [&fun, this](const Index& idx){
             auto& grid = *(this->_grid);
             auto cp  = grid.c(idx);
@@ -210,7 +216,7 @@ public:
         this->_grid->for_each(funi);
     }
 
-    void set_mask(FunSetByXYZT fun, const Vt& time) {
+    void set(FunSetByXYZT fun, const Vt& time) {
 		FunIndex funi = [&fun, this, &time](const Index& idx) {
 			auto& grid = *(this->_grid);
 			auto cp = grid.c(idx);
@@ -225,6 +231,10 @@ public:
 
 
     St size_normal() const{
+        SHOULD_NOT_REACH;
+    }
+
+    virtual St size_not_ghost(){
         SHOULD_NOT_REACH;
     }
 protected:

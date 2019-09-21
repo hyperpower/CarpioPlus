@@ -17,9 +17,10 @@ public:
 
     }
     virtual ~SGhost_(){
-
     }
-
+    virtual std::string type() const{
+    	return "SGhost";
+    }
 
     virtual Grid& grid() {
     	SHOULD_NOT_REACH;
@@ -30,6 +31,7 @@ public:
     }
 
     virtual bool is_ghost(const Index& index) const{};
+    virtual bool is_not_ghost(const Index& index) const{};
     virtual bool is_boundary(
             const Index& index,
             const St&    a,
@@ -43,8 +45,8 @@ public:
                             const Index& indexg,
                             const St&  axe,
                             const St& ori) const{};
-    virtual St size_normal() const{
-    }
+    virtual St size_normal() const{}
+    virtual St size_not_ghost() const{}
 };
 
 

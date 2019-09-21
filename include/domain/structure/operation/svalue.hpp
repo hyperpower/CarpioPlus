@@ -1,10 +1,11 @@
-#ifndef _S_Value_HPP
-#define _S_Value_HPP
+#ifndef _S_VALUE_HPP
+#define _S_VALUE_HPP
 
 
 #include "domain/structure/structure_define.hpp"
 #include "domain/structure/grid/sgrid.hpp"
 #include "domain/structure/ghost/ghost.hpp"
+#include "domain/structure/ghost/linear_cut.hpp"
 #include "domain/structure/order/order.hpp"
 #include "domain/structure/field/sfield.hpp"
 #include "domain/structure/field/svector_center.hpp"
@@ -21,6 +22,7 @@ class SValue_{
 public:
     typedef SGrid_<DIM>   Grid;
     typedef SGhost_<DIM>  Ghost;
+    typedef SGhostLinearCut_<DIM> GhostLinearCut;
     typedef SOrder_<DIM>  Order;
     typedef SField_<DIM>  Field;
     typedef Field*       pField;
@@ -54,12 +56,12 @@ public:
         if(fc.ghost().is_ghost(idxg)){
             auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
             auto spbc = bi.find(bid);
-//            if(axe == _Y_){
-//                std::cout << "Idx c = " << idxc  << " g=  "<< idxg << std::endl;
-//                std::cout << "axes  = " << axe   << " ori "<< ori  << std::endl;
-//                std::cout << "bid   = " << bid   << " bct "<< spbc->type()  << std::endl;
-//                bi.show();
-//            }
+//          if(axe == _Y_){
+//              std::cout << "Idx c = " << idxc  << " g=  "<< idxg << std::endl;
+//              std::cout << "axes  = " << axe   << " ori "<< ori  << std::endl;
+//              std::cout << "bid   = " << bid   << " bct "<< spbc->type()  << std::endl;
+//              bi.show();
+//          }
             if(spbc->type() == BC::_BC1_){
                 return _value_type1(fc, *spbc, idxc, idxg, axe, ori, time);
             }else if(spbc->type() == BC::_BC2_){
@@ -200,7 +202,7 @@ protected:
                     const Index&       idxc,
                     const Index&       idxg,
                     const St&          axe,
-                    const St&          ori,
+                    const St&          ori, // center --> ghost
                     const Vt&          time = 0.0){
         // boundary condition must be type 2
         // walk back
