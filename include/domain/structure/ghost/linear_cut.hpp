@@ -41,7 +41,7 @@ public:
 protected:
     int _type;  // cell type
     int _bid;   // boundary id
-    std::array<Vt, NumEdge> _ers; // edge aperture ratios
+    std::array<Vt, NumEdge> _ers;     // edge aperture ratios
     // aperture ratio is number with direction
     // *=====-----*  aperture ratio =  0.5
     // *-----=====*  aperture ratio = -0.5
@@ -69,6 +69,8 @@ protected:
     // other data
     PointChain _piecewise;
     Front      _front;   // line or plane, original point is cell center
+    Point      _nc;      // normal side center
+    Point      _gc;      // ghost side center
 
 public:
 	SCellLinearCut_() :_type(_CUT_) {
@@ -110,12 +112,20 @@ public:
         return _bid;
     }
 
+    const Point& nc() const{
+    	return _nc;
+    }
+    const Point& gc() const{
+    	return _gc;
+    }
+
     void set_data(const Point& pmin,
     		      const Point& pmax,
 				  const std::array<Vt, NumEdge>& arr){
     	_set_aperture_ratio(arr);
     	_set_piecewise(pmin, pmax, arr);
     	_set_front(pmin, pmax);
+    	_set_two_side_center(pmin, pmax);
     }
 
     Vt get_aperture_ratio(int axe, int o) const{
@@ -135,12 +145,12 @@ public:
     	return _ers;
     }
 
-    void show_aperture_ratio(){
-    	Tool tool;
+    void show_aperture_ratio() const{
     	for(St i = 0; i< NumEdge; i++){
     		std::cout << " Edge idx = " << i << " ap = " << _ers[i] << std::endl;
     	}
     }
+
 
     void _set_aperture_ratio(const std::array<Vt, NumEdge>& arr) {
 		for (St i = 0; i < NumEdge; i++) {
@@ -192,6 +202,30 @@ public:
 			SHOULD_NOT_REACH;
 		}
 	}
+
+
+    void _set_two_side_center(
+    		            const Point& pmin,  // point min
+		                const Point& pmax  // point max
+		                ){
+    	// make sure the aperture ratios are set;
+    	// make sure piecewise is set;
+    	if (DIM == 2){
+			ASSERT(_piecewise.size() == 2);
+			Tool t;
+			auto sx = pmax.x() - pmin.x();
+			auto sy = pmax.y() - pmin.y();
+			auto pc = t.cut_cell_point_chain(
+					pmin.x(), pmin.y(), sx, sy, _ers);
+			_gc = pc.geometry_center();
+			auto pcv = t.cut_cell_point_chain_void_side(
+					pmin.x(), pmin.y(), sx, sy, _ers);
+			_nc = pcv.geometry_center();
+    	}
+    }
+
+
+
 };
 
 template<St DIM>
@@ -237,6 +271,15 @@ public:
 		return "SGhostLinearCut";
 	}
 
+	St type(const Index& idx) const{
+		auto spc = this->operator ()(idx);
+		if(spc == nullptr){
+			return _NORMAL_;
+		}else{
+			return spc->type();
+		}
+	}
+
 	spCell&
 	operator()(const Index& idx) {
 		auto IDX = this->_grid->to_INDEX(idx);
@@ -268,11 +311,11 @@ public:
 	bool is_boundary(const Index& index, const St& a,
 			const St& o) const {
 		SHOULD_NOT_REACH;
-	};
+	}
 	bool is_normal(const Index& index) const {
 		return (!is_ghost(index) && !is_cut(index));
 	}
-	;
+
 	bool is_cut(const Index& index) const{
 		bool bres = Base::is_ghost(index);
 		if (bres == true) {

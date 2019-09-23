@@ -281,6 +281,15 @@ inline Point_<TYPE, DIM> operator-(
 }
 
 template<typename TYPE, St DIM>
+inline Point_<TYPE, DIM> operator/(
+		Point_<TYPE, DIM> lhs,
+		const typename Point_<TYPE, DIM>::Vt& rhs) {
+	lhs /= rhs;
+	return lhs;
+}
+
+
+template<typename TYPE, St DIM>
 std::ostream& operator<<(std::ostream& stream, const Point_<TYPE, DIM>& point) {
 	stream << "(";
 	for (St d = 0; d < DIM; ++d) {

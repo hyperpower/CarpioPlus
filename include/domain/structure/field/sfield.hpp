@@ -67,6 +67,13 @@ public:
                                          cp.value(_Z_), t);
         }
     }
+    Vt sum() const{
+    	Vt sum = 0.0;
+        for(auto& idx : (*_order)){
+        	sum += this->operator ()(idx);
+        }
+    	return sum;
+    }
 
     Vt max() const {
         return _mat.max();
@@ -208,7 +215,7 @@ public:
     }
     // returen a new scalar with cell volume
     Self volume_field() const{
-        Self res(this->_grid, this->_ghost, this->_order);
+        Self res = this->new_compatible();
         auto& grid = res.grid();
         for(auto& idx : (*_order)){
             res(idx) = grid.volume(idx);
@@ -351,6 +358,18 @@ inline SField_<DIM> operator/(const Vt& lhs, const SField_<DIM>& rhs){
     res /= rhs;
     return res;
 }
+// a^2
+template<St DIM>
+SField_<DIM> Square(const SField_<DIM>& a){
+    auto res = a.new_compatible();
+
+    for(auto& idx : res.order()){
+        auto va = a(idx);
+        res(idx)= va * va;
+    }
+    return res;
+}
+
 
 // a^2 + b^2
 template<St DIM>
@@ -399,6 +418,24 @@ SField_<DIM> Abs(const SField_<DIM>& f){
     auto res(f);
     res.abs();
     return res;
+}
+
+template<St DIM>
+Vt Norm1(const SField_<DIM>& f, const SField_<DIM>& exact){
+    auto res = f - exact;
+    return res.norm1();
+}
+
+template<St DIM>
+Vt Norm2(const SField_<DIM>& f, const SField_<DIM>& exact){
+    auto res = Square(f - exact);
+    return res.sum();
+}
+
+template<St DIM>
+Vt NormInf(const SField_<DIM>& f, const SField_<DIM>& exact){
+    auto res = Abs(f - exact);
+    return res.max();
 }
 
 // sum(abs(e))

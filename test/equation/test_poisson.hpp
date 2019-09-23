@@ -125,11 +125,12 @@ TEST(equation, DISABLED_explicit_run){
 	equ.run();
 
 }
+typedef StructureDomain_<2> Domain;
+
 
 TEST(poisson, flower_mask) {
 	const St DIM = 2;
 	typedef SGnuplotActor_<2> GA;
-	typedef StructureDomain_<2> Domain;
 	typedef SGrid_<2> SGrid;
 	typedef typename SGrid::Index SIndex;
 	typedef SCellMask_<2> SCellMask;
@@ -179,7 +180,6 @@ TEST(poisson, flower_mask) {
 	spbi->insert(bid, spbc);
 	equ.set_boundary_index_phi(spbi);
 
-
 	// Set solver
 	equ.set_solver("Jacobi", 100, 1e-4);
 
@@ -201,8 +201,20 @@ TEST(poisson, flower_mask) {
 
 	equ.run();
 
-
-
+	auto sres = equ["phi"];
+	auto exact = sres.new_compatible();
+	typename Poisson::FunXYZT_Value fun_exact = [](Vt x, Vt y, Vt z, Vt t){
+		auto r = std::sqrt(x * x + y * y);
+		auto theta = std::asin(y / r);
+		return r * r * r * r * std::cos(3 * theta);
+	};
+	exact.assign(fun_exact);
+	auto norm1 = Norm1(sres, exact);
+	auto norm2 = Norm2(sres, exact);
+	auto normi = NormInf(sres, exact);
+	std::cout << "norm1 = " << norm1 << std::endl;
+	std::cout << "norm2 = " << norm2 << std::endl;
+	std::cout << "normi = " << normi << std::endl;
 
 }
 

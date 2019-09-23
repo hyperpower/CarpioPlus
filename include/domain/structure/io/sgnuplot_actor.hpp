@@ -286,6 +286,37 @@ public:
 		return actor;
 	}
 
+	static spActor WireFrameCutInterface(
+				const GhostLinearCut2& g,
+				const Index2&          index,
+				int   color_idx = 1) {
+			typedef CuboidToolPL2_<Vt> Tool;
+		Tool tool;
+		spActor actor = spActor(new Gnuplot_actor());
+		actor->command() = "using 1:2:3 title \"\" ";
+		actor->style() = "with line lc variable";
+		int c = (color_idx == -1) ? 0 : color_idx;
+
+		short order[] = { 0, 1, 3, 2, 6, 4, 5, 7 };
+		auto& grid = g.grid();
+		if (g.is_cut(index)) {
+			auto spcell = g(index);
+			auto arr = spcell->get_aperture_ratio();
+			auto po = grid.v(0, index);
+			auto sx = grid.s_(_X_, index);
+			auto sy = grid.s_(_Y_, index);
+			auto sp = tool.start_point(po.x(), po.y(), sx, sy, arr);
+			auto ep = tool.end_point(po.x(), po.y(), sx, sy, arr);
+			actor->data().push_back("");
+			actor->data().push_back(
+					ToString(sp.value(_X_), sp.value(_Y_), c, " "));
+			actor->data().push_back(
+					ToString(ep.value(_X_), ep.value(_Y_), c, " "));
+			actor->data().push_back("");
+		}
+		return actor;
+	}
+
 
 	static spActor WireFrameCutGhostSide(
 			const GhostLinearCut2& g, int color_idx = 1) {
@@ -303,7 +334,6 @@ public:
 			for (int i = -gl; i < grid.n(_X_) + gl; i++) {
 				typename Grid2::Index index(i, j);
 				if (g.is_cut(index)) {
-
                     auto spcell = g(index);
                     auto arr = spcell->get_aperture_ratio();
 					auto po = grid.v(0, index);

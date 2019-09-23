@@ -107,12 +107,19 @@ public:
         _mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
         _init_mat();
     }
-    virtual ~SGhostMask_(){
-
-    }
+    virtual ~SGhostMask_(){}
 
     virtual std::string type() const {
 		return "SGhostMask";
+	}
+
+    virtual St type(const Index& idx) const {
+		auto spc = this->operator ()(idx);
+		if (spc == nullptr) {
+			return _NORMAL_;
+		} else {
+			return spc->type();
+		}
 	}
 
     Grid& grid(){

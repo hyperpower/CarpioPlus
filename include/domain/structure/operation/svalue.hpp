@@ -139,7 +139,7 @@ protected:
         auto oori = Opposite(Orientation(ori));  // opposite oritation
         auto idxb = idxg.shift(axe, oori);
         int step  = 0;
-        while(fc.ghost().is_ghost(idxb)){
+        while(fc.ghost().is_ghost(idxb)){ // find nearest normal cell
             Shift(idxb, axe, oori);
             step++;
         }

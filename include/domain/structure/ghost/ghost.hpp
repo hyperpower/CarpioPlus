@@ -21,6 +21,7 @@ public:
     virtual std::string type() const{
     	return "SGhost";
     }
+	virtual St type(const Index& idx) const{}
 
     virtual Grid& grid() {
     	SHOULD_NOT_REACH;

@@ -160,6 +160,16 @@ public:
 		this->_lpoints.reverse();
 	}
 
+	Point geometry_center() const{
+		Point res;
+		int count = 0;
+		for(auto& p : _lpoints){
+			res += p;
+			count++;
+		}
+		return res / double(count);
+	}
+
 	double perimeter() const {
 		if (empty()) {
 			return 0;

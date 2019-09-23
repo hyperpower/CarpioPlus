@@ -25,6 +25,7 @@
 #include "operation/svof.hpp"
 #include "operation/slaplacian.hpp"
 #include "operation/sbuild_matrix.hpp"
+#include "operation/svalue_cut.hpp"
 
 #include "domain/structure/io/sio_file.hpp"
 #include "domain/structure/io/sgnuplot_actor.hpp"
