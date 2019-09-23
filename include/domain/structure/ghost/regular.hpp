@@ -37,6 +37,10 @@ public:
 
     }
 
+    virtual std::string type() const{
+    	return "SGhostRegular";
+    }
+
     virtual Grid& grid() {
        	return *_grid;
     }
@@ -81,7 +85,7 @@ public:
     	return false;
     }
 
-    virtual bool is_normal(const Index& index) const{
+ virtual bool is_normal(const Index& index) const{
         return !(is_ghost(index));
     }
 

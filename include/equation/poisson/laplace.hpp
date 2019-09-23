@@ -71,19 +71,19 @@ public:
         this->_aflags["set_time_scheme"] = name_time_scheme;
     }
 
-    int initialize() {
+    virtual ~Laplace_(){};
+
+    virtual int initialize() {
         this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
         this->_aflags["solver"] = _init_solver();
-        std::cout << "  Laplace: initialize \n";
         return -1;
     }
 
-    int finalize() {
-        std::cout << "  Laplace: finalize \n";
+    virtual int finalize() {
         return -1;
     }
 
-    int run_one_step(St step) {
+    virtual int run_one_step(St step) {
         auto name = any_cast<std::string>(this->_aflags["set_time_scheme"]);
         if(name == "explicit"){
             _one_step_explicit(step);
@@ -97,21 +97,19 @@ public:
             std::cout <<" >! Unknown time scheme " << name << std::endl;
             SHOULD_NOT_REACH;
         }
-        std::cout << "     Laplace: One Step "<< step <<" \n";
         return -1;
     }
 
-    int solve() {
+    virtual int solve() {
         _solve();
-        std::cout << "  Laplace: solve \n";
         return -1;
     }
 
-    void set_boundary_index_phi(spBoundaryIndex spbi){
+    virtual void set_boundary_index_phi(spBoundaryIndex spbi){
         this->set_boundary_index("phi", spbi);
     }
 
-    void set_initial_phi(FunXYZT_Value fun){
+    virtual void set_initial_phi(FunXYZT_Value fun){
         this->set_function("initial_phi", fun);
     }
 
@@ -152,7 +150,7 @@ public:
     }
 
 protected:
-    int _one_step_explicit(St step){
+    virtual int _one_step_explicit(St step){
         Laplacian Lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         Field     v    = phi.volume_field();
@@ -164,7 +162,7 @@ protected:
     }
 
     // Implicit
-    int _one_step_implicit(St step){
+    virtual int _one_step_implicit(St step){
         Laplacian Lap(this->_bis["phi"]);
         Field& phi     = *(this->_scalars["phi"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -189,7 +187,7 @@ protected:
     }
 
     // Crank–Nicolson method
-    int _one_step_cn(St step){
+    virtual int _one_step_cn(St step){
         Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -213,7 +211,7 @@ protected:
         return 1;
     }
 
-    int _one_step_cng(St step){
+    virtual int _one_step_cng(St step){
         Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -239,7 +237,7 @@ protected:
     }
 
 
-    int _solve(){
+    virtual int _solve(){
         Laplacian lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -255,7 +253,7 @@ protected:
 //        x.show();
     }
 
-    spSolver _init_solver() {
+    virtual spSolver _init_solver() {
         // initial solver
         spSolver spsolver;
         if (this->has_flag("set_solver")) {

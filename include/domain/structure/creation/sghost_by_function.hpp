@@ -67,9 +67,9 @@ public:
 	SCreatGhostByFunction_(){
 	}
 
-	spGhostMask ghost_mask(spGrid spg, FunXYZT_Value fun, Vt time, Vt th){
+	spGhostMask ghost_mask(spGrid spg, FunXYZT_Value fun, Vt time, Vt th, int bid = 10){
 		spGhostMask spgm(new GhostMask(spg));
-		spCellMask  spcm(new CellMask());
+		spCellMask  spcm(new CellMask(bid));
 
 		typename GhostMask::FunSetByXYZT fun2 = [spcm, fun, time, th](
 			const Vt& x, const Vt& y, const Vt& z, const Vt& time){
@@ -80,7 +80,7 @@ public:
 				return spCellMask(nullptr);
 			}
 		};
-		spgm->set_mask(fun2, time);
+		spgm->set(fun2, time);
 		return spgm;
 	}
 

@@ -4,6 +4,7 @@
 #include "type_define.hpp"
 #include "equation/equation_define.hpp"
 #include "equation/event/event.hpp"
+#include "laplace.hpp"
 #include <vector>
 
 namespace carpio {
@@ -13,11 +14,12 @@ namespace carpio {
 //   ▽•(beta(x,y)  ▽phi(x,y)  ) = 0   2D --version
 //   ▽•(beta(x,y,z)▽phi(x,y,z)) = 0   3D --version
 template<St DIM, class D>
-class Poisson_: public Equation_<DIM, D>{
+class Poisson_: public Laplace_<DIM, D>{
 public:
     typedef Poisson_<DIM, D>           Self;
     typedef D                          Domain;
     typedef Equation_<DIM, D>          Equation;
+    typedef Laplace_<DIM, D>           Base;
     typedef typename Domain::SizeType  St;
     typedef typename Domain::ValueType Vt;
     typedef typename Domain::Grid      Grid;
@@ -64,96 +66,49 @@ public:
 protected:
 public:
     Poisson_(spGrid spg, spGhost spgh, spOrder spo):
-        Equation(spg, spgh, spo){
-        // new scalars
-        this->new_scalar("phi");
-        // default one step function
-        std::string name_time_scheme = "explicit";
-        this->_aflags["set_time_scheme"] = name_time_scheme;
+        Base(spg, spgh, spo){
+        this->new_scalar("source");
     }
 
-    int initialize() {
+    virtual int initialize() {
         this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
-        this->_aflags["solver"] = _init_solver();
+        this->_scalars["source"]->assign(this->get_funtion("set_source"));
+        this->_aflags["solver"] = this->_init_solver();
         std::cout << "  Poisson: initialize \n";
         return -1;
     }
 
-    int finalize() {
-        std::cout << "  Poisson: finalize \n";
-        return -1;
-    }
+    virtual ~Poisson_(){};
 
-    int run_one_step(St step) {
-        auto name = any_cast<std::string>(this->_aflags["set_time_scheme"]);
-        if(name == "explicit"){
-            _one_step_explicit(step);
-        }else if(name == "implicit"){
-            _one_step_implicit(step);
-        }else if(name == "CN"){
-            _one_step_cn(step);
-        }else if(name == "CNgeneral"){
-            _one_step_cng(step);
-        }else{
-            std::cout <<" >! Unknown time scheme " << name << std::endl;
-            SHOULD_NOT_REACH;
-        }
-        std::cout << "     Poisson: One Step "<< step <<" \n";
-        return -1;
-    }
+//  virtual int finalize() {}
 
-    int solve() {
-        _solve();
-        std::cout << "  Poisson: solve \n";
-        return -1;
-    }
+//  virtual int run_one_step(St step) {}
 
-    void set_boundary_index_phi(spBoundaryIndex spbi){
-        this->set_boundary_index("phi", spbi);
-    }
+//  virtual int solve() {
+//    _solve();
+//    return -1;
+//  }
 
-    void set_initial_phi(FunXYZT_Value fun){
-        this->set_function("initial_phi", fun);
-    }
+//  vitual void set_boundary_index_phi(spBoundaryIndex spbi){
 
-    void set_solver(
-                const std::string&    name,
-                const int& max_iter = 1000,
-                const Vt&  tol      = 1e-4,
-                const Any& any      = 1.0
-                ) {
-        // name should be
-        ASSERT(name == "Jacobi"
-            || name == "CG"
-            || name == "SOR");
-        this->_aflags["set_solver"]           = name;
-        this->_aflags["set_solver_max_iter"]  = max_iter;
-        this->_aflags["set_solver_tolerence"] = tol;
-        if (name == "SOR") {
-            this->_aflags["SOR_omega"] = any;
-        }
-    }
+//  void set_initial_phi(FunXYZT_Value fun){
 
-    void set_time_scheme(
-            const std::string& name,
-            const Vt&          v = 0.5){
-        ASSERT(name == "explicit"
-            || name == "implicit"
-            || name == "CN"
-            || name == "CNgeneral");
-        this->_aflags["set_time_scheme"] = name;
-        if(name != "explicit"){
-            Field& phi = *(this->_scalars["phi"]);
-            this->_aflags["field_volume"] = std::make_shared<Field>(phi.volume_field());
-            this->_aflags["field_exp"]    = std::make_shared<ExpField>(ExpressionField(phi));
-        }
-        if(name == "CNgeneral"){
-            this->_aflags["cn_omega"] = v;
-        }
-    }
+//  void set_solver(
+//              const std::string&    name,
+//              const int& max_iter = 1000,
+//              const Vt&  tol      = 1e-4,
+//              const Any& any      = 1.0
+//              ) {};
 
+//    void set_time_scheme(
+//            const std::string& name,
+//            const Vt&          v = 0.5){}
+    void set_source(FunXYZT_Value fun){
+        this->set_function("set_source", fun);
+    }
 protected:
-    int _one_step_explicit(St step){
+    virtual int _one_step_explicit(St step){
+    	SHOULD_NOT_REACH;
         Laplacian Lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         Field     v    = phi.volume_field();
@@ -165,7 +120,8 @@ protected:
     }
 
     // Implicit
-    int _one_step_implicit(St step){
+    virtual int _one_step_implicit(St step){
+    	SHOULD_NOT_REACH;
         Laplacian Lap(this->_bis["phi"]);
         Field& phi     = *(this->_scalars["phi"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -190,7 +146,8 @@ protected:
     }
 
     // Crank–Nicolson method
-    int _one_step_cn(St step){
+    virtual int _one_step_cn(St step){
+    	SHOULD_NOT_REACH;
         Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -214,7 +171,8 @@ protected:
         return 1;
     }
 
-    int _one_step_cng(St step){
+    virtual int _one_step_cng(St step){
+    	SHOULD_NOT_REACH;
         Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
@@ -239,12 +197,15 @@ protected:
         return 1;
     }
 
-
-    int _solve(){
+    virtual int _solve(){
+    	std::cout << "Possion _solve()" << std::endl;
         Laplacian lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
+        Field& source  = *(this->_scalars["source"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+
         auto   expf    = lap.expression_field(phi);
+        // build matrix
         Mat a;
         Arr b;
         BuildMatrix::Get(expf, a, b);
@@ -253,32 +214,9 @@ protected:
         BuildMatrix::CopyToArray(phi, x);
         this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
         BuildMatrix::CopyToField(x, phi);
-//        x.show();
     }
 
-    spSolver _init_solver() {
-        // initial solver
-        spSolver spsolver;
-        if (this->has_flag("set_solver")) {
-            std::string sn = any_cast<std::string>(
-                    this->_aflags["set_solver"]);
-            Vt  tol      = any_cast<Vt>(this->_aflags["set_solver_tolerence"]);
-            int max_iter = any_cast<int>(this->_aflags["set_solver_max_iter"]);
-            if (sn == "Jacobi") {
-                spsolver = spSolver(new Solver_Jacobi(max_iter, tol));
-            } else if (sn == "CG") {
-                spsolver = spSolver(new Solver_CG(max_iter, tol));
-            } else if (sn == "SOR") {
-                ASSERT(this->has_flag("SOR_omega"));
-                Vt omega = any_cast<Vt>(this->_aflags["SOR_omega"]);
-                spsolver = spSolver(new Solver_SOR(max_iter, tol, omega));
-            }
-        } else {
-            // default solver
-            spsolver = spSolver(new Solver_CG(5000, 1e-4));
-        }
-        return spsolver;
-    }
+//  spSolver _init_solver() {}
 
 };
 

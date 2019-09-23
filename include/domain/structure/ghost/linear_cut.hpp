@@ -226,9 +226,8 @@ public:
 
 protected:
 	Mat _mat;
-	std::shared_ptr<St> _size;
 public:
-	SGhostLinearCut_(spGrid spg): Base(spg), _size(nullptr),
+	SGhostLinearCut_(spGrid spg): Base(spg),
     	_mat(spg->N(_X_), spg->N(_Y_), spg->N(_Z_)){
 	}
 	virtual ~SGhostLinearCut_() {

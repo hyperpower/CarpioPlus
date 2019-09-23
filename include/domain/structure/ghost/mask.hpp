@@ -71,8 +71,9 @@ public:
 };
 
 template<St DIM>
-class SGhostMask_ : public SGhost_<DIM>{
+class SGhostMask_ : public SGhostRegular_<DIM>{
 public:
+	typedef SGhostRegular_<DIM>   Base;
     typedef SIndex_<DIM>                Index;
     typedef SGrid_<DIM>                 Grid;
     typedef std::shared_ptr<Grid>     spGrid;
@@ -100,11 +101,9 @@ public:
     typedef typename Mat::const_reference const_reference;
 
 protected:
-    spGrid _grid;
-
     Mat _mat;
 public:
-    SGhostMask_(spGrid spg): _grid(spg),
+    SGhostMask_(spGrid spg): Base(spg),
         _mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
         _init_mat();
     }
@@ -133,29 +132,27 @@ public:
         return (_mat.at(idx.i(), idx.j(), idx.k()));
     }
 
-    bool is_ghost(const Index& index) const{
-        for (St d = 0; d < DIM; ++d) {
-            Idx res = index.value(d);
-            if (res < 0) {
-                return true;
-            } else if (res >= this->_grid->n().value(d)) {
-                return true;
-            }
-        }
-        if(_mat(index.i(), index.j(), index.k()) != nullptr){
-            return true;
-        }
-        return false;
+    virtual bool is_ghost(const Index& index) const{
+		bool bres = Base::is_ghost(index);
+		if (bres == false) {
+			auto& pc = this->operator ()(index);
+			if (pc != nullptr) {
+				return (pc->type() == _GHOST_) ? true : false;
+			} else { //pc == nullptr
+				return false;
+			}
+		}
+		return bres;
     };
 
-    bool is_boundary(
+    virtual bool is_boundary(
                 const Index& index,
                 const St& a,
                 const St& o) const{
         ASSERT(a < DIM);
         Idx idx = index.value(a);
         // index should be in normal range
-        ASSERT(idx >= 0 && idx < _grid->n(a));
+        ASSERT(idx >= 0 && idx < this->_grid->n(a));
 
         auto& mask = _mat(index.i(), index.j(), index.k()); // cell mask
         if (is_normal(index)) {
@@ -167,8 +164,8 @@ public:
         return false;
     }
 
-    bool is_normal(const Index& index) const{
-        return !(is_ghost(index));
+    virtual bool is_normal(const Index& index) const{
+         return !(is_ghost(index));
     }
 
 
@@ -231,12 +228,21 @@ public:
 
 
     St size_normal() const{
-        SHOULD_NOT_REACH;
+    	return size_not_ghost();
     }
 
-    virtual St size_not_ghost(){
-        SHOULD_NOT_REACH;
+    virtual St size_not_ghost() const{
+        return _count_not_ghost();
     }
+	St _count_not_ghost() const {
+		St count = 0;
+		for (auto spc : this->_mat) {
+			if (spc == nullptr) {
+				count++;
+			}
+		}
+		return count;
+	}
 protected:
     void _init_mat(){
         for(auto& v : this->_mat){

@@ -160,18 +160,20 @@ public:
 
     static spActor Contour(const Field2& f){
         spActor actor = spActor(new Gnuplot_actor());
+        auto    ghost = f.spghost();
         actor->command() = "using 1:2:3:4:5:6:7 title \"\" ";
         actor->style()   = "with boxxy fs solid palette";
         for (St i = 0; i < f.grid().n(_X_); i++) {
             for (St j = 0; j < f.grid().n(_Y_); j++) {
                 Index2 index(i, j);
-                auto pc   = f.grid().c(index);
-                auto pmin = f.grid().v(0, index);
-                auto pmax = f.grid().v(3, index);
-                actor->data().push_back(
-                        ToString(pc(_X_),   pc(_Y_),
-                                 pmin(_X_), pmax(_X_),
-                                 pmin(_Y_), pmax(_Y_), f(index), " "));
+				if (ghost->is_normal(index) == true) {
+					auto pc   = f.grid().c(index);
+					auto pmin = f.grid().v(0, index);
+					auto pmax = f.grid().v(3, index);
+					actor->data().push_back(
+							ToString(pc(_X_), pc(_Y_), pmin(_X_), pmax(_X_),
+									pmin(_Y_), pmax(_Y_), f(index), " "));
+				}
             }
         }
         return actor;

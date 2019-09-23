@@ -55,7 +55,7 @@ TEST(structure, initial2){
 			return spSCellMask(nullptr);
 		}
 	};
-	spgm->set_mask(fun2);
+	spgm->set(fun2);
 	Gnuplot gnu;
 	gnu.set_xrange(-0.5, 3.5);
 	gnu.set_yrange(-0.5, 3.5);

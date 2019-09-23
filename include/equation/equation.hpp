@@ -6,6 +6,7 @@
 #include "equation.hpp"
 #include "equation/advection/convection.hpp"
 #include "equation/poisson/laplace.hpp"
+#include "equation/poisson/poisson.hpp"
 
 #include "event/event.hpp"
 #include "event/output_time.hpp"
