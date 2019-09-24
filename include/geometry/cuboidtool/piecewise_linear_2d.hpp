@@ -69,7 +69,7 @@ public:
 		for(int i = 0; i< 4; i++){
 			int eo = CCEDGEORDER2[i];
 			Vt  ar = arr[eo];  // get aperture ratio
-			if(ar > 0.0 && std::abs(ar) != 1.0){
+			if(ar >= 1e-12 && !IsCloseTo(std::abs(ar), 1.0)){
 				if (eo == 0) {
 					return Point(xo, yo + dy * ar);
 				}
@@ -77,7 +77,7 @@ public:
 					return Point(xo + dx * ar, yo + dy);
 				}
 			}
-			if(ar < 0.0 && std::abs(ar) != 1.0){
+			if(ar <= -1e-12 && !IsCloseTo(std::abs(ar), 1.0)){
 				if (eo == 1) {
 					return Point(xo + dx, yo + dy * (1 + ar));
 				}
@@ -88,20 +88,20 @@ public:
 		}
 		// trivial case : 1 or -1 follow 0
 		// trivial case : 1 or -1 follow 0
-		if ((std::abs(arr[0]) == 1 && arr[2] == 0)
-				|| (std::abs(arr[2]) == 1 && arr[0] == 0)) {
+		if ((IsCloseTo(std::abs(arr[0]), 1.0) && IsCloseToZero(arr[2]))
+				|| (IsCloseTo(std::abs(arr[2]), 1.0) && IsCloseToZero(arr[0]))) {
 			return Point(xo, yo);
 		}
-		if ((std::abs(arr[2]) == 1 && arr[1] == 0)
-				|| (std::abs(arr[1]) == 1 && arr[2] == 0)) {
+		if ((IsCloseTo(std::abs(arr[2]), 1.0) && IsCloseToZero(arr[1]))
+				|| (IsCloseTo(std::abs(arr[1]), 1.0) && IsCloseToZero(arr[2]))) {
 			return Point(xo + dy, yo);
 		}
-		if ((std::abs(arr[1]) == 1 && arr[3] == 0)
-				|| (std::abs(arr[3]) == 1 && arr[1] == 0)) {
+		if ((IsCloseTo(std::abs(arr[1]), 1.0) && IsCloseToZero(arr[3]))
+				|| (IsCloseTo(std::abs(arr[3]), 1.0) && IsCloseToZero(arr[1]))) {
 			return Point(xo + dy, yo + dy);
 		}
-		if ((std::abs(arr[3]) == 1 && arr[0] == 0)
-				|| (std::abs(arr[0]) == 1 && arr[3] == 0)) {
+		if ((IsCloseTo(std::abs(arr[3]), 1.0) && IsCloseToZero(arr[0]))
+				|| (IsCloseTo(std::abs(arr[0]), 1.0) && IsCloseToZero(arr[3]))) {
 			return Point(xo, yo + dy);
 		}
 	}
@@ -120,7 +120,7 @@ public:
 		for (int i = 0; i < 4; i++) {
 			int eo = CCEDGEORDER2[i];
 			Vt ar = arr[eo];  // get aperture ratio
-			if (ar < 0.0 && std::abs(ar) != 1.0) {
+			if (ar <= -1e-12 && !IsCloseTo(std::abs(ar), 1.0)) {
 				if (eo == 0) {
 					return Point(xo, yo + dy * (1 + ar));
 				}
@@ -128,7 +128,7 @@ public:
 					return Point(xo + dx * (1 + ar), yo + dy);
 				}
 			}
-			if (ar > 0.0 && std::abs(ar) != 1.0) {
+			if (ar >= 1e-12 && !IsCloseTo(std::abs(ar), 1.0)) {
 				if (eo == 1) {
 					return Point(xo + dx, yo + dy * ar);
 				}
@@ -139,32 +139,34 @@ public:
 		}
 		// trivial case : 1 or -1 follow 0
 		Point pres;  // get the second one
-		if ((std::abs(arr[0]) == 1 && arr[2] == 0)
-			|| (std::abs(arr[2]) == 1 && arr[0] == 0)) {
+		if ((IsCloseTo(std::abs(arr[0]), 1.0) && IsCloseToZero(arr[2]))
+			|| (IsCloseTo(std::abs(arr[2]), 1.0) && IsCloseToZero(arr[0]))) {
 			pres = Point(xo, yo);
 		}
-		if ((std::abs(arr[2]) == 1 && arr[1] == 0)
-			|| (std::abs(arr[1]) == 1 && arr[2] == 0)) {
+		if ((IsCloseTo(std::abs(arr[2]), 1.0) && IsCloseToZero(arr[1]))
+			|| (IsCloseTo(std::abs(arr[1]), 1.0) && IsCloseToZero(arr[2]))) {
 			pres = Point(xo + dy, yo);
 		}
-		if ((std::abs(arr[1]) == 1 && arr[3] == 0)
-			|| (std::abs(arr[3]) == 1 && arr[1] == 0)) {
+		if ((IsCloseTo(std::abs(arr[1]),1.0) && IsCloseToZero(arr[3]))
+			|| (IsCloseTo(std::abs(arr[3]),1.0) && IsCloseToZero(arr[1]))) {
 			pres = Point(xo + dy, yo + dy);
 		}
-		if ((std::abs(arr[3]) == 1 && arr[0] == 0)
-			|| (std::abs(arr[0]) == 1 && arr[3] == 0)) {
+		if ((IsCloseTo(std::abs(arr[3]), 1.0) && IsCloseToZero(arr[0]))
+			|| (IsCloseTo(std::abs(arr[0]), 1.0) && IsCloseToZero(arr[3]))) {
 			pres = Point(xo, yo + dy);
 		}
 		return pres;
 	}
 
-	Line interface(const Point& start, const Point& end, const Point& ori = Point()){
+	Line interface(const Point& start,
+			       const Point& end,
+				   const Point& ori = Point(0.0, 0.0)){
 		auto sstart = start - ori;  // shift start
 		auto send   = end   - ori;  // shift end
 		return Line(sstart, send);
 	}
 
-	PointChain cut_cell_point_chain(
+	PointChain cut_cell_point_chain_ghost_side(
 			const Vt& xo,
 			const Vt& yo,
 			const Vt& dx,
@@ -188,7 +190,7 @@ public:
 	}
 
 
-	PointChain cut_cell_point_chain_void_side(
+	PointChain cut_cell_point_chain_normal_side(
 			const Vt& xo, const Vt& yo,
 			const Vt& dx, const Vt& dy,
 			const std::array<Vt, NumFaces>& arr) {
@@ -209,7 +211,6 @@ public:
 				ccarr[2], ccarr[3], ccarr[0], res);
 		return res;
 	}
-
 
 
 	void _push_back_each_edge_void_side(

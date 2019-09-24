@@ -21,10 +21,13 @@ namespace carpio{
 template<St DIM>
 class SValueCut_{
 public:
+	typedef Point_<Vt, DIM>  Point;
     typedef SGrid_<DIM>   Grid;
+    typedef std::shared_ptr<Grid> spGrid;
     typedef SGhost_<DIM>  Ghost;
     typedef SGhostLinearCut_<DIM> GhostLinearCut;
     typedef std::shared_ptr<GhostLinearCut> spGhostLinearCut;
+    typedef typename GhostLinearCut::spCell spCell;
     typedef SOrder_<DIM>  Order;
     typedef SField_<DIM>  Field;
     typedef Field*       pField;
@@ -86,36 +89,50 @@ public:
     	}
     	// case 2 idxg is cut
     	if(spgc->type(idxg) == _CUT_){
+    		auto bid  = spgc->boundary_id(idxc, idxg, axe, ori);
+    		auto spbc = bi.find(bid);
+    		auto spcell = spgc->operator()(idxg);
+    		ASSERT(spcell != nullptr);
+			if (spbc->type() == BC::_BC1_) {
+				return _value_type1_cut_exp(
+						fc, spgrid, spgc, spcell, idxg, *spbc, time);
+			} else if (spbc->type() == BC::_BC2_) {
+				return _value_type2_cut_exp(fc, *spbc, idxc, idxg, axe, ori, time);
+			}
+		}
+    	// case 3 idxg is ghost
+    	if(spgc->type(idxg) == _GHOST_){
 
     	}
-
-        // walkback
-    	auto oori = Opposite(Orientation(ori));  // opposite orientation
-		auto idxb = idxg.shift(axe, oori);
-		int  step = 0;
-		while (spgc->is_ghost(idxb) || spgc->is_cut(idxb)) {
-			Shift(idxb, axe, oori);
-			step++;
-		}
-    	// cut between idxc and idxg
     }
 
 protected:
-
-
-
-    Vt _value_type1(
-                    const Field&       fc,
-                    const BC&          bc,
-                    const Index&       idxc,
-                    const Index&       idxg,
-                    const St&          axe,
-                    const St&          ori,
-                    const Vt&          time = 0.0){
-
+    Exp _value_type1_cut_exp(
+                    const Field&           field,
+					const spGrid           spgrid,
+					const spGhostLinearCut spghost,
+					const spCell           spcell,
+                    const Index&           idxg,
+                    const BC&              bc,
+                    const Vt&              time = 0.0){
+		//  normal face  cell
+		// ---x-----|-----g-----
+		//    +--nf-+--fc-+
+		// equation:
+		//  vc - vx      vf - vx
+		// --------- = ----------  ==> vc - vx = (vf - vx) * (dx + dg) / dx;
+		//     nc         nf           vg = vx + (vf - vx) * (dx + dg) / dx;
+    	Point cc = spgrid->c(idxg);   // cell center
+    	Point nc = spcell->nc();      // normal center
+		Point fc = spcell->intersect_front(cc, nc);  //front intersect
+		Vt disnc = Distance(cc, nc);
+		Vt disnf = Distance(nc, fc);
+		Vt vbc = bc.value(fc.value(_X_), fc.value(_Y_), fc.value(_Z_), time);
+		Exp expx(idxg);
+		return expx + (vbc - expx) * disnc / disnf;
     }
 
-    static Vt _value_type2(
+    static Vt _value_type2_cut_exp(
                     const Field&       fc,
                     const BC&          bc,
                     const Index&       idxc,

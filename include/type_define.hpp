@@ -16,7 +16,7 @@
 #define CAST_REF(type, p)       (*((type)p))
 #define _IF_TRUE_RETRUN(expr)   if(expr){return;};
 #define _IF_FALSE_RETRUN(expr)  if(false==(expr)){return;};
-#define SMALL (1e-10)
+#define SMALL (1e-12)
 //return code
 #define _SUCCESS   0
 #define _ERROR     1
@@ -159,9 +159,14 @@ inline int Heaviside(const TYPE& v){
 }
 
 template <class TYPE>
-inline bool IsCloseTo(const TYPE& v, const TYPE& dst, const Vt tol = 1e-5){
+inline bool IsCloseTo(const TYPE& v, const TYPE& dst, const Vt tol = 1e-12){
 	return std::abs(v - dst) < tol;
 }
+template <class TYPE>
+inline bool IsCloseToZero(const TYPE& v, const Vt tol = 1e-12){
+	return std::abs(v - 0.0) < tol;
+}
+
 
 inline int LoopNext(const int& bgn, const int& end, const int& cur){
 	return (cur == end) ? bgn : cur + 1;

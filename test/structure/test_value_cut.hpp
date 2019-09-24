@@ -12,22 +12,34 @@ namespace carpio {
 typedef SGnuplotActor_<2> GA;
 typedef GGnuplotActor_<Vt, 2> GeoGA;
 typedef StructureDomain_<2> Domain;
+typedef SGrid_<2> SGrid;
+typedef typename SGrid::Index Index;
+typedef SField_<2>     Field;
+typedef SGhostMask_<2> SGhostMask;
+typedef SGhostLinearCut_<2> SGhostLinearCut;
+typedef std::shared_ptr<SCellMask_<2> > spSCellMask;
+typedef std::shared_ptr<SGrid_<2> > spSGrid;
+typedef std::shared_ptr<SGhost_<2> > spSGhost;
+typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
+typedef std::shared_ptr<SGhostLinearCut_<2> > spSGhostLinearCut;
+typedef SValueCut_<2> Value;
+
+void gp_add_cut_cell(
+		Gnuplot& gnu,
+		const typename SGhostLinearCut::Cell& cm){
+	gnu.add(GeoGA::Points(cm.nc(), 7));
+	gnu.add(GeoGA::Points(cm.gc(), 7));
+	auto pw = cm.piecewise();
+	std::cout << "pw s =" << pw.front() << std::endl;
+	std::cout << "pw e =" << pw.back() << std::endl;
+	gnu.add(GeoGA::Points(pw.front(), 7));
+	gnu.add(GeoGA::Points(pw.back(), 7));
+	std::cout << "front " << cm.front() << std::endl;
+	gnu.add(GeoGA::Lines(cm.front(), -0.5, 0.5, 7));
+}
+
 
 TEST(value_cut, initial) {
-	typedef SGrid_<2> SGrid;
-	typedef typename SGrid::Index Index;
-	typedef SField_<2>     Field;
-	typedef SGhostMask_<2> SGhostMask;
-	typedef SGhostLinearCut_<2> SGhostLinearCut;
-
-	typedef std::shared_ptr<SCellMask_<2> > spSCellMask;
-	typedef std::shared_ptr<SGrid_<2> > spSGrid;
-	typedef std::shared_ptr<SGhost_<2> > spSGhost;
-	typedef std::shared_ptr<SGhostMask_<2> > spSGhostMask;
-	typedef std::shared_ptr<SGhostLinearCut_<2> > spSGhostLinearCut;
-
-	typedef SValueCut_<2> Value;
-
 	Point_<Vt, 2> pmin(-0.5, -0.5, -0.5);
 	//	Point_<Vt, 2> pmax(1, 1, 1);
 	spSGrid spsg(new SGridUniform_<2>(pmin, 20, 1, 2));
@@ -56,25 +68,22 @@ TEST(value_cut, initial) {
 	spbi->insert(10, spbc);
 
 	Value valuetool;
-	Index idxc(4,3);
-	Index idxg(5,3);
+	Index idxc(5,1);
+	Index idxg(6,1);
 	Orientation ori = _P_;
 	Axes axe = _X_;
-	std::cout << "idx c  = " << idxc << std::endl;
+//	std::cout << "idx c  = " << idxc << std::endl;
 	std::cout << "idx g  = " << idxg << std::endl;
 
-	auto spcell  = spg->operator ()(idxc);
+	auto spcell  = spg->operator ()(idxg);
 	if(spcell != nullptr){
 		spcell->show_aperture_ratio();
 		std::cout << "normal side center = " << spcell->nc() << std::endl;
 		std::cout << "ghost  side center = " << spcell->gc() << std::endl;
 	}else{
-		std::cout << "idx = " << idxc << " is nullptr" << std::endl;
+		std::cout << "idx = " << idxg << " is nullptr" << std::endl;
 	}
 	valuetool.get_expression(field,*spbi, idxc, idxg, ori, axe);
-
-
-
 	Gnuplot gnu;
 	gnu.set_terminal_png("./plot/out.png");
 	gnu.set_xrange(-0.5, -0.1);
@@ -86,14 +95,12 @@ TEST(value_cut, initial) {
 	gnu.add(GA::WireFrameCutGhostSide(*spg, 3));
 	gnu.add(GA::WireFrameCutNormalSide(*spg, 5));
 	gnu.add(GA::WireFrameCutInterface(*spg, 4));
-	gnu.add(GA::WireFrameCutInterface(*spg, idxc, 6));
-	gnu.add(GeoGA::Points(spcell->nc(), 7));
-	gnu.add(GeoGA::Points(spcell->gc(), 7));
+	gnu.add(GA::WireFrameCutInterface(*spg, idxg, 6));
+	gp_add_cut_cell(gnu, *spcell);
 	//	auto acb = GA::Boundary(*spg);
 	//	acb->style() = "with line lw 3 lc variable";
 	//	gnu.add(acb);
 	gnu.plot();
-
 }
 }
 

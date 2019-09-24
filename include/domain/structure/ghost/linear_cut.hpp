@@ -34,6 +34,9 @@ protected:
 	typedef typename std::conditional<DIM == 2,
 				                      Line_<Vt>,
 									  Plane_<Vt> >::type Front;//
+    typedef Line_<Vt>  Line;
+    typedef Plane_<Vt> Plane;
+
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
 	static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
@@ -68,30 +71,35 @@ protected:
 
     // other data
     PointChain _piecewise;
-    Front      _front;   // line or plane, original point is cell center
+    Front      _front;   // line or plane
     Point      _nc;      // normal side center
     Point      _gc;      // ghost side center
-
 public:
+
 	SCellLinearCut_() :_type(_CUT_) {
-		_bid = 10;
+		_bid    = 10;
+
 	}
 
     SCellLinearCut_(const int& id): _type(_CUT_){
-		_bid = id;
+		_bid    = id;
+
     }
 
     SCellLinearCut_(const Self& self):
-        _type(self._type), _bid(self._bid){
+        _type(self._type),
+		_bid(self._bid)
+		{
     }
 
     Self& operator=(const Self& o) {
         if (this == &o) {
             return *this;
         }
-        _type = o._type;
-        _bid = o._bid;
-        _ers = o._ers;
+        _type   = o._type;
+        _bid    = o._bid;
+        _ers    = o._ers;
+
         return *this;
     }
 
@@ -118,6 +126,34 @@ public:
     const Point& gc() const{
     	return _gc;
     }
+
+    const Front& front() const{
+    	return _front;
+    }
+    Point front_center() const{
+    	if(DIM == 2){
+    		return Mid(_piecewise.front(), _piecewise.back());
+    	}
+    	SHOULD_NOT_REACH;
+    	return Point();
+    }
+    // intersect point on front
+    // line1 : two points
+    // line2 : front
+    Point intersect_front(const Point& ps, const Point& pe) const{
+    	ASSERT(DIM == 2);
+    	auto spinter = IntersectLineExtSegment(ps, pe, _front);
+    	if(spinter == nullptr){
+    		return front_center();
+    	}else{
+    		return *spinter;
+    	}
+    }
+
+    const PointChain& piecewise() const{
+    	return _piecewise;
+    }
+
 
     void set_data(const Point& pmin,
     		      const Point& pmax,
@@ -151,7 +187,6 @@ public:
     	}
     }
 
-
     void _set_aperture_ratio(const std::array<Vt, NumEdge>& arr) {
 		for (St i = 0; i < NumEdge; i++) {
 			if (IsCloseTo(arr[i], 0.0)) {
@@ -178,7 +213,7 @@ public:
 					pmax.x() - pmin.x(),
 					pmax.y() - pmin.y(), arr);
 			_piecewise.push_back(pstart);
-			auto pend = t.start_point(
+			auto pend = t.end_point(
 					pmin.x(),
 					pmin.y(),
 					pmax.x() - pmin.x(),
@@ -196,8 +231,10 @@ public:
     	Tool t;
 		if (DIM == 2) {
 			ASSERT(_piecewise.size() == 2);
-			Point mid = Mid(pmin, pmax);
-			_front = t.interface(_piecewise.front(),_piecewise.back(), mid);
+			_front = t.interface(_piecewise.front(),_piecewise.back());
+			std::cout << "start " << _piecewise.front() << std::endl;
+			std::cout << "end   " << _piecewise.back() << std::endl;
+			std::cout << "f =   " << _front << std::endl;
 		} else {
 			SHOULD_NOT_REACH;
 		}
@@ -215,15 +252,34 @@ public:
 			Tool t;
 			auto sx = pmax.x() - pmin.x();
 			auto sy = pmax.y() - pmin.y();
-			auto pc = t.cut_cell_point_chain(
+			auto pc = t.cut_cell_point_chain_ghost_side(
 					pmin.x(), pmin.y(), sx, sy, _ers);
 			_gc = pc.geometry_center();
-			auto pcv = t.cut_cell_point_chain_void_side(
+			auto pcv = t.cut_cell_point_chain_normal_side(
 					pmin.x(), pmin.y(), sx, sy, _ers);
 			_nc = pcv.geometry_center();
     	}
     }
 
+//    void _set_distance(
+//    		       const Point& pmin,  // point min
+//		           const Point& pmax  // point max
+//    				){
+//    	if(DIM == 2){
+//			ASSERT(_piecewise.size() == 2);
+//			Point cc = Mid(pmin, pmax);
+//			auto spinter = IntersectLineExtSegment(_nc, cc, _front);
+//			if(spinter != nullptr){
+//				_dis_nc = Distance(cc, _nc);
+//				_dis_nf = Distance(_nc, *spinter);
+//				_dis_fc = Distance(cc, *spinter);
+//			}else{
+//				_dis_nc = 0.0;
+//				_dis_nf = 0.0;
+//				_dis_fc = 0.0;
+//			}
+//    	}
+//    }
 
 
 };
@@ -335,7 +391,20 @@ public:
 			const Index& indexg,
 			const St& axe,
 			const St& ori) const {
-		SHOULD_NOT_REACH;
+		St ABI[3][2] = { { 0, 1 }, { 2, 3 }, { 4, 5 } };
+		Index n = this->_grid->n();
+		for (St d = 0; d < DIM; ++d) {
+			Idx res = indexg.value(d);
+			if (res < 0) {
+				return ABI[d][0];
+			} else if (res >= n.value(d)) {
+				return ABI[d][1];
+			}
+		}
+
+		auto spcell = this->operator ()(indexg);
+		ASSERT(spcell != nullptr);
+		return spcell->get_boundary_id();;
 	}
 	;
 	virtual St size_normal() const{

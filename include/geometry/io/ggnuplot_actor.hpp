@@ -186,7 +186,9 @@ public:
 		return Lines(ln.begin(), ln.end(), color_idx, true);
 	}
 
-	static spActor Lines(const Line& l, Vt xmin = 0.0, Vt xmax = 1.0, int color_idx = -1){
+	static spActor Lines(const Line& l,
+			             Vt xmin = 0.0,
+						 Vt xmax = 1.0, int color_idx = -1){
 		ASSERT(Dim == 2);
 		int color = color_idx > 0? color_idx : 0;
 		Vt ymin = l.cal_y(xmin);

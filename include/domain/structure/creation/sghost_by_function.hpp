@@ -150,10 +150,10 @@ protected:
 				time, th, fun, tol, arrv);
 		short vf = 0;
 		for(auto& ev : arre){
-			if(ev == 0.0){
+			if(IsCloseToZero(ev)){
 				vf++;
 			}
-			if(ev == 1.0 || ev == -1.0){
+			if(IsCloseTo(ev,1.0) || IsCloseTo(ev,-1.0)){
 				vf--;
 			}
 		}
@@ -166,6 +166,10 @@ protected:
 			spg->set_type(_GHOST_);
 			return spg;
 		} else {
+			std::cout << "index = " << index << std::endl;  //---------------------
+			for(auto& ev : arre){
+				std::cout << "ev = " << ev << std::endl;
+			}
 			spCellLinearCut spc(new CellLinearCut());
 			spc->set_type(_CUT_);
 			spc->set_data(pmin, pmax, arre);

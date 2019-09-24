@@ -339,7 +339,7 @@ public:
 					auto po = grid.v(0, index);
 					auto sx = grid.s_(_X_, index);
 					auto sy = grid.s_(_Y_, index);
-                    auto pc = tool.cut_cell_point_chain(po.x(), po.y(), sx, sy, arr);
+                    auto pc = tool.cut_cell_point_chain_ghost_side(po.x(), po.y(), sx, sy, arr);
 					for (auto p : pc) {
 						actor->data().push_back(
 								ToString(p.value(_X_), p.value(_Y_), c, " "));
@@ -376,7 +376,7 @@ public:
 					auto po = grid.v(0, index);
 					auto sx = grid.s_(_X_, index);
 					auto sy = grid.s_(_Y_, index);
-					auto pc = tool.cut_cell_point_chain_void_side(po.x(), po.y(), sx, sy,
+					auto pc = tool.cut_cell_point_chain_normal_side(po.x(), po.y(), sx, sy,
 							arr);
 					for (auto p : pc) {
 						actor->data().push_back(
