@@ -97,11 +97,34 @@ public:
 				return _value_type1_cut_exp(
 						fc, spgrid, spgc, spcell, idxg, *spbc, time);
 			} else if (spbc->type() == BC::_BC2_) {
-				return _value_type2_cut_exp(fc, *spbc, idxc, idxg, axe, ori, time);
+				return _value_type2_cut_exp(
+						fc, spgrid, spgc, spcell, idxg, *spbc, time);
 			}
 		}
     	// case 3 idxg is ghost
     	if(spgc->type(idxg) == _GHOST_){
+    		// find cut cell between idxc and idxg
+    		auto oori = Opposite(Orientation(ori));  // opposite oritation
+    		auto idxb = idxg;
+    		int  step = 0;
+    		while(spghost->is_ghost(idxb)){ // find nearest normal cell or cut;
+    		      Shift(idxb, axe, oori);
+    		      step++;
+    		}
+    		auto spcell = spgc->operator()(idxb);
+    		ASSERT(spcell != nullptr);
+    		ASSERT(spcell->type() == _CUT_);
+    		auto bid  = spcell->get_boundary_id();
+    		auto spbc = bi.find(bid);
+			if (spbc->type() == BC::_BC1_) {
+				return _value_type1_cut_ghost_exp(
+						fc, spgrid, spgc, spcell, idxb, idxg,
+						*spbc, time);
+			} else if (spbc->type() == BC::_BC2_) {
+				return _value_type2_cut_ghost_exp(
+						fc, spgrid, spgc, spcell, idxb, idxg,
+						*spbc, time);
+			}
 
     	}
     }
@@ -132,15 +155,53 @@ protected:
 		return expx + (vbc - expx) * disnc / disnf;
     }
 
-    static Vt _value_type2_cut_exp(
-                    const Field&       fc,
-                    const BC&          bc,
-                    const Index&       idxc,
-                    const Index&       idxg,
-                    const St&          axe,
-                    const St&          ori, // center --> ghost
-                    const Vt&          time = 0.0){
+    Exp _value_type1_cut_ghost_exp(
+    		const Field& field,
+			const spGrid spgrid,
+			const spGhostLinearCut spghost,
+			const spCell spcell,
+			const Index& idxc,
+			const Index& idxg,
+			const BC& bc,
+			const Vt& time = 0.0) {
+		//  normal face  cell
+		// ---x-----|-----g-----
+		//    +--nf-+--fc-+
+		// equation:
+		//  vc - vx      vf - vx
+		// --------- = ----------  ==> vc - vx = (vf - vx) * (dx + dg) / dx;
+		//     nc         nf           vg = vx + (vf - vx) * (dx + dg) / dx;
+		Point cc = spgrid->c(idxg);   // cell center
+		Point nc = spcell->nc();      // normal center
+		Point fc = spcell->intersect_front(cc, nc);  //front intersect
+		Vt disnc = Distance(cc, nc);
+		Vt disnf = Distance(nc, fc);
+		Vt vbc = bc.value(fc.value(_X_), fc.value(_Y_), fc.value(_Z_), time);
+		Exp expx(idxc);
+		return expx + (vbc - expx) * disnc / disnf;
+	}
 
+    Exp _value_type2_cut_exp(
+                        const Field&           field,
+    					const spGrid           spgrid,
+    					const spGhostLinearCut spghost,
+    					const spCell           spcell,
+                        const Index&           idxg,
+                        const BC&              bc,
+                        const Vt&              time = 0.0){
+    	SHOULD_NOT_REACH;
+    }
+
+    Exp _value_type2_cut_ghost_exp(
+        		const Field& field,
+    			const spGrid spgrid,
+    			const spGhostLinearCut spghost,
+    			const spCell spcell,
+    			const Index& idxc,
+    			const Index& idxg,
+    			const BC& bc,
+    			const Vt& time = 0.0) {
+    	SHOULD_NOT_REACH;
     }
 };
 

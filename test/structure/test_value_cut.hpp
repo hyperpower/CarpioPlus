@@ -30,11 +30,11 @@ void gp_add_cut_cell(
 	gnu.add(GeoGA::Points(cm.nc(), 7));
 	gnu.add(GeoGA::Points(cm.gc(), 7));
 	auto pw = cm.piecewise();
-	std::cout << "pw s =" << pw.front() << std::endl;
-	std::cout << "pw e =" << pw.back() << std::endl;
+//	std::cout << "pw s =" << pw.front() << std::endl;
+//	std::cout << "pw e =" << pw.back()  << std::endl;
 	gnu.add(GeoGA::Points(pw.front(), 7));
 	gnu.add(GeoGA::Points(pw.back(), 7));
-	std::cout << "front " << cm.front() << std::endl;
+//	std::cout << "front " << cm.front() << std::endl;
 	gnu.add(GeoGA::Lines(cm.front(), -0.5, 0.5, 7));
 }
 
@@ -77,13 +77,14 @@ TEST(value_cut, initial) {
 
 	auto spcell  = spg->operator ()(idxg);
 	if(spcell != nullptr){
-		spcell->show_aperture_ratio();
+//		spcell->show_aperture_ratio();
 		std::cout << "normal side center = " << spcell->nc() << std::endl;
 		std::cout << "ghost  side center = " << spcell->gc() << std::endl;
 	}else{
 		std::cout << "idx = " << idxg << " is nullptr" << std::endl;
 	}
-	valuetool.get_expression(field,*spbi, idxc, idxg, ori, axe);
+	auto exp = valuetool.get_expression(field,*spbi, idxc, idxg, ori, axe);
+	std::cout << "exp : " << exp << std::endl;
 	Gnuplot gnu;
 	gnu.set_terminal_png("./plot/out.png");
 	gnu.set_xrange(-0.5, -0.1);

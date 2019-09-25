@@ -86,10 +86,11 @@ public:
 
 
     // operation
-    typedef SValue_<DIM>       Value;
-    typedef SInterpolate_<DIM> Interpolate;
-    typedef SLaplacian_<DIM>   Laplacian;
-    typedef SBuildMatrix_<DIM> BuildMatrix;
+    typedef SValue_<DIM>        Value;
+    typedef SInterpolate_<DIM>  Interpolate;
+    typedef SLaplacian_<DIM>    Laplacian;
+    typedef SLaplacianCut_<DIM> LaplacianCut;
+    typedef SBuildMatrix_<DIM>  BuildMatrix;
     // io file
     typedef SIOFile_<DIM> IOFile;
 

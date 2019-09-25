@@ -232,9 +232,9 @@ public:
 		if (DIM == 2) {
 			ASSERT(_piecewise.size() == 2);
 			_front = t.interface(_piecewise.front(),_piecewise.back());
-			std::cout << "start " << _piecewise.front() << std::endl;
-			std::cout << "end   " << _piecewise.back() << std::endl;
-			std::cout << "f =   " << _front << std::endl;
+//			std::cout << "start " << _piecewise.front() << std::endl;
+//			std::cout << "end   " << _piecewise.back() << std::endl;
+//			std::cout << "f =   " << _front << std::endl;
 		} else {
 			SHOULD_NOT_REACH;
 		}
@@ -401,12 +401,25 @@ public:
 				return ABI[d][1];
 			}
 		}
-
-		auto spcell = this->operator ()(indexg);
+		auto spcell = this->_find_spcell(indexc, indexg, axe, ori);
 		ASSERT(spcell != nullptr);
-		return spcell->get_boundary_id();;
+		return spcell->get_boundary_id();
 	}
-	;
+
+	spCell _find_spcell(
+			const Index& indexc,
+			const Index& indexg,
+			const St& axe,
+			const St& ori) const{
+		auto oori = Opposite(Orientation(ori));  // opposite oritation
+		auto idxb = indexg;
+		int  step = 0;
+		while(this->is_ghost(idxb)){ // find nearest normal cell or cut;
+		      Shift(idxb, axe, oori);
+		      step++;
+		}
+		return this->operator ()(idxb);
+	}
 	virtual St size_normal() const{
 		return _count_normal();
 	}

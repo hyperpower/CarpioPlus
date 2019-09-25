@@ -59,8 +59,10 @@ public:
     typedef CG_<Vt>           Solver_CG;
 
     typedef typename Domain::Laplacian                Laplacian;
+    typedef typename Domain::LaplacianCut             LaplacianCut;
     typedef typename Domain::BuildMatrix              BuildMatrix;
 protected:
+    std::shared_ptr<Laplacian> _splap;
 public:
     Laplace_(spGrid spg, spGhost spgh, spOrder spo):
         Equation(spg, spgh, spo){
@@ -69,6 +71,11 @@ public:
         // default one step function
         std::string name_time_scheme = "explicit";
         this->_aflags["set_time_scheme"] = name_time_scheme;
+        if(spgh->type() == "SGhostLinearCut"){
+        	this->_splap = std::shared_ptr<Laplacian>(new LaplacianCut());
+        }else{
+        	this->_splap = std::shared_ptr<Laplacian>(new Laplacian());
+        }
     }
 
     virtual ~Laplace_(){};
@@ -76,6 +83,7 @@ public:
     virtual int initialize() {
         this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
         this->_aflags["solver"] = _init_solver();
+    	this->_splap->set_boundary_index(this->_bis["phi"]);
         return -1;
     }
 
@@ -151,12 +159,11 @@ public:
 
 protected:
     virtual int _one_step_explicit(St step){
-        Laplacian Lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         Field     v    = phi.volume_field();
         Vt        dt   = this->_time->dt();
 
-        phi = (Lap(phi) * dt) / v + phi;
+        phi = (this->_splap->operator()(phi) * dt) / v + phi;
 
         return 1;
     }
@@ -169,7 +176,7 @@ protected:
 
         auto spphif    = any_cast<spExpField>(this->_aflags["field_exp"]);
         auto v         = any_cast<spField>(this->_aflags["field_volume"]);
-        auto  Lapexp   = Lap.expression_field(phi);
+        auto  Lapexp   = this->_splap->expression_field(phi);
         Vt    dt       = this->_time->dt();
 
         auto expf = (Lapexp * dt) / (*v) - (*spphif) + phi;
@@ -188,11 +195,10 @@ protected:
 
     // Crank–Nicolson method
     virtual int _one_step_cn(St step){
-        Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-        auto Lapv     = Lap(phi);
-        auto Lapexp   = Lap.expression_field(phi);
+        auto Lapv     = this->_splap->operator()(phi);
+        auto Lapexp   = this->_splap->expression_field(phi);
         auto spphif   = any_cast<spExpField>(this->_aflags["field_exp"]);
         auto v        = any_cast<spField>(this->_aflags["field_volume"]);
         Vt dt         = this->_time->dt();
@@ -215,8 +221,8 @@ protected:
         Laplacian Lap(this->_bis["phi"]);
         Field& phi    = *(this->_scalars["phi"]);
         auto spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-        auto Lapv     = Lap(phi);
-        auto Lapexp   = Lap.expression_field(phi);
+        auto Lapv     = this->_splap->operator()(phi);
+        auto Lapexp   = this->_splap->expression_field(phi);
         auto spphif   = any_cast<spExpField>(this->_aflags["field_exp"]);
         auto v        = any_cast<spField>(this->_aflags["field_volume"]);
         auto omega    = any_cast<Vt>(this->_aflags["cn_omega"]);
@@ -238,10 +244,9 @@ protected:
 
 
     virtual int _solve(){
-        Laplacian lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-        auto   expf    = lap.expression_field(phi);
+        auto   expf    = this->_splap->expression_field(phi);
         Mat a;
         Arr b;
         BuildMatrix::Get(expf, a, b);

@@ -84,18 +84,21 @@ public:
 		return spgm;
 	}
 
-	spGhostLinearCut ghost_linear_cut(spGrid spg, FunXYZT_Value fun, Vt time, Vt th){
+	spGhostLinearCut ghost_linear_cut(
+			spGrid spg, FunXYZT_Value fun,
+			Vt time, Vt th, int bid = 10){
 		spGhostLinearCut spgh(new GhostLinearCut(spg));
 
 		spCellLinearCut spcg(new CellLinearCut());
 		spcg->set_type(_GHOST_);
+		spcg->set_boundary_id(bid);
 
 		auto spcorner = this->_corner_value(spg, fun, time);
 
 		spGhostRegular spgr(new GhostRegular(spg));
 
 		typename GhostLinearCut::FunSetByIndex funindex =
-				[this, spg, spgr, fun,&time,&th,&spcg,&spcorner]
+				[this, spg, spgr, fun,&time,&th,&spcg,&spcorner, &bid]
 				 (const Index& index){
 			if(spgr->is_ghost(index)){
 				return spcg;
@@ -121,8 +124,12 @@ public:
 				// a cut cell
 				if(DIM == 2){
 					Vt tol = spg->min_size() * 1e-3;
-					return this->_new_cell_linear_cut_2(*spg,
+					auto res = this->_new_cell_linear_cut_2(*spg,
 							index, time, th, fun, tol, arrvv);
+					if(res != nullptr){
+						res->set_boundary_id(bid);
+					}
+					return res;
 				}
 				SHOULD_NOT_REACH;
 			}
@@ -166,16 +173,15 @@ protected:
 			spg->set_type(_GHOST_);
 			return spg;
 		} else {
-			std::cout << "index = " << index << std::endl;  //---------------------
-			for(auto& ev : arre){
-				std::cout << "ev = " << ev << std::endl;
-			}
+//			std::cout << "index = " << index << std::endl;  //---------------------
+//			for(auto& ev : arre){
+//				std::cout << "ev = " << ev << std::endl;
+//			}
 			spCellLinearCut spc(new CellLinearCut());
 			spc->set_type(_CUT_);
 			spc->set_data(pmin, pmax, arre);
 			return spc;
 		}
-
 	}
 	spCorner _corner_value(spGrid spg, FunXYZT_Value fun, Vt time){
 		spGhost  spgh(new GhostRegular(spg));

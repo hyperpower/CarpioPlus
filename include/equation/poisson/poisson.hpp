@@ -63,6 +63,7 @@ public:
 
     typedef typename Domain::Laplacian                Laplacian;
     typedef typename Domain::BuildMatrix              BuildMatrix;
+    typedef typename Domain::LaplacianCut             LaplacianCut;
 protected:
 public:
     Poisson_(spGrid spg, spGhost spgh, spOrder spo):
@@ -74,6 +75,7 @@ public:
         this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
         this->_scalars["source"]->assign(this->get_funtion("set_source"));
         this->_aflags["solver"] = this->_init_solver();
+    	this->_splap->set_boundary_index(this->_bis["phi"]);
         std::cout << "  Poisson: initialize \n";
         return -1;
     }
@@ -199,12 +201,12 @@ protected:
 
     virtual int _solve(){
     	std::cout << "Possion _solve()" << std::endl;
-        Laplacian lap(this->_bis["phi"]);
         Field&    phi  = *(this->_scalars["phi"]);
         Field& source  = *(this->_scalars["source"]);
         auto  spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-
-        auto   expf    = lap.expression_field(phi);
+        auto   expf    = this->_splap->expression_field(phi);
+        std::cout << "expresion_field end =====" << std::endl;
+        exit(0);
         // build matrix
         Mat a;
         Arr b;
