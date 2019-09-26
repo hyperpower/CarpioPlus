@@ -46,6 +46,10 @@ public:
                             const Index& indexg,
                             const St&  axe,
                             const St& ori) const{};
+    virtual Index boundary_index(const Index& indexc,
+                                 const Index& indexg,
+                                 const St&    axe,
+                                 const St&    ori) const{};
     virtual St size_normal() const{}
     virtual St size_not_ghost() const{}
 };

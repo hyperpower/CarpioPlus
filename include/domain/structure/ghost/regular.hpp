@@ -89,7 +89,7 @@ public:
     	return false;
     }
 
- virtual bool is_normal(const Index& index) const{
+    virtual bool is_normal(const Index& index) const{
         return !(is_ghost(index));
     }
 
@@ -113,6 +113,22 @@ public:
         SHOULD_NOT_REACH;
         return 0;
     };
+
+    virtual Index boundary_index(const Index& indexc,
+    	                         const Index& indexg,
+    	                         const St&    axe,
+    	                         const St&    ori) const{
+    	auto oori = Opposite(Orientation(ori));  // opposite oritation
+        auto idxb = indexg;
+    	int  step = 0;
+    	while(this->is_ghost(idxb)){ // find nearest normal cell or cut;
+    		Shift(idxb, axe, oori);
+    	    step++;
+    	}
+        return idxb;
+    }
+
+
 
     virtual St size_normal() const{
         return _grid->num_cells();

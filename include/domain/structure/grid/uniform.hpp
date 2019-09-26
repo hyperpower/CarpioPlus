@@ -118,7 +118,7 @@ public:
         for (St d = 0; d < Dim; ++d) {
             res[d] = _c[d][_IDX(ai[d])];
         }
-        return std::move(res);
+        return res;
     }
     Poi c(const Index& index) const {
         return c(index.i(), index.j(), index.k());

@@ -11,7 +11,7 @@ namespace carpio {
 template<class T>
 struct IsZero_: std::unary_function<const T&, bool> {
 	bool operator()(const T& number) const {
-		return (number == 0);
+		return IsCloseToZero(number);
 	}
 };
 
@@ -284,11 +284,11 @@ template<class COE, class TERM,
 		 class IS_ZERO = IsZero_<COE>,
          class COMPARE_TERM = std::less<TERM> >
 LinearPolynomial_<COE, TERM, IS_ZERO, COMPARE_TERM>
-operator/(      LinearPolynomial_<COE, TERM, IS_ZERO, COMPARE_TERM> x,
+operator/(LinearPolynomial_<COE, TERM, IS_ZERO, COMPARE_TERM> x,
 		  const COE& a){
 	IS_ZERO iz;
 	ASSERT((!(iz(a))));
-	x /=a;
+	x /= a;
 	return x;
 }
 
@@ -304,6 +304,7 @@ std::ostream& operator<<(
 		stream << t.first  << "\n";
 	}
 	stream << p.value();
+	stream << " <<--";
 	return stream;
 }
 

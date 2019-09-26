@@ -164,9 +164,9 @@ public:
     	_set_two_side_center(pmin, pmax);
     }
 
-    Vt get_aperture_ratio(int axe, int o) const{
+    Vt aperture_ratio(int axe, int o) const{
 		if (DIM == 1) {
-			return _ers;
+			return _ers[0];
 		}
 		Tool tool;
 		if (DIM == 2) {
@@ -401,25 +401,12 @@ public:
 				return ABI[d][1];
 			}
 		}
-		auto spcell = this->_find_spcell(indexc, indexg, axe, ori);
-		ASSERT(spcell != nullptr);
+		auto indexb = this->boundary_index(indexc, indexg, axe, ori);
+		auto spcell = this->operator ()(indexb);
+		ASSERT(spcell != nullptr);  // must be a cut cell
 		return spcell->get_boundary_id();
 	}
 
-	spCell _find_spcell(
-			const Index& indexc,
-			const Index& indexg,
-			const St& axe,
-			const St& ori) const{
-		auto oori = Opposite(Orientation(ori));  // opposite oritation
-		auto idxb = indexg;
-		int  step = 0;
-		while(this->is_ghost(idxb)){ // find nearest normal cell or cut;
-		      Shift(idxb, axe, oori);
-		      step++;
-		}
-		return this->operator ()(idxb);
-	}
 	virtual St size_normal() const{
 		return _count_normal();
 	}

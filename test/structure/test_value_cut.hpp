@@ -83,7 +83,7 @@ TEST(value_cut, initial) {
 	}else{
 		std::cout << "idx = " << idxg << " is nullptr" << std::endl;
 	}
-	auto exp = valuetool.get_expression(field,*spbi, idxc, idxg, ori, axe);
+	auto exp = valuetool.get_expression(field, *spbi, idxc, idxg, ori, axe);
 	std::cout << "exp : " << exp << std::endl;
 	Gnuplot gnu;
 	gnu.set_terminal_png("./plot/out.png");

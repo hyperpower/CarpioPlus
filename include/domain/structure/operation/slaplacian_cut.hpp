@@ -21,7 +21,7 @@ namespace carpio{
 template<St DIM>
 class SLaplacianCut_: public SLaplacian_<DIM>{
 public:
-//	typedef SOperation_<DIM> Base;
+	typedef SLaplacian_<DIM> Base;
     typedef SGrid_<DIM>      Grid;
     typedef SGhost_<DIM>     Ghost;
     typedef SOrder_<DIM>     Order;
@@ -46,24 +46,16 @@ public:
 
 protected:
     typedef std::shared_ptr<BoundaryIndex> spBI;
-
-    spBI _spbi;
 public:
 
     SLaplacianCut_(){
-        _spbi = nullptr;
+        this->_spbi = nullptr;
     }
 
-    SLaplacianCut_(spBI spbi) : _spbi(spbi){
-    }
-
-    void set_boundary_index(spBI spbi){
-        ASSERT(spbi != nullptr);
-        this->_spbi = spbi;
+    SLaplacianCut_(spBI spbi) : Base(spbi){
     }
 
     virtual ~SLaplacianCut_(){
-
     }
 
     virtual Field operator()(const Field& phi,
@@ -141,19 +133,21 @@ public:
 
     }
     virtual ExpField expression_field(
-                                const Field&    phis,
+                                const Field&    phi,
                                 const Vt&       t = 0.0){
-        ExpField res(phis.spgrid(), phis.spghost(), phis.sporder());
-		const Grid& grid = phis.grid();
-		auto spghost = std::dynamic_pointer_cast<GhostLinearCut>(phis.spghost());
-		for (auto& idx : phis.order()) {
-			std::cout << "Index = " << idx << "type : " << spghost->type(idx)<< std::endl;
-			std::array<Exp, DIM> arr;
+        ExpField res(phi.spgrid(), phi.spghost(), phi.sporder());
+		const Grid& grid = phi.grid();
+		auto spghost = std::dynamic_pointer_cast<GhostLinearCut>(phi.spghost());
+		Exp sum;
+		for (auto& idx : phi.order()) {
+			std::cout << "Index = " << idx
+					  << "type : "  << spghost->type(idx)
+					  << " ==============" << std::endl;
 
 			FOR_EACH_DIM
 			{
-//				sum += exp_gradient_face_times_area(phi, idx, d, _M_, t);
-//				sum += exp_gradient_face_times_area(phi, idx, d, _P_, t);
+				sum += exp_gradient_face_times_area(phi, idx, d, _M_, t);
+				sum += exp_gradient_face_times_area(phi, idx, d, _P_, t);
 			}
 
 //			sum += gradient_front_times_area(phi, idx, t);
@@ -165,86 +159,90 @@ public:
 
     Exp exp_gradient_face_times_area(const Field& phi,
     		                         const Index& idx, St d, St o, Vt t){
+    	std::cout << "  gradient f*a = " << d << " on " << o << std::endl;
     	auto spg   = phi.spghost();
     	auto gc    = std::dynamic_pointer_cast<GhostLinearCut>(spg);
     	auto idxn  = idx.shift(d, o);
-
     	auto pcell = gc->operator()(idx);  // this cell
 		if (pcell == nullptr) { // normal cell
-			Vt gf = exp_gradient_full_face(phi, idx, idxn, d, o, t);
-			Vt a  = phi.grid().fa(d, o, idx);
+			Exp gf = exp_gradient_full_face(phi, idx, idxn, d, o, t);
+			Vt  a  = phi.grid().fa(d, o, idx);
 			return gf * a;
 		} else if (pcell->type() == _CUT_) {
-			std::cout << idx << " CUT " << d << " o " << o << std::endl;
+			auto ap = pcell->aperture_ratio(d, o);
+			if(IsCloseToZero(ap)){ // full face
+				std::cout << "full face = " << ap <<  std::endl;
+				Exp gf = exp_gradient_full_face(phi, idx, idxn, d, o, t);
+				Vt  a  = phi.grid().fa(d, o, idx);
+				return gf * a;
+			}else if(IsCloseTo(std::abs(ap), 1.0)){ // ghost face
+				std::cout << "ghost face " << ap << std::endl;
+				return Exp(0.0);
+			}else{  // partial face
+				std::cout << "partial face " << ap << std::endl;
+			}
+			return Exp(idx);
 		}
     }
 
-    Exp exp_gradient_full_face(const Field& phi,
+    Exp exp_gradient_full_face(
+    		              const Field& phi,
        		              const Index& idx,   // center index
    						  const Index& idxn,  // index next
    						  St           d,     // direction
    						  St           o,     // orientation
    						  Vt           t){    // time
+    	std::cout << "  full face " << idx << " n " << idxn << std::endl;
 		auto spg    = phi.spghost();
 		auto gc     = std::dynamic_pointer_cast<GhostLinearCut>(spg);
 		auto pcell  = gc->operator()(idx);   // this cell is normal
 		auto pcelln = gc->operator()(idxn);  // neighbor cell
-		auto grid   = phi.grid();
+		auto spgrid = phi.spgrid();
+    	ValueCut value;
 		// neighbor cell is normal
-		Exp expn(idxn);
-		Exp exp(idx);
-		if (pcelln == nullptr) {
+		if (pcelln == nullptr) {  // normal cell
+			Exp expn(idxn);
+			Exp exp(idx);
 			auto gf = (expn - exp)
-					/ std::abs((grid.c_(d, idxn) - grid.c_(d, idx)));
+					/ std::abs((spgrid->c_(d, idxn) - spgrid->c_(d, idx)));
 			return gf;
 		} else {  // neighbor cell is cut or ghost
-			if (pcelln->type() == _CUT_) {
-
-			} else if (pcelln->type() == _GHOST_) {
-
-			}
+			auto expn = value.get_expression(phi,(*this->_spbi), idx, idxn, d, o, t);
+			Exp  exp(idx);
+			auto gf = (expn - exp) / Distance(spgrid->c(idxn), spgrid->c(idx));
+			return gf;
 		}
 	}
+
+    Exp exp_gradient_partial_face(
+    		              const Field& phi,
+       		              const Index& idx,   // center index
+   						  const Index& idxn,  // index next
+   						  St           d,     // direction
+   						  St           o,     // orientation
+   						  Vt           t){    // time
+    	// idx is cut cell
+    	std::cout << "  partial face " << idx << " n " << idxn << std::endl;
+		auto spg    = phi.spghost();
+		auto gc     = std::dynamic_pointer_cast<GhostLinearCut>(spg);
+		auto pcell  = gc->operator()(idx);   // this cell is normal
+		auto pcelln = gc->operator()(idxn);  // neighbor cell
+		auto spgrid = phi.spgrid();
+    	ValueCut value;
+		// neighbor cell is normal
+		if (pcelln == nullptr) {  // normal cell
+
+		} else {  // neighbor cell is cut or ghost
+
+		}
+	}
+
 
     virtual ExpField expression_field(
                                     const Field&    phis,
                                     const Vt&       beta,
                                     const Vt&       t = 0.0){
-        ExpField res(phis.spgrid(), phis.spghost(), phis.sporder());
-        const Grid& grid = phis.grid();
-        for (auto& idx : phis.order()) {
-            std::array<Exp, DIM> arr;
-            FOR_EACH_DIM
-            {
-                Index idxp = idx.p(d);
-                Index idxm = idx.m(d);
-                Exp phi_m, phi_p;
-                Exp phi(idx);
-                if (phis.ghost().is_ghost(idxm)) {
-                    phi_m += Value::GetExp(phis, *(this->_spbi), idx, idxm, d, _M_, t);
-                } else {
-                    phi_m += idxm;
-                }
-                if (phis.ghost().is_ghost(idxp)) {
-                    phi_p += Value::GetExp(phis, *(this->_spbi), idx, idxp, d, _P_, t);
-                } else {
-                    phi_p += idxp;
-                }
-                auto dfdx_m = (phi - phi_m) * beta
-                        / (grid.c_(d, idx) - grid.c_(d, idxm));
-                auto dfdx_p = (phi_p - phi) * beta
-                        / (grid.c_(d, idxp) - grid.c_(d, idx));
 
-                arr[d] = (dfdx_p * grid.fa(d, _P_, idx)
-                        - dfdx_m * grid.fa(d, _M_, idx));
-
-            }
-            FOR_EACH_DIM
-            {
-                res(idx) += arr[d];
-            }
-        }
-        return res;
     }
 };
 
