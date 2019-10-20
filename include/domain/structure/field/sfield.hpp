@@ -438,8 +438,10 @@ Vt NormInf(const SField_<DIM>& f, const SField_<DIM>& exact){
     return res.max();
 }
 
-// sum(abs(e))
-
+#define UNPACK_FIELD(field)  \
+	auto& grid  = field.grid();  \
+	auto& ghost = field.ghost(); \
+	auto& order = field.order();
 
 
 }

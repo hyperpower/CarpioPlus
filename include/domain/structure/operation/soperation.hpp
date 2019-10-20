@@ -16,6 +16,8 @@
 #include "domain/boundary/boundary_index.hpp"
 
 #include "sinterpolate.hpp"
+#include "sinterpolation.hpp"
+#include "sinterpolation_local.hpp"
 #include "svalue.hpp"
 
 #include "soperation_define.hpp"

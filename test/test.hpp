@@ -33,10 +33,11 @@
 //#include "structure/test_sexpression.hpp"
 //#include "structure/test_operation.hpp"
 //#include "structure/test_value_cut.hpp"
+#include "structure/test_interpolation.hpp"
 
 //#include "equation/test_convection.hpp"
 //#include "equation/test_equation.hpp"
-#include "equation/test_poisson.hpp"
+//#include "equation/test_poisson.hpp"
 
 //#include "octree/test_node.hpp"
 

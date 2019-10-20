@@ -149,8 +149,6 @@ TEST(linear_polynomial, op_add_term){
 	std::cout << " \"e\" + pb\n";
 	str = "e";
 	std::cout << str + pb << std::endl;
-
-
 }
 
 
