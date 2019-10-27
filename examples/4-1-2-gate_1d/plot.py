@@ -261,30 +261,30 @@ def plot_errori():
     plt.savefig("error_i.png")
     plt.close()
 
-def plot_all():
-    matfu = file_name(PATH_RESULT, "exact")
-    print(len(matfu))
-    matfc = []
-    for one in matfu:
-        matfc.append(one)
+# def plot_all():
+#     matfu = file_name(PATH_RESULT, "exact")
+#     print(len(matfu))
+#     matfc = []
+#     for one in matfu:
+#         matfc.append(one)
 
-    #multiprocessing.freeze_support()
-    pool = multiprocessing.Pool()
-    cpus = multiprocessing.cpu_count() / 2
-    results = []
-    cmatfs = split(matfc, cpus)
+#     #multiprocessing.freeze_support()
+#     pool = multiprocessing.Pool()
+#     cpus = multiprocessing.cpu_count() / 2
+#     results = []
+#     cmatfs = split(matfc, cpus)
 
-    print("Thread num : ", len(cmatfs))
-    for i in xrange(0, cpus):
-        mat = cmatfs[i]
-        for one in mat:
-            result = pool.apply_async(plot_one, args=(one[1], one[2],))
-            results.append(result)
+#     print("Thread num : ", len(cmatfs))
+#     for i in xrange(0, cpus):
+#         mat = cmatfs[i]
+#         for one in mat:
+#             result = pool.apply_async(plot_one, args=(one[1], one[2],))
+#             results.append(result)
     
-    pool.close()
-    pool.join()
+#     pool.close()
+#     pool.join()
     
-    os.system("convert -delay 5 -loop 0 ./fig/comp_*.png comp.gif")
+#     os.system("convert -delay 5 -loop 0 ./fig/comp_*.png comp.gif")
 
 def mp():
     lists=[1,2,3]

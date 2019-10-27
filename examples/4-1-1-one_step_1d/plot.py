@@ -10,7 +10,7 @@ import multiprocessing
 from multiprocessing import Pool
 
 matplotlib.rcParams['text.usetex']        = True
-matplotlib.rcParams['text.latex.unicode'] = True
+# matplotlib.rcParams['text.latex.unicode'] = True
 matplotlib.rcParams['font.family']        = 'serif'
 matplotlib.rcParams['font.size']          = 12
 

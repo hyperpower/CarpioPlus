@@ -6,7 +6,7 @@
 using namespace carpio;
 
 const St DIM = 1;
-typedef StructureDomain_<DIM> Domain;
+typedef StructureDomain_<DIM>    Domain;
 typedef typename Domain::spGrid  spGrid;
 typedef typename Domain::spGhost spGhost;
 typedef typename Domain::spOrder spOrder;
@@ -52,12 +52,12 @@ int main(int argc, char** argv) {
                                                       -1, -1, 1, Event::AFTER));
     equ.add_event("OutputTime", spetime);
 
-    typedef EventOutputScalar_<DIM, Domain> EventOutputScalar;
+    typedef EventOutputField_<DIM, Domain> EventOutputScalar;
     EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
     equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
 
-    typedef EventGnuplotScalar_<DIM, Domain> EventGnuplotScalar;
+    typedef EventGnuplotField_<DIM, Domain> EventGnuplotScalar;
     EventGnuplotScalar egs("phi", -1, -1, 1, Event::AFTER);
     egs.gnuplot().set_yrange(-0.3, 1.3);
     egs.set_path("./fig/");

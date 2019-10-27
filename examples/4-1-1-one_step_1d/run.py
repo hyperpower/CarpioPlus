@@ -7,7 +7,7 @@ FILE_ORIGINAL = [
     "CMakeLists.txt",
     "plot.py",
     "run.py",
-    "report.rstt"
+    "report.rst"
 ]
 
 PATH_THIS     = os.path.abspath(os.path.join(__file__,   "../"))
@@ -45,7 +45,7 @@ def build(path):
     tprev = time.clock()
     print("report   ------------------------------ ")
     # os.system("python3 report.py")
-    REPORT.run(path, runtime, FILE_ORIGINAL)
+    # REPORT.run(path, runtime, FILE_ORIGINAL)
     # os.system("python3 plot.py")
     return runtime
 

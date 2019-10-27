@@ -120,6 +120,8 @@ TEST(convection, one_step_2){
 	EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
 	egs.gnuplot().set_xrange(-0.1, 1.1);
 	egs.gnuplot().set_yrange(-0.1, 1.1);
+	egs.gnuplot().set_palette_blue_red();
+	egs.gnuplot().set_cbrange(0.0, 1.0);
 	egs.gnuplot().set_equal_aspect_ratio();
 	egs.set_path("./plot/");
 	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
