@@ -615,6 +615,38 @@ public:
 
 		return *this;
 	}
+
+
+	Gnuplot& set_palette_blues() {
+		std::ostringstream cmdstr;
+		cmdstr<< "set palette defined(0 '#F7FBFF',\
+    	    	      1 '#DEEBF7',\
+		      	      2 '#C6DBEF',\
+		              3 '#9ECAE1',\
+		              4 '#6BAED6',\
+		              5 '#4292C6',\
+		              6 '#2171B5',\
+		              7 '#084594' \
+					  )";
+		cmd(cmdstr.str());
+
+		return *this;
+	}
+
+	Gnuplot& set_palette_red_grey() {
+		std::ostringstream cmdstr;
+		cmdstr << "set palette defined ( 0 '#B2182B',\
+    	    	      1 '#D6604D',\
+		      	      2 '#F4A582',\
+		              3 '#FDDBC7',\
+		              4 '#E0E0E0',\
+		              5 '#BABABA',\
+		              6 '#878787',\
+		              7 '#4D4D4D' )";
+		cmd(cmdstr.str());
+
+		return *this;
+	}
 	// set range
 	// set the xrange
 	Gnuplot& set_xrange(const double iFrom, const double iTo) {
