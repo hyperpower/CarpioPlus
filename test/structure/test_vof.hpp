@@ -11,8 +11,8 @@
 
 namespace carpio {
 
-typedef SIndex_<2> Index;
-typedef SField_<2> Field;
+typedef SIndex_<2>  Index;
+typedef SField_<2>  Field;
 typedef SIOFile_<2> IOFile;
 typedef SVOF_<2>    VOF;
 typedef std::shared_ptr<SGrid_<2> > spSGrid;

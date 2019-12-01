@@ -68,7 +68,7 @@ endif()
 # end python ===
 # location of header files
 INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
 
 INCLUDE_DIRECTORIES(${MPI_INCLUDE_PATH})

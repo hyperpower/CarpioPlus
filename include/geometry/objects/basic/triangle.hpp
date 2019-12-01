@@ -1,7 +1,7 @@
 #ifndef _TRIANGLE_HPP_
 #define _TRIANGLE_HPP_
 
-#include "../geometry_define.hpp"
+#include "geometry/geometry_define.hpp"
 #include "point.hpp"
 #include <array>
 #include "math.h"
