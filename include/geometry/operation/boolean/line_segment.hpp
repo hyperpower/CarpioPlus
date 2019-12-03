@@ -3,7 +3,7 @@
 
 #include "geometry/geometry_define.hpp"
 #include "geometry/objects/basic/point.hpp"
-#include "geometry/objects/basic/line.hpp"
+#include "geometry/objects/analytic/line.hpp"
 #include "geometry/objects/basic/segment.hpp"
 #include "algebra/algebra.hpp"
 

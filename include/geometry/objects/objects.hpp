@@ -4,17 +4,19 @@
 //#include <array>
 //#include <geometry/objects/_box.hpp>
 #include "geometry/geometry_define.hpp"
+#include "analytic/line.hpp"
+#include "analytic/plane.hpp"
+
 #include "basic/point.hpp"
-#include "basic/line.hpp"
 #include "basic/ray.hpp"
-#include "basic/plane.hpp"
 #include "basic/point_chain.hpp"
 #include "basic/segment.hpp"
-#include "basic/curve/curve.hpp"
-#include "basic/curve/bezier.hpp"
-#include "basic/curve/bezier_quadratic.hpp"
-#include "basic/curve/bezier_cubic.hpp"
-#include "basic/curve/bezier_high_order.hpp"
+
+#include "curve/curve.hpp"
+#include "curve/bezier.hpp"
+#include "curve/bezier_quadratic.hpp"
+#include "curve/bezier_cubic.hpp"
+#include "curve/bezier_high_order.hpp"
 //#include "_box.hpp"
 //#include "_line.hpp"
 //#include "_segment.hpp"

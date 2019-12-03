@@ -2,7 +2,7 @@
 #define _PLANE_HPP_
 
 #include "geometry/geometry_define.hpp"
-#include "point.hpp"
+#include "geometry/objects/basic/point.hpp"
 #include <array>
 
 namespace carpio {

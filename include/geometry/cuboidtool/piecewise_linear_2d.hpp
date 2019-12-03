@@ -4,7 +4,7 @@
 #include "cuboidtool_define.hpp"
 #include "geometry/geometry_define.hpp"
 #include "geometry/objects/basic/point.hpp"
-#include "geometry/objects/basic/line.hpp"
+#include "geometry/objects/analytic/line.hpp"
 #include "geometry/objects/basic/box.hpp"
 #include "algebra/algebra.hpp"
 #include "algebra/array/array_list.hpp"

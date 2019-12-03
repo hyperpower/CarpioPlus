@@ -10,6 +10,10 @@ The Boolean operations include:
 
 Following tables show the functions which have been implemented
 
+- :ballot_box_with_check: : good to go
+- :construction: : working in progress
+- :negative_squared_cross_mark: : can't be implemented
+
 ## Table of Intersection
 |          |        Segment          |  Box         | Line         |
 |----------|:-----------------------:|--------------|--------------|
@@ -18,9 +22,10 @@ Following tables show the functions which have been implemented
 | Line     |                         |              |:construction:|
 | Polygon  |                         |              |              |
 
+
 ## Table of Union
 |          |             Segment          |  Box         | Line     |
-|----------|------------------------------|--------------|----------|
+|----------|:----------------------------:|--------------|----------|
 | Segment  |:negative_squared_cross_mark: |              |          |
 | Box      |                              |:construction:|          |
 | Line     |                              |              |          |
@@ -28,11 +33,24 @@ Following tables show the functions which have been implemented
 ## Table of Subtract
 
 # File Structure
-| file | content |
+| file | status |
 |------|---------|
-|[line_box.hpp](line_box.hpp)| A line cuts a box, or a box cuts a line |
+|[line_box.hpp](line_box.hpp)| :construction: |
 
-# Segment vs. Segment
+## Line vs. Box
+
+All of related functions can be found in '[line_box.hpp](line_box.hpp)'.
+
+### Intersection
+Input: 
+- box       : a box
+- line      : a line 
+- line_flag : 1 region on positive side of the line
+             -1 region on nagative side of the line
+              0 the line itself
+Output: a PointChain in right order.
+
+## Segment vs. Segment
 
 All of related functions can be found in '[segment_segment.hpp](segment_segment.hpp)'. 
 
