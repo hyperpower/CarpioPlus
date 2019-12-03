@@ -75,6 +75,26 @@ TEST(point, draw_on_gnuplot){
 }
 
 
+TEST(point, distance_to_line){
+	typedef Line_<Vt> Line;
+	Line l(1.0, 1.0, 1.0);
+	Point2 p(0.5, 0.3);
+	auto dis = Distance(p, l);
+	std::cout<< "Line  : " << l   << std::endl;
+	std::cout<< "Point : " << p   << std::endl;
+	std::cout<< "Dis   : " << dis << std::endl;
+
+	Gnuplot gnu;
+	auto ap = GA::Points(p, 0);
+	ap->style() = "with points pointtype 7 pointsize 3 lc variable";
+	gnu.add(ap);
+	auto al = GA::Lines(l);
+	gnu.add(al);
+	gnu.plot();
+
+}
+
+
 
 
 }

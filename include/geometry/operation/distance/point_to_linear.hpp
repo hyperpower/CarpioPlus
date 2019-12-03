@@ -11,7 +11,7 @@ namespace carpio {
 template <typename NUM>
 NUM Distance_PointToLine(const NUM& x0, const NUM& y0,
 		                 const NUM& a,  const NUM& b,  const NUM& c){
-	NUM s = a * a + b * b;
+	double s = a * a + b * b;
 	s = (s==0)?SMALL:s;
 	return std::abs(a * x0 + b * y0 + c) / std::sqrt(s);
 }
@@ -33,7 +33,7 @@ NUM Distance2_PointToRay(const NUM&  x0, const NUM&   y0,
 }
 
 template <typename NUM>
-NUM Distance2_PointToSegment(const NUM& x0, const NUM&   y0,
+NUM Distance2_PointToSegment(const NUM& x0,  const NUM&  y0,
 		                     const NUM& sx0, const NUM& sy0,
 							 const NUM& sx1, const NUM& sy1){
 	NUM d[2]   = {sx1 - sx0, sy0 - sy1};
@@ -61,11 +61,14 @@ NUM Distance2_PointToSegment(const NUM& x0, const NUM&   y0,
 // --------------------
 template <typename NUM>
 NUM Distance2(const Point_<NUM, 2>& p, const Line_<NUM>& l){
-	return Distance_PointToLine(p.x(), p.y(), l.a(), l.b(), l.alpha());
+	// Line equation a x + b y = alpha
+	// Line equation change to ax + by - alpha = 0
+	return Distance_PointToLine(p.x(), p.y(), l.a(), l.b(), -(l.alpha()));
 }
 
 template <typename NUM>
 NUM Distance(const Point_<NUM, 2>& p, const Line_<NUM>& l){
+
 	return std::sqrt(Distance2(p, l));
 }
 

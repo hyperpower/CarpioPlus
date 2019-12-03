@@ -1,4 +1,4 @@
-# Boolean Related functions 
+# Overview 
 
 Files in this folder define all of the functions for Boolean operation.
 
@@ -27,7 +27,12 @@ Following tables show the functions which have been implemented
 
 ## Table of Subtract
 
-## Segment vs. Segment
+# File Structure
+| file | content |
+|------|---------|
+|[line_box.hpp](line_box.hpp)| A line cuts a box, or a box cuts a line |
+
+# Segment vs. Segment
 
 All of related functions can be found in '[segment_segment.hpp](segment_segment.hpp)'. 
 
