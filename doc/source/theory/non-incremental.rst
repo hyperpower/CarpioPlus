@@ -12,8 +12,8 @@ This is the simplest pressure-corrction scheme has originally been proposed by [
    \frac{(\tilde{u} - u^{k})}{\Delta t} + u^k \cdot (\nabla u^k) = \frac{1}{Re} \nabla^2 \tilde{u}    
 
 .. math::
-   \frac{u^{k+1} - \tilde{u}^}{\Delta t} + \nabla p^{k+1} &= 0, \\
-   \nabla \cdot u^{k+1} &= 0
+   \frac{(u^{k+1} - \tilde{u})}{\Delta t} + u^k \cdot (\nabla u^k) = \frac{1}{Re} \nabla^2 \tilde{u}
+
    
 Take the divergence operator on both side of Eq. 
 

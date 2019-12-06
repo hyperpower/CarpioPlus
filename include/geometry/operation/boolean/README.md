@@ -34,7 +34,7 @@ Following tables show the functions which have been implemented
 
 # File Structure
 | file | status |
-|------|---------|
+|------|--------|
 |[line_box.hpp](line_box.hpp)| :construction: |
 
 ## Line vs. Box
@@ -45,9 +45,14 @@ All of related functions can be found in '[line_box.hpp](line_box.hpp)'.
 Input: 
 - box       : a box
 - line      : a line 
-- line_flag : 1 region on positive side of the line
-             -1 region on nagative side of the line
-              0 the line itself
+- line_flag : a int indicates which region of the line will be used for intersection.
+
+| Value | Instruction |
+|:-----:|:-----------:|
+| 1     | region on positive side of the line |
+|-1     | region on nagative side of the line |
+| 0     | the line itself |
+
 Output: a PointChain in right order.
 
 ## Segment vs. Segment
