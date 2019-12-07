@@ -225,6 +225,12 @@ public:
 		return Point(get(_X_, lx), get(_Y_, ly), get(_Z_, lz));
 	}
 
+	template<typename T>
+	void transfer(const T&dx, const T& dy = 0, const T& dz = 0) {
+		this->_min.transfer(dx, dy, dz);
+		this->_max.transfer(dx, dy, dz);
+	}
+
 };
 
 template<typename TYPE, St DIM>

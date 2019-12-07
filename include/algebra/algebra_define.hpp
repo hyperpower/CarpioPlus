@@ -23,16 +23,7 @@ inline int StepFun(Float x) {
 inline int StepFun(int x) {
 	return (x <= 0) ? 0 : 1;
 }
-template<class TYPE>
-inline int Sign(const TYPE& x) {
-	if (x < 0.0) {
-		return -1;
-	} else if (x > 0.0) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
+
 template<class TYPE>
 inline bool IsSameSign(const TYPE& x, const TYPE& y){
 	if(Sign(x) == Sign(y)){

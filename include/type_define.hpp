@@ -157,7 +157,16 @@ template <class TYPE>
 inline int Heaviside(const TYPE& v){
 	return v<=0?0:1;
 }
-
+template<class TYPE>
+inline int Sign(const TYPE& x) {
+	if (x < 0.0) {
+		return -1;
+	} else if (x > 0.0) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
 template <class TYPE>
 inline bool IsCloseTo(const TYPE& v, const TYPE& dst, const Vt tol = 1e-12){
 	return std::abs(v - dst) < tol;

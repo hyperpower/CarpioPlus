@@ -191,13 +191,20 @@ public:
 						 Vt xmax = 1.0, int color_idx = -1){
 		ASSERT(Dim == 2);
 		int color = color_idx > 0? color_idx : 0;
-		Vt ymin = l.cal_y(xmin);
-		Vt ymax = l.cal_y(xmax);
+		int n   = 10;   // number of segment
+		Vt dx   = (xmax - xmin) / n;
+		std::list<Point> listp;
+		for(int i = 0; i < n + 1; i++){
+			Vt x = xmin + i * dx;
+			Vt y = l.cal_y(x);
+			listp.push_back(Point(x, y));
+		}
 		spActor actor = spActor(new Gnuplot_actor());
 		actor->command() = "using 1:2:3 title \"\" ";
 		actor->style()   = "with lines lc variable";
-		actor->data().push_back(ToString(xmin, ymin, color, " "));
-		actor->data().push_back(ToString(xmax, ymax, color, " "));
+		for(auto& p : listp){
+			actor->data().push_back(ToString(p.x(), p.y(), color, " "));
+		}
 		actor->data().push_back("");
 		return actor;
 	}

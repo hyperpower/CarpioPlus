@@ -8,6 +8,54 @@
 
 namespace carpio {
 
+template<typename NUM>
+NUM InterseptX(const NUM& a, const NUM& alpha, const NUM& small = 1e-10){
+	if(std::abs(a) < small){
+		return  alpha / (small);
+	}else{
+		return alpha / a;
+	}
+}
+
+template<typename NUM>
+NUM InterseptY(const NUM& b, const NUM& alpha, const NUM& small = 1e-10){
+	if(std::abs(b) < small){
+		return  alpha / (small);
+	}else{
+		return alpha / b;
+	}
+}
+
+template<typename NUM>
+NUM CalculateX(const NUM& a, const NUM& b, const NUM& alpha,  // The line
+		       const NUM& value,                              // Y = value
+		       const NUM& small = 1e-10){
+	if(std::abs(a) < small){
+		return (alpha - value * b) / small;
+	} else {
+		return (alpha - value * b) / a;
+	}
+}
+template<typename NUM>
+NUM CalculateY(const NUM& a, const NUM& b, const NUM& alpha,  // The line
+		       const NUM& value,                              // X = value
+		       const NUM& small = 1e-10){
+	if(std::abs(b) < small){
+		return (alpha - value * a) / small;
+	} else {
+		return (alpha - value * a) / b;
+	}
+}
+template<typename NUM>
+NUM Calculate(const NUM& a,  const NUM& b, const NUM& alpha,  // The line
+		      const Axes& axe, const NUM& value,              // Axes = value
+		      const NUM& small = 1e-10){
+	if(axe == _X_){
+		return CalculateY(a, b, alpha, value, small);
+	}else{
+		return CalculateX(a, b, alpha, value, small);
+	}
+}
 
 template<typename TYPE>
 class Line_: public std::array<TYPE, 3> {
@@ -76,30 +124,24 @@ public:
 		return this->at(2);
 	}
 	Vt cal_x(Vt y) const {
-		return (this->alpha() - this->b() * y)
-				/ ((this->a() == 0.0) ? SMALL : this->a());
+		return CalculateX(this->a(), this->b(), this->alpha(), y);
 	}
 	Vt cal_y(Vt x) const {
-		return (this->alpha() - this->a() * x)
-				/ ((this->b() == 0.0) ? SMALL : this->b());
+		return CalculateY(this->a(), this->b(), this->alpha(), x);
 	}
 	// _X_=v ---> value of _Y_
 	// _Y_=v ---> value of _X_
 	Vt cal(Axes a, Vt v) const{
-		if (a == _X_) {
-			return cal_y(v);
-		} else {
-			return cal_x(v);
-		}
+		return Calculate(this->a(), this->b(), this->alpha(), a, v, SMALL);
 	}
 	Vt slope() const {
 		return -this->a() / (this->b() + SMALL);
 	}
 	Vt intersept_x() const {
-		return this->alpha() / (this->a() + SMALL);
+		return InterseptX(this->a(), this->alpha(), SMALL);
 	}
 	Vt intersept_y() const {
-		return this->alpha() / (this->b() + SMALL);
+		return InterseptY(this->b(), this->alpha(), SMALL);
 	}
 	Vt intersept(Axes aix) const {
 		ASSERT(aix!=_Z_);
@@ -143,6 +185,11 @@ public:
 		return Point(-(this->at(1)), this->at(0));
 	}
 
+	template<typename T>
+	void transfer(const T&dx, const T& dy) {
+		this->alpha() = this->a() * dx + this->b() *dy + this->alpha();
+	}
+
 	static std::array<TYPE, 3> Construct(
 			Vt ax, Vt ay, Vt bx, Vt by) {
 		//assert(!isEqual(ax, bx) || !isEqual(ay,by));
@@ -164,7 +211,7 @@ public:
 	}
 
 	static std::shared_ptr<Point> Intersect(Vt a1, Vt b1, Vt c1,
-			               Vt a2, Vt b2, Vt c2){
+			                                Vt a2, Vt b2, Vt c2){
 		double det = a1 * b2 - a2 * b1;
 		if(std::abs(det) < 1e-14){
 			return std::shared_ptr<Point>(nullptr);
@@ -192,6 +239,9 @@ std::ostream& operator<<(std::ostream& stream, const Line_<TYPE>& line) {
 		   << line.alpha();
 	return stream;
 }
+
+
+
 
 }
 
