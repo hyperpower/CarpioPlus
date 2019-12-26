@@ -14,11 +14,12 @@
 namespace carpio {
 
 
-typedef Point_<double, 3> Point3;
-typedef Point_<double, 2> Point2;
+typedef Point_<double, 3>   Point3;
+typedef Point_<double, 2>   Point2;
 typedef Segment_<double, 2> Seg2;
-typedef Box_<double, 2> Box2;
-typedef Line_<double>   Line;
+typedef Box_<double, 2>     Box2;
+typedef Line_<double>       Line;
+
 typedef GGnuplotActor_<double, 2> GA;
 
 TEST(box, point_to_box_position){
@@ -67,7 +68,7 @@ TEST(box, box_vs_line){
 	Box2 box1(min1, max1);
 	std::cout << "The box 1 is " << box1 << std::endl;
 
-	Line line(1.0, 1.0, 2.0);
+	Line line(1.0, -1.0, 0.0);
 	std::cout << "Line is " << line << std::endl;
 
 	auto lspp = IntersectLineBox(box1, line);

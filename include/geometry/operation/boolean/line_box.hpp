@@ -17,6 +17,47 @@ namespace carpio {
 // Line : ax + by = alpha
 // Box  : Pmin Pmax
 
+template<class NUM>
+std::list<std::shared_ptr<Point_<NUM, 2> > >
+_TrivialAIsZero(const NUM& xmax, const NUM& ymax,
+		        const NUM& b,    const NUM& alpha,
+				const NUM& small = 1e-10){
+	// Line : by = alpha
+	//   ==>   y = alpha / b
+	std::list<std::shared_ptr<Point_<NUM, 2> > > res;
+	NUM y = alpha / b;
+	if(IsInRange(0.0, y, ymax, _cc_)){ // y = 0
+		std::shared_ptr<Point_<NUM, 2> > spp1(new Point_<NUM, 2>(0.0,  y));
+		std::shared_ptr<Point_<NUM, 2> > spp2(new Point_<NUM, 2>(xmax, y));
+		res.push_back(spp1);
+		res.push_back(spp2);
+		return res;
+	}
+	return res;
+}
+template<class NUM>
+std::list<std::shared_ptr<Point_<NUM, 2> > >
+_TrivialBIsZero(const NUM& xmax, const NUM& ymax,
+		        const NUM& a,    const NUM& alpha,
+				const NUM& small = 1e-10){
+	// Line : by = alpha
+	//   ==>   x = alpha / a
+	std::list<std::shared_ptr<Point_<NUM, 2> > > res;
+	NUM x = alpha / a;
+	if(IsInRange(0.0, x, xmax, _cc_)){ // y = 0
+		std::shared_ptr<Point_<NUM, 2> > spp1(new Point_<NUM, 2>(x, 0.0));
+		std::shared_ptr<Point_<NUM, 2> > spp2(new Point_<NUM, 2>(x, ymax));
+		res.push_back(spp1);
+		res.push_back(spp2);
+		return res;
+	}
+	return res;
+}
+template<class NUM>
+int _TrimSamePoints(std::list<std::shared_ptr<Point_<NUM, 2> > >& listp, const NUM& small){
+	for(auto iter = listp.begin(); iter != listp.end(); iter++){
+	}
+}
 
 // Point min is (0, 0)
 template<class NUM>
@@ -27,6 +68,13 @@ IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Poi
 	std::array<Vt, 4>   av = {0.0  , ymax, 0.0,  xmax};
 	std::array<Vt, 4>   rv = {xmax , xmax, ymax, ymax};
 	std::list<std::shared_ptr<Point_<NUM, 2> > > res;
+	// trivial case
+	if(IsCloseToZero(a,1e-10)){
+		return _TrivialAIsZero(xmax, ymax, b, alpha, 1e-10);
+	}
+	if(IsCloseToZero(b,1e-10)){
+		return _TrivialBIsZero(xmax, ymax, a, alpha, 1e-10);
+	}
 	for(int i = 0; i < 4; i++){
 		Vt cv = Calculate(a, b, alpha, ao[i], av[i]);
 		if(IsInRange(0.0, cv, rv[i], _cc_)){
@@ -35,9 +83,6 @@ IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Poi
 			spp->y() = (ao[i] == _X_) ? cv : av[i];
 			res.push_back(spp);
 		}
-//		if(res.size() > 1){
-//			break;
-//		}
 	}
 	// orientation
 	return res;
