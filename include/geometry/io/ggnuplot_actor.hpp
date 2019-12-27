@@ -191,8 +191,8 @@ public:
 						 Vt xmax = 1.0, int color_idx = -1){
 		ASSERT(Dim == 2);
 		int color = color_idx > 0? color_idx : 0;
-		int n   = 10;   // number of segment
-		Vt dx   = (xmax - xmin) / n;
+		int n     = 10;   // number of segment
+		Vt dx     = (xmax - xmin) / n;
 		std::list<Point> listp;
 		for(int i = 0; i < n + 1; i++){
 			Vt x = xmin + i * dx;

@@ -515,12 +515,51 @@ public:
 		cmd(cmdstr.str());
 		return *this;
 	}
+	template<class POINTS>
+	Gnuplot& set_object2d(
+	        int                tag,
+	        const POINTS&      container,
+	        const std::string& append = ""){
+	    ASSERT(tag > 0);
+		std::ostringstream cmdstr;
+		cmdstr << "set object " << tag << " polygon from \\\n" ;
+		for(auto iter = container.begin(); iter != container.end(); iter++){
+		    auto p = *(iter);
+		    auto iternext = std::next(iter, 1);
+		    if (iternext != container.end()){
+		        cmdstr << p[0] << "," << p[1] << " to \\\n";
+		    }else{
+		        cmdstr << p[0] << "," << p[1] << " \\\n";
+		    }
+		}
+		cmdstr << append;
+		cmd(cmdstr.str());
+		return *this;
+	}
+
+	template<class POINTS>
+    Gnuplot& set_object2dp( // container include pointer of points
+            int tag,
+            const POINTS& container,
+            const std::string& append = "") {
+        ASSERT(tag > 0);
+        std::ostringstream cmdstr;
+        cmdstr << "set object " << tag << " polygon from \\\n";
+        for (auto& pp : container) {
+            auto p = *(pp);
+            cmdstr << p[0] << "," << p[1] << " to \\\n";
+        }
+        auto first = *(container.front());
+        cmdstr << first[0] << "," << first[1] << "\\\n";
+        cmdstr << append;
+        cmd(cmdstr.str());
+        return *this;
+    }
 
 	Gnuplot& set_equal_aspect_ratio(){
 		cmd("set size ratio -1");
 		return *this;
 	}
-
 	//------------------------------------------------------------------------------
 	//
 	Gnuplot& set_terminal_pdf(const std::string& filename, double x = 400,

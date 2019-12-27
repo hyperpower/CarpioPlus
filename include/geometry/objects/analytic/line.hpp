@@ -56,6 +56,26 @@ NUM Calculate(const NUM& a,  const NUM& b, const NUM& alpha,  // The line
 		return CalculateX(a, b, alpha, value, small);
 	}
 }
+template<typename NUM>
+std::array<NUM, 3> Construct(const NUM& ax, const NUM& ay,
+                             const NUM& bx, const NUM& by) {
+        //assert(!isEqual(ax, bx) || !isEqual(ay,by));
+        std::array<NUM, 3> res;
+        if (ax == bx) {
+            res[0] = 1;
+            res[1] = 0;
+            res[2] = ax;
+        } else if (ay == by) {
+            res[0] = 0;
+            res[1] = 1;
+            res[2] = ay;
+        } else {
+            res[0] = 1.0 / (ax - bx);
+            res[1] = -1.0 / (ay - by);
+            res[2] = bx / (ax - bx) - by / (ay - by);
+        }
+        return res;
+    }
 
 template<typename TYPE>
 class Line_: public std::array<TYPE, 3> {
@@ -190,26 +210,6 @@ public:
 		this->alpha() = this->a() * dx + this->b() *dy + this->alpha();
 	}
 
-	static std::array<TYPE, 3> Construct(
-			Vt ax, Vt ay, Vt bx, Vt by) {
-		//assert(!isEqual(ax, bx) || !isEqual(ay,by));
-		std::array<TYPE, 3> res;
-		if (ax == bx) {
-			res[0] = 1;
-			res[1] = 0;
-			res[2] = ax;
-		} else if (ay == by) {
-			res[0] = 0;
-			res[1] = 1;
-			res[2] = ay;
-		} else {
-			res[0] = 1.0 / (ax - bx);
-			res[1] = -1.0 / (ay - by);
-			res[2] = bx / (ax - bx) - by / (ay - by);
-		}
-		return res;
-	}
-
 	static std::shared_ptr<Point> Intersect(Vt a1, Vt b1, Vt c1,
 			                                Vt a2, Vt b2, Vt c2){
 		double det = a1 * b2 - a2 * b1;
@@ -223,7 +223,7 @@ public:
 
 	static std::shared_ptr<Point> Intersect(const Line& l1, const Line& l2){
 		double det = l1.a() * l2.b() - l2.a() * l1.b();
-		if(det == 0){
+		if(std::abs(det) < 1e-14){
 			return std::shared_ptr<Point>(nullptr);
 		}
 		double x   = (l2.b() * l1.alpha() - l1.b() * l2.alpha()) / det;

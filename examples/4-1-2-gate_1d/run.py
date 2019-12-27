@@ -47,7 +47,6 @@ def build(path):
     print("report   ------------------------------ ")
     # os.system("python3 report.py")
     REPORT.run(path, runtime, FILE_ORIGINAL)
-    # os.system("python3 plot.py")
     return runtime
 
 def main():

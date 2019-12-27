@@ -54,7 +54,7 @@ IntersectLineExtSegment(
 		const TYPE& c){
 	typedef Line_<TYPE> Line;
 	typedef Point_<TYPE, 2> Point;
-	std::array<TYPE, 3> l1 = Line::Construct(sx, sy, ex, ey);
+	std::array<TYPE, 3> l1 = Construct(sx, sy, ex, ey);
 	std::array<TYPE, 3> l2 = {a, b, c};
 	return  Line::Intersect(l1[0], l1[1], l1[2],
 			                l2[0], l2[1], l2[2]);
