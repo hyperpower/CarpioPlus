@@ -102,7 +102,7 @@ class TextFile:
     def get_coo_y(self):
         nx  = int(self._dict["NX"])
         ny  = int(self._dict["NY"])
-        dim = int(self._dict["Dim"])
+        dim = int(self._dict["DIM"])
         arr = []
         if dim >=2:
             for i in range(0, int(ny)):
@@ -112,10 +112,10 @@ class TextFile:
             return [0]
 
     def get_mat_val(self):
-        assert(int(self._dict["Dim"]) ==2)
+        assert(int(self._dict["DIM"]) ==2)
         nx  = int(self._dict["NX"])
         ny  = int(self._dict["NY"])
-        dim = int(self._dict["Dim"])
+        dim = int(self._dict["DIM"])
         mat = []
         count = 0
         for j in range(0, ny):
