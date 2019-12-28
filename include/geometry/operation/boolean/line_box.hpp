@@ -190,15 +190,15 @@ IntersectLineBox(const Box_<NUM,2>&  box,                    // Box
 
 template<class NUM>
 std::list<std::shared_ptr<Point_<NUM, 2> > >
-IntersectLinePositiveBox(const Box_<NUM,2>&  box,           // Box
-                          const Line_<NUM>&   line){         // Line
+IntersectLinePositiveBox(const Box_<NUM,2>&  box,            // Box
+                         const Line_<NUM>&   line){         // Line
     return IntersectLinePositiveBox(box.min(), box.max(), line);
 }
 
 template<class NUM>
 std::list<std::shared_ptr<Point_<NUM, 2> > >
 IntersectLineNegativeBox(const Box_<NUM,2>&  box,           // Box
-                          const Line_<NUM>&   line){         // Line
+                         const Line_<NUM>&   line){         // Line
     return IntersectLineNegativeBox(box.min(), box.max(), line);
 }
 
