@@ -7,7 +7,7 @@ FILE_ORIGINAL = [
     "CMakeLists.txt",
     "plot.py",
     "run.py",
-    "report.rstt"
+    "report.rst"
 ]
 
 PATH_THIS     = os.path.abspath(os.path.join(__file__,   "../"))

@@ -45,8 +45,7 @@ def build(path):
     tprev = time.clock()
     print("report   ------------------------------ ")
     # os.system("python3 report.py")
-    # REPORT.run(path, runtime, FILE_ORIGINAL)
-    # os.system("python3 plot.py")
+    REPORT.run(path, runtime, FILE_ORIGINAL)
     return runtime
 
 def main():

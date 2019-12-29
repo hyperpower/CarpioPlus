@@ -10,7 +10,7 @@
 //#include "mpi/test_mpi_learn.hpp"
 
 //#include "geometry/test_point.hpp"
-#include "geometry/test_segment.hpp"
+//#include "geometry/test_segment.hpp"
 //#include "geometry/test_polygon_boolean.hpp"
 //#include "geometry/test_point_chain.hpp"
 //#include "geometry/test_bezier.hpp"
@@ -35,7 +35,7 @@
 //#include "structure/test_value_cut.hpp"
 //#include "structure/test_interpolation.hpp"
 
-//#include "equation/test_convection.hpp"
+#include "equation/test_convection.hpp"
 //#include "equation/test_equation.hpp"
 //#include "equation/test_poisson.hpp"
 

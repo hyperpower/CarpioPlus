@@ -6,8 +6,8 @@ import string
 import math
 import operator
 
-matplotlib.rcParams['text.usetex']        = True
-matplotlib.rcParams['font.family']        = 'serif'
+# matplotlib.rcParams['text.usetex']        = True
+matplotlib.rcParams['font.family']        = 'monospace'
 matplotlib.rcParams['font.size']          = 12
 
 PATH_CASES    = os.path.abspath(os.path.join(__file__, "../.."))
@@ -21,7 +21,7 @@ sys.path.append(PATH_PYTOOLS)
 import filetool as FT
 
 def plot_illustration_fig():
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(6, 5))
     ax = plt.axes()
 
     """
@@ -60,20 +60,27 @@ def plot_illustration_fig():
     plt.plot(line_x,  line_y, "--", linewidth=2.0)
     
 
-    plt.text(0.35, 1.05, r'$\frac{d \phi}{d y}$ = ' + "%.1f" % float(0.0), fontsize = 'large')
-    plt.text(0.35,-0.15, r'$\phi$ = ' + "%.1f" % float(0.0), fontsize = 'large')
-    plt.text(-0.4, .5,   r'$\phi$ = ' + "%.1f" % float(1.0), fontsize = 'large')
-    plt.text(1.1,  .5,   r'$\frac{d \phi}{d x}$ = ' + "%.f" % float(1.0), fontsize = 'large')
+    plt.text(0.35, 1.05, r'$\frac{d \phi}{d y}$ = ' + "%.f" % float(0.0))
+    plt.text(0.35,-0.15, r'$\phi$ = ' + "%.1f" % float(0.0))
+    plt.text(-0.4, .5,   r'$\phi$ = ' + "%.1f" % float(1.0))
+    plt.text(1.1,  .5,   r'$\frac{d \phi}{d x}$ = ' + "%.f" % float(0.0))
 
     plt.arrow(0.5,  0.1, 0.2, 0.0, width=0.01, color = "k")
-    plt.text( 0.52, 0.01, "u=1.0", fontsize = 'large')
+    plt.text( 0.52, 0.01, "u = 1.0")
     plt.arrow(0.5,  0.1, 0.0, 0.2, width=0.01, color = "k")
-    plt.text( 0.42, 0.33, "v=1.0", fontsize = 'large')
+    plt.text( 0.42, 0.34, "v = 1.0")
     plt.arrow(0.5,  0.1, 0.2, 0.2, width=0.01, color = "r")
 
-    plt.text( 0.25, 0.75, r'$\phi=1.0$', fontsize = 'large')
-    plt.text( 0.6 , 0.45, r'$\phi=0.0$', fontsize = 'large')
+    plt.text( 0.25, 0.75, r'$\phi=1.0$')
+    plt.text( 0.6 , 0.45, r'$\phi=0.0$')
 
+    # plot cut
+    plt.arrow(0.7,  1.1,  0.1, 0.0, head_width=0.05, color = "k")
+    plt.arrow(0.7,  -0.1, 0.1, 0.0, head_width=0.05, color = "k")
+    plt.plot([0.7, 0.7], [1.1, 1.05], color = "k")
+    plt.plot([0.7, 0.7], [-0.1, -.05], color = "k")
+    plt.text(0.9, 1.1, r'A-A',  va = "center")
+    plt.text(0.9, -0.1, r'A-A', va = "center")
     # plt.legend(llg, scheme, loc= 'upper right')
 
     # plt.grid(True)

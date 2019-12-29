@@ -11,17 +11,17 @@ namespace carpio {
 //This file use to solve convection equation
 // 1 non-conservation from
 //
-//       d(phi)              d( phi)       2D --version
+//       d(phi)              d( phi)                2D --version
 //    u ------------ +  v -------------  = 0
 //          dx                 dy
 //
-//      d(phi)       d(phi)       d(phi)       3D --version
+//       d(phi)       d(phi)       d(phi)            3D --version
 //    u -------- + v -------  + w -------  = 0
 //        dx           dy          dz
 //
 // 2 conservation from
 //
-//      d( u phi)            d( v phi)       2D --version
+//      d( u phi)            d( v phi)              2D --version
 //     --------------- +   --------------  = 0
 //          dx                 dy
 //
@@ -31,7 +31,7 @@ namespace carpio {
 //
 // 2 with time
 //
-//   d(phi)    d(u phi)    d(v phi)       2D --version
+//   d(phi)    d(u phi)    d(v phi)                 2D --version
 //   ------ +  ------- +  -------  = 0
 //     dt         dx         dy
 //

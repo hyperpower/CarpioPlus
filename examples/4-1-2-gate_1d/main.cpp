@@ -58,12 +58,6 @@ int main(int argc, char** argv) {
     eos.set_format_string("Upwind1_%s_%d_%8.4e.txt");
     equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
 
-    // typedef EventGnuplotField_<DIM, Domain> EventGnuplotScalar;
-    // EventGnuplotScalar egs("phi", -1, -1, 1, Event::AFTER);
-    // egs.gnuplot().set_yrange(-0.3, 1.3);
-    // egs.set_path("./fig/");
-    // equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotScalar>(egs));
-
     // Run
     equ.run();
 }

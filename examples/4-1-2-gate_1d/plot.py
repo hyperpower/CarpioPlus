@@ -62,8 +62,6 @@ def add_exact(plt, strstep, strtime):
 
     return l 
 
-
-
 def plot_one(scheme, strstep, strtime):
     print("Draw : ", strstep, " ", strtime)
 
