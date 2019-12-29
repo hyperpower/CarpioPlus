@@ -110,7 +110,7 @@ TEST(convection, one_step_2){
 		                                          -1, -1, 1, Event::AFTER));
 	equ.add_event("OutputTime", spetime);
 
-	typedef std::shared_ptr<EventStopNorm1Previous_<DIM, Domain> >  spEventStopNorm1Previous;
+	typedef std::shared_ptr<EventStopNorm1Previous_<DIM, Domain> > spEventStopNorm1Previous;
 	spEventStopNorm1Previous spen1(
 			new EventStopNorm1Previous_<DIM, Domain>( 1e-1,
 			"phi", spgrid, spghost, sporder, -1, -1, 1, Event::AFTER));

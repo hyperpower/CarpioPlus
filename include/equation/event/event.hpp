@@ -124,8 +124,8 @@ public:
     typedef const Equ* const_pEqu;
 protected:
     std::string _sr;
-    int _step;
-    Vt _t;
+    int         _step;
+    Vt          _t;
 public:
     EventStop_(const std::string& stop_reason,
                               int step,

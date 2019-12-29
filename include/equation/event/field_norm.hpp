@@ -36,15 +36,15 @@ protected:
     List        _ln1;    //list of norm 1
 public:
     EventNorm1Previous_(
-            const std::string& fname,
-            spGrid spg, spGhost spgh, spOrder spor,
-            int is    = -1, int ie   = -1,
-            int istep = -1, int flag = Event::AFTER) :
-                _fn(fname),
-                _count(0),
-                _stepp(is),
-                _fp(spg, spgh, spor),
-                Event(is, ie, istep, flag) {
+        const std::string& fname,
+        spGrid spg, spGhost spgh, spOrder spor,
+        int is    = -1, int ie   = -1,
+        int istep = -1, int flag = Event::AFTER) :
+            _fn(fname),
+            _count(0),
+            _stepp(is),
+            _fp(spg, spgh, spor),
+            Event(is, ie, istep, flag) {
     }
     virtual ~EventNorm1Previous_(){
     }
@@ -53,7 +53,7 @@ public:
         if (pd->has_field(_fn)) {
             auto& fc = (*pd)[_fn];
             if(_count == 0){
-                _fp    = fc; //store previous field
+                _fp    = fc;  //store previous field
                 _stepp = step;
                 _count++;
                 return _SUCCESS;
@@ -106,7 +106,7 @@ public:
 
     typedef std::list<std::array<Vt, 3> > List;
 protected:
-    Vt _cv; //critical value
+    Vt _cv; // critical value
 public:
     EventStopNorm1Previous_(
             const Vt& cv,
@@ -137,13 +137,13 @@ public:
                                 step, this->_stepp, n1, _cv);
                     pd->trigger_stop(reason, step, t);
                 }
-                this->_fp = fc;
+                this->_fp    = fc;
                 this->_stepp = step;
                 this->_count++;
             }
         } else {
             std::cerr << "EventOutputField : " << this->_fn << " not found!"
-                    << std::endl;
+                      << std::endl;
         }
         return -1;
     }
