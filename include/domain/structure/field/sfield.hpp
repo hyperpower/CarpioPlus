@@ -85,6 +85,12 @@ public:
     Vt norm1() const {
         return _mat.norm1();
     }
+    Vt norm2() const {
+        return _mat.norm2();
+    }
+    Vt norminf() const {
+        return _mat.norminf();
+    }
 
     void abs(){
         _mat.abs();

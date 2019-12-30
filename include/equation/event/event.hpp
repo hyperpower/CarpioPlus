@@ -108,13 +108,51 @@ public:
         return (_flag | f) == _flag ? true : false;
     }
 
+    virtual bool is_condition_event() const{
+        return false;
+    }
+
     virtual void show() const{
         std::cout << "Event Base Show" << std::endl;
     }
+};
 
+// deprecate
+template<St DIM, class D>
+class EventCondition_ : public Event_<DIM, D>{
+public:
+    typedef Event_<DIM, D> Event;
+    typedef Equation_<DIM, D> Equ;
+    typedef Equ* pEqu;
+    typedef const Equ* const_pEqu;
+protected:
+    bool _is_satisfied;
+public:
+    EventCondition_(int is    = -1, int ie   = -1,
+                    int istep = -1, int flag = Event::AFTER ):
+        _is_satisfied(false),
+        Event(is, ie, istep, flag) {
+    }
+
+    virtual ~EventCondition_() {
+    }
+
+    virtual bool is_satisfied() const {
+        return _is_satisfied;
+    }
+
+    virtual bool is_condition_event() const{
+        return true;
+    }
+
+    virtual int execute(St step, Vt t, int fob, pEqu pd) {
+        std::cout << "Event Condition Base : execute \n";
+        return -1;
+    }
 };
 
 
+// deprecate
 template<St DIM, class D>
 class EventStop_ : public Event_<DIM, D>{
 public:
@@ -145,7 +183,6 @@ public:
         tfm::format(std::cout, "_STOP_ at step %d, time = %.3e\n", _step, _t);
         tfm::format(std::cout, "Reason: %s\n", _sr);
     }
-
 };
 
 

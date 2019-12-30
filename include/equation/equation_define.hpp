@@ -11,7 +11,9 @@ namespace carpio {
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class D> class Event_;
-template<St DIM, class D> class EventStop_;
+template<St DIM, class D> class EventCondition_;
+
+template<St DIM, class D> class StopManager_;
 
 template<St DIM, class D>
 class Equation_{
@@ -23,13 +25,16 @@ public:
     typedef typename Domain::Ghost     Ghost;
     typedef typename Domain::Order     Order;
     typedef typename Domain::Field    Field;
-    typedef Event_<DIM, Domain>        Event;
+    typedef Event_<DIM, Domain>          Event;
+    typedef EventCondition_<DIM, Domain> EventCondition;
     typedef TimeTerm_<DIM>             TimeTerm;
+    typedef StopManager_<DIM, Domain>  StopManager;
 
     typedef typename Domain::VectorCenter VectorCenter;
     typedef typename Domain::VectorFace   VectorFace;
 
     typedef std::shared_ptr<Event>  spEvent;
+    typedef std::shared_ptr<Event>  spEventCondition;
     typedef std::shared_ptr<Field>  spField;
     typedef std::shared_ptr<Grid>   spGrid;
     typedef std::shared_ptr<Ghost>  spGhost;
@@ -57,7 +62,9 @@ protected:
     // time relates variables
     spTimeTerm   _time;
     Events       _events;        // _events
-//    EventManager _event_manager;
+    StopManager  _stop_manager;
+
+    // EventManager _event_manager;
     Functions    _functions;     // independent of grid
     Values       _values;        // values for equation
     AFlags       _aflags;        // other types of data put in this map
@@ -114,7 +121,7 @@ public:
                     this->_time->current_step(),    //
                     Event::START);
             // loop
-            while (!this->_time->is_end() && (!this->has_event("_STOP_"))) {
+            while (!this->_time->is_end() && (!_stop_manager.is_stop())) {
                 //
                 // events before each step
                 run_events(this->_time->current_step(),  //
@@ -190,16 +197,19 @@ public:
         return false;
     }
 
-    void trigger_stop(const std::string& reason,
-                      int   step,
-                      Vt    time){
-        spEvent e(new EventStop_<DIM, D>(reason, step, time));
-        this->add_event("_STOP_", e);
-    }
+//    void trigger_stop(const std::string& reason,
+//                      int   step,
+//                      Vt    time){
+//        spEvent e(new EventStop_<DIM, D>(reason, step, time));
+//        this->add_event("_STOP_", e);
+//    }
 
     void add_event(const std::string& key, spEvent spe){
         ASSERT(spe != nullptr);
         this->_events[key] = spe;
+        if(spe->is_condition_event()){
+            _stop_manager.add_condition(std::dynamic_pointer_cast<EventCondition>(spe));
+        }
     }
 
     void set_time_term(St n, Vt dt, Vt tau = 1){

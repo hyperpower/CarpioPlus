@@ -68,13 +68,20 @@ TEST(convection, DISABLED_initial){
 }
 
 TEST(convection, one_step_2){
-	const St DIM = 2;
+	const St DIM = 2;                            // Dimension
+	const St n   = 40;                           // number of cells
+	const Vt CFL = 0.4;                          // CFL
+	const Vt dt  = CFL / n;                      // delta time
+
+	std::cout << "Cell size  = " << 1.0 / n << std::endl;
+	std::cout << "Delta time = " << dt << std::endl;
+	std::cout << "CFL number = " << CFL << std::endl;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
-			new SGridUniform_<DIM>({0.0, 0.0}, // min point
-					               {20,  20},  // num on each direction
-								    0.05,      // cell size
-								    2));       // ghost layer
+			new SGridUniform_<DIM>({0.0, 0.0},   // min point
+					               {n,  n},      // num on each direction
+								    1.0 / n,     // cell size
+								    2));         // ghost layer
 	typename Domain::spGhost spghost(
 			new SGhostRegular_<DIM>(spgrid));
 	typename Domain::spOrder sporder(
@@ -83,7 +90,7 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(500, 0.01);
+	equ.set_time_term(500, dt);
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -110,10 +117,14 @@ TEST(convection, one_step_2){
 		                                          -1, -1, 1, Event::AFTER));
 	equ.add_event("OutputTime", spetime);
 
-	typedef std::shared_ptr<EventStopNorm1Previous_<DIM, Domain> > spEventStopNorm1Previous;
-	spEventStopNorm1Previous spen1(
-			new EventStopNorm1Previous_<DIM, Domain>( 1e-1,
-			"phi", spgrid, spghost, sporder, -1, -1, 1, Event::AFTER));
+	// Stop condition
+	typedef std::shared_ptr<EventConditionNorm1Previous_<DIM, Domain> > spEventConditionNorm1Previous;
+	spEventConditionNorm1Previous spen1(
+			new EventConditionNorm1Previous_<DIM, Domain>(
+			        1e-1,   // critical value
+			        "phi",  // field
+			        spgrid, spghost, sporder,
+			        50, -1, 10, Event::AFTER));
 	equ.add_event("Norm1P1", spen1);
 
 	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
@@ -128,11 +139,13 @@ TEST(convection, one_step_2){
 
 	equ.run();
 
+	// plot normal 1
 	typedef SGnuplotActor_<DIM> GA;
 	Gnuplot gnu;
 	gnu.set_terminal_png("./plot/norm1.png");
 	gnu.set_xlabel("Step");
 	gnu.set_ylabel("Norm1");
+	gnu.set_ylogscale(10.0);
 //	gnu.set_xrange(-0.1, 1.6);
 //	gnu.set_yrange(-0.1, 1.2);
 	auto a = GnuplotActor::XY(spen1->get_list(), 1, 2);
