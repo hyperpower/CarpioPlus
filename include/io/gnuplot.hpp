@@ -495,6 +495,16 @@ public:
 		return *this;
 	}
 
+	/// set z axis label
+    Gnuplot& set_cblabel(const std::string &label = "c") {
+        std::ostringstream cmdstr;
+
+        cmdstr << "set cblabel \"" << label << "\"";
+        cmd(cmdstr.str());
+
+        return *this;
+    }
+
 	Gnuplot& set_equal_ratio() {
 		std::ostringstream cmdstr;
 		cmdstr << "set size ratio -1";

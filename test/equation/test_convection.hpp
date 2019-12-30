@@ -132,6 +132,9 @@ TEST(convection, one_step_2){
 	egs.gnuplot().set_xrange(-0.1, 1.1);
 	egs.gnuplot().set_yrange(-0.1, 1.1);
 	egs.gnuplot().set_palette_red_grey();
+	egs.gnuplot().set_xlabel("X");
+	egs.gnuplot().set_ylabel("Y");
+	egs.gnuplot().set_cblabel("phi");
 	egs.gnuplot().set_cbrange(0.0, 1.0);
 	egs.gnuplot().set_equal_aspect_ratio();
 	egs.set_path("./plot/");
