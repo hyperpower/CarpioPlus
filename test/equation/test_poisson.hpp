@@ -59,7 +59,7 @@ TEST(equation, DISABLED_initial){
 
 }
 
-TEST(equation, DISABLED_explicit_run){
+TEST(equation, explicit_run){
 	const St DIM = 2;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
@@ -218,7 +218,7 @@ TEST(poisson, DISABLED_flower_mask) {
 
 }
 
-TEST(poisson, flower_cut) {
+TEST(poisson, DISABLED_flower_cut) {
 	const St DIM = 2;
 	typedef SGnuplotActor_<2> GA;
 	typedef SGrid_<2> SGrid;

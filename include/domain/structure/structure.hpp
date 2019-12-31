@@ -39,6 +39,8 @@ class StructureDomain_{
 public:
     typedef St SizeType;
     typedef Vt ValueType;
+    typedef SIndex_<DIM>                Index;
+
     typedef SGrid_<DIM>                 Grid;
     typedef Grid&                       ref_Grid;
     typedef const Grid&                 const_ref_Grid;

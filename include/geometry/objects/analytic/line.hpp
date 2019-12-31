@@ -105,7 +105,7 @@ public:
 		this->at(2) = arr[2];
 	}
 	Line_(const Point &p1, const Point &p2) {
-		auto arr = Line::Construct(p1.x(), p1.y(), p2.x(), p2.y());
+		auto arr = Construct(p1.x(), p1.y(), p2.x(), p2.y());
 		this->at(0) = arr[0];
 		this->at(1) = arr[1];
 		this->at(2) = arr[2];

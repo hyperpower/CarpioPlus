@@ -17,7 +17,6 @@
 
 namespace carpio{
 
-
 template<St DIM>
 class SLaplacianCut_: public SLaplacian_<DIM>{
 public:

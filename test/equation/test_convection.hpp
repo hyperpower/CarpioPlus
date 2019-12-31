@@ -9,63 +9,63 @@
 
 namespace carpio {
 
-TEST(convection, DISABLED_initial){
-    const St DIM = 1;
-	typedef StructureDomain_<DIM> Domain;
-	typename Domain::spGrid spgrid(
-			new SGridUniform_<DIM>({0.0, 0.0}, // min point
-					               {100, 10},  // num on each direction
-								    0.02,      // cell size
-								    2));       // ghost layer
-	typename Domain::spGhost spghost(
-			new SGhostRegular_<DIM>(spgrid));
-
-	typename Domain::spOrder sporder(
-			new SOrderXYZ_<DIM>(spgrid, spghost));
-
-	// Define the equation
-	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
-
-	equ.set_time_term(10, 0.001);
-
-	// Set boundary condition
-	typedef std::shared_ptr<BoundaryIndex> spBI;
-	typedef BoundaryCondition BC;
-	spBI spbi(new BoundaryIndex());
-//	spbi->insert(0,std::make_shared<BC>(
-//			BoundaryConditionValue(BC::_BC1_, 1.0)));
-	equ.set_boundary_index_phi(spbi);
-	// Set initial condition
-	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
-		if(x < 0.5){
-			return 1.0;
-		}else{
-			return 0.0;
-		}
-	});
-	equ.set_initial_velocity(_X_, [](Vt, Vt, Vt, Vt){return 1.0;});
-
-	// Add events
-	typedef Event_<DIM, Domain> Event;
-	typedef std::shared_ptr<Event_<DIM, Domain> >  spEvent;
-	spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
-			                                          -1, -1, 1, Event::AFTER));
-	equ.add_event("OutputTime", spetime);
-
-//  typedef EventOutputField_<DIM, Domain> EventOutputField;
-//	EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
-//	eos.set_path("./plot/");
-//	equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
-
-	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
-	EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
-	egs.gnuplot().set_yrange(-0.3, 1.3);
-	egs.set_path("./plot/");
-	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
-
-	// Run
-	equ.run();
-}
+//TEST(convection, DISABLED_initial){
+//    const St DIM = 1;
+//	typedef StructureDomain_<DIM> Domain;
+//	typename Domain::spGrid spgrid(
+//			new SGridUniform_<DIM>({0.0, 0.0}, // min point
+//					               {100, 10},  // num on each direction
+//								    0.02,      // cell size
+//								    2));       // ghost layer
+//	typename Domain::spGhost spghost(
+//			new SGhostRegular_<DIM>(spgrid));
+//
+//	typename Domain::spOrder sporder(
+//			new SOrderXYZ_<DIM>(spgrid, spghost));
+//
+//	// Define the equation
+//	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
+//
+//	equ.set_time_term(10, 0.001);
+//
+//	// Set boundary condition
+//	typedef std::shared_ptr<BoundaryIndex> spBI;
+//	typedef BoundaryCondition BC;
+//	spBI spbi(new BoundaryIndex());
+////	spbi->insert(0,std::make_shared<BC>(
+////			BoundaryConditionValue(BC::_BC1_, 1.0)));
+//	equ.set_boundary_index_phi(spbi);
+//	// Set initial condition
+//	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
+//		if(x < 0.5){
+//			return 1.0;
+//		}else{
+//			return 0.0;
+//		}
+//	});
+//	equ.set_initial_velocity(_X_, [](Vt, Vt, Vt, Vt){return 1.0;});
+//
+//	// Add events
+//	typedef Event_<DIM, Domain> Event;
+//	typedef std::shared_ptr<Event_<DIM, Domain> >  spEvent;
+//	spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
+//			                                          -1, -1, 1, Event::AFTER));
+//	equ.add_event("OutputTime", spetime);
+//
+////  typedef EventOutputField_<DIM, Domain> EventOutputField;
+////	EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
+////	eos.set_path("./plot/");
+////	equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
+//
+//	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
+//	EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
+//	egs.gnuplot().set_yrange(-0.3, 1.3);
+//	egs.set_path("./plot/");
+//	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
+//
+//	// Run
+//	equ.run();
+//}
 
 TEST(convection, one_step_2){
 	const St DIM = 2;                            // Dimension
@@ -74,8 +74,8 @@ TEST(convection, one_step_2){
 	const Vt dt  = CFL / n;                      // delta time
 
 	std::cout << "Cell size  = " << 1.0 / n << std::endl;
-	std::cout << "Delta time = " << dt << std::endl;
-	std::cout << "CFL number = " << CFL << std::endl;
+	std::cout << "Delta time = " << dt      << std::endl;
+	std::cout << "CFL number = " << CFL     << std::endl;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
 			new SGridUniform_<DIM>({0.0, 0.0},   // min point
@@ -90,14 +90,22 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(500, dt);
+	equ.set_time_term(50, dt);
+	equ.set_scheme("fou_implicit");
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
 	typedef BoundaryCondition BC;
 	typedef std::shared_ptr<BoundaryCondition> spBC;
 	spBI spbi(new BoundaryIndex());
-	spBC spbcxm(new BoundaryConditionValue(BC::_BC1_, 1.0));
+	BoundaryConditionFunXYZ::FunXYZ_Value fun = [](Vt x, Vt y, Vt z){
+	    if(y >= 0.0 && y <= 0.3){
+	        return 1.0;
+	    }else{
+	        return 0.0;
+	    }
+	};
+	spBC spbcxm(new BoundaryConditionFunXYZ(BC::_BC1_, fun));
 	spbi->insert(0, spbcxm);
 	spBC spbcym(new BoundaryConditionValue(BC::_BC1_, 0.0));
 	spbi->insert(2, spbcym);
@@ -124,8 +132,17 @@ TEST(convection, one_step_2){
 			        1e-1, 1e-1, 1e-1,  // critical value
 			        "phi",             // field
 			        spgrid, spghost, sporder,
-			        50, -1, 10, Event::AFTER));
+			        1, -1, 1, Event::AFTER));
 	equ.add_event("Norm1P1", spen1);
+
+// Output section
+	typedef EventOutputFieldAxisAlignSection_<DIM, Domain> EventOutputFieldAxisAlignSection;
+	typedef std::shared_ptr<EventOutputFieldAxisAlignSection> spEventOutputFieldAxisAlignSection;
+	spEventOutputFieldAxisAlignSection speaa(
+	        new EventOutputFieldAxisAlignSection(
+	                "phi", _X_, 0.6,
+	                1, -1, 1, Event::END));
+	equ.add_event("OutputSection", speaa);
 
 	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
 	typename EventGnuplotField::FunPlot plot_fun = [](

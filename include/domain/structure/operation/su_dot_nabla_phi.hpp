@@ -101,41 +101,41 @@ public:
     virtual ~SUdotNabla_FOU(){
     }
 
-    static Vt Local(const Index& idx,
-                    const VectorFace& U,
-                    const Field& phi,
-                    const BI&    bi,
-                    const Vt&    t = 0.0){
-        std::array<Vt, DIM> arr;
-        arr.fill(0.0);
-
-        FOR_EACH_DIM
-        {
-            Vt up = U(d, _P_, idx);
-            Vt um = U(d, _M_, idx);
-            Vt uc = (up + um) * 0.5;      //average velocity to center
-            auto idxm = idx.m(d);
-            auto idxp = idx.p(d);
-            Vt phi_u, phi_d;
-            Vt s = phi.grid().s_(d, idx);
-            if (uc >= 0) {
-                phi_u = Value::Get(phi, bi, idx, idxm, d, _M_, t);
-                phi_d = phi(idx);
-
-            } else { // uc < 0
-                phi_u = phi(idx);
-                phi_d = Value::Get(phi, bi, idx, idxp, d, _P_, t);
-            }
-            arr[d] = uc * (phi_u - phi_d) / s;
-        }
-
-        Vt sum = 0;
-        FOR_EACH_DIM
-        {
-            sum += arr[d];
-        }
-        return sum;
-    }
+//    static Vt Local(const Index& idx,
+//                    const VectorFace& U,
+//                    const Field& phi,
+//                    const BI&    bi,
+//                    const Vt&    t = 0.0){
+//        std::array<Vt, DIM> arr;
+//        arr.fill(0.0);
+//
+//        FOR_EACH_DIM
+//        {
+//            Vt up = U(d, _P_, idx);
+//            Vt um = U(d, _M_, idx);
+//            Vt uc = (up + um) * 0.5;      //average velocity to center
+//            auto idxm = idx.m(d);
+//            auto idxp = idx.p(d);
+//            Vt phi_u, phi_d;
+//            Vt s = phi.grid().s_(d, idx);
+//            if (uc >= 0) {
+//                phi_u = Value::Get(phi, bi, idx, idxm, d, _M_, t);
+//                phi_d = phi(idx);
+//
+//            } else { // uc < 0
+//                phi_u = phi(idx);
+//                phi_d = Value::Get(phi, bi, idx, idxp, d, _P_, t);
+//            }
+//            arr[d] = uc * (phi_u - phi_d) / s;
+//        }
+//
+//        Vt sum = 0;
+//        FOR_EACH_DIM
+//        {
+//            sum += arr[d];
+//        }
+//        return sum;
+//    }
 
     virtual Field operator()(
             const VectorFace& U,
@@ -180,51 +180,47 @@ public:
         return res;
     }
 
-    ExpField operator()(
-                const VectorFace& U,
-                const ExpField&   phi,
-                const Vt&         t = 0.0){
-//        ExpField res = phi.new_compatible();
-//        for (auto& idx : phi.order()) {
-//            std::array<Exp, DIM> arr;
-//            FOR_EACH_DIM
-//            {
-//                Vt up = U(d, _P_, idx);
-//                Vt um = U(d, _M_, idx);
-//                Vt uc = (up + um) * 0.5;      //average velocity to center
-//                auto idxm = idx.m(d);
-//                auto idxp = idx.p(d);
-//                Exp phi_u, phi_d;
-//                Vt s = phi.grid().s_(d, idx);
-//                if (uc >= 0) {
-//                    if(phi.ghost().is_ghost(idxm)){
-//                        phi_u += Value::Get(phi,
-//                                *(this->_spbi),
-//                                idx, idxm,
-//                                d, _M_, t);
-//                    }else{
-//                        phi_u += idxm;
-//                    }
-//                    phi_d += idx;
-//                } else { // uc < 0
-//                    phi_u += phi(idx);
-//                    if(phi.ghost().is_ghost(idxp)){
-//                        phi_d += Value::Get(phi, *(this->_spbi),
-//                                idx, idxp, d, _P_,t);
-//                    }else{
-//                        phi_d += idxp;
-//                    }
-//                }
-//                arr[d] = (phi_u - phi_d) * (uc / s);
-//            }
-//
-//            Vt sum = 0;
-//            FOR_EACH_DIM
-//            {
-////                sum += arr[d];
-//            }
-//            res(idx) = sum;
-//        }
+    ExpField expression_field(
+            const VectorFace& U,
+            const Field& phi,
+            const Vt& t = 0.0) {
+        ExpField res(phi.spgrid(), phi.spghost(), phi.sporder());
+        for (auto& idx : phi.order()) {
+            std::array<Exp, DIM> arr;
+            FOR_EACH_DIM
+            {
+                Vt up = U(d, _P_, idx);
+                Vt um = U(d, _M_, idx);
+                Vt uc = (up + um) * 0.5;      //average velocity to center
+                auto idxm = idx.m(d);
+                auto idxp = idx.p(d);
+                Exp phi_u, phi_d;
+                Vt s = phi.grid().s_(d, idx);
+                if (uc >= 0) {
+                    phi_u = Value::GetExp(
+                                phi, *(this->_spbi),
+                                idx, idxm,
+                                d,   _M_,  t);
+                    phi_d = idx;
+                } else { // uc < 0
+                    phi_u = idx;
+                    phi_d = Value::GetExp(
+                                phi, *(this->_spbi),
+                                idx, idxp,
+                                d,   _P_,  t);
+                }
+                arr[d] = (phi_u - phi_d) * (uc / s);
+            }
+
+            Exp sum;
+            FOR_EACH_DIM
+            {
+                sum += arr[d];
+            }
+            res(idx) = sum;
+        }
+
+        return res;
     }
 
 };

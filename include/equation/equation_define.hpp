@@ -53,6 +53,12 @@ public:
     typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
     typedef std::unordered_map<std::string, Vt>       Values;
 
+    typedef Solver_<Vt>       Solver;
+    typedef std::shared_ptr<Solver> spSolver;
+    typedef Jacobi_<Vt>       Solver_Jacobi;
+    typedef SOR_<Vt>          Solver_SOR;
+    typedef CG_<Vt>           Solver_CG;
+
 
 protected:
     spGrid  _grid;
@@ -197,13 +203,6 @@ public:
         return false;
     }
 
-//    void trigger_stop(const std::string& reason,
-//                      int   step,
-//                      Vt    time){
-//        spEvent e(new EventStop_<DIM, D>(reason, step, time));
-//        this->add_event("_STOP_", e);
-//    }
-
     void add_event(const std::string& key, spEvent spe){
         ASSERT(spe != nullptr);
         this->_events[key] = spe;
@@ -328,6 +327,46 @@ public:
             std::cout << "  " << std::setw(15) << iter->first << " : "
                     << iter->second << std::endl;
         }
+    }
+
+    void set_solver(const std::string&    name,
+                    const int& max_iter = 1000,
+                    const Vt&  tol      = 1e-4,
+                    const Any& any      = 1.0
+                    ) {
+        // name should be
+        ASSERT(name == "Jacobi" || name == "CG" || name == "SOR");
+        this->_aflags["set_solver"]           = name;
+        this->_aflags["set_solver_max_iter"]  = max_iter;
+        this->_aflags["set_solver_tolerence"] = tol;
+        if (name == "SOR") {
+            this->_aflags["SOR_omega"] = any;
+        }
+    }
+
+protected:
+    virtual spSolver _init_solver() {
+        // initial solver
+        spSolver spsolver;
+        if (this->has_flag("set_solver")) {
+            std::string sn = any_cast<std::string>(
+                    this->_aflags["set_solver"]);
+            Vt  tol      = any_cast<Vt>(this->_aflags["set_solver_tolerence"]);
+            int max_iter = any_cast<int>(this->_aflags["set_solver_max_iter"]);
+            if (sn == "Jacobi") {
+                spsolver = spSolver(new Solver_Jacobi(max_iter, tol));
+            } else if (sn == "CG") {
+                spsolver = spSolver(new Solver_CG(max_iter, tol));
+            } else if (sn == "SOR") {
+                ASSERT(this->has_flag("SOR_omega"));
+                Vt omega = any_cast<Vt>(this->_aflags["SOR_omega"]);
+                spsolver = spSolver(new Solver_SOR(max_iter, tol, omega));
+            }
+        } else {
+            // default solver
+            spsolver = spSolver(new Solver_Jacobi(5000, 1e-4));
+        }
+        return spsolver;
     }
 };
 

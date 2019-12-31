@@ -97,7 +97,7 @@ public:
 
 
     static Exp GetExp(
-            const Field&         fc,
+            const Field&      fc,
             const BoundaryIndex& bi,
             const Index&         idxc,
             const Index&         idxg,
@@ -107,7 +107,6 @@ public:
         if(fc.ghost().is_ghost(idxg)){
             auto bid  = fc.ghost().boundary_id(idxc, idxg, axe, ori);
             auto spbc = bi.find(bid);
-
             if (spbc->type() == BC::_BC1_) {
                 return _value_type1_exp(fc, *spbc, idxc, idxg, axe, ori, time);
             } else if (spbc->type() == BC::_BC2_) {

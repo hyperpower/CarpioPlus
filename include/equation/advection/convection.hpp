@@ -54,17 +54,19 @@ public:
 	typedef typename Domain::Ghost     Ghost;
 	typedef typename Domain::Order     Order;
 	typedef typename Domain::Field     Field;
+    typedef typename Domain::ExpField  ExpField;
 	typedef Event_<DIM,Domain>         Event;
 	typedef TimeTerm_<DIM>             TimeTerm;
 
 	typedef typename Domain::VectorCenter VectorCenter;
 	typedef typename Domain::VectorFace   VectorFace;
 
-	typedef std::shared_ptr<Event>  spEvent;
-	typedef std::shared_ptr<Field>  spField;
-	typedef std::shared_ptr<Grid>   spGrid;
-	typedef std::shared_ptr<Ghost>  spGhost;
-	typedef std::shared_ptr<Order>  spOrder;
+	typedef std::shared_ptr<Event>    spEvent;
+	typedef std::shared_ptr<Field>    spField;
+    typedef std::shared_ptr<ExpField> spExpField;
+	typedef std::shared_ptr<Grid>     spGrid;
+	typedef std::shared_ptr<Ghost>    spGhost;
+	typedef std::shared_ptr<Order>    spOrder;
 	typedef std::shared_ptr<VectorCenter>  spVectorCenter;
 	typedef std::shared_ptr<VectorFace>    spVectorFace;
 	typedef std::shared_ptr<TimeTerm>      spTimeTerm;
@@ -80,15 +82,27 @@ public:
 	typedef std::unordered_map<std::string, Vt>       Values;
 
 	typedef typename Domain::UdotNabla     UdotNabla;
+    typedef	std::shared_ptr<UdotNabla> spUdotNabla;
 	typedef typename Domain::UdotNabla_FOU UdotNabla_FOU;
 	typedef typename Domain::Interpolate   Interpolate;
 
+	typedef MatrixSCR_<Vt>    Mat;
+    typedef ArrayListV_<Vt>   Arr;
+    typedef Solver_<Vt>               Solver;
+    typedef std::shared_ptr<Solver> spSolver;
+    typedef Jacobi_<Vt>               Solver_Jacobi;
+    typedef SOR_<Vt>                  Solver_SOR;
+    typedef CG_<Vt>                   Solver_CG;
+
+    typedef typename Domain::BuildMatrix              BuildMatrix;
 protected:
 	spVectorCenter _vc;
 	spVectorFace   _vf;
 
 	typedef void (Self::*FunOneStep)(St);
 	FunOneStep     _fun_one_step;
+
+	spUdotNabla    _spudn;
 public:
 	Convection_(spGrid spg, spGhost spgh, spOrder spo):
 		Equation(spg, spgh, spo){
@@ -126,11 +140,16 @@ public:
 		return -1;
 	}
 
-	void set_space_scheme(const std::string& name){
+	void set_scheme(const std::string& name){
 		if(name == "fou"){
-			_fun_one_step = Self::_one_step_fou_explicit;
-		}else{
-			_fun_one_step = Self::_one_step_fou_explicit;
+			_fun_one_step = &Self::_one_step_fou_explicit;
+		}else if(name == "fou_implicit"){
+		    Field& phi = *(this->_scalars["phi"]);
+		    this->_aflags["solver"] = this->_init_solver();
+		    this->_aflags["field_volume"] = std::make_shared<Field>(phi.volume_field());
+		    this->_aflags["field_exp"]    = std::make_shared<ExpField>(ExpressionField(phi));
+		    _fun_one_step = &Self::_one_step_fou_implicit;
+
 		}
 	}
 
@@ -198,6 +217,36 @@ protected:
 			this->get_boundary_index("w"));
 		phi = FOU(vf, phi) * dt + phi;
 	}
+
+
+	void _one_step_fou_implicit(St step) {
+        UdotNabla_FOU FOU(this->_bis["phi"]);
+        VectorFace&   vf = *(this->_vf);
+        VectorCenter& vc = *(this->_vc);
+        Field&       phi = *(this->_scalars["phi"]);
+        Vt            dt = this->_time->dt();
+
+        auto    spsolver = any_cast<spSolver>(this->_aflags["solver"]);
+        auto      spphif = any_cast<spExpField>(this->_aflags["field_exp"]);
+
+        Interpolate::VectorCenterToFace(vc, vf,
+                this->get_boundary_index("u"),
+                this->get_boundary_index("v"),
+                this->get_boundary_index("w"));
+
+        auto      fouexp = FOU.expression_field(vf, phi);
+
+        auto expf = fouexp * dt + phi - (*spphif);
+
+        Mat a;
+        Arr b;
+        BuildMatrix::Get(fouexp, a, b);
+        // prepare x
+        Arr x(phi.order().size());
+        BuildMatrix::CopyToArray(phi, x);
+        this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);
+        BuildMatrix::CopyToField(x, phi);
+    }
 };
 
 
