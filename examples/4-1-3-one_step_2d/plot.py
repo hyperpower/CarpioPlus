@@ -90,8 +90,79 @@ def plot_illustration_fig():
     plt.close()
     # plt.show()
 
+def plot_norm_fig():
+    plt.figure(figsize=(6, 5))
+    ax = plt.axes()
+
+    """
+    Set labels
+    """
+    plt.xlabel(r'Step')
+    plt.ylabel(r'Norm')
+
+    """
+    Set range
+    """
+    x_st = -0.45
+    x_ed = 1.45
+    y_st = -0.35
+    y_ed = 1.35
+
+    # plt.xlim([x_st, x_ed])
+    # plt.ylim([y_st, y_ed])
+    #plt.xscale('log')
+    plt.yscale('log')
+
+    """
+    Data part
+    """
+    file = FT.TextFile(PATH_DATA + "/norm1.txt")
+    d    = file.get_data()
+    l1,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
+    file = FT.TextFile(PATH_DATA + "/norm2.txt")
+    d    = file.get_data()
+    l2,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
+    file = FT.TextFile(PATH_DATA + "/norminf.txt")
+    d    = file.get_data()
+    li,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
+    plt.legend([l1,l2,li], ["Norm1", "Norm2", "Norminf"], loc= 'best')
+
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(PATH_FIG + "/norm.png")
+    plt.close()
+    # plt.show()
+
+def file_name(namedir, namescheme, namevar):
+    res = []
+    files = [f for f in os.listdir(namedir) if os.path.isfile(os.path.join(namedir, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == namescheme and spf[1] == namevar:
+            res.append(spf)
+    return res 
+
+def change_file_name(scheme):
+    # the png is plot by gnuplot
+    filemat = file_name("./fig/", scheme, "phi")
+    if len(filemat[0]) < 4 :
+        return
+    sfm     = sorted(filemat, key = lambda x: int(x[2]))
+    # change file name
+    count = 0 
+    for row in sfm:
+        old_fn  = "%s_%s_%s_%s" % (row[0], row[1], row[2], row[3])
+        new_fn  = "%s_%s_%06d.png" % (row[0], row[1], count)
+        os.system("mv ./fig/%s ./fig/%s" % (old_fn, new_fn))
+        count += 1
+
+    os.system("convert -delay 5 -loop 0 ./fig/%s_%s_*.png ./fig/%s_%s.gif" % (scheme, "phi", scheme, "phi"));
+
 def main():
+    scheme = "Upwind1"
     plot_illustration_fig()
+    plot_norm_fig()
+    change_file_name(scheme)
 
 if __name__ == '__main__':
     main()

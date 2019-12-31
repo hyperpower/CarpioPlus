@@ -12,7 +12,7 @@
 #include "event/output_time.hpp"
 #include "event/output_field.hpp"
 #include "event/gnuplot_field.hpp"
-#include "event/field_norm1.hpp"
+#include "event/field_norm.hpp"
 
 #include "stop_manager.hpp"
 

@@ -69,7 +69,7 @@ TEST(convection, DISABLED_initial){
 
 TEST(convection, one_step_2){
 	const St DIM = 2;                            // Dimension
-	const St n   = 40;                           // number of cells
+	const St n   = 50;                           // number of cells
 	const Vt CFL = 0.4;                          // CFL
 	const Vt dt  = CFL / n;                      // delta time
 
@@ -118,46 +118,47 @@ TEST(convection, one_step_2){
 	equ.add_event("OutputTime", spetime);
 
 	// Stop condition
-	typedef std::shared_ptr<EventConditionNorm1Previous_<DIM, Domain> > spEventConditionNorm1Previous;
-	spEventConditionNorm1Previous spen1(
-			new EventConditionNorm1Previous_<DIM, Domain>(
-			        1e-1,   // critical value
-			        "phi",  // field
+	typedef std::shared_ptr<EventConditionNormPrevious_<DIM, Domain> > spEventConditionNormPrevious;
+	spEventConditionNormPrevious spen1(
+			new EventConditionNormPrevious_<DIM, Domain>(
+			        1e-1, 1e-1, 1e-1,  // critical value
+			        "phi",             // field
 			        spgrid, spghost, sporder,
 			        50, -1, 10, Event::AFTER));
 	equ.add_event("Norm1P1", spen1);
 
 	typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
-	EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
-	egs.gnuplot().set_xrange(-0.1, 1.1);
-	egs.gnuplot().set_yrange(-0.1, 1.1);
-	egs.gnuplot().set_palette_red_grey();
-	egs.gnuplot().set_xlabel("X");
-	egs.gnuplot().set_ylabel("Y");
-	egs.gnuplot().set_cblabel("phi");
-	egs.gnuplot().set_cbrange(0.0, 1.0);
-	egs.gnuplot().set_equal_aspect_ratio();
-	egs.set_path("./plot/");
+	typename EventGnuplotField::FunPlot plot_fun = [](
+	        Gnuplot& gnu,
+	        const EventGnuplotField::Field& f,
+	              St step , Vt t, int fob,
+	              EventGnuplotField::pEqu pd){
+        gnu.set_xrange(-0.1, 1.1);
+        gnu.set_yrange(-0.1, 1.1);
+        gnu.set_palette_red_grey();
+        gnu.set_xlabel("X");
+        gnu.set_ylabel("Y");
+        gnu.set_cblabel("phi");
+        gnu.set_cbrange(0.0, 1.0);
+        gnu.set_equal_aspect_ratio();
+        gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
+        gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
+        gnu.add(Domain::GnuplotActor::Contour(f));
+        gnu.plot();
+        gnu.clear();
+        return 1;
+	};
+
+	EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER);
+    egs.set_path("./plot/");
+    egs.set_format_string("Upwind1_%s_%d_%8.4e.png");
 	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
 
 	equ.run();
 
-	// plot normal 1
-	typedef SGnuplotActor_<DIM> GA;
-	Gnuplot gnu;
-	gnu.set_terminal_png("./plot/norm1.png");
-	gnu.set_xlabel("Step");
-	gnu.set_ylabel("Norm1");
-	gnu.set_ylogscale(10.0);
-//	gnu.set_xrange(-0.1, 1.6);
-//	gnu.set_yrange(-0.1, 1.2);
-	auto a = GnuplotActor::XY(spen1->get_list(), 1, 2);
-//	asc->command() = "using 1:2:3 title \"Value on Scalar center\" ";
-//	auto asv = GA::LinesPoints(c, 2);
-//	asv->command() = "using 1:2:3 title \"Valut on Vertex\" ";
-	gnu.add(a);
-	gnu.plot();
-
+	OutputNormList("./norm1.txt", "Norm 1", spen1->get_norm1_list());
+	OutputNormList("./norm2.txt", "Norm 2", spen1->get_norm2_list());
+	OutputNormList("./norminf.txt", "Norm inf", spen1->get_norminf_list());
 }
 
 
