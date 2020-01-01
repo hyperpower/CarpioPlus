@@ -1,6 +1,6 @@
-# Cases for Carpio Project
+# Examples for Carpio Project
 
-This folder include all the test cases for Carpio project.
+This folder include all the examples for Carpio project.
 
 ## Table of Content
 
@@ -8,7 +8,7 @@ This folder include all the test cases for Carpio project.
    1. Basic Geometry Objects
       1. :ballot_box_with_check: Point Location 
       2. :ballot_box_with_check: Segments intersection
-      3. Segment vs box
+      3. :construction: Segment vs box
       4. Triangle intersection
       5. :ballot_box_with_check: Point in polygon
       6. Distance and Closest Point
@@ -34,18 +34,18 @@ This folder include all the test cases for Carpio project.
    2. Octree
 4. Equation
    1. Convection
-      1. One Step 1D
-      2. Gate 1D
-      3. One Step 2D
-      4. Gate 2D
-      5. Sine Square
+      1. :construction: One Step 1D
+      2. :construction: Gate 1D
+      3. :construction: One Step 2D
+      4. :construction: Gate 2D
+      5. :construction: Sine Square
       6. Semi Ellipse
       7. Rotational One Step
       8. Rotational Two Step
       9. Rotational Smooth
    2. Poisson
       1. :ballot_box_with_check: Time Scheme 1D
-      2. flower shape 
+      2. Flower Shape 
    3. Navier-Stokes
       1. Lid Driven Cavity
       2. Backward Facing Step
