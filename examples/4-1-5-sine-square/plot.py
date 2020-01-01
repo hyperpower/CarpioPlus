@@ -80,7 +80,7 @@ def plot_illustration_fig():
     plt.text( 0.42, 0.34, "v = 1.0")
     plt.arrow(0.5,  0.1, 0.2, 0.2, width=0.01, color = "r")
 
-    plt.text( 0.5, 0.75, r'$\phi=1.0$')
+    plt.text( 0.35, 0.6, r'$\phi=\sin^2(\frac{10}{3} \pi y)$')
     plt.text( 0.6, 0.45, r'$\phi=0.0$')
     plt.text( 0.1, 0.75, r'$\phi=0.0$')
 
@@ -179,15 +179,21 @@ def find_section_file(namedir, namescheme, namevar):
     for f in files:
         spf = f.split("_")
         if spf[0]     == namescheme \
-           and spf[1] == "Section" \
+           and spf[1] == "section" \
            and spf[2] == namevar:
             res.append(f)
     return res 
 
 def add_section_exact(plt, x):
-    y1 = x
-    y2 = x + 0.3
-    l, = plt.plot([0.0, y1, y1, y2, y2, 1.0], [0.0, 0.0, 1.0, 1.0, 0.0, 0.0], color = "k")
+    arrx = np.linspace(0.0, 1.0, num=100) 
+    arry = np.array([])
+    for value in arrx:
+        if x < value < x + 0.3:
+            s = math.sin(10.0 / 3.0 * math.pi * (value - x))
+            arry = np.append(arry, (s*s))
+        else:
+            arry = np.append(arry, 0)
+    l, = plt.plot(arrx, arry, color = "k")
     return l
 
 def plot_setion(scheme):
@@ -223,13 +229,17 @@ def plot_setion(scheme):
     fd   = FT.TextFile(PATH_DATA + "/" + file[0])
     d    = fd.get_data()
     l1,  = ax.plot(FT.col(d, 2), FT.col(d, 4), ".")
-
-    lexact = add_section_exact(plt, 0.6)
+    
+    avgx = np.average(FT.col(d, 1)) 
+    
+    lexact = add_section_exact(plt, avgx)
     plt.legend([l1, lexact], [scheme, "Exact"], loc= 'best')
+
+    plt.text(0.3,  0.23, r'x = %.2f' % avgx, va = "center")
 
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(PATH_FIG + "/" + scheme + "_Section.png")
+    plt.savefig(PATH_FIG + "/" + scheme + "_section.png")
     plt.close()
 
 def plot_a_scheme(scheme):
@@ -239,11 +249,17 @@ def plot_a_scheme(scheme):
 
 def main():
     plot_illustration_fig()
-    plot_a_scheme("fou")
-    make_gif("fou")
-    plot_a_scheme("quick")
-    plot_a_scheme("cds")
-
+    arrscheme = [
+        "fou",
+        "quick",
+        "cds",
+        "superbee",
+        "vanleer",
+        "WAHYD"
+    ]
+    for s in arrscheme:
+        plot_a_scheme(s)
+    # make_gif("fou")
 
 if __name__ == '__main__':
     main()

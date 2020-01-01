@@ -131,15 +131,18 @@ protected:
         // walk back
         auto oori = Opposite(Orientation(ori));  // opposite oritation
         auto idxb = idxg.shift(axe, oori);
-        int step  = 0;
+        int  step = 0;
+//        if(idxc == Index(0.0, 0.0)){
+//            std::cout << "idxb 1 = " << idxb << std::endl;
+//        }
         while(fc.ghost().is_ghost(idxb)){ // find nearest normal cell
             Shift(idxb, axe, oori);
             step++;
         }
         auto fp = fc.grid().f(axe, ori, idxb);   // face point
-        for(int i = 0; i < step; ++i){
-            Shift(idxb, axe, oori);
-        }
+//        for(int i = 0; i < step; ++i){
+//            Shift(idxb, axe, oori);
+//        }
         ASSERT(fc.ghost().is_normal(idxb));
         //  idxb   face  ghost
         // ---x-----|-----g-----
@@ -152,6 +155,13 @@ protected:
         Vt dg  = std::abs(fc.grid().c_(axe, idxg) - fp[axe]);
         Vt vbc = bc.value(fp.value(_X_), fp.value(_Y_), fp.value(_Z_), time);
         Vt vx  = fc(idxb);
+//        if(idxc == Index(0.0, 0.0)){
+//            std::cout << "idxb = " << idxb << std::endl;
+//            std::cout << "idxg = " << idxg << std::endl;
+//            std::cout << "dx     " << dx   << std::endl;
+//            std::cout << "dg     " << dg   << std::endl;
+//            std::cout << "vbc    " << vbc  << std::endl;
+//        }
         return vx + (vbc - vx) * (dx + dg) / dx;
     }
     // similar to _value_type1

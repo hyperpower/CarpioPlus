@@ -82,8 +82,9 @@ public:
 	typedef std::unordered_map<std::string, Vt>       Values;
 
 	typedef typename Domain::UdotNabla     UdotNabla;
-    typedef	std::shared_ptr<UdotNabla> spUdotNabla;
+    typedef	std::shared_ptr<UdotNabla>   spUdotNabla;
 	typedef typename Domain::UdotNabla_FOU UdotNabla_FOU;
+	typedef typename Domain::UdotNabla_TVD UdotNabla_TVD;
 	typedef typename Domain::Interpolate   Interpolate;
 
 	typedef MatrixSCR_<Vt>    Mat;
@@ -102,7 +103,7 @@ protected:
 	typedef void (Self::*FunOneStep)(St);
 	FunOneStep     _fun_one_step;
 
-	spUdotNabla    _spudn;
+	spUdotNabla    _spUdN_H;  // high order UdotNabla
 public:
 	Convection_(spGrid spg, spGhost spgh, spOrder spo):
 		Equation(spg, spgh, spo){
@@ -141,15 +142,20 @@ public:
 	}
 
 	void set_scheme(const std::string& name){
-		if(name == "fou"){
+		if(name == "FOU"){
 			_fun_one_step = &Self::_one_step_fou_explicit;
-		}else if(name == "fou_implicit"){
+		}else if(name == "fou_implicit"){  // should be solve
 		    Field& phi = *(this->_scalars["phi"]);
 		    this->_aflags["solver"] = this->_init_solver();
 		    this->_aflags["field_volume"] = std::make_shared<Field>(phi.volume_field());
 		    this->_aflags["field_exp"]    = std::make_shared<ExpField>(ExpressionField(phi));
 		    _fun_one_step = &Self::_one_step_fou_implicit;
-
+		}else if(_has_TVD_scheme(name)){
+		    _spUdN_H = spUdotNabla(new UdotNabla_TVD(this->_bis["phi"], name));
+		    _fun_one_step = &Self::_one_step_tvd;
+		}else{
+		    std::cerr << " !> No such scheme : " << name << std::endl;
+		    SHOULD_NOT_REACH;
 		}
 	}
 
@@ -196,6 +202,11 @@ public:
 	}
 
 protected:
+	bool _has_TVD_scheme(std::string name){
+	    UdotNabla_TVD tvd;
+	    return tvd.has_scheme(name);
+	}
+
 	void _new_uvw(){
 		std::vector<std::string> vname = {"u", "v", "w"};
 		for(St d = 0; d< DIM; ++d){
@@ -215,8 +226,27 @@ protected:
 		    this->get_boundary_index("u"),
 			this->get_boundary_index("v"),
 			this->get_boundary_index("w"));
-		phi = FOU(vf, phi) * dt + phi;
+		phi = phi - FOU(vf, phi) * dt;
 	}
+
+	void _one_step_tvd(St step) {
+        UdotNabla_FOU   FOU(this->_bis["phi"]);
+        this->_spUdN_H->set_boundary_index(this->_bis["phi"]);
+        // default if quick scheme
+        VectorFace& vf = *(this->_vf);
+        VectorCenter& vc = *(this->_vc);
+        Field& phi = *(this->_scalars["phi"]);
+        Vt dt = this->_time->dt();
+
+        Interpolate::VectorCenterToFace(vc, vf,
+                this->get_boundary_index("u"),
+                this->get_boundary_index("v"),
+                this->get_boundary_index("w"));
+        // half step FOU
+        Vt dth    = dt * 0.5;
+        auto phih = FOU(vf, phi) * (-dth) + phi;
+        phi       = this->_spUdN_H->operator()(vf, phih) * (-dt) + phi;
+    }
 
 
 	void _one_step_fou_implicit(St step) {
@@ -241,7 +271,6 @@ protected:
         Mat a;
         Arr b;
         BuildMatrix::Get(fouexp, a, b);
-        // prepare x
         Arr x(phi.order().size());
         BuildMatrix::CopyToArray(phi, x);
         this->_aflags["solver_rcode"] = spsolver->solve(a, x, b);

@@ -160,7 +160,7 @@ public:
                             phi, *(this->_spbi),
                             idx, idxm, d, _M_, t);
                     phi_d = phi(idx);
-
+                    s = -s;
                 } else { // uc < 0
                     phi_u = phi(idx);
                     phi_d = Value::Get(
@@ -202,6 +202,7 @@ public:
                                 idx, idxm,
                                 d,   _M_,  t);
                     phi_d = idx;
+                    s = -s;
                 } else { // uc < 0
                     phi_u = idx;
                     phi_d = Value::GetExp(
@@ -243,18 +244,46 @@ public:
     typedef SValue_<DIM> Value;
 
     typedef Vt (*Limiter)(Vt, Vt);
+    typedef std::unordered_map<std::string, Limiter> LimiterMap;
 
 protected:
     Limiter lim;
+
+    LimiterMap _map;
 public:
 
     SUdotNabla_TVD(): Base(){
         // default limiter
         lim = SUdotNabla_TVD::_limiter_QUICK;
+        _map = _build_limiter_map();
     }
 
     SUdotNabla_TVD(spBI spbi) : Base(spbi){
         lim = SUdotNabla_TVD::_limiter_QUICK;
+        _map = _build_limiter_map();
+    }
+    SUdotNabla_TVD(spBI spbi, const std::string& scheme) : Base(spbi){
+        _map = _build_limiter_map();
+        this->set_scheme(scheme);
+    }
+
+    void set_scheme(const std::string& name){
+        auto it = _map.find(name);
+        if (it != _map.end()) {
+            lim = _map[name];
+        }else{
+            std::cerr << " !> No such scheme : " << name << std::endl;
+            lim = SUdotNabla_TVD::_limiter_QUICK;
+        }
+    }
+
+    bool has_scheme(const std::string& name) const{
+        auto it = _map.find(name);
+        if (it != _map.end()) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     virtual ~SUdotNabla_TVD(){
@@ -318,13 +347,15 @@ public:
                 // p -----------------------
                 R = _RCD(phi, d, Cp, Dp);
                 r = _rCD(phi, d, Up, Cp, Dp, VUp, VCp, VDp);
-//                fp = VCp + lim(r, R) / R * (VDp - VCp);
+                fp = VCp + lim(r, R) / R * (VDp - VCp);
                 // m ---------------------
                 R = _RCD(phi, d, Cm, Dm);
                 r = _rCD(phi, d, Um, Cm, Dm, VUm, VCm, VDm);
-//                fm = VCm + lim(r, R) / R * (VDm - VCm);
+                fm = VCm + lim(r, R) / R * (VDm - VCm);
                 //
-                arr[d] = (up * fp - um * fm)
+                //
+                //
+                arr[d] = (fp -  fm) * uc
                         / phi.grid().s_(d, idx);
             }
 
@@ -334,11 +365,39 @@ public:
             }
             res(idx) = sum;
         }
-
         return res;
     }
 
 protected:
+    LimiterMap _build_limiter_map() const{
+        LimiterMap map;
+        map["SOU"]      = SUdotNabla_TVD::_limiter_SOU;
+        map["Fromm"]    = SUdotNabla_TVD::_limiter_Fromm;
+        map["CUI"]      = SUdotNabla_TVD::_limiter_CUI;
+        map["QUICK"]    = SUdotNabla_TVD::_limiter_QUICK;
+        map["CDS"]      = SUdotNabla_TVD::_limiter_CDS;
+        map["VanLeer"]  = SUdotNabla_TVD::_limiter_VanLeer;
+        map["WAHYD"]    = SUdotNabla_TVD::_limiter_WAHYD;
+        map["BSOU"]     = SUdotNabla_TVD::_limiter_BSOU;
+        map["Superbee"] = SUdotNabla_TVD::_limiter_Superbee;
+        map["Minmod"]   = SUdotNabla_TVD::_limiter_Minmod;
+        map["MUSCL"]    = SUdotNabla_TVD::_limiter_MUSCL;
+        map["Koren"]    = SUdotNabla_TVD::_limiter_Koren;
+        map["WACEB"]    = SUdotNabla_TVD::_limiter_WACEB;
+        map["UMIST"]    = SUdotNabla_TVD::_limiter_UMIST;
+        map["SPLmax12"] = SUdotNabla_TVD::_limiter_SPLmax12;
+        map["SPL13"]    = SUdotNabla_TVD::_limiter_SPL13;
+        map["SPLmax13"] = SUdotNabla_TVD::_limiter_SPLmax13;
+        map["Harmonic"] = SUdotNabla_TVD::_limiter_Harmonic;
+        map["OSPER"]    = SUdotNabla_TVD::_limiter_OSPER;
+        map["Albada"]   = SUdotNabla_TVD::_limiter_Albada;
+        map["GVA12"]    = SUdotNabla_TVD::_limiter_GVA12;
+        map["GVA13"]    = SUdotNabla_TVD::_limiter_GVA13;
+        map["GPR0"]     = SUdotNabla_TVD::_limiter_GPR0;
+        map["GPR12"]    = SUdotNabla_TVD::_limiter_GPR12;
+        map["GPR13"]    = SUdotNabla_TVD::_limiter_GPR13;
+        return map;
+    }
 
     static Vt _rCD(
                 const Field& phi, St d,
@@ -384,25 +443,92 @@ protected:
     static Vt _limiter_SOU(Vt r, Vt R) {
         return r + 1.0;
     }
-
     static Vt _limiter_Fromm(Vt r, Vt R){
         return 0.5 * r + 0.5;
     }
-
     static Vt _limiter_CUI(Vt r, Vt R) {
         return 2.0 / 3.0 * r + 1.0 / 3.0;
     }
-
     static Vt _limiter_QUICK(Vt r, Vt R){
         return 0.75 * r + 0.25;
     }
-
     static Vt _limiter_CDS(Vt r, Vt R) {
         return r;
     }
-
-
-
+    static Vt _limiter_VanLeer(Vt r, Vt R) {
+        return 0.5 * R * (r + std::abs(r)) / (R - 1 + r);
+    }
+    static Vt _limiter_WAHYD(Vt r, Vt R) {
+        if (r <= 1.0) {
+            return 0.5 * R * (r + std::abs(r)) / (R - 1 + r);
+        } else {
+            return std::min((r + R * r * std::abs(r)) / (R + r * r), R);
+        }
+    }
+    // Piece-wise Linear Steady-State Limiter
+    static Vt _limiter_BSOU(Vt r, Vt R){
+        return std::max(0.0, std::min(2.0 * r, 1.0));
+    }
+    static Vt _limiter_Superbee(Vt r, Vt R) {
+        return std::max(std::max(0.0, std::min(R * r, 1.0)), std::min(r, R));
+    }
+    static Vt _limiter_Minmod(Vt r, Vt R){
+        return std::max(0.0, std::min(r, 1.0));
+    }
+    static Vt _limiter_MUSCL(Vt r, Vt R){
+        return std::max(0.0, std::min(std::min(2.0 * r, (r + 1.0) * 0.5), 2.0));
+    }
+    static Vt _limiter_Koren(Vt r, Vt R){
+        return std::max(0.0, std::min(std::min(2.0 * r, (2.0 * r + 1.0) / 3.0), 2.0));
+    }
+    static Vt _limiter_WACEB(Vt r, Vt R){
+        return std::max(0.0, std::min(std::min(2.0 * r, (3.0 * r + 1.0) / 4.0), 2.0));
+    }
+    static Vt _limiter_UMIST(Vt r, Vt R){
+        Vt m1 = std::min(2.0 * r, (3.0 * r + 1.0) / 4.0);
+        Vt m2 = std::min(m1, (r + 3.0) / 4.0);
+        return std::max(0.0, std::min(m2, 2.0));
+    }
+    static Vt _limiter_SPLmax12(Vt r, Vt R){
+        Vt m1 = std::max((3.0 * r + 1.0)/ 4.0, (r + 3.0) / 4.0);
+        Vt m2 = std::min(m1, 2.0 * r);
+        return std::max(0.0, std::min(m2, 2.0));
+    }
+    static Vt _limiter_SPL13(Vt r, Vt R){
+        Vt m1 = std::min((2.0 * r + 1.0)/ 3.0, (r + 2.0) / 3.0);
+        Vt m2 = std::min(m1, 2.0 * r);
+        return std::max(0.0, std::min(m2, 2.0));
+    }
+    static Vt _limiter_SPLmax13(Vt r, Vt R){
+        Vt m1 = std::min((2.0 * r + 1.0) / 3.0, (r + 2.0) / 3.0);
+        Vt m2 = std::min(m1, 2.0 * r);
+        return std::max(0.0, std::min(m2, 2.0));
+    }
+    // Smooth SS-TVD
+    static Vt _limiter_Harmonic(Vt r, Vt R){
+        return (r + std::abs(r)) / (r + 1.0);
+    }
+    static Vt _limiter_OSPER(Vt r, Vt R){
+        return 3.0 * r * (r + 1.0) / 2.0 / (r * r + r + 1.0);
+    }
+    static Vt _limiter_Albada(Vt r, Vt R){
+        return r * (r + 1.0) / (r * r + 1.0);
+    }
+    static Vt _limiter_GVA12(Vt r, Vt R){
+        return r * (r + 2.0) / (r * r + 2.0);
+    }
+    static Vt _limiter_GVA13(Vt r, Vt R){
+        return r * (r + 3.0) / (r * r + 3.0);
+    }
+    static Vt _limiter_GPR0(Vt r, Vt R){
+        return r * (3.0 * r + 1.0) / (2.0 * r * r + r + 1.0);
+    }
+    static Vt _limiter_GPR12(Vt r, Vt R){
+        return 2.0 * r * ( r + 1.0) / (r * r + r + 2.0);
+    }
+    static Vt _limiter_GPR13(Vt r, Vt R){
+        return r * ( 2.0 * r + 1.0) / (r * r + r + 1.0);
+    }
 
 };
 

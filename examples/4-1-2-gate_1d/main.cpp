@@ -11,6 +11,15 @@ typedef typename Domain::spGrid  spGrid;
 typedef typename Domain::spGhost spGhost;
 typedef typename Domain::spOrder spOrder;
 
+typename Domain::FunXYZT_Value fun_exact = [](Vt x, Vt y, Vt z, Vt t){
+    Vt xc = 0.5 + t;
+    if(x > (xc - 0.25) && x < (xc + 0.25)){
+        return 1.0;
+    }else{
+        return 0.0;
+    }
+};
+
 int main(int argc, char** argv) {
     spGrid spgrid(
             new SGridUniform_<DIM>({0.0, 0.0}, // min point
@@ -52,6 +61,12 @@ int main(int argc, char** argv) {
                                                       -1, -1, 1, Event::AFTER));
     equ.add_event("OutputTime", spetime);
 
+    // Event Normal to exact
+    typedef EventNormExactFunction_<DIM, Domain> EventNormExactFunction;
+    std::shared_ptr<EventNormExactFunction> spenef(
+        new EventNormExactFunction("phi", fun_exact, -1, -1, 1, Event::AFTER));
+    equ.add_event("NormToExactFunction", spenef);
+
     typedef EventOutputField_<DIM, Domain> EventOutputScalar;
     EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
@@ -60,4 +75,8 @@ int main(int argc, char** argv) {
 
     // Run
     equ.run();
+
+    OutputNormList("./data/norm1_exact.txt","Norm1Exact", spenef->get_norm1_list());
+    OutputNormList("./data/norm2_exact.txt","Norm2Exact", spenef->get_norm2_list());
+    OutputNormList("./data/norminf_exact.txt","NorminfExact", spenef->get_norminf_list());
 }

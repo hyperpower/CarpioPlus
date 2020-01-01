@@ -3,6 +3,8 @@
 #include "domain/boundary/boundary_condition.hpp"
 #include "domain/boundary/boundary_index.hpp"
 
+#include <cmath>
+
 using namespace carpio;
 
 const St DIM = 2;
@@ -43,7 +45,8 @@ int run_a_scheme(const std::string& scheme) {
     spBI spbi(new BoundaryIndex());
     BoundaryConditionFunXYZ::FunXYZ_Value fun = [](Vt x, Vt y, Vt z){
         if(y >= 0.0 && y <= 0.3){
-            return 1.0;
+            Vt s = std::sin(10.0 / 3.0 * M_PI * y);
+            return s * s;
         }else{
             return 0.0;
         }
@@ -87,7 +90,7 @@ int run_a_scheme(const std::string& scheme) {
                     "phi", _X_, 0.6,
                     1, -1, 1, Event::END));
     speaa->set_path("./data/");
-    speaa->set_format_string(scheme + "_Section_%s_%d_%8.4e.txt");
+    speaa->set_format_string(scheme + "_section_%s_%d_%8.4e.txt");
     equ.add_event("OutputSection", speaa);
 
     // plot
@@ -131,7 +134,10 @@ int run_a_scheme(const std::string& scheme) {
 }
 
 int main(int argc, char** argv) {
-    run_a_scheme("quick");
-    run_a_scheme("cds");
-    run_a_scheme("fou");
+    std::vector<std::string> arrscheme = {
+        "QUICK", "CDS", "FOU", "Superbee", "VanLeer", "WAHYD"
+    };
+    for(auto& scheme : arrscheme){
+        run_a_scheme(scheme);
+    }
 }

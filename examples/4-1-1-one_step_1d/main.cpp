@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
     equ.set_time_term(100, 0.01);
+    // equ.set_scheme("quick");
 
     // Set boundary condition
     typedef std::shared_ptr<BoundaryIndex> spBI;

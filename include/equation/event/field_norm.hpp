@@ -13,6 +13,80 @@
 namespace carpio{
 
 template<St DIM, class D>
+class EventNormExactFunction_ : public Event_<DIM, D>{
+public:
+    typedef Event_<DIM, D> Event;
+    typedef Equation_<DIM, D> Equ;
+    typedef Equ* pEqu;
+    typedef const Equ* const_pEqu;
+
+    typedef typename D::FunXYZT_Value FunXYZT_Value;
+
+    typedef typename D::IOFile IOFile;
+    typedef typename D::Field  Field;
+
+    typedef typename D::spGrid  spGrid;
+    typedef typename D::spGhost spGhost;
+    typedef typename D::spOrder spOrder;
+
+    typedef std::list<std::array<Vt, 2> > List;
+protected:
+    std::string   _fn;        //field name
+    FunXYZT_Value _exact_fun; // exact function
+
+    List        _ln1;    //list of norm 1
+    List        _ln2;    //list of norm 1
+    List        _lninf;  //list of norm 1
+public:
+    EventNormExactFunction_(
+        const std::string& fname, FunXYZT_Value fun,
+        int is    = -1, int ie   = -1,
+        int istep = -1, int flag = Event::AFTER) :
+            _fn(fname),
+            _exact_fun(fun),
+            Event(is, ie, istep, flag) {
+    }
+    virtual ~EventNormExactFunction_(){
+    }
+
+    virtual int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
+        if (pd->has_field(_fn)) {
+            auto& fc = (*pd)[_fn];
+            auto  fe = fc.error(_exact_fun, t);
+            _ln1.push_back({Vt(step), fe.norm1()});
+            _ln2.push_back({Vt(step), fe.norm2()});
+            _lninf.push_back({Vt(step), fe.norminf()});
+        } else {
+            std::cerr << "EventOutputField : " << _fn << " not found!"
+                    << std::endl;
+        }
+        return -1;
+    }
+
+    List& get_norm1_list(){
+        return _ln1;
+    }
+    const List& get_norm1_list() const{
+        return _ln1;
+    }
+
+    List& get_norm2_list() {
+        return _ln2;
+    }
+    const List& get_norm2_list() const {
+        return _ln2;
+    }
+
+    List& get_norminf_list() {
+        return _lninf;
+    }
+    const List& get_norminf_list() const {
+        return _lninf;
+    }
+};
+
+
+template<St DIM, class D>
 class EventNormPrevious_ : public Event_<DIM, D>{
 public:
     typedef Event_<DIM, D> Event;
@@ -292,6 +366,27 @@ void OutputNormList(
     for (auto& row : list) {
         std::stringstream ss;
         tfm::format(ss, "%d, %d, %.8e", row[0], row[1], row[2]);
+        txtf.add_line(ss.str());
+    }
+    txtf.write();
+}
+
+void OutputNormList(
+        const std::string& filename,
+        const std::string& normname,
+        const std::list<std::array<Vt, 2> >& list){
+    // Open a file
+    TextFile txtf(filename);
+    // format first line
+    txtf.add_line(tfm::format("## SIZE : %d", list.size()));
+    txtf.add_line(tfm::format("## NAME : %d", normname));
+    //
+    txtf.add_line(
+            tfm::format("## COLUMN_NAME : %s, %s",
+                     "STEP", "VALUE"));
+    for (auto& row : list) {
+        std::stringstream ss;
+        tfm::format(ss, "%d, %.8e", row[0], row[1]);
         txtf.add_line(ss.str());
     }
     txtf.write();

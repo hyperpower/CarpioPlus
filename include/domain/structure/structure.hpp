@@ -80,6 +80,7 @@ public:
 
     typedef SUdotNabla_<DIM>    UdotNabla;
     typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
+    typedef SUdotNabla_TVD<DIM> UdotNabla_TVD;
 
     // creation
 

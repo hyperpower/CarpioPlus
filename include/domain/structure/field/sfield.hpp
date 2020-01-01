@@ -91,7 +91,24 @@ public:
     Vt norminf() const {
         return _mat.norminf();
     }
-
+    Self error(FunXYZT_Value fun, Vt t = 0.0) const{
+        auto res = this->new_compatible();
+        for (auto& idx : (*_order)) {
+            auto cp = _grid->c(idx);
+            Vt exact = fun(cp.value(_X_), cp.value(_Y_), cp.value(_Z_), t);
+            res(idx) = this->operator ()(idx) - exact;
+        }
+        return res;
+    }
+    Vt norm1(FunXYZT_Value fun, Vt t = 0.0) const{
+        return this->error(fun, t).norm1();
+    }
+    Vt norm2(FunXYZT_Value fun, Vt t = 0.0) const {
+        return this->error(fun, t).norm2();
+    }
+    Vt norminf(FunXYZT_Value fun, Vt t = 0.0) const {
+        return this->error(fun, t).norminf();
+    }
     void abs(){
         _mat.abs();
     }
@@ -238,6 +255,7 @@ public:
         }
         return res;
     }
+
 
 
 };
