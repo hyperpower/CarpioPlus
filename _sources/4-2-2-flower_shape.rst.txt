@@ -1,0 +1,88 @@
+=================================
+Flower Shape
+=================================
+
+Problem Description
+===================
+
+This example solves Poisson's equation
+
+.. math::
+   
+   \nabla \cdot \beta \nabla \phi = 7 r^2 cos 3 \theta
+
+where, :math:`\beta = 1` in present case.
+
+The domain is defined by 
+
+.. math::
+   
+   \Omega = {(r, \theta) : r \le 0.30 + 0.15 cos 6 \theta}
+
+
+Dirichlet boundary conditions on :math:`\partial \Omega` are specified by the exact solution,
+
+.. math::
+
+   \varphi (r, \theta) = r^4 cos3 \theta
+
+Error Definition
+======================
+Volume-weighted norm of a variable :math:`e`,
+
+.. math::
+   
+   ||e||^{\Lambda, \Omega_k}_{p} = (\sum_{\Omega_k} |e|^p \Lambda V)^{1/p}
+
+where :math:`V = \Delta x \Delta y` is the cell volume. :math:`\Lambda` is volume fraction for cut cell. 
+
+The rate of convergence between two norms, :math:`e_1` and :math:`e_2`, with two different grid spacings :math:`h_1` and :math:`h2`, as
+
+.. math::
+   
+   r = log(\frac{e_1}{e_2}) / log(\frac{h_1}{h_2})
+
+Thus with :math:`h_1 < h_2`, a rate of :math:`r=1` for the two errors :math:`e_1` and :math:`e_2` indicates a first-order accurate method.
+
+
+Masked Cell Solution
+======================
+
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake          0.001319  
+        dt_make          0.000321  
+         dt_run          0.000487  
+        dt_plot          0.000296  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp|             19-12-24 20:48|             19-12-24 20:48| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt|             19-12-24 20:48|             19-12-24 20:48| 
+   +---------------+---------------------------+---------------------------+
+   |        plot.py|             19-12-24 20:48|             19-12-24 20:48| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py|             19-12-24 20:48|             19-12-24 20:48| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst|             19-12-24 20:48|             19-12-24 20:48| 
+   +---------------+---------------------------+---------------------------+
+   
