@@ -15,7 +15,7 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="2.3. Structure Grid and Domain Examples" href="structure.html" />
+    <link rel="next" title="2.2.2. Jacobi Solver" href="2-3-1-jacobi_solver.html" />
     <link rel="prev" title="2.2. Algebra Examples" href="algebra.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -75,13 +75,13 @@
           <div class="body" role="main">
             
   <div class="section" id="array-openmp">
-<h1>2.2.1. Array Openmp<a class="headerlink" href="#array-openmp" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">2.2.1. </span>Array Openmp<a class="headerlink" href="#array-openmp" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="problem-description">
-<h2>2.2.1.1. Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.1.1. </span>Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
 <p>This test case just illustrates how to use OpenMP. The prefromence test has been carried out for comparsion. Note that the perfromence may highly depend on hardware platform. This test program could get different results on an other computer.</p>
 </div>
 <div class="section" id="time-test">
-<h2>2.2.1.2. Time Test<a class="headerlink" href="#time-test" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.1.2. </span>Time Test<a class="headerlink" href="#time-test" title="Permalink to this headline">¶</a></h2>
 <p>OpenMP takes some time to allocate the threads and manage them. This procedure will spend some time. Compare to the time for runing simple task, the time used for managing threads can’t not be ignored. Here, we want to find out what kind of task is suitalbe for paralleling in terms of excution time. A simple sleep funtion is used as single task function. Multiple threads, say n threads, will execut the function n times. If they are runing in prefect parallel, the execution time time will be as same as the single thread running the funtion for just one time.</p>
 <p>We set the number of threads, n = 2, 4, 10, 20, 40. The result is shown in following Figure.</p>
 <div class="figure align-center" id="id1">
@@ -95,7 +95,7 @@
 </ul>
 </div>
 <div class="section" id="array-operation-test">
-<h2>2.2.1.3. Array Operation Test<a class="headerlink" href="#array-operation-test" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.1.3. </span>Array Operation Test<a class="headerlink" href="#array-operation-test" title="Permalink to this headline">¶</a></h2>
 <p>A simple array operation(+,-,*) execute in parallel. Following figure shows the result. The operation is acted on arrays with different length. The longer array takes more time to operate. The execution time should be longer than 10 ms. The parallel execution could save time.</p>
 <div class="figure align-center" id="id2">
 <img alt="arrar test for OpenMP" src="_images/arrayop.png" />
@@ -103,7 +103,7 @@
 </div>
 </div>
 <div class="section" id="case-information">
-<h2>2.2.1.4. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2.1.4. </span>Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
 <p>Run time infomation:</p>
 <table class="colwidths-auto docutils align-center" id="id3">
 <caption><span class="caption-number">Table 2.11 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
@@ -114,16 +114,16 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>dt_cmake</p></td>
-<td><p>2.353299</p></td>
+<td><p>1.509994</p></td>
 </tr>
 <tr class="row-odd"><td><p>dt_make</p></td>
-<td><p>1.446722</p></td>
+<td><p>1.108225</p></td>
 </tr>
 <tr class="row-even"><td><p>dt_run</p></td>
-<td><p>34.091742</p></td>
+<td><p>161.026824</p></td>
 </tr>
 <tr class="row-odd"><td><p>dt_plot</p></td>
-<td><p>0.000076</p></td>
+<td><p>0.040985</p></td>
 </tr>
 </tbody>
 </table>
@@ -137,20 +137,20 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>main.cpp</p></td>
-<td><p>2019-01-16 20:58:07.667747</p></td>
-<td><p>2019-01-16 20:58:07.667747</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-odd"><td><p>CMakeLists.txt</p></td>
-<td><p>2019-01-13 22:05:14.915512</p></td>
-<td><p>2019-01-13 22:05:14.915512</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-even"><td><p>run.py</p></td>
-<td><p>2019-05-23 20:17:35.814341</p></td>
-<td><p>2019-05-23 20:17:35.814341</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-odd"><td><p>report.rst</p></td>
-<td><p>2019-05-23 20:17:29.238122</p></td>
-<td><p>2019-05-23 20:17:29.238122</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 </tbody>
 </table>

@@ -1,8 +1,10 @@
+.. projection_method:
+
 =================
-Theory
+Theory of CFD
 =================
 
 .. toctree::
 
-   convection
-   projection_method
+  convection
+  projection_method

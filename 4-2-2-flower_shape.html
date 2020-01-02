@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.5.2. Flower Shape &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. reStructureText Examples" href="example.html" />
+    <link rel="prev" title="2.5.1. Time Scheme 1D" href="4-2-1-time_scheme_1d.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.5.2. Flower Shape</a><ul>
+<li><a class="reference internal" href="#problem-description">2.5.2.1. Problem Description</a></li>
+<li><a class="reference internal" href="#error-definition">2.5.2.2. Error Definition</a></li>
+<li><a class="reference internal" href="#masked-cell-solution">2.5.2.3. Masked Cell Solution</a></li>
+<li><a class="reference internal" href="#case-information">2.5.2.4. Case Information</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="flower-shape">
+<h1><span class="section-number">2.5.2. </span>Flower Shape<a class="headerlink" href="#flower-shape" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-description">
+<h2><span class="section-number">2.5.2.1. </span>Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<p>This example solves Poisson’s equation</p>
+<div class="math notranslate nohighlight">
+\[\nabla \cdot \beta \nabla \phi = 7 r^2 cos 3 \theta\]</div>
+<p>where, <span class="math notranslate nohighlight">\(\beta = 1\)</span> in present case.</p>
+<p>The domain is defined by</p>
+<div class="math notranslate nohighlight">
+\[\Omega = {(r, \theta) : r \le 0.30 + 0.15 cos 6 \theta}\]</div>
+<p>Dirichlet boundary conditions on <span class="math notranslate nohighlight">\(\partial \Omega\)</span> are specified by the exact solution,</p>
+<div class="math notranslate nohighlight">
+\[\varphi (r, \theta) = r^4 cos3 \theta\]</div>
+</div>
+<div class="section" id="error-definition">
+<h2><span class="section-number">2.5.2.2. </span>Error Definition<a class="headerlink" href="#error-definition" title="Permalink to this headline">¶</a></h2>
+<p>Volume-weighted norm of a variable <span class="math notranslate nohighlight">\(e\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[||e||^{\Lambda, \Omega_k}_{p} = (\sum_{\Omega_k} |e|^p \Lambda V)^{1/p}\]</div>
+<p>where <span class="math notranslate nohighlight">\(V = \Delta x \Delta y\)</span> is the cell volume. <span class="math notranslate nohighlight">\(\Lambda\)</span> is volume fraction for cut cell.</p>
+<p>The rate of convergence between two norms, <span class="math notranslate nohighlight">\(e_1\)</span> and <span class="math notranslate nohighlight">\(e_2\)</span>, with two different grid spacings <span class="math notranslate nohighlight">\(h_1\)</span> and <span class="math notranslate nohighlight">\(h2\)</span>, as</p>
+<div class="math notranslate nohighlight">
+\[r = log(\frac{e_1}{e_2}) / log(\frac{h_1}{h_2})\]</div>
+<p>Thus with <span class="math notranslate nohighlight">\(h_1 &lt; h_2\)</span>, a rate of <span class="math notranslate nohighlight">\(r=1\)</span> for the two errors <span class="math notranslate nohighlight">\(e_1\)</span> and <span class="math notranslate nohighlight">\(e_2\)</span> indicates a first-order accurate method.</p>
+</div>
+<div class="section" id="masked-cell-solution">
+<h2><span class="section-number">2.5.2.3. </span>Masked Cell Solution<a class="headerlink" href="#masked-cell-solution" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="case-information">
+<h2><span class="section-number">2.5.2.4. </span>Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<p>Run time infomation:</p>
+<table class="colwidths-auto docutils align-center" id="id1">
+<caption><span class="caption-number">Table 2.30 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Functions</p></th>
+<th class="head"><p>Wall Time (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dt_cmake</p></td>
+<td><p>0.001319</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_make</p></td>
+<td><p>0.000321</p></td>
+</tr>
+<tr class="row-even"><td><p>dt_run</p></td>
+<td><p>0.000487</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_plot</p></td>
+<td><p>0.000296</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto docutils align-center" id="id2">
+<caption><span class="caption-number">Table 2.31 </span><span class="caption-text">Files in this case.</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Creat Time</p></th>
+<th class="head"><p>Modified Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main.cpp</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMakeLists.txt</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
+</tr>
+<tr class="row-even"><td><p>plot.py</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
+</tr>
+<tr class="row-odd"><td><p>run.py</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
+</tr>
+<tr class="row-even"><td><p>report.rst</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/4-2-2-flower_shape.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

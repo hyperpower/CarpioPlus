@@ -8,3 +8,4 @@ Examples and Tests
    algebra
    structure
    convection
+   poisson

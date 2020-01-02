@@ -77,13 +77,13 @@
           <div class="body" role="main">
             
   <div class="section" id="bezier-curve">
-<h1>2.1.4. Bezier Curve<a class="headerlink" href="#bezier-curve" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">2.1.4. </span>Bezier Curve<a class="headerlink" href="#bezier-curve" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
-<h2>2.1.4.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>A Bézier curve is is a parametric curve used in computer graphics and related fields. Details can be found at <a class="reference external" href="https://en.wikipedia.org/wiki/B%C3%A9zier_curve">Wiki</a>. A few Bézier curves have been implemented.</p>
 </div>
 <div class="section" id="linear-bezier-curves">
-<h2>2.1.4.2. Linear Bézier curves<a class="headerlink" href="#linear-bezier-curves" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.2. </span>Linear Bézier curves<a class="headerlink" href="#linear-bezier-curves" title="Permalink to this headline">¶</a></h2>
 <p>Given distinct points <span class="math notranslate nohighlight">\(\mathbf{P}_0\)</span> and <span class="math notranslate nohighlight">\(\mathbf{P}_1\)</span>, a linear Bézier curve is simply a straight line between those two points. The curve is given by</p>
 <div class="math notranslate nohighlight" id="equation-eq-bezier1">
 <span class="eqno">(2.1)<a class="headerlink" href="#equation-eq-bezier1" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{B}(t) &amp;= \mathbf{P}_0 + t(\mathbf{P}_1 - \mathbf{P}_0)\\
@@ -95,7 +95,7 @@
 </div>
 </div>
 <div class="section" id="quadratic-bezier-curves">
-<h2>2.1.4.3. Quadratic Bézier curves<a class="headerlink" href="#quadratic-bezier-curves" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.3. </span>Quadratic Bézier curves<a class="headerlink" href="#quadratic-bezier-curves" title="Permalink to this headline">¶</a></h2>
 <p>A quadratic Bézier curve is the path traced by the function <span class="math notranslate nohighlight">\(\mathbf{B}(t)\)</span>, given points <span class="math notranslate nohighlight">\(\mathbf{P}_0\)</span>, <span class="math notranslate nohighlight">\(\mathbf{P}_1\)</span>, and <span class="math notranslate nohighlight">\(\mathbf{P}_2\)</span>,</p>
 <div class="math notranslate nohighlight" id="equation-eq-bezier2">
 <span class="eqno">(2.2)<a class="headerlink" href="#equation-eq-bezier2" title="Permalink to this equation">¶</a></span>\[\mathbf{B}(t) = (1-t)[(1-t)\mathbf{P}_0 + t\mathbf{P}_1] + t[(1-t)\mathbf{P}_1 + t\mathbf{P}_2]\]</div>
@@ -106,7 +106,7 @@
 </div>
 </div>
 <div class="section" id="cubic-bezier-curves">
-<h2>2.1.4.4. Cubic Bézier curves<a class="headerlink" href="#cubic-bezier-curves" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.4. </span>Cubic Bézier curves<a class="headerlink" href="#cubic-bezier-curves" title="Permalink to this headline">¶</a></h2>
 <p>Cubic Bézier curve can be defined as an affine combination of two quadratic Bézier curves:</p>
 <p>Given points <span class="math notranslate nohighlight">\(\mathbf{P}_0\)</span>, <span class="math notranslate nohighlight">\(\mathbf{P}_1\)</span>, <span class="math notranslate nohighlight">\(\mathbf{P}_2\)</span> and <span class="math notranslate nohighlight">\(\mathbf{P}_3\)</span></p>
 <div class="math notranslate nohighlight" id="equation-eq-bezier3">
@@ -118,7 +118,7 @@
 </div>
 </div>
 <div class="section" id="high-order-bezier-curves">
-<h2>2.1.4.5. High Order Bézier curves<a class="headerlink" href="#high-order-bezier-curves" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.5. </span>High Order Bézier curves<a class="headerlink" href="#high-order-bezier-curves" title="Permalink to this headline">¶</a></h2>
 <p>A <strong>recursive definition</strong> for the Bézier curve of degree n expresses it as a point-to-point linear combination (linear interpolation) of a pair of corresponding points in two Bézier curves of degree n − 1.</p>
 <p>Let <span class="math notranslate nohighlight">\(\mathbf {B}_{\mathbf {P} _{0}\mathbf {P} _{1}\ldots \mathbf {P} _{n}}\)</span> denote the Bézier curve determined by any selection of points <span class="math notranslate nohighlight">\(\mathbf{P}_0\)</span>, <span class="math notranslate nohighlight">\(\mathbf{P}_1\)</span>, <span class="math notranslate nohighlight">\(\ldots\)</span> <span class="math notranslate nohighlight">\(\mathbf{P}_n\)</span>. Then to start,</p>
 <div class="math notranslate nohighlight" id="equation-eq-bezierh">
@@ -129,7 +129,7 @@
 </div>
 </div>
 <div class="section" id="case-information">
-<h2>2.1.4.6. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1.4.6. </span>Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
 <p>Run time infomation:</p>
 <table class="colwidths-auto docutils align-center" id="id5">
 <caption><span class="caption-number">Table 2.9 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
@@ -140,13 +140,13 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>dt_cmake</p></td>
-<td><p>0.001507</p></td>
+<td><p>0.000919</p></td>
 </tr>
 <tr class="row-odd"><td><p>dt_make</p></td>
-<td><p>0.001114</p></td>
+<td><p>0.000393</p></td>
 </tr>
 <tr class="row-even"><td><p>dt_run</p></td>
-<td><p>0.000786</p></td>
+<td><p>0.000366</p></td>
 </tr>
 <tr class="row-odd"><td><p>dt_plot</p></td>
 <td><p>0.000061</p></td>
@@ -163,20 +163,20 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>main.cpp</p></td>
-<td><p>2019-06-26 23:03:31.329024</p></td>
-<td><p>2019-06-26 23:03:31.329024</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-odd"><td><p>CMakeLists.txt</p></td>
-<td><p>2019-06-26 21:31:55.004365</p></td>
-<td><p>2019-06-26 21:31:55.004365</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-even"><td><p>run.py</p></td>
-<td><p>2019-06-26 21:38:09.075077</p></td>
-<td><p>2019-06-26 21:38:09.075077</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 <tr class="row-odd"><td><p>report.rst</p></td>
-<td><p>2019-06-27 21:17:22.370515</p></td>
-<td><p>2019-06-27 21:17:22.370515</p></td>
+<td><p>19-12-24 20:48</p></td>
+<td><p>19-12-24 20:48</p></td>
 </tr>
 </tbody>
 </table>

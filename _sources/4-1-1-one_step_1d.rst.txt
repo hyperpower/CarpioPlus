@@ -1,6 +1,6 @@
-============================
+=================================
 One Step 1D
-============================
+=================================
 
 Problem Description
 ===================
@@ -8,15 +8,15 @@ Problem Description
 The 1D gate profile has been initialized as:
 
 .. math::
-   x &< 0.5, \phi = 1,  \\
-   x &> 0.5, \phi = 0
+   x &\in [0.0, 0.5]   , \phi = 1,  \\
+   x &\notin [0.5, 2.0], \phi = 0
    :label: eq_initial
 
 The velocity is :math:`u=1` m/s. After 1 seconds (100 steps with :math:`\Delta t = 0.01`), the final profile should be 
 
 .. math::
-   x < 1.5&, \phi = 1,  \\
-     else &, \phi = 0
+   x \in [0.0, 1.5]&, \phi = 1,  \\
+     else          &, \phi = 0
    :label: eq_final 
 
 .. figure:: _static/4-1-1-one_step_1d/illustration.png
@@ -28,8 +28,24 @@ The velocity is :math:`u=1` m/s. After 1 seconds (100 steps with :math:`\Delta t
 Results
 ===================
 
-First order upwind
+First Order Upwind
 -------------------
+The first schem is First Order Upwind (FOU).
+
+.. figure:: _static/4-1-1-one_step_1d/Upwind1.gif
+   :alt: the gate profile
+   :align: center 
+
+   First Order Upwind.
+
+.. figure:: _static/4-1-1-one_step_1d/Upwind1_000100.png
+   :alt: the gate profile
+   :align: center 
+
+   First Order Upwind (Last Step).
+
+
+
 
 Case Information
 ===================
@@ -40,12 +56,12 @@ Run time infomation:
    :align: center 
 
    ============= =====================
-    Functions      CPU Time            
+    Functions      Wall Time (s)            
    ============= =====================
-       dt_cmake      1.468000e-03  
-        dt_make      8.870000e-04  
-         dt_run      7.980000e-04  
-        dt_plot      6.910000e-04  
+       dt_cmake          0.001200  
+        dt_make          0.000827  
+         dt_run          0.000751  
+        dt_plot          0.000437  
    ============= =====================
 
 
@@ -56,14 +72,14 @@ Run time infomation:
    +---------------+---------------------------+---------------------------+ 
    | File          | Creat Time                | Modified Time             | 
    +===============+===========================+===========================+ 
-   |       main.cpp| 2018-12-30 12:00:07.529606| 2018-12-30 12:00:07.529606| 
+   |       main.cpp|             19-12-31 22:44|             19-12-31 22:44| 
    +---------------+---------------------------+---------------------------+
-   | CMakeLists.txt| 2018-12-30 15:29:52.985651| 2018-12-30 15:29:52.985651| 
+   | CMakeLists.txt|             19-12-24 20:48|             19-12-24 20:48| 
    +---------------+---------------------------+---------------------------+
-   |        plot.py| 2018-10-31 23:49:21.285539| 2018-10-31 23:49:21.285539| 
+   |        plot.py|             19-12-28 19:23|             19-12-28 19:23| 
    +---------------+---------------------------+---------------------------+
-   |         run.py| 2018-11-23 23:47:34.272199| 2018-11-23 23:47:34.272199| 
+   |         run.py|             19-12-28 18:45|             19-12-28 18:45| 
    +---------------+---------------------------+---------------------------+
-   |    report.rstt| 2018-12-30 11:58:44.357779| 2018-12-30 11:58:44.357779| 
+   |     report.rst|             19-12-28 19:23|             19-12-28 19:23| 
    +---------------+---------------------------+---------------------------+
    

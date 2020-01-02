@@ -15,7 +15,7 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2. Examples and Tests" href="../examples.html" />
+    <link rel="next" title="1.2.1. Non-incremental Projection" href="non-incremental.html" />
     <link rel="prev" title="1.1.2. ENO" href="eno.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -45,15 +45,6 @@
 
 
 
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">1.2. Projection Method</a><ul>
-<li><a class="reference internal" href="#introduction">1.2.1. Introduction</a></li>
-<li><a class="reference internal" href="#non-incremental-projection-method">1.2.2. Non-incremental projection method</a></li>
-</ul>
-</li>
-</ul>
-
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -73,50 +64,18 @@
           <div class="body" role="main">
             
   <div class="section" id="projection-method">
-<h1>1.2. Projection Method<a class="headerlink" href="#projection-method" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<h2>1.2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="non-incremental-projection-method">
-<h2>1.2.2. Non-incremental projection method<a class="headerlink" href="#non-incremental-projection-method" title="Permalink to this headline">¶</a></h2>
-<p>The usual non-incremental algorithm is proposed by Chorin. The definition of the parameters are shown as follows:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 75%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Parameters</p></th>
-<th class="head"><p>Illustion</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Time interval</p></td>
-<td><p><span class="math notranslate nohighlight">\([0, T]\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Time subinterval</p></td>
-<td><p><span class="math notranslate nohighlight">\(N\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>Time step</p></td>
-<td><p><span class="math notranslate nohighlight">\(\Delta t = T / N\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Velocities</p></td>
-<td><p><span class="math notranslate nohighlight">\({\tilde{\mathbf{u}}^{n+1}}_{n = 0,...,N}\)</span></p></td>
-</tr>
-<tr class="row-even"><td><p>Velocities</p></td>
-<td><p><span class="math notranslate nohighlight">\({\mathbf{u}^{n+1}}_{n = 0,...,N}\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Pressure</p></td>
-<td><p><span class="math notranslate nohighlight">\({\mathbf{p}^{n+1}}_{n = 0,...,N}\)</span></p></td>
-</tr>
-</tbody>
-</table>
-<p>The governing equations are:</p>
-<ul class="simple">
-<li><p>Momentum equation:</p></li>
+<h1><span class="section-number">1.2. </span>Projection Method<a class="headerlink" href="#projection-method" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="non-incremental.html">1.2.1. Non-incremental Projection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="non-incremental.html#introduction">1.2.1.1. Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="non-incremental.html#calculation-of-an-auxiliary-veloticy-field">1.2.1.2. Calculation of an Auxiliary Veloticy Field</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="non-incremental.html#boundary-condition-for-tilde-u">1.2.1.2.1. Boundary condition for <span class="math notranslate nohighlight">\(\tilde{u}\)</span></a></li>
 </ul>
-<div class="math notranslate nohighlight">
-\[\frac{\rho}{\Delta t}(\tilde{\mathbf{u}}^{n+1} - \mathbf{u}^{n+1}) - \mu \Delta \tilde{\mathbf{u}}^{n+1} = \mathbf{u}^{n+1}\]</div>
+</li>
+</ul>
+</li>
+</ul>
 </div>
 </div>
 
