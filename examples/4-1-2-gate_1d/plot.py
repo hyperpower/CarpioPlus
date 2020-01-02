@@ -187,6 +187,12 @@ def plot_all(scheme):
     # make gif
     os.system("convert -delay 5 -loop 0 ./fig/%s_*.png ./fig/%s.gif" % (scheme, scheme))
 
+    # delete files
+    for f in fmat:
+        strstep = f[2]
+        if int(strstep) != 100:
+            os.system("rm " + PATH_FIG + "/" + scheme + "_%06d" % int(strstep) +".png")
+
 def cal_norm(scheme, strstep, strtime):
     fne = PATH_DATA + "/" + scheme + "_phi_" + strstep + "_" + strtime + ".txt"
 
@@ -276,7 +282,9 @@ def plot_norm(scheme):
 def main():
     plot_illustration_fig()
 
-    # plot_all("QUICK")
+    plot_all("QUICK")
+    plot_all("FOU")
+
     plot_norm("FOU")
     plot_norm("QUICK")
 
