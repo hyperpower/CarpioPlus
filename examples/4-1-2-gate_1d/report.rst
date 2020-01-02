@@ -28,13 +28,13 @@ First Order Upwind
 -------------------
 The first schem is First Order Upwind (FOU).
 
-.. figure:: _static/{{folder_name}}/Upwind1.gif
+.. figure:: _static/{{folder_name}}/FOU.gif
    :alt: the gate profile
    :align: center 
 
    First Order Upwind.
 
-.. figure:: _static/{{folder_name}}/Upwind1_000100.png
+.. figure:: _static/{{folder_name}}/FOU_000100.png
    :alt: the gate profile
    :align: center 
 
