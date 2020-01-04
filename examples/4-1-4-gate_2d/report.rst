@@ -24,6 +24,34 @@ Results
 
 First Order Upwind
 -------------------
-Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-4}`. CFL number is 0.5.
+Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-5}`. CFL number is 0.4.
 
+.. figure:: _static/{{folder_name}}/FOU_phi.gif
+   :alt: the gif
+   :align: center 
 
+   First Order Upwind.
+
+.. figure:: _static/{{folder_name}}/FOU_phi_last.png
+   :align: center 
+
+   First Order Upwind (Last Step).
+
+.. figure:: _static/{{folder_name}}/FOU_Section.png
+   :align: center 
+
+   First Order Upwind (x = 0.6).
+
+Center Difference Scheme
+-------------------------
+.. figure:: _static/{{folder_name}}/CDS_Section.png
+   :align: center 
+
+   CDS (x = 0.6).
+
+QUICK
+-------------------------
+.. figure:: _static/{{folder_name}}/QUICK_Section.png
+   :align: center 
+
+   QUICK (x = 0.6).

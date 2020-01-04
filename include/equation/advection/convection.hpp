@@ -136,7 +136,6 @@ public:
 	}
 
 	int run_one_step(St step) {
-		std::cout << "    Convection: One Step "<< step <<" \n";
 		(this->*_fun_one_step)(step);
 		return -1;
 	}

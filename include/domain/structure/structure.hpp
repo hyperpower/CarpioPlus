@@ -8,6 +8,7 @@
 
 #include "ghost/ghost.hpp"
 #include "ghost/regular.hpp"
+#include "ghost/regular_subdivision.hpp"
 #include "ghost/mask.hpp"
 #include "ghost/linear_cut.hpp"
 

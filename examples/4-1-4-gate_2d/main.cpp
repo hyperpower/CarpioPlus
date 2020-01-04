@@ -13,7 +13,7 @@ typedef typename Domain::spOrder spOrder;
 
 int run_a_scheme(const std::string& scheme) {
     const St n   = 65;                           // number of cells
-    const Vt CFL = 0.2;                          // CFL
+    const Vt CFL = 0.4;                          // CFL
     const Vt dt  = CFL / n;                      // delta time
 
     std::cout << "Scheme     = " << scheme  << std::endl;
@@ -91,7 +91,7 @@ int run_a_scheme(const std::string& scheme) {
     equ.add_event("OutputSection", speaa);
 
     // plot
-    if (scheme == "fou"){
+    if (scheme == "FOU"){
     typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
     typename EventGnuplotField::FunPlot plot_fun = [](
             Gnuplot& gnu,
@@ -131,7 +131,7 @@ int run_a_scheme(const std::string& scheme) {
 }
 
 int main(int argc, char** argv) {
-    run_a_scheme("quick");
-    run_a_scheme("cds");
-    run_a_scheme("fou");
+    run_a_scheme("QUICK");
+    run_a_scheme("CDS");
+    run_a_scheme("FOU");
 }

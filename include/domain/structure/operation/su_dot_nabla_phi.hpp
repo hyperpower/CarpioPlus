@@ -508,18 +508,21 @@ protected:
     static Vt _limiter_Harmonic(Vt r, Vt R){
         return (r + std::abs(r)) / (r + 1.0);
     }
+    // Symmetric polynomial-ratio (SPR) schemes
     static Vt _limiter_OSPER(Vt r, Vt R){
         return 3.0 * r * (r + 1.0) / 2.0 / (r * r + r + 1.0);
     }
     static Vt _limiter_Albada(Vt r, Vt R){
         return r * (r + 1.0) / (r * r + 1.0);
     }
+
     static Vt _limiter_GVA12(Vt r, Vt R){
         return r * (r + 2.0) / (r * r + 2.0);
     }
     static Vt _limiter_GVA13(Vt r, Vt R){
         return r * (r + 3.0) / (r * r + 3.0);
     }
+    // Generalized polynomial-ratio (GPR) schemes
     static Vt _limiter_GPR0(Vt r, Vt R){
         return r * (3.0 * r + 1.0) / (2.0 * r * r + r + 1.0);
     }

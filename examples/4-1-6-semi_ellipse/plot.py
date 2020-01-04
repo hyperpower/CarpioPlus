@@ -52,8 +52,11 @@ def plot_illustration_fig():
     line_x     = [0.0, 1.0]
     line_y     = [0.0, 1.0]
     # dash line 2
-    line2_x    = [0.0, 0.7]
-    line2_y    = [0.3, 1.0]
+    line2_x    = [0.0,       1.0 - (1.0/6.0)]
+    line2_y    = [(1.0/6.0), 1.0]
+    # dash line 2
+    line3_x    = [(1.0/6.0), 1.0]
+    line3_y    = [0.0, 1.0 - (1.0/6.0)]
 
     arrx_start = [x_st, 0.25, 0.25, 0.75, 0.75, x_ed] 
     arr_v      = [0.0,  0.0,  1.0,  1.0 , 0.0,  0.0]
@@ -63,88 +66,49 @@ def plot_illustration_fig():
 
     plt.plot(line_x,   line_y, "--", linewidth=2.0)
     plt.plot(line2_x, line2_y, "--", linewidth=2.0, color = "C1")
+    plt.plot(line3_x, line3_y, "--", linewidth=2.0, color = "C1")
 
-    # the 0.3 tick
-    plt.plot([-0.05, 0.0], [0.3, 0.3], "-", linewidth=2.0, color = "C0")
-    plt.text( -0.2, 0.3, "0.3", color = "C0", va = "center")
+    # the 1/6 ticky
+    ticky = 1.0/6.0
+    plt.plot([-0.05, 0.0], [ticky, ticky], "-", linewidth=2.0, color = "C0")
+    plt.text( -0.2, ticky, "1/6", color = "C0", va = "center")
+    
+    plt.text(-0.4, .08, r'$\sqrt{1 - (6 * y)^2}$', va="center")
+
+    plt.plot([ticky, ticky], [-0.05, 0.0], "-", linewidth=2.0, color = "C0")
+    plt.text( ticky, -0.14, "1/6", color = "C0",   ha="center")
+
+    plt.text(-0.3, -.1, r'$\sqrt{1 - (6 * x)^2}$', va="center")
 
     plt.text(0.25, 1.05, r'$\frac{d \phi}{d y}$ = ' + "%.f" % float(0.0))
     plt.text(0.25,-0.15, r'$\phi$ = ' + "%.1f" % float(0.0))
-    plt.text(-0.35, .15,  r'$\phi$ = ' + "%.1f" % float(1.0), va="center")
-    plt.text(-0.35, .6,   r'$\phi$ = ' + "%.1f" % float(0.0), va="center")
+    plt.text(-0.35, .6,  r'$\phi$ = ' + "%.1f" % float(0.0), va="center")
     plt.text(1.1,  .5,   r'$\frac{d \phi}{d x}$ = ' + "%.f" % float(0.0))
 
-    plt.arrow(0.5,  0.1, 0.2, 0.0, width=0.01, color = "k")
-    plt.text( 0.52, 0.01, "u = 1.0")
-    plt.arrow(0.5,  0.1, 0.0, 0.2, width=0.01, color = "k")
-    plt.text( 0.42, 0.34, "v = 1.0")
-    plt.arrow(0.5,  0.1, 0.2, 0.2, width=0.01, color = "r")
+    vv = {"x" : 0.6, "y" : 0.1}
+    plt.arrow(vv["x"],        vv["y"], 0.2, 0.0, width=0.01, color = "k")
+    plt.text( vv["x"] + 0.06, vv["y"] - 0.07, "u = 1.0")
+    plt.arrow(vv["x"],        vv["y"], 0.0, 0.2, width=0.01, color = "k")
+    plt.text( vv["x"] - 0.1,  vv["y"] + 0.25, "v = 1.0")
+    plt.arrow(vv["x"],        vv["y"], 0.2, 0.2, width=0.01, color = "r")
 
-    plt.text( 0.35, 0.6, r'$\phi=\sin^2(\frac{10}{3} \pi y)$')
-    plt.text( 0.6, 0.45, r'$\phi=0.0$')
+    plt.text( 0.75, 0.45, r'$\phi=0.0$')
     plt.text( 0.1, 0.75, r'$\phi=0.0$')
 
     # plot cut
-    xcut = 0.6
+    xcut = 0.7
     plt.arrow(xcut,  1.1,  0.1, 0.0, head_width=0.05, color = "k")
     plt.arrow(xcut,  -0.1, 0.1, 0.0, head_width=0.05, color = "k")
     plt.plot([xcut, xcut], [1.1, 1.05], color = "k")
     plt.plot([xcut, xcut], [-0.1, -.05], color = "k")
-    plt.text(xcut + 0.2,  1.1, r'A-A (x = 0.6)', va = "center")
-    plt.text(xcut + 0.2, -0.1, r'A-A (x = 0.6)', va = "center")
+    plt.text(xcut + 0.2,  1.1, r'A-A (x = 0.7)', va = "center")
+    plt.text(xcut + 0.2, -0.1, r'A-A (x = 0.7)', va = "center")
     # plt.legend(llg, scheme, loc= 'upper right')
 
     # plt.grid(True)
     ax.set_aspect('equal')
     plt.tight_layout()
     plt.savefig(PATH_FIG + "/illustration.png")
-    plt.close()
-    # plt.show()
-
-def plot_norm_fig(scheme):
-    plt.figure(figsize=(6, 5))
-    ax = plt.axes()
-
-    """
-    Set labels
-    """
-    plt.xlabel(r'Step')
-    plt.ylabel(r'Norm')
-
-    """
-    Set range
-    """
-    x_st = -0.45
-    x_ed = 1.45
-    y_st = -0.35
-    y_ed = 1.35
-
-    # plt.xlim([x_st, x_ed])
-    # plt.ylim([y_st, y_ed])
-    #plt.xscale('log')
-    plt.yscale('log')
-
-    """
-    Data part
-    """
-    # file check
-    if not os.path.exists(PATH_DATA + "/%s_norm1.txt" % scheme):
-        return
-    # read file
-    file = FT.TextFile(PATH_DATA + "/%s_norm1.txt" % scheme)
-    d    = file.get_data()
-    l1,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
-    file = FT.TextFile(PATH_DATA + "/%s_norm2.txt" % scheme)
-    d    = file.get_data()
-    l2,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
-    file = FT.TextFile(PATH_DATA + "/%s_norminf.txt" % scheme)
-    d    = file.get_data()
-    li,  = ax.plot(FT.col(d, 1), FT.col(d, 2))
-    plt.legend([l1,l2,li], ["Norm1", "Norm2", "Norminf"], loc= 'best')
-
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig(PATH_FIG + "/%s_norm.png" % scheme)
     plt.close()
     # plt.show()
 
@@ -187,16 +151,30 @@ def find_section_file(namedir, namescheme, namevar):
 def add_section_exact(plt, x):
     arrx = np.linspace(0.0, 1.0, num=100) 
     arry = np.array([])
+    v16  = 1.0 / 6.0
     for value in arrx:
-        if x < value < x + 0.3:
-            s = math.sin(10.0 / 3.0 * math.pi * (value - x))
-            arry = np.append(arry, (s*s))
+        if x - v16 < value < x + v16:
+            s = math.sqrt(1.0 - 36 * (value - x) * (value - x))
+            arry = np.append(arry, s)
         else:
             arry = np.append(arry, 0)
     l, = plt.plot(arrx, arry, color = "k")
     return l
 
-def plot_setion(scheme):
+def add_a_scheme(ax, scheme):
+    file = find_section_file("./data/", scheme, "phi")
+    if len(file) < 1:
+        return
+
+    fd   = FT.TextFile(PATH_DATA + "/" + file[0])
+    d    = fd.get_data()
+    l1,  = ax.plot(FT.col(d, 2), FT.col(d, 4), ".")
+
+    avgx = np.average(FT.col(d, 1)) 
+
+    return l1, avgx
+
+def plot_setion_compare(schemes):
     plt.figure(figsize=(6, 5))
     ax = plt.axes()
 
@@ -222,43 +200,33 @@ def plot_setion(scheme):
     """
     Data part
     """
-    file = find_section_file("./data/", scheme, "phi")
-    if len(file) < 1:
-        return
-
-    fd   = FT.TextFile(PATH_DATA + "/" + file[0])
-    d    = fd.get_data()
-    l1,  = ax.plot(FT.col(d, 2), FT.col(d, 4), ".")
-    
-    avgx = np.average(FT.col(d, 1)) 
+    ls = []
+    lname = []
+    for scheme in schemes:
+        l, avgx = add_a_scheme(ax, scheme)
+        ls.append(l)
+        lname.append(scheme)
     
     lexact = add_section_exact(plt, avgx)
-    plt.legend([l1, lexact], [scheme, "Exact"], loc= 'best')
+    ls.append(lexact)
+    lname.append("Exact")
+    plt.legend(ls, lname, loc= 'best')
 
     plt.text(0.3,  0.23, r'x = %.2f' % avgx, va = "center")
 
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(PATH_FIG + "/" + scheme + "_section.png")
+    plt.savefig(PATH_FIG + "/compare_section.png")
     plt.close()
-
-def plot_a_scheme(scheme):
-    plot_setion(scheme)
-    plot_norm_fig(scheme)
-    # change_file_name(scheme)
 
 def main():
     plot_illustration_fig()
     arrscheme = [
-        "fou",
-        "quick",
-        "cds",
-        "superbee",
-        "vanleer",
-        "WAHYD"
+        "FOU",
+        "Superbee",
+        "Minmod"
     ]
-    for s in arrscheme:
-        plot_a_scheme(s)
+    plot_setion_compare(arrscheme)
     # make_gif("fou")
 
 if __name__ == '__main__':

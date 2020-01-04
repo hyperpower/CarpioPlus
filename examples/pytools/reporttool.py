@@ -27,7 +27,7 @@ Run time infomation:
     Functions      Wall Time (s)            
    ============= =====================
    {% for rt in runtime -%}
-   {{ '%12s' % rt[0] }}   {{'%15.6f' % rt[1]}}  
+   {{ '%12s' % rt[0] }}   {{'%15.5e' % rt[1]}}  
    {% endfor -%}
    ============= =====================
 

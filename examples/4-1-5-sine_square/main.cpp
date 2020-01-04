@@ -135,7 +135,7 @@ int run_a_scheme(const std::string& scheme) {
 
 int main(int argc, char** argv) {
     std::vector<std::string> arrscheme = {
-        "QUICK", "CDS", "FOU", "Superbee", "VanLeer", "WAHYD"
+        "GPR0", "GPR12", "GPR13", "FOU"
     };
     for(auto& scheme : arrscheme){
         run_a_scheme(scheme);

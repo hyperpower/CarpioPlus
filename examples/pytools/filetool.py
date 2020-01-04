@@ -17,6 +17,17 @@ import numbers
 def col(matrix, i):
     return [row[i] for row in matrix]
 
+# data file name is sperated by underscore.
+# select_files like <name0>_<name1>_....txt
+def select_files_split(dirname, name0, name1):
+    res = []
+    files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == name0 and spf[1] == name1:
+            res.append(spf)
+    return res 
+
 class TextFile:
     def __init__(self, filename):
         self._fn = filename

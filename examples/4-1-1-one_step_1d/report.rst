@@ -26,7 +26,6 @@ Results
 
 First Order Upwind
 -------------------
-The first schem is First Order Upwind (FOU).
 
 .. figure:: _static/{{folder_name}}/Upwind1.gif
    :alt: the gate profile

@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
     typedef EventOutputField_<DIM, Domain> EventOutputField;
     EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
-    eos.set_format_string("Upwind1_%s_%d_%8.4e.txt");
+    eos.set_format_string("FOU_%s_%d_%8.4e.txt");
     equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
 
     // Run

@@ -133,33 +133,32 @@ def plot_norm_fig():
     plt.close()
     # plt.show()
 
-def file_name(namedir, namescheme, namevar):
-    res = []
-    files = [f for f in os.listdir(namedir) if os.path.isfile(os.path.join(namedir, f))]
-    for f in files:
-        spf = f.split("_")
-        if spf[0] == namescheme and spf[1] == namevar:
-            res.append(spf)
-    return res 
-
 def change_file_name(scheme):
     # the png is plot by gnuplot
-    filemat = file_name("./fig/", scheme, "phi")
+    filemat = FT.select_files_split("./fig/", scheme, "phi")
     if len(filemat[0]) < 4 :
         return
     sfm     = sorted(filemat, key = lambda x: int(x[2]))
     # change file name
     count = 0 
+    nfiles = []
     for row in sfm:
         old_fn  = "%s_%s_%s_%s" % (row[0], row[1], row[2], row[3])
         new_fn  = "%s_%s_%06d.png" % (row[0], row[1], count)
+        nfiles.append(new_fn)
         os.system("mv ./fig/%s ./fig/%s" % (old_fn, new_fn))
         count += 1
 
     os.system("convert -delay 5 -loop 0 ./fig/%s_%s_*.png ./fig/%s_%s.gif" % (scheme, "phi", scheme, "phi"));
 
+    for i in range(0, len(nfiles)):
+        if i != len(nfiles) - 1:
+            os.system("rm ./fig/" + nfiles[i])
+        else:
+            os.system("mv ./fig/" + nfiles[i] + " ./fig/"+scheme +"_phi_last.png")
+
 def main():
-    scheme = "Upwind1"
+    scheme = "FOU"
     plot_illustration_fig()
     plot_norm_fig()
     change_file_name(scheme)

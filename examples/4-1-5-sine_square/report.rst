@@ -17,13 +17,29 @@ The velocity is :math:`\mathbf{u}=(1, 1)`.
 
    Illustration of the problem.
 
-The :math:`y=x` and :math:`y=x+0.3` is a step which jumps between 1 and 0.
 
 Results
 ===================
 
-First Order Upwind
--------------------
-Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-4}`. CFL number is 0.5.
+This example tests three GRP (Generalized polynomial-ratio) schemes.
+
+.. figure:: _static/{{folder_name}}/GPR0_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPRO.
+
+.. figure:: _static/{{folder_name}}/GPR12_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPR12.
+
+.. figure:: _static/{{folder_name}}/GPR13_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPR13.
+
 
 

@@ -112,31 +112,6 @@ def plot_one(scheme, strstep, strtime):
     plt.close()
     # plt.show()
 
-def plot_all():
-    matfu = file_name(PATH_RESULT, "exact")
-    print(len(matfu))
-    matfc = []
-    for one in matfu:
-        matfc.append(one)
-
-    #multiprocessing.freeze_support()
-    pool = multiprocessing.Pool()
-    cpus = multiprocessing.cpu_count() / 2
-    results = []
-    cmatfs = split(matfc, cpus)
-
-    print("Thread num : ", len(cmatfs))
-    for i in xrange(0, cpus):
-        mat = cmatfs[i]
-        for one in mat:
-            result = pool.apply_async(plot_one, args=(one[1], one[2],))
-            results.append(result)
-    
-    pool.close()
-    pool.join()
-    
-    os.system("convert -delay 5 -loop 0 ./fig/comp_*.png comp.gif")
-
 def plot_illustration_fig():
     plt.figure(figsize=(6, 4))
 
@@ -205,6 +180,11 @@ def plot_all(scheme):
     # make gif
     os.system("convert -delay 5 -loop 0 ./fig/%s_*.png ./fig/%s.gif" % (scheme, scheme))
 
+    # delete files
+    for f in fmat:
+        strstep = f[2]
+        if int(strstep) != 100:
+            os.system("rm " + PATH_FIG + "/" + scheme + "_%06d" % int(strstep) +".png")
 
 def main():
     plot_illustration_fig()
@@ -212,7 +192,7 @@ def main():
     # strt = "4.0000e-02"
     # plot_one("Upwind1", stri, strt) 
     
-    plot_all("Upwind1")
+    plot_all("FOU")
 
 if __name__ == '__main__':
     main()

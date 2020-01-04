@@ -80,7 +80,7 @@ def plot_illustration_fig():
     plt.text( 0.42, 0.34, "v = 1.0")
     plt.arrow(0.5,  0.1, 0.2, 0.2, width=0.01, color = "r")
 
-    plt.text( 0.5, 0.75, r'$\phi=1.0$')
+    plt.text( 0.35, 0.6, r'$\phi=\sin^2(\frac{10}{3} \pi y)$')
     plt.text( 0.6, 0.45, r'$\phi=0.0$')
     plt.text( 0.1, 0.75, r'$\phi=0.0$')
 
@@ -148,29 +148,30 @@ def plot_norm_fig(scheme):
     plt.close()
     # plt.show()
 
+def file_name(namedir, namescheme, namevar):
+    res = []
+    files = [f for f in os.listdir(namedir) if os.path.isfile(os.path.join(namedir, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == namescheme and spf[1] == namevar:
+            res.append(spf)
+    return res 
+
 def make_gif(scheme):
     # the png is plot by gnuplot
-    filemat = FT.select_files_split("./fig/", scheme, "phi")
+    filemat = file_name("./fig/", scheme, "phi")
     if len(filemat[0]) < 4 :
         return
     sfm     = sorted(filemat, key = lambda x: int(x[2]))
     # change file name
     count = 0 
-    nfiles = []
     for row in sfm:
         old_fn  = "%s_%s_%s_%s" % (row[0], row[1], row[2], row[3])
         new_fn  = "%s_%s_%06d.png" % (row[0], row[1], count)
-        nfiles.append(new_fn)
         os.system("mv ./fig/%s ./fig/%s" % (old_fn, new_fn))
         count += 1
 
     os.system("convert -delay 5 -loop 0 ./fig/%s_%s_*.png ./fig/%s_%s.gif" % (scheme, "phi", scheme, "phi"));
-
-    for i in range(0, len(nfiles)):
-        if i != len(nfiles) - 1:
-            os.system("rm ./fig/" + nfiles[i])
-        else:
-            os.system("mv ./fig/" + nfiles[i] + " ./fig/"+scheme +"_phi_last.png")
 
 def find_section_file(namedir, namescheme, namevar):
     res = []
@@ -178,15 +179,21 @@ def find_section_file(namedir, namescheme, namevar):
     for f in files:
         spf = f.split("_")
         if spf[0]     == namescheme \
-           and spf[1] == "Section" \
+           and spf[1] == "section" \
            and spf[2] == namevar:
             res.append(f)
     return res 
 
 def add_section_exact(plt, x):
-    y1 = x
-    y2 = x + 0.3
-    l, = plt.plot([0.0, y1, y1, y2, y2, 1.0], [0.0, 0.0, 1.0, 1.0, 0.0, 0.0], color = "k")
+    arrx = np.linspace(0.0, 1.0, num=100) 
+    arry = np.array([])
+    for value in arrx:
+        if x < value < x + 0.3:
+            s = math.sin(10.0 / 3.0 * math.pi * (value - x))
+            arry = np.append(arry, (s*s))
+        else:
+            arry = np.append(arry, 0)
+    l, = plt.plot(arrx, arry, color = "k")
     return l
 
 def plot_setion(scheme):
@@ -222,13 +229,17 @@ def plot_setion(scheme):
     fd   = FT.TextFile(PATH_DATA + "/" + file[0])
     d    = fd.get_data()
     l1,  = ax.plot(FT.col(d, 2), FT.col(d, 4), ".")
-
-    lexact = add_section_exact(plt, 0.6)
+    
+    avgx = np.average(FT.col(d, 1)) 
+    
+    lexact = add_section_exact(plt, avgx)
     plt.legend([l1, lexact], [scheme, "Exact"], loc= 'best')
+
+    plt.text(0.3,  0.23, r'x = %.2f' % avgx, va = "center")
 
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(PATH_FIG + "/" + scheme + "_Section.png")
+    plt.savefig(PATH_FIG + "/" + scheme + "_section.png")
     plt.close()
 
 def plot_a_scheme(scheme):
@@ -238,11 +249,12 @@ def plot_a_scheme(scheme):
 
 def main():
     plot_illustration_fig()
-    plot_a_scheme("FOU")
-    make_gif("FOU")
-    plot_a_scheme("QUICK")
-    plot_a_scheme("CDS")
-
+    arrscheme = [
+        "GPR0", "GPR12", "GPR13", "FOU"
+    ]
+    for s in arrscheme:
+        plot_a_scheme(s)
+    # make_gif("fou")
 
 if __name__ == '__main__':
     main()

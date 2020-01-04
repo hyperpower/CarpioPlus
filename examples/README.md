@@ -23,23 +23,24 @@ This folder include all the examples for Carpio project.
       2. :ballot_box_with_check: Array OpenMP
    2. Matrix
       1. Matrix operations
+   3. Solver
+      1. :construction: Jacobi Solver
 3. Domain
    1. Structure
       1. :ballot_box_with_check: Field Define
       2. :ballot_box_with_check: Vector Center and Face Define
       3. Corner Define
-      4. Center to Face
-      5. Face to Center
-      6. Center to Corner
+      4. Field Interpolation
+      5. Cut Cell
    2. Octree
 4. Equation
    1. Convection
-      1. :construction: One Step 1D
+      1. :ballot_box_with_check: One Step 1D
       2. :ballot_box_with_check: Gate 1D
-      3. :construction: One Step 2D
-      4. :construction: Gate 2D
-      5. :construction: Sine Square
-      6. Semi Ellipse
+      3. :ballot_box_with_check: One Step 2D
+      4. :ballot_box_with_check: Gate 2D
+      5. :ballot_box_with_check: Sine Square
+      6. :ballot_box_with_check: Semi Ellipse
       7. Rotational One Step
       8. Rotational Two Step
       9. Rotational Smooth

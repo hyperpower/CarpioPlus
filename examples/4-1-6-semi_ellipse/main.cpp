@@ -3,6 +3,8 @@
 #include "domain/boundary/boundary_condition.hpp"
 #include "domain/boundary/boundary_index.hpp"
 
+#include <cmath>
+
 using namespace carpio;
 
 const St DIM = 2;
@@ -11,14 +13,16 @@ typedef typename Domain::spGrid  spGrid;
 typedef typename Domain::spGhost spGhost;
 typedef typename Domain::spOrder spOrder;
 
-int main(int argc, char** argv) {
-    const St n   = 50;                           // number of cells
+int run_a_scheme(const std::string& scheme) {
+    const St n   = 65;                           // number of cells
     const Vt CFL = 0.4;                          // CFL
     const Vt dt  = CFL / n;                      // delta time
 
+    std::cout << "Scheme     = " << scheme  << std::endl;
     std::cout << "Cell size  = " << 1.0 / n << std::endl;
-    std::cout << "Delta time = " << dt << std::endl;
-    std::cout << "CFL number = " << CFL << std::endl;
+    std::cout << "n cell     = " << n       << std::endl;
+    std::cout << "Delta time = " << dt      << std::endl;
+    std::cout << "CFL number = " << CFL     << std::endl;
     spGrid spgrid(
             new SGridUniform_<DIM>({0.0, 0.0},   // min point
                                    {n,  n},      // num on each direction
@@ -35,13 +39,29 @@ int main(int argc, char** argv) {
     equ.set_time_term(500, dt);
 
     // Set boundary condition
-    typedef std::shared_ptr<BoundaryIndex> spBI;
-    typedef BoundaryCondition BC;
+    typedef std::shared_ptr<BoundaryIndex>     spBI;
+    typedef BoundaryCondition                    BC;
     typedef std::shared_ptr<BoundaryCondition> spBC;
     spBI spbi(new BoundaryIndex());
-    spBC spbcxm(new BoundaryConditionValue(BC::_BC1_, 1.0));
+    BoundaryConditionFunXYZ::FunXYZ_Value funy = [](Vt x, Vt y, Vt z){
+        if(y >= 0.0 && y <= 1.0 / 6.0){
+            Vt s = 1.0 - (36.0 * y * y);
+            return std::sqrt(s);
+        }else{
+            return 0.0;
+        }
+    };
+    spBC spbcxm(new BoundaryConditionFunXYZ(BC::_BC1_, funy));
     spbi->insert(0, spbcxm);
-    spBC spbcym(new BoundaryConditionValue(BC::_BC1_, 0.0));
+    BoundaryConditionFunXYZ::FunXYZ_Value funx = [](Vt x, Vt y, Vt z){
+        if(x >= 0.0 && x <= 1.0 / 6.0){
+            Vt s = 1.0 - (36.0 * x * x);
+            return std::sqrt(s);
+        }else{
+            return 0.0;
+        }
+    };
+    spBC spbcym(new BoundaryConditionFunXYZ(BC::_BC1_, funx));
     spbi->insert(2, spbcym);
     equ.set_boundary_index_phi(spbi);
 
@@ -58,6 +78,7 @@ int main(int argc, char** argv) {
     spEvent spetime(new EventOutputTime_<DIM, Domain>(std::cout,
                                                   -1, -1, 1, Event::AFTER));
     equ.add_event("OutputTime", spetime);
+    equ.set_scheme(scheme);
 
     // Stop condition
     typedef std::shared_ptr<EventConditionNormPrevious_<DIM, Domain> > spEventConditionNormPrevious;
@@ -69,7 +90,19 @@ int main(int argc, char** argv) {
                     50, -1, 10, Event::AFTER));
     equ.add_event("Norm", spen1);
 
+    // Output section
+    typedef EventOutputFieldAxisAlignSection_<DIM, Domain> EventOutputFieldAxisAlignSection;
+    typedef std::shared_ptr<EventOutputFieldAxisAlignSection> spEventOutputFieldAxisAlignSection;
+    spEventOutputFieldAxisAlignSection speaa(
+            new EventOutputFieldAxisAlignSection(
+                    "phi", _X_, 0.7,
+                    1, -1, 1, Event::END));
+    speaa->set_path("./data/");
+    speaa->set_format_string(scheme + "_section_%s_%d_%8.4e.txt");
+    equ.add_event("OutputSection", speaa);
+
     // plot
+    if (scheme == "fou"){
     typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
     typename EventGnuplotField::FunPlot plot_fun = [](
             Gnuplot& gnu,
@@ -94,12 +127,25 @@ int main(int argc, char** argv) {
 
     EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER);
     egs.set_path("./fig/");
-    egs.set_format_string("FOU_%s_%d_%8.4e.png");
+    egs.set_format_string(scheme + "_%s_%d_%8.4e.png");
     equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
+    }
 
     equ.run();
 
-    OutputNormList("./data/norm1.txt", "Norm 1", spen1->get_norm1_list());
-    OutputNormList("./data/norm2.txt", "Norm 2", spen1->get_norm2_list());
-    OutputNormList("./data/norminf.txt", "Norm inf", spen1->get_norminf_list());
+    OutputNormList(tfm::format("./data/%s_norm1.txt", scheme), 
+                   "Norm 1", spen1->get_norm1_list());
+    OutputNormList(tfm::format("./data/%s_norm2.txt", scheme), 
+                   "Norm 2", spen1->get_norm2_list());
+    OutputNormList(tfm::format("./data/%s_norminf.txt", scheme),
+                   "Norm inf", spen1->get_norminf_list());
+}
+
+int main(int argc, char** argv) {
+    std::vector<std::string> arrscheme = {
+        "FOU", "Superbee", "Minmod"
+    };
+    for(auto& scheme : arrscheme){
+        run_a_scheme(scheme);
+    }
 }

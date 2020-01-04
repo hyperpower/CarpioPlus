@@ -94,7 +94,7 @@ public:
     }
 
 
-    int boundary_id(
+    virtual int boundary_id(
                 const Index& indexc,
                 const Index& indexg,
                 const St& axe,
@@ -127,8 +127,6 @@ public:
     	}
         return idxb;
     }
-
-
 
     virtual St size_normal() const{
         return _grid->num_cells();
