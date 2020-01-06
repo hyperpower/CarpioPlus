@@ -11,7 +11,7 @@ namespace carpio {
 
 
 
-TEST(convection, initial){
+TEST(convection, DISABLED_initial){
     const St DIM = 1;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
@@ -67,7 +67,6 @@ TEST(convection, initial){
 	EventNormExactFunction enef("phi", fun_exact, -1, -1, 1, Event::AFTER);
 	equ.add_event("NormToExactFunction", std::make_shared<EventNormExactFunction>(enef));
 
-
 //  typedef EventOutputField_<DIM, Domain> EventOutputField;
 //	EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
 //	eos.set_path("./plot/");
@@ -83,9 +82,9 @@ TEST(convection, initial){
 	equ.run();
 }
 
-TEST(convection, DISABLED_one_step_2){
+TEST(convection, one_step_2){
 	const St DIM = 2;                            // Dimension
-	const St n   = 50;                           // number of cells
+	const St n   = 60;                           // number of cells
 	const Vt CFL = 0.4;                          // CFL
 	const Vt dt  = CFL / n;                      // delta time
 
@@ -94,20 +93,28 @@ TEST(convection, DISABLED_one_step_2){
 	std::cout << "CFL number = " << CFL     << std::endl;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
-			new SGridUniform_<DIM>({0.0, 0.0},   // min point
-					               {n,  n},      // num on each direction
+			new SGridUniform_<DIM>({-1.0, 0.0},  // min point
+					               {2*n,  n},    // num on each direction
 								    1.0 / n,     // cell size
 								    2));         // ghost layer
-	typename Domain::spGhost spghost(
-			new SGhostRegular_<DIM>(spgrid));
+	std::shared_ptr<SGhostRegularSubdivision_<DIM> > spghost(new SGhostRegularSubdivision_<DIM>(spgrid));
+	typename SGhostRegularSubdivision_<DIM>::FunBoundaryID funbid = [](int bid, Vt x, Vt y, Vt z){
+	    if(x < 0.0){
+	        return 21; // inlet boundary
+	    }else{
+	        return 22; // outlet boundary
+	    }
+	};
+	spghost->set_boundary_id_function(2, funbid);
+
 	typename Domain::spOrder sporder(
 			new SOrderXYZ_<DIM>(spgrid, spghost));
 
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(500, dt);
-	equ.set_scheme("Superbee");
+	equ.set_time_term(1000, dt);
+	equ.set_scheme("QUICK");
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -115,24 +122,27 @@ TEST(convection, DISABLED_one_step_2){
 	typedef std::shared_ptr<BoundaryCondition> spBC;
 	spBI spbi(new BoundaryIndex());
 	BoundaryConditionFunXYZ::FunXYZ_Value fun = [](Vt x, Vt y, Vt z){
-	    if(y >= 0.0 && y <= 0.3){
+	    if(x >= -0.8 && x <= -0.6){
 	        return 1.0;
 	    }else{
 	        return 0.0;
 	    }
 	};
 	spBC spbcxm(new BoundaryConditionFunXYZ(BC::_BC1_, fun));
-	spbi->insert(0, spbcxm);
-	spBC spbcym(new BoundaryConditionValue(BC::_BC1_, 0.0));
-	spbi->insert(2, spbcym);
+	spbi->insert(21, spbcxm);
+
+	spBC spbc0(new BoundaryConditionValue(BC::_BC1_, 0.0));
+	spbi->insert(0, spbc0);
+	spbi->insert(1, spbc0);
+	spbi->insert(3, spbc0);
 	equ.set_boundary_index_phi(spbi);
 
 	// Set initial condition
 	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
 		return 0.0;
 	});
-	equ.set_initial_velocity(_X_, [](Vt, Vt, Vt, Vt){return 1.0;});
-	equ.set_initial_velocity(_Y_, [](Vt, Vt, Vt, Vt){return 1.0;});
+	equ.set_initial_velocity(_X_, [](Vt x, Vt y, Vt z, Vt t){return y;});
+	equ.set_initial_velocity(_Y_, [](Vt x, Vt y, Vt z, Vt t){return -x;});
 
 	// Add events
 	typedef Event_<DIM, Domain> Event;
@@ -148,10 +158,10 @@ TEST(convection, DISABLED_one_step_2){
 			        1e-1, 1e-1, 1e-1,  // critical value
 			        "phi",             // field
 			        spgrid, spghost, sporder,
-			        1, -1, 1, Event::AFTER));
+			        1, -1, 10, Event::AFTER));
 	equ.add_event("Norm1P1", spen1);
 
-// Output section
+    // Output section
 	typedef EventOutputFieldAxisAlignSection_<DIM, Domain> EventOutputFieldAxisAlignSection;
 	typedef std::shared_ptr<EventOutputFieldAxisAlignSection> spEventOutputFieldAxisAlignSection;
 	spEventOutputFieldAxisAlignSection speaa(
@@ -166,7 +176,7 @@ TEST(convection, DISABLED_one_step_2){
 	        const EventGnuplotField::Field& f,
 	              St step , Vt t, int fob,
 	              EventGnuplotField::pEqu pd){
-        gnu.set_xrange(-0.1, 1.1);
+        gnu.set_xrange(-1.1, 1.1);
         gnu.set_yrange(-0.1, 1.1);
         gnu.set_palette_red_grey();
         gnu.set_xlabel("X");

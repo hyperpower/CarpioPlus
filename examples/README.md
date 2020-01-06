@@ -41,8 +41,8 @@ This folder include all the examples for Carpio project.
       4. :ballot_box_with_check: Gate 2D
       5. :ballot_box_with_check: Sine Square
       6. :ballot_box_with_check: Semi Ellipse
-      7. Rotational One Step
-      8. Rotational Two Step
+      7. Rotational One Gate
+      8. Rotational Two Gate
       9. Rotational Smooth
    2. Poisson
       1. :ballot_box_with_check: Time Scheme 1D
