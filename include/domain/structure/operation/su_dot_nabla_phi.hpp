@@ -53,13 +53,13 @@ public:
 
     }
 
-    virtual Field operator()(
+    virtual Field cal(
             const VectorFace& U,
             const Field&     phi,
             const Vt&         t = 0.0){
 
     }
-    virtual ExpField operator()(
+    virtual ExpField cal(
             const VectorFace& U,
             const ExpField& phi,
             const Vt&         t = 0.0){
@@ -101,43 +101,42 @@ public:
     virtual ~SUdotNabla_FOU(){
     }
 
-//    static Vt Local(const Index& idx,
-//                    const VectorFace& U,
-//                    const Field& phi,
-//                    const BI&    bi,
-//                    const Vt&    t = 0.0){
-//        std::array<Vt, DIM> arr;
-//        arr.fill(0.0);
-//
-//        FOR_EACH_DIM
-//        {
-//            Vt up = U(d, _P_, idx);
-//            Vt um = U(d, _M_, idx);
-//            Vt uc = (up + um) * 0.5;      //average velocity to center
-//            auto idxm = idx.m(d);
-//            auto idxp = idx.p(d);
-//            Vt phi_u, phi_d;
-//            Vt s = phi.grid().s_(d, idx);
-//            if (uc >= 0) {
-//                phi_u = Value::Get(phi, bi, idx, idxm, d, _M_, t);
-//                phi_d = phi(idx);
-//
-//            } else { // uc < 0
-//                phi_u = phi(idx);
-//                phi_d = Value::Get(phi, bi, idx, idxp, d, _P_, t);
-//            }
-//            arr[d] = uc * (phi_u - phi_d) / s;
-//        }
-//
-//        Vt sum = 0;
-//        FOR_EACH_DIM
-//        {
-//            sum += arr[d];
-//        }
-//        return sum;
-//    }
+    virtual Vt _local_one_dim(const Index&      idx,
+                              const St&         d,
+                              const VectorFace& U,
+                              const Field&      phi,
+                              const Vt&         t){
+        Vt up = U(d, _P_, idx);
+        Vt um = U(d, _M_, idx);
+        Vt uc = (up + um) * 0.5;      //average velocity to center
+        auto idxm = idx.m(d);
+        auto idxp = idx.p(d);
+        Vt phi_u, phi_d;
+        Vt s = phi.grid().s_(d, idx);
+        if (uc >= 0) {
+            phi_u = Value::Get(phi, *(this->_spbi), idx, idxm, d, _M_, t);
+            phi_d = phi(idx);
+            s = -s;
+        } else { // uc < 0
+            phi_u = phi(idx);
+            phi_d = Value::Get(phi, *(this->_spbi), idx, idxp, d, _P_, t);
+        }
+        return (up * phi_u - um * phi_d) / s;
+    }
 
-    virtual Field operator()(
+    virtual Field cal(
+               const VectorFace& U,
+               const Field&      phi,
+               const St&         d,
+               const Vt&         t = 0.0){
+        Field res = phi.new_compatible();
+        for (auto& idx : phi.order()) {
+            res(idx) = _local_one_dim(idx, d, U, phi, t);
+        }
+        return res;
+    }
+
+    virtual Field cal(
             const VectorFace& U,
             const Field& phi,
             const Vt& t = 0.0){
@@ -148,26 +147,7 @@ public:
 
             FOR_EACH_DIM
             {
-                Vt up = U(d, _P_, idx);
-                Vt um = U(d, _M_, idx);
-                Vt uc = (up + um) * 0.5;      //average velocity to center
-                auto idxm = idx.m(d);
-                auto idxp = idx.p(d);
-                Vt phi_u, phi_d;
-                Vt s      = phi.grid().s_(d, idx);
-                if (uc >= 0) {
-                    phi_u = Value::Get(
-                            phi, *(this->_spbi),
-                            idx, idxm, d, _M_, t);
-                    phi_d = phi(idx);
-                    s = -s;
-                } else { // uc < 0
-                    phi_u = phi(idx);
-                    phi_d = Value::Get(
-                            phi, *(this->_spbi),
-                            idx, idxp, d, _P_, t);
-                }
-                arr[d] = uc * (phi_u - phi_d) / s;
+                arr[d] = _local_one_dim(idx, d, U, phi, t);
             }
 
             Vt sum = 0;
@@ -180,7 +160,7 @@ public:
         return res;
     }
 
-    ExpField expression_field(
+    ExpField cal_exp(
             const VectorFace& U,
             const Field& phi,
             const Vt& t = 0.0) {
@@ -293,7 +273,7 @@ public:
     // simulation on arbitrary grids
     // J. Hou , F. Simons and R. Hinkelmann
     // Int. J. Numer. Meth. Fluids 2012; 70:359–382
-    virtual Field operator()(const VectorFace& U, const Field& phi, const Vt& t = 0.0){
+    virtual Field cal(const VectorFace& U, const Field& phi, const Vt& t = 0.0){
         Field res = phi.new_compatible();
         for (auto& idx : phi.order()) {
             std::array<Vt, DIM> arr;

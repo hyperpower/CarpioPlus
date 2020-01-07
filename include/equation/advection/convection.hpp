@@ -126,6 +126,10 @@ public:
 		}
 
 		this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
+
+		if(this->_time == nullptr){
+		    this->_aflags["solver"] = this->_init_solver();
+		}
 		std::cout << "  Convection: initialize \n";
 		return -1;
 	}
@@ -140,15 +144,14 @@ public:
 		return -1;
 	}
 
+    int solve() {
+        _solve_fou();
+        return -1;
+    }
+
 	void set_scheme(const std::string& name){
 		if(name == "FOU"){
 			_fun_one_step = &Self::_one_step_fou_explicit;
-		}else if(name == "fou_implicit"){  // should be solve
-		    Field& phi = *(this->_scalars["phi"]);
-		    this->_aflags["solver"] = this->_init_solver();
-		    this->_aflags["field_volume"] = std::make_shared<Field>(phi.volume_field());
-		    this->_aflags["field_exp"]    = std::make_shared<ExpField>(ExpressionField(phi));
-		    _fun_one_step = &Self::_one_step_fou_implicit;
 		}else if(_has_TVD_scheme(name)){
 		    _spUdN_H = spUdotNabla(new UdotNabla_TVD(this->_bis["phi"], name));
 		    _fun_one_step = &Self::_one_step_tvd;
@@ -215,17 +218,21 @@ protected:
 	}
 
 	void _one_step_fou_explicit(St step){
-		UdotNabla_FOU FOU(this->_bis["phi"]);
-		VectorFace&   vf  = *(this->_vf);
-		VectorCenter& vc  = *(this->_vc);
-		Field&       phi  = *(this->_scalars["phi"]);
-		Vt            dt  = this->_time->dt();
+        UdotNabla_FOU FOU(this->_bis["phi"]);
+        VectorFace&   vf = *(this->_vf);
+        VectorCenter& vc = *(this->_vc);
+        Field& phi = *(this->_scalars["phi"]);
+        Vt      dt = this->_time->dt();
+        Vt       t = this->_time->current_time();
 
-		Interpolate::VectorCenterToFace(vc, vf,
-		    this->get_boundary_index("u"),
-			this->get_boundary_index("v"),
-			this->get_boundary_index("w"));
-		phi = phi - FOU(vf, phi) * dt;
+        Interpolate::VectorCenterToFace(vc, vf,
+                this->get_boundary_index("u"),
+                this->get_boundary_index("v"),
+                this->get_boundary_index("w"));
+        Vt dts = dt / DIM;
+        for(St d = 0 ; d<DIM; d++){
+            phi = phi - FOU.cal(vf, phi, d, t) * dts;
+        }
 	}
 
 	void _one_step_tvd(St step) {
@@ -243,29 +250,27 @@ protected:
                 this->get_boundary_index("w"));
         // half step FOU
         Vt dth    = dt * 0.5;
-        auto phih = FOU(vf, phi) * (-dth) + phi;
-        phi       = this->_spUdN_H->operator()(vf, phih) * (-dt) + phi;
+        auto phih = FOU.cal(vf, phi) * (-dth) + phi;
+        phi       = this->_spUdN_H->cal(vf, phih) * (-dt) + phi;
     }
 
 
-	void _one_step_fou_implicit(St step) {
+	int _solve_fou() {
         UdotNabla_FOU FOU(this->_bis["phi"]);
         VectorFace&   vf = *(this->_vf);
         VectorCenter& vc = *(this->_vc);
         Field&       phi = *(this->_scalars["phi"]);
-        Vt            dt = this->_time->dt();
 
         auto    spsolver = any_cast<spSolver>(this->_aflags["solver"]);
-        auto      spphif = any_cast<spExpField>(this->_aflags["field_exp"]);
+        ASSERT(spsolver != nullptr);
+//        auto      spphif = any_cast<spExpField>(this->_aflags["field_exp"]);
 
         Interpolate::VectorCenterToFace(vc, vf,
                 this->get_boundary_index("u"),
                 this->get_boundary_index("v"),
                 this->get_boundary_index("w"));
 
-        auto      fouexp = FOU.expression_field(vf, phi);
-
-        auto expf = fouexp * dt + phi - (*spphif);
+        auto      fouexp = FOU.cal_exp(vf, phi);
 
         Mat a;
         Arr b;

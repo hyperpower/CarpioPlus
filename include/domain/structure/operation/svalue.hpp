@@ -131,13 +131,10 @@ protected:
         // walk back
         auto oori = Opposite(Orientation(ori));  // opposite oritation
         auto idxb = idxg.shift(axe, oori);
-        int  step = 0;
-//        if(idxc == Index(0.0, 0.0)){
-//            std::cout << "idxb 1 = " << idxb << std::endl;
-//        }
+//        int  step = 0;
         while(fc.ghost().is_ghost(idxb)){ // find nearest normal cell
             Shift(idxb, axe, oori);
-            step++;
+//            step++;
         }
         auto fp = fc.grid().f(axe, ori, idxb);   // face point
 //        for(int i = 0; i < step; ++i){
@@ -181,9 +178,9 @@ protected:
             step++;
         }
         auto fp = fc.grid().f(axe, ori, idxb);   // face point
-        for (int i = 0; i < step; ++i) {
-            Shift(idxb, axe, oori);
-        }
+//        for (int i = 0; i < step; ++i) {
+//            Shift(idxb, axe, oori);
+//        }
         ASSERT(fc.ghost().is_normal(idxb));
         //  idxb   face  ghost
         // ---x-----|-----g-----
@@ -217,9 +214,9 @@ protected:
             step++;
         }
         auto fp = fc.grid().f(axe, ori, idxb);
-        for(int i = 0; i < step; ++i){
-            Shift(idxb, axe, oori);
-        }
+//        for(int i = 0; i < step; ++i){
+//            Shift(idxb, axe, oori);
+//        }
         ASSERT(fc.ghost().is_normal(idxb));
         //  idxb   face  ghost
         // ---x-----|-----g-----
@@ -253,9 +250,9 @@ protected:
             step++;
         }
         auto fp = fc.grid().f(axe, ori, idxb);
-        for (int i = 0; i < step; ++i) {
-            Shift(idxb, axe, oori);
-        }
+//        for (int i = 0; i < step; ++i) {
+//            Shift(idxb, axe, oori);
+//        }
         ASSERT(fc.ghost().is_normal(idxb));
         //  idxb   face  ghost
         // ---x-----|-----g-----

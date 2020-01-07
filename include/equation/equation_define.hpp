@@ -364,7 +364,7 @@ protected:
             }
         } else {
             // default solver
-            spsolver = spSolver(new Solver_Jacobi(5000, 1e-4));
+            spsolver = spSolver(new Solver_Jacobi(500, 1e-4));
         }
         return spsolver;
     }

@@ -84,7 +84,7 @@ TEST(convection, DISABLED_initial){
 
 TEST(convection, one_step_2){
 	const St DIM = 2;                            // Dimension
-	const St n   = 60;                           // number of cells
+	const St n   = 40;                           // number of cells
 	const Vt CFL = 0.4;                          // CFL
 	const Vt dt  = CFL / n;                      // delta time
 
@@ -113,8 +113,8 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(1000, dt);
-	equ.set_scheme("QUICK");
+//	equ.set_time_term(1000, dt);
+//	equ.set_scheme("QUICK");
 
 	// Set boundary condition
 	typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -131,15 +131,15 @@ TEST(convection, one_step_2){
 	spBC spbcxm(new BoundaryConditionFunXYZ(BC::_BC1_, fun));
 	spbi->insert(21, spbcxm);
 
-	spBC spbc0(new BoundaryConditionValue(BC::_BC1_, 0.0));
-	spbi->insert(0, spbc0);
-	spbi->insert(1, spbc0);
-	spbi->insert(3, spbc0);
+//	spBC spbc0(new BoundaryConditionValue(BC::_BC1_, 0.0));
+//	spbi->insert(0, spbc0);
+//	spbi->insert(1, spbc0);
+//	spbi->insert(3, spbc0);
 	equ.set_boundary_index_phi(spbi);
 
 	// Set initial condition
 	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
-		return 0.0;
+		return 0.1;
 	});
 	equ.set_initial_velocity(_X_, [](Vt x, Vt y, Vt z, Vt t){return y;});
 	equ.set_initial_velocity(_Y_, [](Vt x, Vt y, Vt z, Vt t){return -x;});
@@ -192,7 +192,7 @@ TEST(convection, one_step_2){
         return 1;
 	};
 
-	EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER);
+	EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER | Event::END);
     egs.set_path("./plot/");
     egs.set_format_string("Upwind1_%s_%d_%8.4e.png");
 	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
