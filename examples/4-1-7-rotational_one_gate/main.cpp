@@ -15,7 +15,7 @@ typedef typename Domain::spOrder spOrder;
 
 int run_a_scheme(const std::string& scheme) {
     const St n   = 60;                           // number of cells
-    const Vt CFL = 0.3;                          // CFL
+    const Vt CFL = 0.4;                          // CFL
     const Vt dt  = CFL / n;                      // delta time
 
     std::cout << "Scheme     = " << scheme  << std::endl;
@@ -44,7 +44,7 @@ int run_a_scheme(const std::string& scheme) {
     // Define the equation
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-    equ.set_time_term(500, dt);
+    equ.set_time_term(600, dt);
     equ.set_scheme(scheme);
 
     // Set boundary condition
@@ -81,7 +81,7 @@ int run_a_scheme(const std::string& scheme) {
     typedef std::shared_ptr<EventConditionNormPrevious_<DIM, Domain> > spEventConditionNormPrevious;
     spEventConditionNormPrevious spen1(
             new EventConditionNormPrevious_<DIM, Domain>(
-                    1e-5, 1e-5, 1e-5,  // critical value
+                    1e-4, 1e-4, 1e-4,  // critical value
                     "phi",             // field
                     spgrid, spghost, sporder,
                     50, -1, 10, Event::AFTER));
@@ -100,32 +100,32 @@ int run_a_scheme(const std::string& scheme) {
 
     // plot
     if (scheme == "FOU"){
-    typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
-    typename EventGnuplotField::FunPlot plot_fun = [](
-            Gnuplot& gnu,
-            const EventGnuplotField::Field& f,
-                  St step , Vt t, int fob,
-                  EventGnuplotField::pEqu pd){
-        gnu.set_xrange(-1.1, 1.1);
-        gnu.set_yrange(-0.1, 1.1);
-        gnu.set_palette_red_grey();
-        gnu.set_xlabel("X");
-        gnu.set_ylabel("Y");
-        gnu.set_cblabel("phi");
-        gnu.set_cbrange(0.0, 1.0);
-        gnu.set_equal_aspect_ratio();
-        gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
-        gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
-        gnu.add(Domain::GnuplotActor::Contour(f));
-        gnu.plot();
-        gnu.clear();
-        return 1;
-    };
+        typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
+        typename EventGnuplotField::FunPlot plot_fun = [](
+                Gnuplot& gnu,
+                const EventGnuplotField::Field& f,
+                      St step , Vt t, int fob,
+                      EventGnuplotField::pEqu pd){
+            gnu.set_xrange(-1.1, 1.1);
+            gnu.set_yrange(-0.1, 1.1);
+            gnu.set_palette_red_grey();
+            gnu.set_xlabel("X");
+            gnu.set_ylabel("Y");
+            gnu.set_cblabel("phi");
+            gnu.set_cbrange(0.0, 1.0);
+            gnu.set_equal_aspect_ratio();
+            gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
+            gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
+            gnu.add(Domain::GnuplotActor::Contour(f));
+            gnu.plot();
+            gnu.clear();
+            return 1;
+        };
 
-    EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER);
-    egs.set_path("./fig/");
-    egs.set_format_string(scheme + "_%s_%d_%8.4e.png");
-    equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
+        EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER);
+        egs.set_path("./fig/");
+        egs.set_format_string(scheme + "_%s_%d_%8.4e.png");
+        equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
     }
 
     equ.run();
@@ -140,7 +140,7 @@ int run_a_scheme(const std::string& scheme) {
 
 int main(int argc, char** argv) {
     std::vector<std::string> arrscheme = {
-        "FOU", "Superbee", "Minmod"
+        "Superbee", "Minmod"
     };
     for(auto& scheme : arrscheme){
         run_a_scheme(scheme);

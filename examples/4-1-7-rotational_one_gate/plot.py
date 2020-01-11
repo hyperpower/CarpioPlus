@@ -152,16 +152,17 @@ def find_section_file(namedir, namescheme, namevar):
             res.append(f)
     return res 
 
-def add_section_exact(plt, x):
+def add_section_exact(plt, y):
     arrx = np.linspace(0.0, 1.0, num=100) 
-    arry = np.array([])
-    v16  = 1.0 / 6.0
+    arry = []
+    x1 = math.sqrt(0.6 * 0.6 - y * y)
+    x2 = math.sqrt(0.8 * 0.8 - y * y)
     for value in arrx:
-        if x - v16 < value < x + v16:
-            s = math.sqrt(1.0 - 36 * (value - x) * (value - x))
-            arry = np.append(arry, s)
+        if x1 < value < x2:
+            arry.append(1.0)
         else:
-            arry = np.append(arry, 0)
+            arry.append(0.0) 
+
     l, = plt.plot(arrx, arry, color = "k")
     return l
 
@@ -172,9 +173,9 @@ def add_a_scheme(ax, scheme):
 
     fd   = FT.TextFile(PATH_DATA + "/" + file[0])
     d    = fd.get_data()
-    l1,  = ax.plot(FT.col(d, 2), FT.col(d, 4), ".")
+    l1,  = ax.plot(FT.col(d, 1), FT.col(d, 4), ".")
 
-    avgx = np.average(FT.col(d, 1)) 
+    avgx = np.average(FT.col(d, 2)) 
 
     return l1, avgx
 
@@ -216,7 +217,7 @@ def plot_setion_compare(schemes):
     lname.append("Exact")
     plt.legend(ls, lname, loc= 'best')
 
-    plt.text(0.3,  0.23, r'x = %.2f' % avgx, va = "center")
+    plt.text(0.3,  0.23, r'y = %.2f' % avgx, va = "center")
 
     plt.grid(True)
     plt.tight_layout()
@@ -225,13 +226,12 @@ def plot_setion_compare(schemes):
 
 def main():
     plot_illustration_fig()
-    # arrscheme = [
-    #     "FOU",
-    #     "Superbee",
-    #     "Minmod"
-    # ]
-    # plot_setion_compare(arrscheme)
-    # make_gif("fou")
+    arrscheme = [
+        "Superbee",
+        "Minmod"
+    ]
+    plot_setion_compare(arrscheme)
+    # make_gif("Superbee")
 
 if __name__ == '__main__':
     main()
