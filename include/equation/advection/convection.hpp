@@ -229,6 +229,12 @@ protected:
                 this->get_boundary_index("u"),
                 this->get_boundary_index("v"),
                 this->get_boundary_index("w"));
+        if(step == 312){
+            typename Domain::Index index(0, 0);
+            std::cout << "Index = " << index << std::endl;
+            std::cout << "u     = " << vc[_X_](index) << " v = " << vc[_Y_](index) << std::endl;
+        }
+
         Vt dts = dt / DIM;
         for(St d = 0 ; d<DIM; d++){
             phi = phi - FOU.cal(vf, phi, d, t) * dts;

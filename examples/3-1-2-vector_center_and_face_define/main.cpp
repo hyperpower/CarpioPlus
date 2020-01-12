@@ -261,12 +261,12 @@ int vector_face_2d(){
 
     spField spfx(new Field(spsg, spgh, sporder));
     spfx->assign([](Vt x, Vt y, Vt z, Vt t){
-        return sin(x + y);
+        return y;
     });
 
     spField spfy(new Field(spsg, spgh, sporder));
     spfy->assign([](Vt x, Vt y, Vt z, Vt t){
-            return sin(x + y);
+        return -x;
     });
 
     VC vc(spfx, spfy);

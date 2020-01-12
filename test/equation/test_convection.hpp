@@ -113,7 +113,7 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-//	equ.set_time_term(1000, dt);
+	equ.set_time_term(313, dt);
 //	equ.set_scheme("QUICK");
 
 	// Set boundary condition
@@ -137,9 +137,36 @@ TEST(convection, one_step_2){
 //	spbi->insert(3, spbc0);
 	equ.set_boundary_index_phi(spbi);
 
+	spBI spbi_u(new BoundaryIndex());
+	BoundaryConditionFunXYZ::FunXYZ_Value fun_u = [](Vt x, Vt y, Vt z){
+	    return y;
+	};
+	spBC spbc_u(new BoundaryConditionFunXYZ(BC::_BC1_, fun_u));
+	spbi_u->insert(0,  spbc_u);
+	spbi_u->insert(1,  spbc_u);
+	spbi_u->insert(21, spbc_u);
+	spbi_u->insert(22, spbc_u);
+	spbi_u->insert(3,  spbc_u);
+	spbi_u->insert(4,  spbc_u);
+
+	spBI spbi_v(new BoundaryIndex());
+	BoundaryConditionFunXYZ::FunXYZ_Value fun_v = [](Vt x, Vt y, Vt z){
+	    return -x;
+	};
+	spBC spbc_v(new BoundaryConditionFunXYZ(BC::_BC1_, fun_v));
+	spbi_v->insert(0,  spbc_v);
+	spbi_v->insert(1,  spbc_v);
+	spbi_v->insert(21, spbc_v);
+	spbi_v->insert(22, spbc_v);
+	spbi_v->insert(3,  spbc_v);
+	spbi_v->insert(4,  spbc_v);
+
+	equ.set_boundary_index_velocity(_X_, spbi_u);
+	equ.set_boundary_index_velocity(_Y_, spbi_v);
+
 	// Set initial condition
 	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
-		return 0.1;
+		return 0.0;
 	});
 	equ.set_initial_velocity(_X_, [](Vt x, Vt y, Vt z, Vt t){return y;});
 	equ.set_initial_velocity(_Y_, [](Vt x, Vt y, Vt z, Vt t){return -x;});
@@ -160,6 +187,14 @@ TEST(convection, one_step_2){
 			        spgrid, spghost, sporder,
 			        1, -1, 10, Event::AFTER));
 	equ.add_event("Norm1P1", spen1);
+
+	// Output Field
+    typedef EventOutputField_<DIM, Domain> EventOutputField;
+    EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
+    eos.set_path("./data/");
+    eos.set_format_string("FOU_%s_%d_%8.4e.txt");
+    equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
+
 
     // Output section
 	typedef EventOutputFieldAxisAlignSection_<DIM, Domain> EventOutputFieldAxisAlignSection;
@@ -182,7 +217,7 @@ TEST(convection, one_step_2){
         gnu.set_xlabel("X");
         gnu.set_ylabel("Y");
         gnu.set_cblabel("phi");
-        gnu.set_cbrange(0.0, 1.0);
+//        gnu.set_cbrange(0.0, 1.0);
         gnu.set_equal_aspect_ratio();
         gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
         gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
