@@ -79,6 +79,8 @@ def plot_illustration_fig():
     arry = np.linspace( 0.1,0.9,10)
     add_stream_line(ax, -0.8, 0.0, 100)
     add_stream_line(ax, -0.6, 0.0, 100)
+    add_stream_line(ax, -0.4, 0.0, 100)
+    add_stream_line(ax, -0.2, 0.0, 100)
     # add_quiver(ax, arrx, arry)
 
     # the 1/6 ticky
@@ -91,17 +93,26 @@ def plot_illustration_fig():
     plt.text(ticky, -0.12, "%.1f" % ticky, color = "C0", ha="center",va = "center")
     # plt.plot([ticky, ticky], [-0.05, 0.0], "-", linewidth=2.0, color = "C0")
     # plt.text( ticky, -0.14, "1/6", color = "C0",   ha="center")
+    ticky = -0.4
+    plt.plot([ticky, ticky],[-0.05, 0.0], "-", linewidth=2.0, color = "C0")
+    plt.text(ticky, -0.12, "%.1f" % ticky, color = "C0", ha="center",va = "center")
+
+    ticky = -0.2
+    plt.plot([ticky, ticky],[-0.05, 0.0], "-", linewidth=2.0, color = "C0")
+    plt.text(ticky, -0.12, "%.1f" % ticky, color = "C0", ha="center",va = "center")
 
     ticky = 0.0
     plt.plot([ticky, ticky],[-0.08, 0.0], "-", linewidth=2.0, color = "C0")
     plt.text(ticky, -0.13, "%.1f" % ticky, color = "C0", ha="center",va = "center")
 
 
-    plt.text(0., 1.05,   r'$\frac{d \phi}{d y}$ = ' + "%.f" % float(0.0), ha="center")
-    plt.text(0.5,-0.15,  r'$\frac{d \phi}{d y}$ = ' + "%.1f" % float(0.0), ha="center")
+    plt.text(0.,   1.05, r'$\frac{d \phi}{d y}$ = ' + "%.f" % float(0.0), ha="center")
+    plt.text(0.5, -0.15, r'$\frac{d \phi}{d y}$ = ' + "%.1f" % float(0.0), ha="center")
     plt.text(-0.9,-0.25, r'$\phi$=' + "%.f" % float(0.0), ha="center")
     plt.text(-0.7,-0.25, r'$\phi$=' + "%.f" % float(1.0), ha="center")
-    plt.text(-0.4,-0.25, r'$\phi$=' + "%.f" % float(0.0), ha="center")
+    plt.text(-0.5,-0.25, r'$\phi$=' + "%.f" % float(0.0), ha="center")
+    plt.text(-0.3,-0.25, r'$\phi$=' + "%.f" % float(1.0), ha="center")
+    plt.text(-0.1,-0.25, r'$\phi$=' + "%.f" % float(0.0), ha="center")
     plt.text(-1.35,.5,   r'$\frac{d \phi}{d x}$ = ' + "%.1f" % float(0.0), va="center")
     plt.text( 1.05,.5,   r'$\frac{d \phi}{d x}$ = ' + "%.f" % float(0.0))
 
@@ -157,8 +168,10 @@ def add_section_exact(plt, y):
     arry = []
     x1 = math.sqrt(0.6 * 0.6 - y * y)
     x2 = math.sqrt(0.8 * 0.8 - y * y)
+    x3 = math.sqrt(0.2 * 0.2 - y * y)
+    x4 = math.sqrt(0.4 * 0.4 - y * y)
     for value in arrx:
-        if x1 < value < x2:
+        if x1 < value < x2 or x3 < value < x4:
             arry.append(1.0)
         else:
             arry.append(0.0) 
@@ -192,7 +205,7 @@ def plot_setion_compare(schemes):
     """
     Set range
     """
-    x_st = 0.2
+    x_st = -0.18
     x_ed = 1.0
     y_st = -0.35
     y_ed = 1.35

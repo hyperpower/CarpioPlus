@@ -112,16 +112,16 @@ public:
         auto idxm = idx.m(d);
         auto idxp = idx.p(d);
         Vt phi_u, phi_d;
-        Vt s = phi.grid().s_(d, idx);
         if (uc >= 0) {
             phi_u = Value::Get(phi, *(this->_spbi), idx, idxm, d, _M_, t);
             phi_d = phi(idx);
-            s = -s;
+            return (up * phi_u - um * phi_d) / (phi.grid().c_(d,idxm) - phi.grid().c_(d, idx));
         } else { // uc < 0
             phi_u = phi(idx);
             phi_d = Value::Get(phi, *(this->_spbi), idx, idxp, d, _P_, t);
+            return (up * phi_u - um * phi_d) / (phi.grid().c_(d,idx) - phi.grid().c_(d, idxp));
         }
-        return (up * phi_u - um * phi_d) / s;
+
     }
 
     virtual Field cal(
@@ -182,15 +182,16 @@ public:
                                 idx, idxm,
                                 d,   _M_,  t);
                     phi_d = idx;
-                    s = -s;
+                    arr[d] = (up * phi_u - um * phi_d) / (phi.grid().c_(d, idxm) - phi.grid().c_(d, idx));
                 } else { // uc < 0
                     phi_u = idx;
                     phi_d = Value::GetExp(
                                 phi, *(this->_spbi),
                                 idx, idxp,
                                 d,   _P_,  t);
+                    arr[d] = (up * phi_u - um * phi_d) / (phi.grid().c_(d, idx) - phi.grid().c_(d, idxp));
                 }
-                arr[d] = (phi_u - phi_d) * (uc / s);
+
             }
 
             Exp sum;

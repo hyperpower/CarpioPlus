@@ -53,7 +53,8 @@ int run_a_scheme(const std::string& scheme) {
     typedef std::shared_ptr<BoundaryCondition> spBC;
     spBI spbi(new BoundaryIndex());
     BoundaryConditionFunXYZ::FunXYZ_Value fun = [](Vt x, Vt y, Vt z){
-        if(x >= -0.8 && x <= -0.6){
+        if((x >= -0.8 && x <= -0.6) || 
+            (x >= -0.4 && x <= -0.2)){
             return 1.0;
         }else{
             return 0.0;

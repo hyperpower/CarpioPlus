@@ -113,7 +113,7 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(313, dt);
+//	equ.set_time_term(613, dt);
 //	equ.set_scheme("QUICK");
 
 	// Set boundary condition
