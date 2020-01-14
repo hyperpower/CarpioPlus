@@ -33,7 +33,6 @@ public:
     typedef SGrid_<DIM>   Grid;
     typedef SGhost_<DIM>  Ghost;
     typedef SOrder_<DIM>  Order;
-    typedef SOrderParallel_<DIM>  OrderParallel;
     typedef SField_<DIM>  Field;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
@@ -50,32 +49,29 @@ public:
 
     typedef AInterpolate_<Vt, Vt> AInter;
     typedef std::function<void(const Index&, const Grid&, const Ghost&) > FunIndexGridGhost;
-    typedef std::function<void(const Index&) > FunIndex;
-    typedef std::function<void(const Index&, St) > FunIndexThreadNum;
+    typedef std::function<void(const Index&, St) > FunIndex;
+//    typedef std::function<void(const Index&, St) > FunIndexThreadNum;
 
     static int ForEachIndex(const Order& order,
                             FunIndex fun){
-        for (auto& idx : order) {
-            fun(idx);
-        }
-        return _SUCCESS;
-    }
-
-    static int ForEachIndexParallel(
-            const OrderParallel& order,
-                  FunIndexThreadNum fun){
+#ifdef OPENMP
         #pragma omp parallel for
-        for (St thread = 0; thread < order.num_threads(); thread++){
-            for (auto iter = order.begin(thread); iter != order.end(thread); iter++) {
+        for (St thread = 0; thread < order.num_threads(); thread++) {
+            for (auto iter = order.begin(thread); iter != order.end(thread);
+                    iter++) {
                 auto& idx = (*iter);
                 St nt = thread;
-#ifdef OPENMP
                 nt = omp_get_thread_num();
-#endif
                 fun(idx, nt);
             }
         }
         return _SUCCESS;
+#else
+        for (auto& idx : order) {
+            fun(idx,0);
+        }
+        return _SUCCESS;
+#endif
     }
 };
 

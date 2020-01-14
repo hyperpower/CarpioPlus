@@ -39,7 +39,7 @@ int run_a_scheme(const std::string& scheme) {
     spghost->set_boundary_id_function(2, funbid);
 
     spOrder sporder(
-            new SOrderXYZ_<DIM>(spgrid, spghost));
+            new SOrderXYZ_<DIM>(spgrid, spghost, 16));
 
     // Define the equation
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
@@ -146,4 +146,7 @@ int main(int argc, char** argv) {
     for(auto& scheme : arrscheme){
         run_a_scheme(scheme);
     }
+    #ifdef OPENMP
+    std::cout << "Define OpenMP" << std::endl;
+    #endif
 }

@@ -17,7 +17,7 @@ if (MPI_LIBRARY)
 	message(STATUS "MPI INC = ${MPI_INCLUDE_PATH}")
 endif (MPI_LIBRARY)
 
-OPTION(ENABLE_OPENMP "Enable openmp" ON) # Enabled by default
+OPTION(ENABLE_OPENMP "Enable openmp" OFF) # Enabled by default
 IF(ENABLE_OPENMP)
 	message(STATUS "======== LOOKING FOR OPENMP ========================")
     ADD_DEFINITIONS(-DOPENMP)

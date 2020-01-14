@@ -230,7 +230,7 @@ def plot_setion_compare(schemes):
     lname.append("Exact")
     plt.legend(ls, lname, loc= 'best')
 
-    plt.text(0.3,  0.23, r'y = %.2f' % avgx, va = "center")
+    plt.text(-0.1,  0.23, r'y = %.2f' % avgx, va = "center")
 
     plt.grid(True)
     plt.tight_layout()

@@ -69,7 +69,7 @@ void AddEqual(const ST& n, VT* src, const VT& dst) {
 }
 template<typename ST, typename VT>
 void MinusEqual(const ST& n, VT* src, const VT& dst) {
-#pragma omp parallelfor
+#pragma omp parallel for
 	for (ST i = 0; i < n; ++i) {
 		src[i] -= dst;
 	}

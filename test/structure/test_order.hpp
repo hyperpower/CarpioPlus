@@ -38,7 +38,7 @@ TEST(structure, plot_order){
 	typedef SIndex_<2> Index;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
-	typedef std::shared_ptr<SOrderParallel_<2> > spOrder;
+	typedef std::shared_ptr<SOrder_<2> > spOrder;
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
@@ -48,7 +48,7 @@ TEST(structure, plot_order){
 
 	spSGhost spgh(new SGhostRegular_<2>(spsg));
 
-	spOrder spo(new SOrderXYZParallel_<2>(spsg, spgh, 5));
+	spOrder spo(new SOrderXYZ_<2>(spsg, spgh, 5));
 
 	typedef SGnuplotActor_<2> GA;
 	Gnuplot gnu;
@@ -64,7 +64,7 @@ TEST(scalar, parallel_order){
 	typedef SIndex_<2> Index;
 	typedef std::shared_ptr<SGrid_<2> > spSGrid;
 	typedef std::shared_ptr<SGhost_<2> > spSGhost;
-	typedef std::shared_ptr<SOrderParallel_<2> > spOrderParallel;
+	typedef std::shared_ptr<SOrder_<2> > spOrder;
 
 	Point_<Vt, 2> pmin(0, 0, 0);
 	Point_<Vt, 2> pmax(1, 1, 1);
@@ -74,7 +74,7 @@ TEST(scalar, parallel_order){
 
 	spSGhost spgh(new SGhostRegular_<2>(spsg));
 
-	spOrderParallel spo(new SOrderXYZParallel_<2>(spsg, spgh, 4));
+	spOrder spo(new SOrderXYZ_<2>(spsg, spgh, 4));
 
 	std::cout << "Size order =   " << spo->size() << std::endl;
 	std::cout << "Size threads = " << spo->num_threads() << std::endl;

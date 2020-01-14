@@ -230,7 +230,6 @@ protected:
                 this->get_boundary_index("v"),
                 this->get_boundary_index("w"));
 
-//        Vt dts = dt / double(DIM);
         for(St d = 0 ; d<DIM; d++){
             phi = phi - FOU.cal(vf, phi, d, t) * dt;
         }

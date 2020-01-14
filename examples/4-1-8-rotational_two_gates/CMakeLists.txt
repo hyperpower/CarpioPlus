@@ -8,6 +8,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/)
 set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 
+OPTION(ENABLE_OPENMP "Enable openmp" ON) # Enabled by default
+IF(ENABLE_OPENMP)
+    message(STATUS "======== LOOKING FOR OPENMP ========================")
+    ADD_DEFINITIONS(-DOPENMP)
+    find_package(OpenMP)
+    if (OPENMP_FOUND)
+        set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    endif()
+ENDIF(ENABLE_OPENMP)
+
 # python =======
 set(REQUIRED_PYTHON_VERSION 3.4)
 # message(STATUS "======== LOOKING FOR PYTHON ${REQUIRED_PYTHON_VERSION} ========================")

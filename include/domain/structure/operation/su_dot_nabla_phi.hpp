@@ -130,9 +130,21 @@ public:
                const St&         d,
                const Vt&         t = 0.0){
         Field res = phi.new_compatible();
+#ifdef OPENMP
+        #pragma omp parallel for num_threads(phi.order().num_threads())
+        for (St thread = 0; thread < phi.order().num_threads(); thread++) {
+            for (auto iter = phi.order().begin(thread);
+                    iter != phi.order().end(thread);
+                    iter++) {
+                auto& idx = (*iter);
+                res(idx) = _local_one_dim(idx, d, U, phi, t);
+            }
+        }
+#else
         for (auto& idx : phi.order()) {
             res(idx) = _local_one_dim(idx, d, U, phi, t);
         }
+#endif
         return res;
     }
 
@@ -276,7 +288,16 @@ public:
     // Int. J. Numer. Meth. Fluids 2012; 70:359–382
     virtual Field cal(const VectorFace& U, const Field& phi, const Vt& t = 0.0){
         Field res = phi.new_compatible();
+#ifdef OPENMP
+        #pragma omp parallel for num_threads(phi.order().num_threads())
+        for (St thread = 0; thread < phi.order().num_threads(); thread++) {
+            for (auto iter = phi.order().begin(thread);
+                    iter != phi.order().end(thread);
+                    iter++) {
+                auto& idx = (*iter);
+#else
         for (auto& idx : phi.order()) {
+#endif
             std::array<Vt, DIM> arr;
             arr.fill(0.0);
 
@@ -346,6 +367,9 @@ public:
             }
             res(idx) = sum;
         }
+#ifdef OPENMP
+     }
+#endif
         return res;
     }
 

@@ -83,8 +83,11 @@ TEST(convection, DISABLED_initial){
 }
 
 TEST(convection, one_step_2){
+#ifdef OPENMP
+    std::cout << "DEFINE OPENMP" << std::endl;
+#endif
 	const St DIM = 2;                            // Dimension
-	const St n   = 40;                           // number of cells
+	const St n   = 40;                          // number of cells
 	const Vt CFL = 0.4;                          // CFL
 	const Vt dt  = CFL / n;                      // delta time
 
@@ -108,12 +111,12 @@ TEST(convection, one_step_2){
 	spghost->set_boundary_id_function(2, funbid);
 
 	typename Domain::spOrder sporder(
-			new SOrderXYZ_<DIM>(spgrid, spghost));
+			new SOrderXYZ_<DIM>(spgrid, spghost, 16));
 
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-//	equ.set_time_term(613, dt);
+	equ.set_time_term(613, dt);
 //	equ.set_scheme("QUICK");
 
 	// Set boundary condition
@@ -193,7 +196,7 @@ TEST(convection, one_step_2){
     EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
     eos.set_format_string("FOU_%s_%d_%8.4e.txt");
-    equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
+//    equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
 
 
     // Output section
@@ -230,7 +233,7 @@ TEST(convection, one_step_2){
 	EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER | Event::END);
     egs.set_path("./plot/");
     egs.set_format_string("Upwind1_%s_%d_%8.4e.png");
-	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
+//	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
 
 	equ.run();
 
