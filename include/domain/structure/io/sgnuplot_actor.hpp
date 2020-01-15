@@ -178,6 +178,26 @@ public:
         return actor;
     }
 
+    static spActor ContourWire(const Field2& f){
+        spActor actor = spActor(new Gnuplot_actor());
+        auto ghost = f.spghost();
+        actor->command() = "using 1:2:3 title \"\" ";
+        actor->style() = "with line lc palette";
+        for (St i = 0; i < f.grid().n(_X_); i++) {
+            for (St j = 0; j < f.grid().n(_Y_); j++) {
+                Index2 index(i, j);
+                if (ghost->is_normal(index) == true) {
+                    auto pc   = f.grid().c(index);
+                    actor->data().push_back(
+                            ToString(pc(_X_), pc(_Y_), f(index), f(index), " "));
+                }
+            }
+            actor->data().push_back("");
+        }
+        return actor;
+    }
+
+
 
     static spActor Contour(const Field1& f){
         SHOULD_NOT_REACH;

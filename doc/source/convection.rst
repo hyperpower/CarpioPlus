@@ -12,3 +12,4 @@ Convection Examples
    4-1-6-semi_ellipse
    4-1-7-rotational_one_gate
    4-1-8-rotational_two_gates
+   4-1-9-rotational_square

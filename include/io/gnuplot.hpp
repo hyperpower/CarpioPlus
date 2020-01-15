@@ -385,6 +385,13 @@ public:
 		cmd(sst.str());
 		return *this;
 	}
+	// only for splot
+	inline Gnuplot& set_ticslevel(Vt v = 0.0) {
+	        std::ostringstream sst;
+	        sst << "set ticslevel " << v;
+	        cmd(sst.str());
+	        return *this;
+	}
 	// -----------------------------------------------
 	/// set the mulitplot mode
 	///

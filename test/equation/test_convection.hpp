@@ -87,18 +87,20 @@ TEST(convection, one_step_2){
     std::cout << "DEFINE OPENMP" << std::endl;
 #endif
 	const St DIM = 2;                            // Dimension
-	const St n   = 40;                          // number of cells
+	const St n   = 80;                           // number of cells
 	const Vt CFL = 0.4;                          // CFL
-	const Vt dt  = CFL / n;                      // delta time
+	const Vt dt  = CFL * 80.0 / n;               // delta time
+	const St steps = 360.0 / dt;
 
-	std::cout << "Cell size  = " << 1.0 / n << std::endl;
-	std::cout << "Delta time = " << dt      << std::endl;
-	std::cout << "CFL number = " << CFL     << std::endl;
+	std::cout << "Cell size  = " << 80.0 / n << std::endl;
+	std::cout << "Delta time = " << dt       << std::endl;
+	std::cout << "Steps      = " << steps    << std::endl;
+	std::cout << "CFL number = " << CFL      << std::endl;
 	typedef StructureDomain_<DIM> Domain;
 	typename Domain::spGrid spgrid(
-			new SGridUniform_<DIM>({-1.0, 0.0},  // min point
-					               {2*n,  n},    // num on each direction
-								    1.0 / n,     // cell size
+			new SGridUniform_<DIM>({0.0, 0.0},  // min point
+					               {n,  n},    // num on each direction
+								    80.0 / n,     // cell size
 								    2));         // ghost layer
 	std::shared_ptr<SGhostRegularSubdivision_<DIM> > spghost(new SGhostRegularSubdivision_<DIM>(spgrid));
 	typename SGhostRegularSubdivision_<DIM>::FunBoundaryID funbid = [](int bid, Vt x, Vt y, Vt z){
@@ -116,7 +118,7 @@ TEST(convection, one_step_2){
 	// Define the equation
 	Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-	equ.set_time_term(613, dt);
+	equ.set_time_term(steps, dt);
 //	equ.set_scheme("QUICK");
 
 	// Set boundary condition
@@ -132,7 +134,7 @@ TEST(convection, one_step_2){
 	    }
 	};
 	spBC spbcxm(new BoundaryConditionFunXYZ(BC::_BC1_, fun));
-	spbi->insert(21, spbcxm);
+//	spbi->insert(21, spbcxm);
 
 //	spBC spbc0(new BoundaryConditionValue(BC::_BC1_, 0.0));
 //	spbi->insert(0, spbc0);
@@ -142,7 +144,7 @@ TEST(convection, one_step_2){
 
 	spBI spbi_u(new BoundaryIndex());
 	BoundaryConditionFunXYZ::FunXYZ_Value fun_u = [](Vt x, Vt y, Vt z){
-	    return y;
+        return -(y - 40.0)*2*3.1415926/360.0;
 	};
 	spBC spbc_u(new BoundaryConditionFunXYZ(BC::_BC1_, fun_u));
 	spbi_u->insert(0,  spbc_u);
@@ -154,7 +156,7 @@ TEST(convection, one_step_2){
 
 	spBI spbi_v(new BoundaryIndex());
 	BoundaryConditionFunXYZ::FunXYZ_Value fun_v = [](Vt x, Vt y, Vt z){
-	    return -x;
+        return (x-40)*2*3.1415926/360.0;
 	};
 	spBC spbc_v(new BoundaryConditionFunXYZ(BC::_BC1_, fun_v));
 	spbi_v->insert(0,  spbc_v);
@@ -169,10 +171,22 @@ TEST(convection, one_step_2){
 
 	// Set initial condition
 	equ.set_initial_phi([](Vt x, Vt y, Vt z, Vt t){
-		return 0.0;
+	    Vt xc = 20;
+	    Vt yc = 40;
+	    Vt l  = 8;
+		if(   IsInRange(xc-l, x, xc+l, _cc_)
+		   && IsInRange(yc-l, y, yc+l, _cc_)){
+		    return 1.0;
+		}else{
+		    return 0.0;
+		}
 	});
-	equ.set_initial_velocity(_X_, [](Vt x, Vt y, Vt z, Vt t){return y;});
-	equ.set_initial_velocity(_Y_, [](Vt x, Vt y, Vt z, Vt t){return -x;});
+	equ.set_initial_velocity(_X_, [fun_u](Vt x, Vt y, Vt z, Vt t){
+	    return fun_u(x, y, z);
+	});
+	equ.set_initial_velocity(_Y_, [fun_v](Vt x, Vt y, Vt z, Vt t){
+	    return fun_v(x, y, z);
+	});
 
 	// Add events
 	typedef Event_<DIM, Domain> Event;
@@ -214,18 +228,21 @@ TEST(convection, one_step_2){
 	        const EventGnuplotField::Field& f,
 	              St step , Vt t, int fob,
 	              EventGnuplotField::pEqu pd){
-        gnu.set_xrange(-1.1, 1.1);
-        gnu.set_yrange(-0.1, 1.1);
-        gnu.set_palette_red_grey();
+//        gnu.set_xrange(-1.1, 1.1);
+//        gnu.set_yrange(-0.1, 1.1);
+        gnu.set_zrange(0.0, 1.0);
+        gnu.set_palette_blue_red();
         gnu.set_xlabel("X");
         gnu.set_ylabel("Y");
         gnu.set_cblabel("phi");
-//        gnu.set_cbrange(0.0, 1.0);
+        gnu.set_cbrange(0.0, 1.0);
         gnu.set_equal_aspect_ratio();
-        gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
-        gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
-        gnu.add(Domain::GnuplotActor::Contour(f));
-        gnu.plot();
+        gnu.set_ticslevel();
+        gnu.set_view(20,25,1.1,1.0);
+//        gnu.set_label(1,tfm::format("Step = %6d", step), 0.0, 1.02);
+//        gnu.set_label(2,tfm::format("Time = %f", t), 0.5, 1.02);
+        gnu.add(Domain::GnuplotActor::ContourWire(f));
+        gnu.splot();
         gnu.clear();
         return 1;
 	};
@@ -233,7 +250,7 @@ TEST(convection, one_step_2){
 	EventGnuplotField egs("phi", plot_fun, -1, -1, 1, Event::AFTER | Event::END);
     egs.set_path("./plot/");
     egs.set_format_string("Upwind1_%s_%d_%8.4e.png");
-//	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
+	equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
 
 	equ.run();
 
