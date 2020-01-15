@@ -76,9 +76,9 @@
           <div class="body" role="main">
             
   <div class="section" id="non-incremental-projection">
-<h1><span class="section-number">1.2.1. </span>Non-incremental Projection<a class="headerlink" href="#non-incremental-projection" title="Permalink to this headline">¶</a></h1>
+<h1>1.2.1. Non-incremental Projection<a class="headerlink" href="#non-incremental-projection" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
-<h2><span class="section-number">1.2.1.1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>1.2.1.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This is the simplest pressure-corrction scheme has originally been proposed by <a class="reference internal" href="#c1" id="id1"><span>[C1]</span></a>. Using the implicit Euler time stepping, the algorithm is as follows: Set <span class="math notranslate nohighlight">\(u^0 = u_0\)</span>, then for <span class="math notranslate nohighlight">\(k \ge 0\)</span> compute <span class="math notranslate nohighlight">\((\hat{u}^{k+1}, u^{k+1}, p^{k+1})\)</span> by solving</p>
 <div class="math notranslate nohighlight">
 \[\frac{(\tilde{u} - u^{k})}{\Delta t} + u^k \cdot (\nabla u^k) = \frac{1}{Re} \nabla^2 \tilde{u}\]</div>
@@ -94,7 +94,7 @@
 \[u^{k+1} = \tilde{u} - \Delta t \nabla p^{k+1}\]</div>
 </div>
 <div class="section" id="calculation-of-an-auxiliary-veloticy-field">
-<h2><span class="section-number">1.2.1.2. </span>Calculation of an Auxiliary Veloticy Field<a class="headerlink" href="#calculation-of-an-auxiliary-veloticy-field" title="Permalink to this headline">¶</a></h2>
+<h2>1.2.1.2. Calculation of an Auxiliary Veloticy Field<a class="headerlink" href="#calculation-of-an-auxiliary-veloticy-field" title="Permalink to this headline">¶</a></h2>
 <p>In order to calculate an auxiliary velocity <span class="math notranslate nohighlight">\(\tilde{u}\)</span>, we follow the scheme in <a class="reference internal" href="#c2" id="id2"><span>[C2]</span></a>. The scheme is one of the splitting and fractional-step methods, which is a variant of the ADI method.</p>
 <div class="math notranslate nohighlight">
 \[\frac{(u^* - u^{k})}{\Delta t} + u^k (\frac{\partial u^k}{\partial x}) = \frac{1}{Re} \frac{\partial^2 u^*}{\partial x^{2}}\]</div>
@@ -104,7 +104,7 @@
 \[\frac{(\tilde{u} - u^{**})}{\Delta t} + u^{**} (\frac{\partial u^{**}}{\partial z}) = \frac{1}{Re} \frac{\partial^2 \tilde{u}}{\partial z^2}\]</div>
 <p>Note that Euquations are of implicit form for each intermediate field. These schems are unconditionally stable, but total stability condition is not strictly derived.</p>
 <div class="section" id="boundary-condition-for-tilde-u">
-<h3><span class="section-number">1.2.1.2.1. </span>Boundary condition for <span class="math notranslate nohighlight">\(\tilde{u}\)</span><a class="headerlink" href="#boundary-condition-for-tilde-u" title="Permalink to this headline">¶</a></h3>
+<h3>1.2.1.2.1. Boundary condition for <span class="math notranslate nohighlight">\(\tilde{u}\)</span><a class="headerlink" href="#boundary-condition-for-tilde-u" title="Permalink to this headline">¶</a></h3>
 <p>Since,</p>
 <div class="math notranslate nohighlight">
 \[\tilde{u} = u^{k + 1} + \Delta t \nabla p^n\]</div>

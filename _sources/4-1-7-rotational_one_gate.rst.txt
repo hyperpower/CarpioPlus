@@ -1,0 +1,76 @@
+=================================
+Rotational One Gate
+=================================
+
+Problem Description
+===================
+
+The domain is a unit square :math:`x \in [-1.0, 1.0], y \in [0.0, 1.0]`. The boudary conditions are
+
+.. math::
+   \phi = 1 &, \quad \text{if} \quad y = 0.0 \quad \text{and} \quad y = [-0.8, -0.6]\\
+   \frac{d \phi}{d x} = 0 &, \quad \text{if} \quad x = 0 \quad \text{and} \quad x = 1\\
+   \frac{d \phi}{d y} = 0 &, \quad \text{if} \quad y = 0.0 \quad \text{and} \quad x = [0.0, 1.0]\\
+   \frac{d \phi}{d y} = 0 &, \quad \text{if} \quad y = 1.0 \\
+
+The velocity is :math:`\mathbf{u}=(y, -x)`. 
+
+.. figure:: _static/4-1-7-rotational_one_gate/illustration.png
+   :alt: the semi-ellipse profile
+   :align: center 
+
+   Illustration of the problem.
+
+Results
+===================
+
+Scheme Comparsion
+-------------------
+Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when 3 norms are all less than :math:`10^{-5}`. CFL number is 0.4. 
+
+The final profile at outlet section (x = [0.0, 1.0] and y = 0.0) is shown as follows.
+
+.. figure:: _static/4-1-7-rotational_one_gate/compare_section.png
+   :alt: rotate ou
+   :align: center 
+
+   Comparsion of schemes.
+
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake       1.94685e+00  
+        dt_make       7.15328e+00  
+         dt_run       6.39388e+01  
+        dt_plot       1.41132e+00  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp|             20-01-13 23:08|             20-01-13 23:08| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt|             20-01-11 14:07|             20-01-11 14:07| 
+   +---------------+---------------------------+---------------------------+
+   |        plot.py|             20-01-13 22:40|             20-01-13 22:40| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py|             20-01-06 22:13|             20-01-04 17:53| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst|             20-01-06 22:23|             20-01-06 22:23| 
+   +---------------+---------------------------+---------------------------+
+   

@@ -11,7 +11,7 @@ Time Test
 ===================
 OpenMP takes some time to allocate the threads and manage them. This procedure will spend some time. Compare to the time for runing simple task, the time used for managing threads can't not be ignored. Here, we want to find out what kind of task is suitalbe for paralleling in terms of excution time. A simple sleep funtion is used as single task function. Multiple threads, say n threads, will execut the function n times. If they are runing in prefect parallel, the execution time time will be as same as the single thread running the funtion for just one time. 
 
-We set the number of threads, n = 2, 4, 10, 20, 40. The result is shown in following Figure.   
+We set the number of threads, n = 2, 4, 8, 16. The result is shown in following Figure.   
 
 .. figure:: _static/2-1-2-array_openmp/timetest.png
    :alt: Time test for OpenMP
@@ -45,10 +45,10 @@ Run time infomation:
    ============= =====================
     Functions      Wall Time (s)            
    ============= =====================
-       dt_cmake          1.509994  
-        dt_make          1.108225  
-         dt_run        161.026824  
-        dt_plot          0.040985  
+       dt_cmake       4.02154e+00  
+        dt_make       2.04848e+00  
+         dt_run       2.85278e+01  
+        dt_plot       2.69413e-04  
    ============= =====================
 
 
@@ -59,12 +59,12 @@ Run time infomation:
    +---------------+---------------------------+---------------------------+ 
    | File          | Creat Time                | Modified Time             | 
    +===============+===========================+===========================+ 
-   |       main.cpp|             19-12-24 20:48|             19-12-24 20:48| 
+   |       main.cpp|             20-01-04 21:30|             20-01-04 21:30| 
    +---------------+---------------------------+---------------------------+
-   | CMakeLists.txt|             19-12-24 20:48|             19-12-24 20:48| 
+   | CMakeLists.txt|             19-11-24 18:50|             19-11-24 18:50| 
    +---------------+---------------------------+---------------------------+
-   |         run.py|             19-12-24 20:48|             19-12-24 20:48| 
+   |         run.py|             19-11-24 18:50|             19-11-24 18:50| 
    +---------------+---------------------------+---------------------------+
-   |     report.rst|             19-12-24 20:48|             19-12-24 20:48| 
+   |     report.rst|             20-01-04 21:18|             20-01-04 21:18| 
    +---------------+---------------------------+---------------------------+
    

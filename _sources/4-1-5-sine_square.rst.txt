@@ -1,0 +1,86 @@
+=================================
+Sine Square
+=================================
+
+Problem Description
+===================
+
+The domain is a unit square :math:`x \in [0.0, 1.0], y \in [0.0, 1.0]`. The boudary conditions are
+
+.. math::
+   \phi =\sin^2(\frac{10}{3} \pi y) &, \quad \text{if} \quad x = 0.0 \quad \text{and} \quad y = [0.0, 0.3]\\
+   \frac{d \phi}{d x} = 0 &, \quad \text{if} \quad x = 1.0\\
+   \phi = 0 &, \quad \text{if} \quad y = 0.0\\
+   \frac{d \phi}{d y} = 0 &, \quad \text{if} \quad y = 1.0\\
+
+The velocity is :math:`\mathbf{u}=(1, 1)`. 
+
+.. figure:: _static/4-1-5-sine_square/illustration.png
+   :alt: the gate profile
+   :align: center 
+
+   Illustration of the problem.
+
+
+Results
+===================
+
+This example tests three GRP (Generalized polynomial-ratio) schemes.
+
+.. figure:: _static/4-1-5-sine_square/GPR0_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPRO.
+
+.. figure:: _static/4-1-5-sine_square/GPR12_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPR12.
+
+.. figure:: _static/4-1-5-sine_square/GPR13_section.png
+   :alt: the gate profile
+   :align: center 
+
+   GPR13.
+
+
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake       2.32600e-03  
+        dt_make       1.14000e-03  
+         dt_run       1.46700e-03  
+        dt_plot       1.47400e-03  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp|             20-01-04 19:02|             20-01-04 19:02| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt|             20-01-04 17:34|             20-01-04 17:34| 
+   +---------------+---------------------------+---------------------------+
+   |        plot.py|             20-01-04 19:00|             20-01-04 19:00| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py|             20-01-12 17:25|             20-01-12 17:25| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst|             20-01-04 19:33|             20-01-04 19:33| 
+   +---------------+---------------------------+---------------------------+
+   

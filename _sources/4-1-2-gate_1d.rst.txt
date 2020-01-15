@@ -44,6 +44,38 @@ The first schem is First Order Upwind (FOU).
 
    First Order Upwind (Last Step).
 
+QUICK 
+-------------------
+The second scheme is QUICK. Its accuracy is better than FOU.
+
+.. figure:: _static/4-1-2-gate_1d/QUICK.gif
+   :alt: the gate profile
+   :align: center 
+
+   QUICK.
+
+.. figure:: _static/4-1-2-gate_1d/QUICK_000100.png
+   :alt: the gate profile
+   :align: center 
+
+   QUICK (Last Step).
+
+Normal Compare
+---------------------
+Here, we plot Norm1, Norm2 and Norminf changing with steps.
+
+.. figure:: _static/4-1-2-gate_1d/FOU_norm.png
+   :alt: the gate profile
+   :align: center 
+
+   FOU Norm.
+
+.. figure:: _static/4-1-2-gate_1d/QUICK_norm.png
+   :alt: the gate profile
+   :align: center 
+
+   QUICK Norm.
+
 
 
 
@@ -59,10 +91,10 @@ Run time infomation:
    ============= =====================
     Functions      Wall Time (s)            
    ============= =====================
-       dt_cmake          0.002198  
-        dt_make          0.000717  
-         dt_run          0.001449  
-        dt_plot          0.000650  
+       dt_cmake       2.72420e+00  
+        dt_make       6.22221e+00  
+         dt_run       1.90800e-01  
+        dt_plot       8.44209e+01  
    ============= =====================
 
 
@@ -73,14 +105,14 @@ Run time infomation:
    +---------------+---------------------------+---------------------------+ 
    | File          | Creat Time                | Modified Time             | 
    +===============+===========================+===========================+ 
-   |       main.cpp|             20-01-01 21:42|             20-01-01 21:42| 
+   |       main.cpp|             20-01-04 17:34|             20-01-04 17:34| 
    +---------------+---------------------------+---------------------------+
-   | CMakeLists.txt|             19-12-24 20:48|             19-12-24 20:48| 
+   | CMakeLists.txt|             19-11-24 18:50|             19-11-24 18:50| 
    +---------------+---------------------------+---------------------------+
-   |        plot.py|             20-01-01 21:41|             20-01-01 21:41| 
+   |        plot.py|             20-01-04 17:34|             20-01-04 17:34| 
    +---------------+---------------------------+---------------------------+
-   |         run.py|             20-01-01 07:21|             20-01-01 07:21| 
+   |         run.py|             20-01-04 17:34|             20-01-04 17:34| 
    +---------------+---------------------------+---------------------------+
-   |     report.rst|             20-01-01 21:10|             20-01-01 21:10| 
+   |     report.rst|             20-01-04 17:34|             20-01-04 17:34| 
    +---------------+---------------------------+---------------------------+
    

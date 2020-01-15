@@ -28,7 +28,24 @@ Results
 
 First Order Upwind
 -------------------
-Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-4}`. CFL number is 0.5.
+Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-5}`. CFL number is 0.5.
+
+.. figure:: _static/4-1-3-one_step_2d/FOU_phi.gif
+   :alt: the gif
+   :align: center 
+
+   First Order Upwind.
+
+.. figure:: _static/4-1-3-one_step_2d/FOU_phi_last.png
+   :align: center 
+
+   First Order Upwind (Last Step).
+
+.. figure:: _static/4-1-3-one_step_2d/norm.png
+   :align: center 
+
+   Normal of each step.
+
 
 
 
@@ -43,10 +60,10 @@ Run time infomation:
    ============= =====================
     Functions      Wall Time (s)            
    ============= =====================
-       dt_cmake          0.001968  
-        dt_make          0.002266  
-         dt_run          0.001827  
-        dt_plot          0.000852  
+       dt_cmake       3.02104e+00  
+        dt_make       5.89928e+00  
+         dt_run       1.96257e+01  
+        dt_plot       4.44360e+01  
    ============= =====================
 
 
@@ -57,14 +74,14 @@ Run time infomation:
    +---------------+---------------------------+---------------------------+ 
    | File          | Creat Time                | Modified Time             | 
    +===============+===========================+===========================+ 
-   |       main.cpp|             19-12-30 19:22|             19-12-30 19:22| 
+   |       main.cpp|             20-01-04 20:22|             20-01-04 20:22| 
    +---------------+---------------------------+---------------------------+
-   | CMakeLists.txt|             19-12-24 20:48|             19-12-24 20:48| 
+   | CMakeLists.txt|             19-11-24 18:50|             19-11-24 18:50| 
    +---------------+---------------------------+---------------------------+
-   |        plot.py|             19-12-30 19:22|             19-12-30 19:22| 
+   |        plot.py|             20-01-04 20:22|             20-01-04 20:22| 
    +---------------+---------------------------+---------------------------+
-   |         run.py|             19-12-30 18:47|             19-12-30 18:47| 
+   |         run.py|             20-01-04 20:24|             20-01-04 20:24| 
    +---------------+---------------------------+---------------------------+
-   |     report.rst|             19-12-28 20:19|             19-12-28 20:19| 
+   |     report.rst|             20-01-04 20:26|             20-01-04 20:26| 
    +---------------+---------------------------+---------------------------+
    

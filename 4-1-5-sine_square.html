@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.4.5. Sine Square &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2.4.6. Semi Ellipse" href="4-1-6-semi_ellipse.html" />
+    <link rel="prev" title="2.4.4. Gate 2D" href="4-1-4-gate_2d.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.4.5. Sine Square</a><ul>
+<li><a class="reference internal" href="#problem-description">2.4.5.1. Problem Description</a></li>
+<li><a class="reference internal" href="#results">2.4.5.2. Results</a></li>
+<li><a class="reference internal" href="#case-information">2.4.5.3. Case Information</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="sine-square">
+<h1>2.4.5. Sine Square<a class="headerlink" href="#sine-square" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-description">
+<h2>2.4.5.1. Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<p>The domain is a unit square <span class="math notranslate nohighlight">\(x \in [0.0, 1.0], y \in [0.0, 1.0]\)</span>. The boudary conditions are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\phi =\sin^2(\frac{10}{3} \pi y) &amp;, \quad \text{if} \quad x = 0.0 \quad \text{and} \quad y = [0.0, 0.3]\\
+\frac{d \phi}{d x} = 0 &amp;, \quad \text{if} \quad x = 1.0\\
+\phi = 0 &amp;, \quad \text{if} \quad y = 0.0\\
+\frac{d \phi}{d y} = 0 &amp;, \quad \text{if} \quad y = 1.0\\\end{split}\]</div>
+<p>The velocity is <span class="math notranslate nohighlight">\(\mathbf{u}=(1, 1)\)</span>.</p>
+<div class="figure align-center" id="id1">
+<img alt="the gate profile" src="_images/illustration1.png" />
+<p class="caption"><span class="caption-number">Fig. 2.52 </span><span class="caption-text">Illustration of the problem.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="results">
+<h2>2.4.5.2. Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>This example tests three GRP (Generalized polynomial-ratio) schemes.</p>
+<div class="figure align-center" id="id2">
+<img alt="the gate profile" src="_images/GPR0_section.png" />
+<p class="caption"><span class="caption-number">Fig. 2.53 </span><span class="caption-text">GPRO.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id3">
+<img alt="the gate profile" src="_images/GPR12_section.png" />
+<p class="caption"><span class="caption-number">Fig. 2.54 </span><span class="caption-text">GPR12.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id4">
+<img alt="the gate profile" src="_images/GPR13_section.png" />
+<p class="caption"><span class="caption-number">Fig. 2.55 </span><span class="caption-text">GPR13.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="case-information">
+<h2>2.4.5.3. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<p>Run time infomation:</p>
+<table class="colwidths-auto docutils align-center" id="id5">
+<caption><span class="caption-number">Table 2.28 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Functions</p></th>
+<th class="head"><p>Wall Time (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dt_cmake</p></td>
+<td><p>2.32600e-03</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_make</p></td>
+<td><p>1.14000e-03</p></td>
+</tr>
+<tr class="row-even"><td><p>dt_run</p></td>
+<td><p>1.46700e-03</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_plot</p></td>
+<td><p>1.47400e-03</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto docutils align-center" id="id6">
+<caption><span class="caption-number">Table 2.29 </span><span class="caption-text">Files in this case.</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Creat Time</p></th>
+<th class="head"><p>Modified Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main.cpp</p></td>
+<td><p>20-01-04 19:02</p></td>
+<td><p>20-01-04 19:02</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMakeLists.txt</p></td>
+<td><p>20-01-04 17:34</p></td>
+<td><p>20-01-04 17:34</p></td>
+</tr>
+<tr class="row-even"><td><p>plot.py</p></td>
+<td><p>20-01-04 19:00</p></td>
+<td><p>20-01-04 19:00</p></td>
+</tr>
+<tr class="row-odd"><td><p>run.py</p></td>
+<td><p>20-01-12 17:25</p></td>
+<td><p>20-01-12 17:25</p></td>
+</tr>
+<tr class="row-even"><td><p>report.rst</p></td>
+<td><p>20-01-04 19:33</p></td>
+<td><p>20-01-04 19:33</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/4-1-5-sine_square.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
