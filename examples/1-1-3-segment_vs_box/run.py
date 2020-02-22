@@ -41,12 +41,12 @@ def build(path):
     runtime.append(("dt_run",  time.clock() - tprev))
     tprev = time.clock()
     print("plot   -------------------------------- ")
+    # os.system("python3 plot.py")
     runtime.append(("dt_plot", time.clock() - tprev))
     tprev = time.clock()
     print("report   ------------------------------ ")
-    # os.system("python3 report.py")
-    # REPORT.run(path, runtime, FILE_ORIGINAL)
-    # os.system("python3 plot.py")
+    os.system("python3 report.py")
+    REPORT.run(path, runtime, FILE_ORIGINAL)
     return runtime
 
 def main():

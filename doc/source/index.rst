@@ -23,7 +23,6 @@ Restructure examples
    :maxdepth: 1
    
    example
-   5-1-1-doc_test
 
 Indices and tables
 ==================

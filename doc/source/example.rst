@@ -1,8 +1,6 @@
 reStructureText Examples
 ===========================
 
-
-
 This file used for testing reStructureText file
 
 H3 -- Subsection
@@ -61,6 +59,21 @@ Inline Markup
 Words can have *emphasis in italics* or be **bold** and you can define
 code samples with back quotes, like when you talk about a command: ``sudo`` 
 gives you super user powers!
+
+Math
+-------------
+
+here is a inline math. Since Pythagoras, we know that :math:`a^2 + b^2 = c^2`.
+
+
+.. math::
+   :label: math1
+
+   (a + b)^2 = a^2 + 2ab + b^2
+
+   (a - b)^2 = a^2 - 2ab + b^2
+
+here, we can find :eq:`math1`
 
 Paragraph Markup
 --------------------
@@ -153,11 +166,4 @@ See the matplotlib `pyplot tutorial
 <http://matplotlib.sourceforge.net/users/pyplot_tutorial.html>`_ and
 the `gallery <http://matplotlib.sourceforge.net/gallery.html>`_ for
 lots of examples of matplotlib plots.
-
-
-Breath 
-------------
-
-.. doxygenclass:: Point_
-   :project: Carpio
 
