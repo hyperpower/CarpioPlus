@@ -19,7 +19,8 @@ typedef Segment_<double, 2> Seg2;
 typedef Box_<double, 2>     Box2;
 typedef Line_<double>       Line;
 
-typedef GGnuplotActor_<double, 2> GA;
+//typedef GGnuplotActor_<double, 2> GA;
+typedef GGnuplotActorMaker_<double, 2> GAM;
 
 TEST(box, point_to_box_position){
 	Point2 x(1, 0);
@@ -77,20 +78,21 @@ TEST(box, box_vs_line){
 	}
 
 	Gnuplot gnu;
+	GAM     gam;
 	gnu.set_xrange(-0.5, 1.5);
 	gnu.set_yrange(-0.5, 1.5);
 	gnu.set_equal_aspect_ratio();
 	gnu.set_terminal_png("./plot/line_box_normal.png");
-	auto spbox1 = GA::Lines(box1);
+	auto spbox1 = gam.lines(box1);
 	spbox1->style() = "with lines lw 2 lc 8";
 	gnu.add(spbox1);
-	auto spline = GA::Lines(line, -0.5, 1.5);
+	auto spline = gam.lines(line, -0.5, 1.5);
 	spline->style() = "with lines lw 3 lc 6";
 	gnu.add(spline);
 	// add intersection points
 	int numlabel = 30;
 	for(auto& sp : lspp){
-		auto sppoint = GA::Points(*sp);
+		auto sppoint = gam.points(*sp);
 		sppoint->style() = "with points pt 7 ps 2 lc 7";
 		gnu.set_label(numlabel, tfm::format("(%.2f, %.2f)", sp->x(), sp->y()),
 				     sp->x(), sp->y()+ 0.05, "left font \",16\"");
@@ -127,20 +129,21 @@ TEST(box, box_vs_line_positive){
     }
 
     Gnuplot gnu;
+    GAM     gam;
     gnu.set_xrange(-0.5, 1.5);
     gnu.set_yrange(-0.5, 1.5);
     gnu.set_equal_aspect_ratio();
     gnu.set_terminal_png("./plot/line_box_positve.png");
-    auto spbox1 = GA::Lines(box1);
+    auto spbox1 = gam.lines(box1);
     spbox1->style() = "with lines lw 2 lc 8";
     gnu.add(spbox1);
-    auto spline = GA::Lines(line, -0.5, 1.5);
+    auto spline = gam.lines(line, -0.5, 1.5);
     spline->style() = "with lines lw 3 lc 6";
     gnu.add(spline);
     // add intersection points
     int numlabel = 30;
     for(auto& sp : lspp){
-        auto sppoint = GA::Points(*sp);
+        auto sppoint = gam.points(*sp);
         sppoint->style() = "with points pt 7 ps 2 lc 7";
         gnu.set_label(numlabel, tfm::format("(%.2f, %.2f)",
                       sp->x(), sp->y()),

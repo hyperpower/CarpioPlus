@@ -1044,57 +1044,106 @@ public:
 		this->cmd("save \'" + filename + "\'");
 		return *this;
 	}
-
-
-
 }
 ;
+
+class GnuplotActorMaker{
+public:
+    typedef std::shared_ptr<carpio::Gnuplot_actor> spActor;
+
+public:
+    GnuplotActorMaker(){};
+
+    template<typename X, typename Y>
+    spActor array_xy(const X& x, const Y& y,
+            const std::string &pcmd = "using 1:2 title \"\" ",
+            const std::string& scmd = "") {
+        auto actor = _make_spactor(pcmd, scmd);
+        ASSERT(x.size() == y.size());
+        typename X::const_iterator xiter = x.begin();
+        typename X::const_iterator yiter = y.begin();
+        for (; xiter != x.end();) {
+            std::ostringstream sst;
+            sst << (*xiter) << " " << (*yiter);
+            actor->data().push_back(sst.str());
+            xiter++;
+            yiter++;
+        }
+        return actor;
+    }
+
+    template<typename Container>
+    spActor matrix_xy(
+            const Container& con, // matrix like data structure
+            const St& c1, // column index
+            const St& c2, // column index
+            const std::string &pcmd = "using 1:2 title \"\" ",
+            const std::string& scmd = "") {
+        auto actor = _make_spactor(pcmd, scmd);
+        for (auto& row : con) {
+            std::ostringstream sst;
+            sst << row[c1] << " " << row[c2];
+            actor->data().push_back(sst.str());
+        }
+        return actor;
+    }
+
+protected:
+	spActor _make_spactor(
+	    const std::string &pcmd = "using 1:2 title \"\" ",
+        const std::string& scmd = ""){
+	    spActor actor    = spActor(new Gnuplot_actor());
+	    actor->command() = pcmd;
+	    actor->style()   = scmd;
+	    return actor;
+	}
+};
 
 //------------------------------------------------------------------------------
 //int GnuplotShow(const std::list<Gnuplot_actor>& lga);
 //int GnuplotShow(Gnuplot&, const std::list<Gnuplot_actor>& lga);
 namespace GnuplotActor {
 
-	typedef std::shared_ptr<carpio::Gnuplot_actor> spActor;
-	typedef std::list<spActor> list_spActor;
+typedef std::shared_ptr<carpio::Gnuplot_actor> spActor;
+typedef std::list<spActor> list_spActor;
 
-	template<typename X, typename Y>
-	spActor XY(const X& x,
-			   const Y& y,
-			   const std::string &pcmd = "using 1:2 title \"\" ",
-		       const std::string& scmd = "") {
-		spActor actor = spActor(new Gnuplot_actor());
-	actor->command() = pcmd;
-	actor->style()   = scmd;
-	ASSERT(x.size() == y.size());
-	typename X::const_iterator xiter = x.begin();
-	typename X::const_iterator yiter = y.begin();
-	for(; xiter!=x.end();){
-		std::ostringstream sst;
-		sst << (*xiter) << " " << (*yiter);
-		actor->data().push_back(sst.str());
-		xiter++;
-		yiter++;
-	}
+template<typename X, typename Y>
+spActor XY(const X& x, const Y& y,
+        const std::string &pcmd = "using 1:2 title \"\" ",
+        const std::string& scmd = "") {
+    spActor actor = spActor(new Gnuplot_actor());
+    actor->command() = pcmd;
+    actor->style() = scmd;
+    ASSERT(x.size() == y.size());
+    typename X::const_iterator xiter = x.begin();
+    typename X::const_iterator yiter = y.begin();
+    for (; xiter != x.end();) {
+        std::ostringstream sst;
+        sst << (*xiter) << " " << (*yiter);
+        actor->data().push_back(sst.str());
+        xiter++;
+        yiter++;
+    }
 //	actor->data().push_back("");
-	return actor;
-	}
+    return actor;
+}
 
-	template<typename Container>
-	spActor XY(const Container& con, // matrix like data structure
-			   const St& c1, // column index
-			   const St& c2, // column index
-			   const std::string &pcmd = "using 1:2 title \"\" ",
-			   const std::string& scmd = "") {
-	spActor actor = spActor(new Gnuplot_actor());
-	actor->command() = pcmd;
-	actor->style() = scmd;
-	for (auto& row : con) {
-		std::ostringstream sst;
-		sst << row[c1] << " " << row[c2];
-		actor->data().push_back(sst.str());
-	}
-	return actor;
+template<typename Container>
+spActor XY(
+        const Container& con, // matrix like data structure
+        const St& c1, // column index
+        const St& c2, // column index
+        const std::string &pcmd = "using 1:2 title \"\" ",
+        const std::string& scmd = "") {
+    spActor actor = spActor(new Gnuplot_actor());
+    actor->command() = pcmd;
+    actor->style() = scmd;
+    for (auto& row : con) {
+        std::ostringstream sst;
+        sst << row[c1] << " " << row[c2];
+        actor->data().push_back(sst.str());
+    }
+    return actor;
 }
 
 }

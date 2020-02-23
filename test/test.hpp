@@ -15,7 +15,7 @@
 //#include "geometry/test_point_chain.hpp"
 //#include "geometry/test_bezier.hpp"
 //#include "geometry/test_ts.hpp"
-//#include "geometry/test_box.hpp"
+#include "geometry/test_box.hpp"
 //#include "geometry/test_aabbtree.hpp"
 //#include "geometry/test_voftool.hpp"
 //#include "algebra/test_multi_array.hpp"
@@ -35,7 +35,7 @@
 //#include "structure/test_value_cut.hpp"
 //#include "structure/test_interpolation.hpp"
 
-#include "equation/test_convection.hpp"
+//#include "equation/test_convection.hpp"
 //#include "equation/test_equation.hpp"
 //#include "equation/test_poisson.hpp"
 
