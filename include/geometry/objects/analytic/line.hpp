@@ -157,11 +157,22 @@ public:
 	Vt norm_y() const {
 		return this->b();
 	}
+	// (x,y) is another vector
+	// true  --- (x, y) direction is normal to the line
+	// false --- (x, y) direction is not norma to he line
+	bool is_norm(Vt x, Vt y, Vt small = 1e-10) const{
+		Vt dot = this->shear_x() * x + this->shear_y() * y;
+		if (std::abs(dot) < small){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	Vt shear_x() const {
 		return this->b();
 	}
 	Vt shear_y() const {
-		return -this->a();
+		return -(this->a());
 	}
 	bool empty() const {
 		if (this->a() != 0.0 || this->b() != 0.0) {

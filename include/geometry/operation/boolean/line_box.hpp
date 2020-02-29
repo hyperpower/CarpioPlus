@@ -23,9 +23,9 @@ template<class NUM>
 std::list<std::shared_ptr<Point_<NUM, 2> > >
 IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Point max
 				 const NUM& a,   const NUM& b, const NUM& alpha){         // Line
-	std::array<Axes, 4> ao = {_Y_  , _Y_,  _X_,  _X_};
-	std::array<Vt, 4>   av = {0.0  , ymax, 0.0,  xmax};
-	std::array<Vt, 4>   rv = {xmax , xmax, ymax, ymax};
+	std::array<Axes, 4> ao = {_Y_  , _X_,  _Y_,  _X_ };
+	std::array<Vt, 4>   av = {0.0  , xmax, ymax, 0.0 };
+	std::array<Vt, 4>   rv = {xmax , ymax, xmax, ymax};
 	std::list<std::shared_ptr<Point_<NUM, 2> > > res;
 	for(int i = 0; i < 4; i++){
 		Vt cv = Calculate(a, b, alpha, ao[i], av[i]);
@@ -35,11 +35,7 @@ IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Poi
 			spp->y() = (ao[i] == _X_) ? cv : av[i];
 			res.push_back(spp);
 		}
-//		if(res.size() > 1){
-//			break;
-//		}
 	}
-	// orientation
 	return res;
 }
 

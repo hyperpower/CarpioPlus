@@ -67,7 +67,7 @@ TEST(box, box_vs_line){
 	Box2 box1(min1, max1);
 	std::cout << "The box 1 is " << box1 << std::endl;
 
-	Line line(1.0, 1.0, 2.0);
+	Line line(0.0, 1.0, 1.0);
 	std::cout << "Line is " << line << std::endl;
 
 	auto lspp = IntersectLineBox(box1, line);
