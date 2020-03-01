@@ -1,0 +1,70 @@
+=================================
+Array Openmp
+=================================
+
+Problem Description
+===================
+
+This test case just illustrates how to use OpenMP. The prefromence test has been carried out for comparsion. Note that the perfromence may highly depend on hardware platform. This test program could get different results on an other computer. 
+
+Time Test
+===================
+OpenMP takes some time to allocate the threads and manage them. This procedure will spend some time. Compare to the time for runing simple task, the time used for managing threads can't not be ignored. Here, we want to find out what kind of task is suitalbe for paralleling in terms of excution time. A simple sleep funtion is used as single task function. Multiple threads, say n threads, will execut the function n times. If they are runing in prefect parallel, the execution time time will be as same as the single thread running the funtion for just one time. 
+
+We set the number of threads, n = 2, 4, 8, 16. The result is shown in following Figure.   
+
+.. figure:: _static/2-1-2-array_openmp/timetest.png
+   :alt: Time test for OpenMP
+   :align: center 
+
+   Time test for OpenMP
+
+Two obvious conclusions can be reached:
+
+- More threads will take more time to manage.
+- Execution time of single function is better be more than 10 millisecond.
+
+Array Operation Test
+======================
+A simple array operation(+,-,*) execute in parallel. Following figure shows the result. The operation is acted on arrays with different length. The longer array takes more time to operate. The execution time should be longer than 10 ms. The parallel execution could save time. 
+
+.. figure:: _static/2-1-2-array_openmp/arrayop.png
+   :alt: arrar test for OpenMP
+   :align: center 
+
+   Array test for OpenMP
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake       4.02154e+00  
+        dt_make       2.04848e+00  
+         dt_run       2.85278e+01  
+        dt_plot       2.69413e-04  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp|             20-01-04 21:30|             20-01-04 21:30| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt|             19-11-24 18:50|             19-11-24 18:50| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py|             19-11-24 18:50|             19-11-24 18:50| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst|             20-01-04 21:18|             20-01-04 21:18| 
+   +---------------+---------------------------+---------------------------+
+   

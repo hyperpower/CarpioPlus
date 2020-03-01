@@ -1,0 +1,73 @@
+=================================
+Jacobi Solver
+=================================
+
+Problem Description
+===================
+
+This example shows Jacobi method for solving :math:`\mathbf{A}x = \mathbf{b}`.
+
+Test Problem
+===================
+The Matrix is obtained from MatrixMarket. The name is 685_bus.mtx. The equation which we want
+to solve:
+
+.. math::
+   \mathbf{A} \cdot \mathbf{x} = \mathbf{b}
+
+where, :math:`\mathbf{A}` the matrix, :math:`\mathbf{x}` unknown vector and :math:`\mathbf{b}` is the 
+vector on right hand side.
+
+
+.. table:: Matrix 685_bus.mtx Information.
+   :widths: auto
+   :align: center 
+
+   ================== =======================
+   Item               Info   
+   ================== =======================
+   i                  685  
+   j                  685   
+   none-zero          3249   
+   ================== =======================
+
+Solver Test
+======================
+
+
+Case Information
+===================
+Run time infomation:
+
+.. table:: Summary of Running Time.
+   :widths: auto
+   :align: center 
+
+   ============= =====================
+    Functions      Wall Time (s)            
+   ============= =====================
+       dt_cmake          2.423865  
+        dt_make          2.193082  
+         dt_run         63.956961  
+        dt_plot          0.001428  
+   ============= =====================
+
+
+.. table:: Files in this case.
+   :widths: auto
+   :align: center 
+
+   +---------------+---------------------------+---------------------------+ 
+   | File          | Creat Time                | Modified Time             | 
+   +===============+===========================+===========================+ 
+   |       main.cpp| 2019-11-24 18:50:22.306483| 2019-11-24 18:50:22.306483| 
+   +---------------+---------------------------+---------------------------+
+   | CMakeLists.txt| 2019-11-24 18:50:22.306483| 2019-11-24 18:50:22.306483| 
+   +---------------+---------------------------+---------------------------+
+   |    685_bus.mtx| 2019-11-24 18:50:22.306483| 2019-11-24 18:50:22.306483| 
+   +---------------+---------------------------+---------------------------+
+   |         run.py| 2019-11-24 18:50:22.306483| 2019-11-24 18:50:22.306483| 
+   +---------------+---------------------------+---------------------------+
+   |     report.rst| 2019-11-24 18:50:22.306483| 2019-11-24 18:50:22.306483| 
+   +---------------+---------------------------+---------------------------+
+   

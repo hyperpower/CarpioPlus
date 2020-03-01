@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to Carpio’s documentation! &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. Theory of CFD" href="theory/theory.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory/theory.html">1. Theory of CFD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">2. Examples and Tests</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">1. reStructureText Examples</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-carpio-s-documentation">
+<h1>Welcome to Carpio’s documentation!<a class="headerlink" href="#welcome-to-carpio-s-documentation" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="table-of-content">
+<h1>Table of content<a class="headerlink" href="#table-of-content" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory/theory.html">1. Theory of CFD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory/convection.html">1.1. Convection Scheme</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/tvd.html">1.1.1. TVD schemes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="theory/eno.html">1.1.2. ENO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="theory/projection_method.html">1.2. Projection Method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="theory/non-incremental.html">1.2.1. Non-incremental Projection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">2. Examples and Tests</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">2.1. Geometry Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="1-1-1-point_position_to_segment.html">2.1.1. Point Position To Segment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-1-2-segments_intersection.html">2.1.2. Segments Intersection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-1-3-segment_vs_box.html">2.1.3. Segment Vs Box</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-1-5-point_in_polygon.html">2.1.4. Point In Polygon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="1-1-9-bezier_curve.html">2.1.5. Bezier Curve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="algebra.html">2.2. Algebra Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="2-1-2-array_openmp.html">2.2.1. Array Openmp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2-3-1-jacobi_solver.html">2.2.2. Jacobi Solver</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="structure.html">2.3. Structure Grid and Domain Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="3-1-1-field_define.html">2.3.1. Field Define</a></li>
+<li class="toctree-l3"><a class="reference internal" href="3-1-2-vector_center_and_face_define.html">2.3.2. Vector Center And Face Define</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="convection.html">2.4. Convection Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="4-1-1-one_step_1d.html">2.4.1. One Step 1D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-2-gate_1d.html">2.4.2. Gate 1D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-3-one_step_2d.html">2.4.3. One Step 2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-4-gate_2d.html">2.4.4. Gate 2D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-5-sine_square.html">2.4.5. Sine Square</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-6-semi_ellipse.html">2.4.6. Semi Ellipse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-7-rotational_one_gate.html">2.4.7. Rotational One Gate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-8-rotational_two_gates.html">2.4.8. Rotational Two Gates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4-1-9-rotational_square.html">2.4.9. Rotational Square</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="poisson.html">2.5. Poisson Examples</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="restructure-examples">
+<h2>Restructure examples<a class="headerlink" href="#restructure-examples" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">1. reStructureText Examples</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
