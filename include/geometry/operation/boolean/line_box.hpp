@@ -48,9 +48,9 @@ int _RemoveSamePoints(std::list<std::shared_ptr<Point_<NUM, 2> > >& listp,
 // Point min is (0, 0)
 template<class NUM>
 std::list<std::shared_ptr<Point_<NUM, 2> > >
-IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Point max
-				 const NUM& a,   const NUM& b, const NUM& alpha,
-				 const double& tol = 1e-10){         // Line
+IntersectLineBox(const NUM& xmax,const NUM& ymax,                // Point max
+				 const NUM& a,   const NUM& b, const NUM& alpha, // Line
+				 const double& tol = 1e-10){
 	std::array<Axes, 4> ao = {_Y_  , _Y_,  _X_,  _X_};
 	std::array<Vt, 4>   av = {0.0  , ymax, 0.0,  xmax};
 	std::array<Vt, 4>   rv = {xmax , xmax, ymax, ymax};
@@ -72,8 +72,8 @@ IntersectLineBox(const NUM& xmax,const NUM& ymax,                         // Poi
 
 template<class NUM>
 std::list<std::shared_ptr<Point_<NUM, 2> > >
-IntersectLineBox(const NUM& xmin,const NUM& ymin,  // Point min
-		         const NUM& xmax,const NUM& ymax,  // Point max
+IntersectLineBox(const NUM& xmin,const NUM& ymin,                 // Point min
+		         const NUM& xmax,const NUM& ymax,                 // Point max
 				 const NUM& a,   const NUM& b, const NUM& alpha){ // Line
 	// transfer to (0,0)
 	auto listspp = IntersectLineBox(xmax - xmin, ymax - ymin,

@@ -19,6 +19,7 @@ def col(matrix, i):
 
 # data file name is sperated by underscore.
 # select_files like <name0>_<name1>_....txt
+# return a name matrix
 def select_files_split(dirname, name0, name1):
     res = []
     files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, f))]
@@ -27,6 +28,27 @@ def select_files_split(dirname, name0, name1):
         if spf[0] == name0 and spf[1] == name1:
             res.append(spf)
     return res 
+
+def select_files_split1(dirname, name0):
+    res = []
+    files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == name0:
+            res.append(spf)
+    return res 
+
+# data file name is sperated by underscore.
+# select_files like <name0>_....txt
+# return a list of file
+def select_files1(dirname, name0):
+    res = []
+    files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == name0:
+            res.append(f)
+    return res
 
 class TextFile:
     def __init__(self, filename):
