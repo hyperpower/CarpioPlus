@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.1.3. Segment Vs Box &#8212; Carpio 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2.1.4. Point In Polygon" href="1-1-5-point_in_polygon.html" />
+    <link rel="prev" title="2.1.2. Segments Intersection" href="1-1-2-segments_intersection.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Carpio</a></h1>
+
+
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=hyperpower&repo=CarpioPlus&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.1.3. Segment Vs Box</a><ul>
+<li><a class="reference internal" href="#problem-description">2.1.3.1. Problem Description</a></li>
+<li><a class="reference internal" href="#results">2.1.3.2. Results</a><ul>
+<li><a class="reference internal" href="#line-vs-box-normal">2.1.3.2.1. Line vs Box - Normal</a></li>
+<li><a class="reference internal" href="#line-vs-box-corner">2.1.3.2.2. Line vs Box - Corner</a></li>
+<li><a class="reference internal" href="#line-vs-box-edge">2.1.3.2.3. Line vs Box - Edge</a></li>
+<li><a class="reference internal" href="#line-vs-box-positive-side">2.1.3.2.4. Line vs Box - Positive Side</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#case-information">2.1.3.3. Case Information</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="segment-vs-box">
+<h1>2.1.3. Segment Vs Box<a class="headerlink" href="#segment-vs-box" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="problem-description">
+<h2>2.1.3.1. Problem Description<a class="headerlink" href="#problem-description" title="Permalink to this headline">¶</a></h2>
+<p>We want to find intersection results of a line vs box.</p>
+<div class="figure align-center" id="id1">
+<img alt="_images/illustration9.png" src="_images/illustration9.png" />
+<p class="caption"><span class="caption-number">Fig. 2.14 </span><span class="caption-text">A line intersects with box.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="results">
+<h2>2.1.3.2. Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="line-vs-box-normal">
+<h3>2.1.3.2.1. Line vs Box - Normal<a class="headerlink" href="#line-vs-box-normal" title="Permalink to this headline">¶</a></h3>
+<p>The box is fixed at (0,0) to (1,1). A line passes through the box. Two intersect points can be found.</p>
+<div class="figure align-center" id="id2">
+<img alt="_images/line_box_normal.png" src="_images/line_box_normal.png" />
+<p class="caption"><span class="caption-number">Fig. 2.15 </span><span class="caption-text">A line intersects with box (Normal).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="line-vs-box-corner">
+<h3>2.1.3.2.2. Line vs Box - Corner<a class="headerlink" href="#line-vs-box-corner" title="Permalink to this headline">¶</a></h3>
+<p>The box is fixed at (0,0) to (1,1). A corner of the box is on the line.</p>
+<div class="figure align-center" id="id3">
+<img alt="_images/line_box_corner.png" src="_images/line_box_corner.png" />
+<p class="caption"><span class="caption-number">Fig. 2.16 </span><span class="caption-text">A line intersects with box (Corner).</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="line-vs-box-edge">
+<h3>2.1.3.2.3. Line vs Box - Edge<a class="headerlink" href="#line-vs-box-edge" title="Permalink to this headline">¶</a></h3>
+<p>The box is fixed at (0,0) to (1,1). The line is on one edge of the box.</p>
+<div class="figure align-center" id="id4">
+<img alt="_images/line_box_edge.png" src="_images/line_box_edge.png" />
+<p class="caption"><span class="caption-number">Fig. 2.17 </span><span class="caption-text">A line intersects with box (Edge).</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="line-vs-box-positive-side">
+<h3>2.1.3.2.4. Line vs Box - Positive Side<a class="headerlink" href="#line-vs-box-positive-side" title="Permalink to this headline">¶</a></h3>
+<p>A line cuts a box into two sides. Here, we get a positive side as a ploygon.</p>
+<p>We want to construct a line rotate about a point, say p1: <span class="math notranslate nohighlight">\((x1, y1)\)</span>. p1 is the rotational center. And, we have another point p2: math:<cite>(x2, y2)</cite>. A line can be constructed in two points form.</p>
+<p>Given two different points <span class="math notranslate nohighlight">\((x1, y1)\)</span> and <span class="math notranslate nohighlight">\((x2, y2)\)</span>, there is exactly one line that passes through them. There are several ways to write a linear equation of this line.</p>
+<p>If <span class="math notranslate nohighlight">\(x1 ≠ x2\)</span>, the slope of the line is <span class="math notranslate nohighlight">\(\frac{y_{2}-y_{1}}{x_{2}-x_{1}}\)</span> Thus, a point-slope form is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}y - y_{1} &amp;= \frac{y_2 - y_1}{x_2 - x_1} (x - x_1) \\
+(x_2 - x_1)(y - y_1) &amp;= (y_2 - y_1)(x - x_1)\end{split}\]</div>
+<p>finally, the line equation will be</p>
+<div class="math notranslate nohighlight">
+\[(y_1 - y_2) x + (x_2 - x_1) y + (x_1 y_2 - x_2 y_1) = 0\]</div>
+<p>p2 is also a point on a circle. The center of the circle is p1. Radius of this circle is r. Thus, p2 can be obtained by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_2 &amp;= x_1 + r \cos \theta \\
+y_2 &amp;= y_1 + r \sin \theta\end{split}\]</div>
+<div class="figure align-center" id="id5">
+<img alt="_images/lb.gif" src="_images/lb.gif" />
+<p class="caption"><span class="caption-number">Fig. 2.18 </span><span class="caption-text">A line intersects with box and its positive side.</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="case-information">
+<h2>2.1.3.3. Case Information<a class="headerlink" href="#case-information" title="Permalink to this headline">¶</a></h2>
+<p>Run time infomation:</p>
+<table class="colwidths-auto docutils align-center" id="id6">
+<caption><span class="caption-number">Table 2.7 </span><span class="caption-text">Summary of Running Time.</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Functions</p></th>
+<th class="head"><p>Wall Time (s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dt_cmake</p></td>
+<td><p>3.06976e+00</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_make</p></td>
+<td><p>2.94279e+00</p></td>
+</tr>
+<tr class="row-even"><td><p>dt_run</p></td>
+<td><p>1.00629e+01</p></td>
+</tr>
+<tr class="row-odd"><td><p>dt_plot</p></td>
+<td><p>2.90207e+01</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-auto docutils align-center" id="id7">
+<caption><span class="caption-number">Table 2.8 </span><span class="caption-text">Files in this case.</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Creat Time</p></th>
+<th class="head"><p>Modified Time</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main.cpp</p></td>
+<td><p>20-03-01 16:13</p></td>
+<td><p>20-03-01 16:13</p></td>
+</tr>
+<tr class="row-odd"><td><p>CMakeLists.txt</p></td>
+<td><p>19-12-07 15:57</p></td>
+<td><p>19-11-24 18:50</p></td>
+</tr>
+<tr class="row-even"><td><p>plot.py</p></td>
+<td><p>20-03-01 16:16</p></td>
+<td><p>20-03-01 16:16</p></td>
+</tr>
+<tr class="row-odd"><td><p>run.py</p></td>
+<td><p>20-03-01 16:21</p></td>
+<td><p>20-03-01 16:21</p></td>
+</tr>
+<tr class="row-even"><td><p>report.rst</p></td>
+<td><p>20-03-01 16:18</p></td>
+<td><p>20-03-01 16:18</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2018, Chengsi Zhou.
+      
+      |
+      <a href="_sources/1-1-3-segment_vs_box.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
