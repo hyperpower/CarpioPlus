@@ -14,9 +14,7 @@
 #include "event/gnuplot_field.hpp"
 #include "event/field_norm.hpp"
 
-#include "stop/stop.hpp"
-#include "stop/stop_manager.hpp"
-#include "stop/stop_field_norm.hpp"
+#include "stop_manager.hpp"
 
 namespace carpio{
 

@@ -287,9 +287,9 @@ public:
 template<St DIM>
 class SGhostLinearCut_: public SGhostRegular_<DIM> {
 public:
-	typedef SGhostRegular_<DIM>   Base;
-	typedef SIndex_<DIM> Index;
-	typedef SGrid_<DIM>  Grid;
+	typedef SGhostRegular_<DIM>     Base;
+	typedef SIndex_<DIM>            Index;
+	typedef SGrid_<DIM>             Grid;
 	typedef std::shared_ptr<Grid> spGrid;
 	typedef SCellLinearCut_<DIM>    Cell;
 	typedef std::shared_ptr<Cell> spCell;

@@ -17,6 +17,17 @@ import numbers
 def col(matrix, i):
     return [row[i] for row in matrix]
 
+# data file name is sperated by underscore.
+# select_files like <name0>_<name1>_....txt
+def select_files_split(dirname, name0, name1):
+    res = []
+    files = [f for f in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, f))]
+    for f in files:
+        spf = f.split("_")
+        if spf[0] == name0 and spf[1] == name1:
+            res.append(spf)
+    return res 
+
 class TextFile:
     def __init__(self, filename):
         self._fn = filename
@@ -102,7 +113,7 @@ class TextFile:
     def get_coo_y(self):
         nx  = int(self._dict["NX"])
         ny  = int(self._dict["NY"])
-        dim = int(self._dict["Dim"])
+        dim = int(self._dict["DIM"])
         arr = []
         if dim >=2:
             for i in range(0, int(ny)):
@@ -112,10 +123,10 @@ class TextFile:
             return [0]
 
     def get_mat_val(self):
-        assert(int(self._dict["Dim"]) ==2)
+        assert(int(self._dict["DIM"]) ==2)
         nx  = int(self._dict["NX"])
         ny  = int(self._dict["NY"])
-        dim = int(self._dict["Dim"])
+        dim = int(self._dict["DIM"])
         mat = []
         count = 0
         for j in range(0, ny):

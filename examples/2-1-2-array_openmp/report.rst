@@ -7,7 +7,7 @@ Time Test
 ===================
 OpenMP takes some time to allocate the threads and manage them. This procedure will spend some time. Compare to the time for runing simple task, the time used for managing threads can't not be ignored. Here, we want to find out what kind of task is suitalbe for paralleling in terms of excution time. A simple sleep funtion is used as single task function. Multiple threads, say n threads, will execut the function n times. If they are runing in prefect parallel, the execution time time will be as same as the single thread running the funtion for just one time. 
 
-We set the number of threads, n = 2, 4, 10, 20, 40. The result is shown in following Figure.   
+We set the number of threads, n = 2, 4, 8, 16. The result is shown in following Figure.   
 
 .. figure:: _static/{{folder_name}}/timetest.png
    :alt: Time test for OpenMP

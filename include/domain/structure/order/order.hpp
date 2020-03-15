@@ -44,28 +44,17 @@ public:
     virtual spGhost spghost() const{
     }
 
-};
-
-template<St DIM>
-class SOrderParallel_: public SOrder_<DIM>{
-public:
-    typedef SIndex_<DIM> Index;
-
-    typedef std::vector<Index> OrderVector;
-    typedef typename OrderVector::iterator iterator;
-    typedef typename OrderVector::const_iterator const_iterator;
-
-    SOrderParallel_(){}
-
-    virtual ~SOrderParallel_(){}
-
     // ----------------------------------------------
+#ifdef OPENMP
     virtual St num_threads() const{}
     virtual iterator begin(St) {}
     virtual const_iterator begin(St) const {}
     virtual iterator end(St) {}
     virtual const_iterator end(St) const {}
+#endif
+
 };
+
 
 
 }

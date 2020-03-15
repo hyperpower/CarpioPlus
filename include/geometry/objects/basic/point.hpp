@@ -213,7 +213,6 @@ public:
 	}
 
 	// operator
-
 	Point& operator+=(const Point& p) {
 		for (St i = 0; i < Dim; i++) {
 			this->at(i) += p[i];
@@ -347,8 +346,14 @@ double Distance2(const Point_<TYPE, DIM>& p1,
 }
 template<typename TYPE, St DIM>
 double Distance(const Point_<TYPE, DIM>& p1,
-		         const Point_<TYPE, DIM>& p2) {
+		        const Point_<TYPE, DIM>& p2) {
 	return std::sqrt(Distance2(p1, p2));
+}
+template<typename TYPE, St DIM>
+bool IsSame(const Point_<TYPE, DIM>& p1,
+		    const Point_<TYPE, DIM>& p2,
+			double tol = 1e-10) {
+	return Distance(p1, p2) < tol ? true : false;
 }
 template<typename TYPE, St DIM>
 Point_<TYPE, DIM> Mid(
@@ -360,7 +365,6 @@ Point_<TYPE, DIM> Mid(
 	}
 	return res;
 }
-
 
 /**
  * Get minimun loaction of

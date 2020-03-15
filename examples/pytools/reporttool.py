@@ -27,7 +27,7 @@ Run time infomation:
     Functions      Wall Time (s)            
    ============= =====================
    {% for rt in runtime -%}
-   {{ '%12s' % rt[0] }}   {{'%15.6f' % rt[1]}}  
+   {{ '%12s' % rt[0] }}   {{'%15.5e' % rt[1]}}  
    {% endfor -%}
    ============= =====================
 
@@ -40,7 +40,7 @@ Run time infomation:
    | File          | Creat Time                | Modified Time             | 
    +===============+===========================+===========================+ 
    {% for file in files -%}
-   |{{ '%15s' % file.name }}| {{'%24s' % file.ctime}}| {{ '%24s' %  file.mtime}}| 
+   |{{ '%15s' % file.name }}| {{'%26s' % file.ctime}}| {{ '%26s' %  file.mtime}}| 
    +---------------+---------------------------+---------------------------+
    {% endfor %}
 """
@@ -59,8 +59,10 @@ def file_info(path, origianl_files):
         info = os.stat(full_path)
         fdict = {}
         fdict["name"]  = f
-        fdict["ctime"] = datetime.datetime.fromtimestamp(info.st_ctime)
-        fdict["mtime"] = datetime.datetime.fromtimestamp(info.st_mtime)
+        ctime = datetime.datetime.fromtimestamp(info.st_ctime)
+        fdict["ctime"] = ctime.strftime("%y-%m-%d %H:%M")
+        mtime = datetime.datetime.fromtimestamp(info.st_mtime)
+        fdict["mtime"] = mtime.strftime("%y-%m-%d %H:%M")
         fdict["size"]  = info.st_size
         res.append(fdict)
     return res

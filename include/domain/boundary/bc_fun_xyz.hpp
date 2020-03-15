@@ -26,18 +26,12 @@ public:
 			return 0.0;
 		};
 	}
-	/*
-	 * this constructor should not used to BC2
-     */
 	BoundaryConditionFunXYZ(int type, Vt v) : Base(),
 		_type(type) {
 		_fun = [v](Vt, Vt, Vt){
 			return v;
 		};
 	}
-	/*
-	 * this constructor should not used to BC2
-	 */
 	BoundaryConditionFunXYZ(int type, FunXYZ_Value fun) : Base(),
 		_type(type), _fun(fun) {
 	}

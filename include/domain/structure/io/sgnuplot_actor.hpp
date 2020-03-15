@@ -39,7 +39,6 @@ public:
     typedef SCellLinearCut_<3> CellLinearCut3;
 
     typedef SOrder_<DIM>  Order;
-    typedef SOrderParallel_<DIM> OrderParallel;
     typedef SOrder_<1>    Order1;
     typedef SOrder_<2>    Order2;
     typedef SOrder_<3>    Order3;
@@ -178,6 +177,26 @@ public:
         }
         return actor;
     }
+
+    static spActor ContourWire(const Field2& f){
+        spActor actor = spActor(new Gnuplot_actor());
+        auto ghost = f.spghost();
+        actor->command() = "using 1:2:3 title \"\" ";
+        actor->style() = "with line lc palette";
+        for (St i = 0; i < f.grid().n(_X_); i++) {
+            for (St j = 0; j < f.grid().n(_Y_); j++) {
+                Index2 index(i, j);
+                if (ghost->is_normal(index) == true) {
+                    auto pc   = f.grid().c(index);
+                    actor->data().push_back(
+                            ToString(pc(_X_), pc(_Y_), f(index), f(index), " "));
+                }
+            }
+            actor->data().push_back("");
+        }
+        return actor;
+    }
+
 
 
     static spActor Contour(const Field1& f){
@@ -872,23 +891,8 @@ public:
             return actor;
         }
 
-    static Gnuplot& OrderLabel(Gnuplot& gnu, const Order& order, int color_idx = -1){
-        spActor actor = spActor(new Gnuplot_actor());
-        auto& grid  = order.grid();
-        auto& ghost = order.ghost();
-        int c  = (color_idx<0)? 0 : color_idx;
-        auto fun = [&actor, &c, &grid, &ghost, &gnu, &order](const Index& idx){
-            auto cp = grid.c(idx);
-            auto o  = order.get_order(idx);
 
-            std::string adds = " center textcolor lt " + ToString(c);
-            gnu.set_label(o+1, ToString(o), cp.x(), cp.y(), adds);
-        };
-        Loop::ForEachIndex(order, fun);
-        return gnu;
-    }
-
-    static Gnuplot& OrderLabel(Gnuplot& gnu, const OrderParallel& order){
+    static Gnuplot& OrderLabel(Gnuplot& gnu, const Order& order){
         spActor actor = spActor(new Gnuplot_actor());
         auto& grid  = order.grid();
         auto& ghost = order.ghost();
@@ -899,8 +903,7 @@ public:
             std::string adds = " center textcolor lt " + ToString(tn + 1);
             gnu.set_label(o+1, text, cp.x(), cp.y(), adds);
         };
-        #pragma omp parallel
-        Loop::ForEachIndexParallel(order, fun);
+        Loop::ForEachIndex(order, fun);
         return gnu;
     }
 };

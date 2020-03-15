@@ -36,7 +36,7 @@ int Copy(ST n, const VT * src, VT* dst);
 
 //Computes the sum of magnitudes of the vector elements.
 template<typename ST, typename VT>
-int ASum(ST n, const VT * sx, ST incx = 1);
+int Asum(ST n, const VT * sx, ST incx = 1);
 
 template<class VT>
 int Rotg(VT& sa, VT& sb, VT& c, VT& s);
@@ -59,12 +59,14 @@ VT Dot(ST n, const VT* sx, ST incx, const VT* sy, ST incy);
 template<class VT> VT Nrm1(const ArrayListV_<VT>& ax);
 template<class VT> VT Nrm2(const ArrayListV_<VT>& arr);
 template<class VT> VT Nrmp(const ArrayListV_<VT>& arr, float p);
+template<class VT> VT Nrminf(const ArrayListV_<VT>& arr);
+template<class VT> VT Amax(const ArrayListV_<VT>& arr);
 template<class VT> VT Dot(const ArrayListV_<VT>& arrx, const ArrayListV_<VT>& arry);
 
 
 // -----------------------------------------------------
 template<typename ST, typename VT>
-int ASum(ST n, const VT * sx, ST incx){
+int Asum(ST n, const VT * sx, ST incx){
 	VT asum = 0.0e0;
 	if (n < 0 || incx <= 0) {
 		return asum;
@@ -342,6 +344,18 @@ template<class VT>
 VT Nrmp(const ArrayListV_<VT>& arr, float p){
 	typedef typename ArrayListV_<VT>::size_type St;
 	return Nrmp(arr.size(), arr.data(), p, St(1));
+}
+
+template<class VT>
+VT Amax(const ArrayListV_<VT>& arr){
+    typedef typename ArrayListV_<VT>::size_type St;
+    return Amax(arr.size(), arr.data(), St(1));
+}
+
+template<class VT>
+VT Nrminf(const ArrayListV_<VT>& arr){
+    typedef typename ArrayListV_<VT>::size_type St;
+    return Amax(arr.size(), arr.data(), St(1));
 }
 
 template<class VT>

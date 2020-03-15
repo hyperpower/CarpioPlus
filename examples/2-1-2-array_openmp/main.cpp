@@ -76,7 +76,7 @@ void TimeTestPlot(){
 	gnu.set_yrange(80, 300.0);
 	gnu.set_xlabel("Time of single task (ms)");
 	gnu.set_ylabel("Time ratio (Parallel Wall Time / Single Task Time (%)");
-	std::vector<int> vnt = {2, 4, 10, 20, 40};
+	std::vector<int> vnt = {2, 4, 8, 16};
 	for(auto& nt: vnt){
 		std::cout << "Run by " << nt << " Threads" << std::endl;
 		auto a = TimeTestRun(nt);
@@ -91,11 +91,8 @@ double ArrayOp(int nt, double na){
 	ArrayListV_<double> a(na), b(na);
 	a.assign(2);
 	b.assign(1);
-	// a.show();
-	// b.show();
 	tick_t start = Clock::Tick();
 	omp_set_num_threads(nt);
-#pragma omp parallel
 	b = a + b - a * b + 5.0 * a;
 	tick_t end = Clock::Tick();
 	std::cout << "Num of threads = " << nt;
@@ -118,7 +115,7 @@ void ArrayOpPlot(){
 	gnu.set_xlabel("Number of threads (-)");
 	gnu.set_ylabel("Wall Time (ms)");
 	ArrayListV_<double> vna = {1e4, 1e6, 5e6};
-	ArrayListV_<double> vnt = {1, 2, 4, 6, 8, 10, 12, 14, 15, 16, 18, 20};
+	ArrayListV_<double> vnt = {1, 2, 4, 6, 8, 10, 12, 14, 15, 16};
 	for(auto& na: vna){
 		std::cout << "Array Size = " << na << std::endl;
 		ArrayListV_<double> vdt;

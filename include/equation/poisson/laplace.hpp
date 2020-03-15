@@ -82,7 +82,7 @@ public:
 
     virtual int initialize() {
         this->_scalars["phi"]->assign(this->get_funtion("initial_phi"));
-        this->_aflags["solver"] = _init_solver();
+        this->_aflags["solver"] = this->_init_solver();
     	this->_splap->set_boundary_index(this->_bis["phi"]);
         return -1;
     }
@@ -119,24 +119,6 @@ public:
 
     virtual void set_initial_phi(FunXYZT_Value fun){
         this->set_function("initial_phi", fun);
-    }
-
-    void set_solver( 
-                const std::string&    name,  
-                const int& max_iter = 1000,  
-                const Vt&  tol      = 1e-4,  
-                const Any& any      = 1.0   
-                ) {
-        // name should be
-        ASSERT(name == "Jacobi" 
-            || name == "CG"
-            || name == "SOR");
-        this->_aflags["set_solver"]           = name;
-        this->_aflags["set_solver_max_iter"]  = max_iter;
-        this->_aflags["set_solver_tolerence"] = tol;
-        if (name == "SOR") {
-            this->_aflags["SOR_omega"] = any;
-        }
     }
 
     void set_time_scheme(
@@ -258,29 +240,7 @@ protected:
 //        x.show();
     }
 
-    virtual spSolver _init_solver() {
-        // initial solver
-        spSolver spsolver;
-        if (this->has_flag("set_solver")) {
-            std::string sn = any_cast<std::string>(
-                    this->_aflags["set_solver"]);
-            Vt  tol      = any_cast<Vt>(this->_aflags["set_solver_tolerence"]);
-            int max_iter = any_cast<int>(this->_aflags["set_solver_max_iter"]);
-            if (sn == "Jacobi") {
-                spsolver = spSolver(new Solver_Jacobi(max_iter, tol));
-            } else if (sn == "CG") {
-                spsolver = spSolver(new Solver_CG(max_iter, tol));
-            } else if (sn == "SOR") {
-                ASSERT(this->has_flag("SOR_omega"));
-                Vt omega = any_cast<Vt>(this->_aflags["SOR_omega"]);
-                spsolver = spSolver(new Solver_SOR(max_iter, tol, omega));
-            }
-        } else {
-            // default solver
-            spsolver = spSolver(new Solver_CG(5000, 1e-4));
-        }
-        return spsolver;
-    }
+
 
 };
 

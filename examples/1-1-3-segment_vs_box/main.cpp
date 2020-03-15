@@ -13,20 +13,22 @@ typedef GGnuplotActor_<double, 2>      GA;
 
 
 // Forware Declare
-int line_box_normal_case();
+int line_box_case(double a, double b, double alpha, std::string name);
 
 int main(){
-    int r = line_box_normal_case();
+    int r = line_box_case(1.5, 1.0, 1.3, "line_box_normal");
+    line_box_case(1.5, 1.0, 0.0, "line_box_corner");
+    line_box_case(0.0, 1.0, 1.0, "line_box_edge");
 }
 
-int line_box_normal_case(){
-    std::cout << "Initial box" << std::endl;
+int line_box_case(double a, double b, double alpha, std::string name){
+    std::cout << "Initial box " << " >>>>>>> " << std::endl;
     Point2 min1(0, 0);
     Point2 max1(1, 1);
     Box2 box1(min1, max1);
-    std::cout << "The box 1 is " << box1 << std::endl;
+    std::cout << "The box is " << box1 << std::endl;
 
-    Line line(1.5, 1.0, 1.3);
+    Line line(a, b, alpha);
     std::cout << "Line is " << line << std::endl;
 
     auto lspp = IntersectLineBox(max1, line);
@@ -34,12 +36,12 @@ int line_box_normal_case(){
     for(auto& sp : lspp){
         std::cout << "   " << *sp << std::endl;
     }
-
+    
     Gnuplot gnu;
     gnu.set_xrange(-0.5, 1.5);
     gnu.set_yrange(-0.5, 1.5);
     gnu.set_equal_aspect_ratio();
-    gnu.set_terminal_png("./fig/line_box_normal.png");
+    gnu.set_terminal_png("./fig/" + name + ".png");
     auto spbox1 = GA::Lines(box1);
     spbox1->style() = "with lines lw 2 lc 8";
     gnu.add(spbox1);
@@ -62,4 +64,6 @@ int line_box_normal_case(){
     gnu.set_label(4,tfm::format("Line : %.1f X + %.1f Y = %.1f", line.a(), line.b(), line.alpha()),
                     0.1, 1.3, "left font \",16\"");
     gnu.plot();
+
+    std::cout << "End of Case " << name << " <<<<<<<< "<< std::endl;
 }

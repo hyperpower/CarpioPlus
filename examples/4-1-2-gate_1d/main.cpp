@@ -11,7 +11,7 @@ typedef typename Domain::spGrid  spGrid;
 typedef typename Domain::spGhost spGhost;
 typedef typename Domain::spOrder spOrder;
 
-int main(int argc, char** argv) {
+int run_a_scheme(const std::string& scheme){
     spGrid spgrid(
             new SGridUniform_<DIM>({0.0, 0.0}, // min point
                                    {100, 10},  // num on each direction
@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
     equ.set_time_term(100, 0.01);
+    equ.set_scheme(scheme);
 
     // Set boundary condition
     typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -55,14 +56,18 @@ int main(int argc, char** argv) {
     typedef EventOutputField_<DIM, Domain> EventOutputScalar;
     EventOutputScalar eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
+    eos.set_format_string(scheme + "_%s_%d_%8.4e.txt");
     equ.add_event("OutputPhi", std::make_shared<EventOutputScalar>(eos));
-
-    typedef EventGnuplotField_<DIM, Domain> EventGnuplotScalar;
-    EventGnuplotScalar egs("phi", -1, -1, 1, Event::AFTER);
-    egs.gnuplot().set_yrange(-0.3, 1.3);
-    egs.set_path("./fig/");
-    equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotScalar>(egs));
 
     // Run
     equ.run();
+}
+
+int main(int argc, char** argv) {
+    std::vector<std::string> schemes = {
+        "FOU", "QUICK"
+    };
+    for(auto& scheme : schemes){
+        run_a_scheme(scheme);
+    }
 }

@@ -259,6 +259,18 @@ inline SExpField_<DIM> operator-(const Vt& lhs, SExpField_<DIM> rhs){
     rhs -= lhs;
     return rhs;
 }
+template<St DIM>
+inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+    lhs -= rhs;
+    return lhs;
+}
+
+template<St DIM>
+inline SExpField_<DIM> operator-(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
+    rhs -= lhs;
+    return rhs;
+}
+
 
 template<St DIM>
 inline SExpField_<DIM> operator*(SExpField_<DIM> lhs, const Vt& rhs){

@@ -17,13 +17,30 @@ The velocity is :math:`\mathbf{u}=(1, 1)`. The final profile will be :math:`\phi
 
    Illustration of the problem.
 
-The :math:`y=x` is a step which jumps from 1 to 0. 
+The :math:`y=x` is a step which jumps from 1 to 0.
 
 Results
 ===================
 
 First Order Upwind
 -------------------
-Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^-4`. CFL number is 0.5.
+Initial condition of the domain is :math:`\phi = 0.0`. The iteration stops when :math:`||\phi^{n+1} - \phi^{n}|| < 10^{-5}`. CFL number is 0.5.
+
+.. figure:: _static/{{folder_name}}/FOU_phi.gif
+   :alt: the gif
+   :align: center 
+
+   First Order Upwind.
+
+.. figure:: _static/{{folder_name}}/FOU_phi_last.png
+   :align: center 
+
+   First Order Upwind (Last Step).
+
+.. figure:: _static/{{folder_name}}/norm.png
+   :align: center 
+
+   Normal of each step.
+
 
 

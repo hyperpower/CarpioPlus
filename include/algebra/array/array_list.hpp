@@ -524,6 +524,8 @@ public:
     V min() const;
     V max() const;
     V norm1() const;
+    V norm2() const;
+    V norminf() const;
     size_type min_idx() const;
     size_type max_idx() const;
     //fill ----------------------------------------
@@ -729,12 +731,20 @@ V ArrayListV_<V>::max() const {
 }
 template<typename V>
 V ArrayListV_<V>::norm1() const {
-    ASSERT(this->m_p!=NULL);
-    V sum = 0.0;
-    for (size_type i = 0; i < this->m_Len; i++) {
-    	sum += std::abs(this->m_p[i]);
-    }
-    return sum;
+    ASSERT(this->m_p != nullptr);
+    return Nrm1(*this);
+}
+
+template<typename V>
+V ArrayListV_<V>::norm2() const {
+    ASSERT(this->m_p != nullptr);
+    return Nrm2(*this);
+}
+
+template<typename V>
+V ArrayListV_<V>::norminf() const {
+    ASSERT(this->m_p != nullptr);
+    return Amax(*this);
 }
 
 template<typename V>

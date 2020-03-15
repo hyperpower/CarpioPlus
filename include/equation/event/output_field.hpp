@@ -65,5 +65,41 @@ protected:
 };
 
 
+template<St DIM, class D>
+class EventOutputFieldAxisAlignSection_ : public EventOutputField_<DIM, D>{
+public:
+    typedef Event_<DIM, D> Event;
+    typedef EventOutputField_<DIM, D> Base;
+    typedef Equation_<DIM, D> Equ;
+    typedef Equ* pEqu;
+    typedef const Equ* const_pEqu;
+
+    typedef typename D::IOFile IOFile;
+protected:
+    Axes _ax;
+    Vt   _value;
+public:
+    EventOutputFieldAxisAlignSection_(
+            const std::string& sname, Axes a, Vt v,
+            int is    = -1, int ie   = -1,
+            int istep = -1, int flag = Event::AFTER) :
+         _ax(a), _value(v),
+         Base(sname, is, ie, istep, flag) {
+        this->_format = "%s_%d_%8.4e.txt";
+        this->_path   = "./";
+    }
+
+    int execute(St step, Vt t, int fob, pEqu pd = nullptr) {
+        auto fn = this->_file_name(step, t, fob);
+        if(pd->has_field(this->_sn)){
+            IOFile::OutputFieldAxisAlignSection(fn, (*pd)[this->_sn], _ax, _value);
+        }else{
+            std::cerr<< "EventOutputField : " << this->_sn << " not found!" << std::endl;
+        }
+        return -1;
+    }
+};
+
+
 }
 #endif

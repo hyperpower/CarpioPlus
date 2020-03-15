@@ -12,7 +12,6 @@
 
 namespace carpio {
 
-
 typedef Point_<double, 3> Point3;
 typedef Point_<double, 2> Point2;
 typedef Segment_<double, 2> Seg2;
@@ -82,6 +81,7 @@ TEST(segment, intersection){
 	std::cout << "new point         : "<< np << std::endl;
 
 	Gnuplot gnu;
+    gnu.set_terminal_png("./plot/line_segment_1.png");
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
@@ -107,6 +107,7 @@ TEST(segment, intersection2){
 	std::cout << "new point         : "<< np << std::endl;
 
 	Gnuplot gnu;
+    gnu.set_terminal_png("./plot/line_segment_2.png");
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);
@@ -131,6 +132,7 @@ TEST(segment, intersection3){
 	std::cout << "new point         : "<< np << std::endl;
 
 	Gnuplot gnu;
+    gnu.set_terminal_png("./plot/line_segment_3.png");
 	gnu.set_xrange(-5, 5);
 	gnu.set_yrange(-5, 5);
 	gnu.set_label(1, strtype, -4.5, 4);

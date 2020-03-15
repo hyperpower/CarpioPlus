@@ -27,6 +27,7 @@ int main(int argc, char** argv) {
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
     equ.set_time_term(100, 0.01);
+    // equ.set_scheme("quick");
 
     // Set boundary condition
     typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -55,13 +56,8 @@ int main(int argc, char** argv) {
     typedef EventOutputField_<DIM, Domain> EventOutputField;
     EventOutputField eos("phi", -1, -1, 1, Event::AFTER);
     eos.set_path("./data/");
+    eos.set_format_string("FOU_%s_%d_%8.4e.txt");
     equ.add_event("OutputPhi", std::make_shared<EventOutputField>(eos));
-
-    typedef EventGnuplotField_<DIM, Domain> EventGnuplotField;
-    EventGnuplotField egs("phi", -1, -1, 1, Event::AFTER);
-    egs.gnuplot().set_yrange(-0.3, 1.3);
-    egs.set_path("./fig/");
-    equ.add_event("GnuplotPhi", std::make_shared<EventGnuplotField>(egs));
 
     // Run
     equ.run();

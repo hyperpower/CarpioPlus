@@ -81,7 +81,6 @@ public:
         auto fn = _file_name(step, t, fob);
         if(pd->has_field(_sn)){
             _set_terminal(_terminal_name, fn);
-//            _plot((*pd)[_sn]);
             _fun(*(this->_spgnu), (*pd)[_sn], step, t, fob, pd);
         }else{
             std::cerr<< "EventGnuplotField : " << _sn << " not found!" << std::endl;
@@ -113,15 +112,15 @@ protected:
         std::cerr << "EventGnuplotField: " << "Wrong terminal!" << std::endl;
     }
 
-    void _plot(const Field& s){
-        if(DIM == 1){
-            _spgnu->add(GnuplotActor::Lines(s));
-        }else if(DIM == 2){
-            _spgnu->add(GnuplotActor::Contour(s));
-        }
-        _spgnu->plot();
-        _spgnu->clear();
-    }
+//    void _plot(const Field& s){
+//        if(DIM == 1){
+//            _spgnu->add(GnuplotActor::Lines(s));
+//        }else if(DIM == 2){
+//            _spgnu->add(GnuplotActor::Contour(s));
+//        }
+//        _spgnu->plot();
+//        _spgnu->clear();
+//    }
 
     void _init_fun_plot(){
         this->_fun = [](Gnuplot& gnu, const Field& f, St step , Vt t, int fob, pEqu pd){

@@ -108,46 +108,48 @@ public:
         return (_flag | f) == _flag ? true : false;
     }
 
+    virtual bool is_condition_event() const{
+        return false;
+    }
+
     virtual void show() const{
         std::cout << "Event Base Show" << std::endl;
     }
-
 };
 
-
+// deprecate
 template<St DIM, class D>
-class EventStop_ : public Event_<DIM, D>{
+class EventCondition_ : public Event_<DIM, D>{
 public:
     typedef Event_<DIM, D> Event;
     typedef Equation_<DIM, D> Equ;
     typedef Equ* pEqu;
     typedef const Equ* const_pEqu;
 protected:
-    std::string _sr;
-    int _step;
-    Vt _t;
+    bool _is_satisfied;
 public:
-    EventStop_(const std::string& stop_reason,
-                              int step,
-                              Vt  time):
-                   _sr(stop_reason),
-                   _step(step),
-                   _t(time),
-                   Event(-1, -1, -1, 0) {
+    EventCondition_(int is    = -1, int ie   = -1,
+                    int istep = -1, int flag = Event::AFTER ):
+        _is_satisfied(false),
+        Event(is, ie, istep, flag) {
     }
 
-    int execute(St step, Vt t, int fob, pEqu pd) {
-        std::cout << "Event Stop : execute \n";
+    virtual ~EventCondition_() {
+    }
+
+    virtual bool is_satisfied() const {
+        return _is_satisfied;
+    }
+
+    virtual bool is_condition_event() const{
+        return true;
+    }
+
+    virtual int execute(St step, Vt t, int fob, pEqu pd) {
+        std::cout << "Event Condition Base : execute \n";
         return -1;
     }
-
-    void show() const{
-        tfm::format(std::cout, "_STOP_ at step %d, time = %.3e\n", _step, _t);
-        tfm::format(std::cout, "Reason: %s\n", _sr);
-    }
-
 };
-
 
 
 }

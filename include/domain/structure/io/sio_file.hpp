@@ -20,7 +20,12 @@ public:
 
     typedef SField_<DIM> Field;
 
+    typedef SField_<2>   Field2;
+
 public:
+
+
+
     static void OutputField(const std::string& filename, const Field& data) {
         auto& grid = data.grid();
         auto n = grid.n();
@@ -49,6 +54,40 @@ public:
             Vt val = data(index);
             tfm::format(ss, "%10.6e", val);
             txtf.add_line(ss.str());
+        }
+        txtf.write();
+    }
+
+    static void OutputFieldAxisAlignSection(const std::string& filename,
+                                            const Field2& data,
+                                            Axes a, Vt value) {
+        auto& grid = data.grid();
+        auto n = grid.n();
+        // Open a file
+        TextFile txtf(filename);
+        // format first line
+        txtf.add_line(tfm::format("## SIZE : %d", data.size()));
+        txtf.add_line(tfm::format("## DIM : %d", DIM));
+        txtf.add_line(tfm::format("## NX : %d", n(_X_)));
+        txtf.add_line(tfm::format("## NY : %d", n(_Y_)));
+        //
+        txtf.add_line(
+                tfm::format("## COLUMN_NAME : %s, %s, %s, %s, %s", "ORDER", "X",
+                        "Y", "Z", "VALUE"));
+        for (auto& index : data.order()) {
+            std::stringstream ss;
+            auto fpm = grid.f(a, _M_, index);
+            auto fpp = grid.f(a, _P_, index);
+            if (IsInRange(fpm[a], value, fpp[a], _co_)) {
+                tfm::format(ss, "%d, ", data.order().get_order(index));
+                for (St d = 0; d < 3; ++d) { // always 3 d
+                    Vt cor = grid.c_(d, index);
+                    tfm::format(ss, "%10.6e, ", cor);
+                }
+                Vt val = data(index);
+                tfm::format(ss, "%10.6e", val);
+                txtf.add_line(ss.str());
+            }
         }
         txtf.write();
     }

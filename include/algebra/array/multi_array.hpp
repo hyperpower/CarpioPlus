@@ -399,6 +399,12 @@ class MultiArrayV_ {
 	T norm1() const{
 		return this->m_mp.norm1();
 	}
+	T norm2() const{
+		return this->m_mp.norm2();
+	}
+	T norminf() const{
+		return this->m_mp.norminf();
+	}
 
     //element access===============================
 

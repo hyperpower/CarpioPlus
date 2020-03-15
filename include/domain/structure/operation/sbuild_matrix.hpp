@@ -59,7 +59,6 @@ public:
         // Loop 1 ================
         //   1 get size of none zero
         //   2 build b
-//        std::cout << "n = " << n << std::endl;
         b.reconstruct(n);
         St nz = 0;
         for(auto& index : order){

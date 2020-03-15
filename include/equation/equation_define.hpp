@@ -11,7 +11,9 @@ namespace carpio {
 template<St DIM> class TimeTerm_;
 
 template<St DIM, class D> class Event_;
-template<St DIM, class D> class EventStop_;
+template<St DIM, class D> class EventCondition_;
+
+template<St DIM, class D> class StopManager_;
 
 template<St DIM, class D>
 class Equation_{
@@ -23,13 +25,16 @@ public:
     typedef typename Domain::Ghost     Ghost;
     typedef typename Domain::Order     Order;
     typedef typename Domain::Field    Field;
-    typedef Event_<DIM, Domain>        Event;
+    typedef Event_<DIM, Domain>          Event;
+    typedef EventCondition_<DIM, Domain> EventCondition;
     typedef TimeTerm_<DIM>             TimeTerm;
+    typedef StopManager_<DIM, Domain>  StopManager;
 
     typedef typename Domain::VectorCenter VectorCenter;
     typedef typename Domain::VectorFace   VectorFace;
 
     typedef std::shared_ptr<Event>  spEvent;
+    typedef std::shared_ptr<Event>  spEventCondition;
     typedef std::shared_ptr<Field>  spField;
     typedef std::shared_ptr<Grid>   spGrid;
     typedef std::shared_ptr<Ghost>  spGhost;
@@ -48,6 +53,12 @@ public:
     typedef std::unordered_map<std::string, FunXYZT_Value> Functions;
     typedef std::unordered_map<std::string, Vt>       Values;
 
+    typedef Solver_<Vt>       Solver;
+    typedef std::shared_ptr<Solver> spSolver;
+    typedef Jacobi_<Vt>       Solver_Jacobi;
+    typedef SOR_<Vt>          Solver_SOR;
+    typedef CG_<Vt>           Solver_CG;
+
 
 protected:
     spGrid  _grid;
@@ -57,7 +68,9 @@ protected:
     // time relates variables
     spTimeTerm   _time;
     Events       _events;        // _events
-//    EventManager _event_manager;
+    StopManager  _stop_manager;
+
+    // EventManager _event_manager;
     Functions    _functions;     // independent of grid
     Values       _values;        // values for equation
     AFlags       _aflags;        // other types of data put in this map
@@ -114,7 +127,7 @@ public:
                     this->_time->current_step(),    //
                     Event::START);
             // loop
-            while (!this->_time->is_end() && (!this->has_event("_STOP_"))) {
+            while (!this->_time->is_end() && (!_stop_manager.is_stop())) {
                 //
                 // events before each step
                 run_events(this->_time->current_step(),  //
@@ -190,16 +203,12 @@ public:
         return false;
     }
 
-    void trigger_stop(const std::string& reason,
-                      int   step,
-                      Vt    time){
-        spEvent e(new EventStop_<DIM, D>(reason, step, time));
-        this->add_event("_STOP_", e);
-    }
-
     void add_event(const std::string& key, spEvent spe){
         ASSERT(spe != nullptr);
         this->_events[key] = spe;
+        if(spe->is_condition_event()){
+            _stop_manager.add_condition(std::dynamic_pointer_cast<EventCondition>(spe));
+        }
     }
 
     void set_time_term(St n, Vt dt, Vt tau = 1){
@@ -318,6 +327,46 @@ public:
             std::cout << "  " << std::setw(15) << iter->first << " : "
                     << iter->second << std::endl;
         }
+    }
+
+    void set_solver(const std::string&    name,
+                    const int& max_iter = 1000,
+                    const Vt&  tol      = 1e-4,
+                    const Any& any      = 1.0
+                    ) {
+        // name should be
+        ASSERT(name == "Jacobi" || name == "CG" || name == "SOR");
+        this->_aflags["set_solver"]           = name;
+        this->_aflags["set_solver_max_iter"]  = max_iter;
+        this->_aflags["set_solver_tolerence"] = tol;
+        if (name == "SOR") {
+            this->_aflags["SOR_omega"] = any;
+        }
+    }
+
+protected:
+    virtual spSolver _init_solver() {
+        // initial solver
+        spSolver spsolver;
+        if (this->has_flag("set_solver")) {
+            std::string sn = any_cast<std::string>(
+                    this->_aflags["set_solver"]);
+            Vt  tol      = any_cast<Vt>(this->_aflags["set_solver_tolerence"]);
+            int max_iter = any_cast<int>(this->_aflags["set_solver_max_iter"]);
+            if (sn == "Jacobi") {
+                spsolver = spSolver(new Solver_Jacobi(max_iter, tol));
+            } else if (sn == "CG") {
+                spsolver = spSolver(new Solver_CG(max_iter, tol));
+            } else if (sn == "SOR") {
+                ASSERT(this->has_flag("SOR_omega"));
+                Vt omega = any_cast<Vt>(this->_aflags["SOR_omega"]);
+                spsolver = spSolver(new Solver_SOR(max_iter, tol, omega));
+            }
+        } else {
+            // default solver
+            spsolver = spSolver(new Solver_Jacobi(500, 1e-4));
+        }
+        return spsolver;
     }
 };
 

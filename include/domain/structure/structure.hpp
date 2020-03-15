@@ -8,6 +8,7 @@
 
 #include "ghost/ghost.hpp"
 #include "ghost/regular.hpp"
+#include "ghost/regular_subdivision.hpp"
 #include "ghost/mask.hpp"
 #include "ghost/linear_cut.hpp"
 
@@ -39,6 +40,8 @@ class StructureDomain_{
 public:
     typedef St SizeType;
     typedef Vt ValueType;
+    typedef SIndex_<DIM>                Index;
+
     typedef SGrid_<DIM>                 Grid;
     typedef Grid&                       ref_Grid;
     typedef const Grid&                 const_ref_Grid;
@@ -78,6 +81,7 @@ public:
 
     typedef SUdotNabla_<DIM>    UdotNabla;
     typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
+    typedef SUdotNabla_TVD<DIM> UdotNabla_TVD;
 
     // creation
 
