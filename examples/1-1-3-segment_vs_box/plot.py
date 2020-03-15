@@ -25,16 +25,16 @@ import filetool as FT
 
 # plot figure for illustration
 def figure_1():
-    plt.figure(figsize=(8,6))
+    plt.figure(figsize=(6,6))
     frame = plt.gca()
     ax = plt.axes()
-    plt.axis('off')
     ax.set_aspect("equal")
     plot_box_line(ax, box, line)
 
     plot_annotation(plt)
 
-    plt.show()
+    plt.axis('off')
+    plt.savefig(PATH_FIG + "/" +"illustration.png")
 
 
 box = np.array([[0.0, 0.0],
@@ -60,9 +60,24 @@ def plot_annotation(plt):
                         ha="center",
                         arrowprops=arrowprops)
 
+    plt.annotate("Line", xy       =(0.4, 0.7), 
+                        xytext    =(0.5, 0.8),
+                        va="center", 
+                        ha="center",
+                        arrowprops=arrowprops)
+
+def make_gif(fn_prefix, filename):
+    # make gif
+    os.system("convert -delay 5 -loop 0 ./fig/%s_*.png ./fig/%s.gif" % (fn_prefix, filename))
+
+    # delete files
+    files = FT.select_files1(PATH_FIG, fn_prefix)
+    for file in files:
+        os.system("rm " + PATH_FIG + "/" + file)
 
 def main():
     figure_1()
+    make_gif("lb", "lb")
 
 if __name__ == '__main__':
     main()
