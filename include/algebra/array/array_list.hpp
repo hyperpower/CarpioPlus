@@ -254,10 +254,7 @@ void ArrayListT_<T>::set(size_type i, const T& value) {
 
 template<typename T>
 void ArrayListT_<T>::assign(const T& nd) {
-#pragma omp parallel for
-    for (size_type i = 0; i < m_Len; i++) {
-        m_p[i] = nd;
-    }
+    Assign(this->m_Len, this->m_p, nd);
 }
 template<typename T>
 void ArrayListT_<T>::assign(ArrayListT_<T>::FunIndex fun) {
@@ -738,7 +735,7 @@ V ArrayListV_<V>::norm1() const {
 template<typename V>
 V ArrayListV_<V>::norm2() const {
     ASSERT(this->m_p != nullptr);
-    return Nrm2(*this);
+    return Nrm2(this->m_Len, this->m_p, 1);
 }
 
 template<typename V>

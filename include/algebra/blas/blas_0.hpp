@@ -12,6 +12,8 @@
 
 
 namespace carpio {
+template<typename ST, typename VT>
+void Assign(const ST& n, VT*, const VT&);
 
 template<typename ST, typename VT>
 void AddEqual(     const ST& n, VT*, const VT*);
@@ -30,6 +32,15 @@ template<typename ST, typename VT>
 void MultiplyEqual(const ST& n, VT*, const VT&);
 template<typename ST, typename VT>
 void DivideEqual(  const ST& n, VT*, const VT&);
+
+
+template<typename ST, typename VT>
+void Assign(const ST& n, VT* src, const VT& value){
+#pragma omp parallel for
+    for (ST i = 0; i < n; ++i) {
+        src[i] = value;
+    }
+}
 
 template<typename ST, typename VT>
 void AddEqual(const ST& n, VT* src, const VT* dst) {

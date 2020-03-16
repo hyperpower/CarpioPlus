@@ -53,16 +53,14 @@ VT Nrmp(ST n, const VT* x, VT2 p, ST incx);\
 template<class ST, class VT>
 VT Dot(ST n, const VT* sx, ST incx, const VT* sy, ST incy);
 
-
 // High level functions
 // work with ArrayListV
-template<class VT> VT Nrm1(const ArrayListV_<VT>& ax);
-template<class VT> VT Nrm2(const ArrayListV_<VT>& arr);
-template<class VT> VT Nrmp(const ArrayListV_<VT>& arr, float p);
+template<class VT> VT Nrm1(  const ArrayListV_<VT>& ax);
+template<class VT> VT Nrm2(  const ArrayListV_<VT>& arr);
+template<class VT> VT Nrmp(  const ArrayListV_<VT>& arr, float p);
 template<class VT> VT Nrminf(const ArrayListV_<VT>& arr);
-template<class VT> VT Amax(const ArrayListV_<VT>& arr);
-template<class VT> VT Dot(const ArrayListV_<VT>& arrx, const ArrayListV_<VT>& arry);
-
+template<class VT> VT Amax(  const ArrayListV_<VT>& arr);
+template<class VT> VT Dot(   const ArrayListV_<VT>& arrx, const ArrayListV_<VT>& arry);
 
 // -----------------------------------------------------
 template<typename ST, typename VT>

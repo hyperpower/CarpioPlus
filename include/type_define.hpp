@@ -22,7 +22,6 @@
 #define _ERROR     1
 #define _WARNING   2
 
-
 #define _RETURN_VAL_IF_FAIL(expr,val)  {       \
 		if (!(expr))                           \
 			return (val);                      \

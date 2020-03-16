@@ -19,8 +19,9 @@ public:
     typedef SOrder_<DIM> Order;
 
     typedef std::shared_ptr<SIndex_<DIM> > spIndex;
-    typedef std::shared_ptr<SGrid_<DIM>  > spGrid;
     typedef std::shared_ptr<SGhost_<DIM> > spGhost;
+    typedef std::shared_ptr<SGrid_<DIM> >  spGrid;
+
     typedef std::shared_ptr<SOrder_<DIM> > spOrder;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;

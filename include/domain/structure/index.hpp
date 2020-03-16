@@ -5,9 +5,7 @@
 #include <array>
 
 
-
 namespace carpio{
-
 
 typedef int Idx;
 

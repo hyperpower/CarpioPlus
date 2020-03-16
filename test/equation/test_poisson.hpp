@@ -61,15 +61,20 @@ TEST(equation, DISABLED_initial){
 
 TEST(equation, explicit_run){
 	const St DIM = 2;
+	typedef SGridUniform_<DIM>    Grid;
+	typedef SGhostRegular_<DIM>   Ghost;
+	typedef SOrderXYZ_<DIM>       Order;
+
 	typedef StructureDomain_<DIM> Domain;
+
 	typename Domain::spGrid spgrid(
-			new SGridUniform_<DIM>(
+			new Grid(
 					{ 0.0, 0.0 }, // min point
 			        { 20,  20 },  // num on each direction
 			          0.05,       // cell size
 			          2));        // ghost layer
-	typename Domain::spGhost spghost(new SGhostRegular_<DIM>(spgrid));
-	typename Domain::spOrder sporder(new SOrderXYZ_<DIM>(spgrid, spghost));
+	typename Domain::spGhost spghost(new Ghost(spgrid));
+	typename Domain::spOrder sporder(new Order(spgrid, spghost));
 
 	// Define the equation
 	Laplace_<DIM, Domain> equ(spgrid, spghost, sporder);

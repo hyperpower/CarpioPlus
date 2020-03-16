@@ -24,11 +24,12 @@ public:
     typedef typename Domain::Grid      Grid;
     typedef typename Domain::Ghost     Ghost;
     typedef typename Domain::Order     Order;
-    typedef typename Domain::Field    Field;
+    typedef typename Domain::Field     Field;
+
     typedef Event_<DIM, Domain>          Event;
     typedef EventCondition_<DIM, Domain> EventCondition;
-    typedef TimeTerm_<DIM>             TimeTerm;
-    typedef StopManager_<DIM, Domain>  StopManager;
+    typedef TimeTerm_<DIM>               TimeTerm;
+    typedef StopManager_<DIM, Domain>    StopManager;
 
     typedef typename Domain::VectorCenter VectorCenter;
     typedef typename Domain::VectorFace   VectorFace;
