@@ -15,7 +15,7 @@ typedef GGnuplotActorMaker_<double, 2> GAM;
 
 
 // Forware Declare
-int line_box_case(double a, double b, double alpha, std::string name);
+int  line_box_case(double a, double b, double alpha, std::string name);
 void BoxLinePositiveCase(int num_case, 
                          double x, double y,
                          double a, double b, double alpha);
