@@ -8,8 +8,6 @@
 #ifndef _ARRAYLIST_H_
 #define _ARRAYLIST_H_
 
-
-
 #include "type_define.hpp"
 #include "algebra/blas/blas_0.hpp"
 #include "algebra/blas/blas_1.hpp"

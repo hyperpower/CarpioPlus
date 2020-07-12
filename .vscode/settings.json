@@ -1,0 +1,8 @@
+{
+    "editor.fontSize":       18,
+    "editor.fontFamily" :    "Fira Code",
+    "editor.fontLigatures":  true,
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory":  "${workspaceFolder}/build",
+    "terminal.integrated.fontSize": 18
+}
