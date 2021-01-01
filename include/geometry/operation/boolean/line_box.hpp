@@ -35,12 +35,12 @@ void _SortPointsAlongTheLine(
 }
 template<class NUM>
 int _RemoveSamePoints(std::list<std::shared_ptr<Point_<NUM, 2> > >& listp,
-                      const NUM& small = 1e-10){
+                      NUM s){
     // list must be sorted !!!
     // Binary Predicate
-    auto fun = [&small](const std::shared_ptr<Point_<NUM, 2> >& sp1,
+    auto fun = [s](const std::shared_ptr<Point_<NUM, 2> >& sp1,
                         const std::shared_ptr<Point_<NUM, 2> >& sp2){
-        return IsSame(*sp1, *sp2, small);
+        return IsSame(*sp1, *sp2, s);
     };
     listp.unique(fun);
 }

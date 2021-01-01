@@ -1,10 +1,19 @@
-#ifndef IO_DEFINE_H_
-#define IO_DEFINE_H_
+#ifndef _IO_DEFINE_HPP_
+#define _IO_DEFINE_HPP_
 
 #include <type_define.hpp>
 #include <iostream>
 #include <fstream>
-#include <unistd.h>
+#ifdef __linux__ 
+    //linux code goes here
+	#include <unistd.h>
+#else // _WIN32
+    // windows code goes here
+	#include <io.h>
+	#include <process.h>
+	#include <windows.h>
+	#include <direct.h>
+#endif
 
 #include <string>
 #include <vector>
@@ -105,7 +114,11 @@ inline std::string GetWorkingPath()
 {
     char temp [ 256 ];
 
-    if ( getcwd(temp, 256) != 0) 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)
+    if ( _getcwd(temp, 256) != 0)
+#elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+    if ( getcwd(temp, 256) != 0)
+#endif
         return std::string ( temp );
 
     int error = errno;
@@ -161,6 +174,22 @@ inline bool FileAccessCheck( //
 	} else {
 		return false;
 	}
+}
+
+inline bool CreateDir(std::string dir) {
+#if defined _MSC_VER   // windows
+	int rc = _mkdir( dir.data() );
+    if( rc == 0 ){
+		return true;
+	}else if(rc == EEXIST){
+		// file exist
+		return true;
+	}else{
+		return false;
+	}
+#elif defined __GNUC__
+    mkdir(dir.data(), 0777);
+#endif
 }
 
 class TextFile {

@@ -1,12 +1,9 @@
-#ifndef ALGEBRA_TEST_SOLVER_JACOBI_HPP_
-#define ALGEBRA_TEST_SOLVER_JACOBI_HPP_
-
 #include "algebra/solver/jacobi.hpp"
 #include "algebra/algebra.hpp"
 #include "gtest/gtest.h"
 #include "utility/clock.hpp"
 
-namespace carpio{
+using namespace carpio;
 
 TEST(solver, direct1) {
 	typedef MatrixV_<Vt> Mat;
@@ -242,9 +239,7 @@ TEST(solver, DISABLED_parallel){
 
 
 
-}
 
 
 
 
-#endif

@@ -1,12 +1,8 @@
-#ifndef __TEST_CSV_HPP_
-#define __TEST_CSV_HPP_
-
-
 #include "gtest/gtest.h"
 #include "io/csv.hpp"
 #include <math.h>
 
-namespace carpio {
+using namespace carpio; 
 
 TEST(CSV, test1) {
 	std::cout << "CSV Test \n";
@@ -45,7 +41,3 @@ TEST(CSV, test2) {
 		std::cerr << e.what() << std::endl;
 	}
 }
-
-}
-
-#endif

@@ -103,9 +103,10 @@ template<typename ST, typename VT>
 int Copy(ST n, const VT * src, VT* dst) {
 #ifdef OPENMP
 # pragma omp for
-    for (ST i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         dst[i] = src[i];
     }
+	return 1;
 #else
     //make sure: the length of a and b is equal
     //           and n>0

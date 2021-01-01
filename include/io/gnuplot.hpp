@@ -1,5 +1,5 @@
-#ifndef _GNUPLOT_H_
-#define _GNUPLOT_H_
+#ifndef _GNUPLOT_HPP_
+#define _GNUPLOT_HPP_
 
 #include <iostream>
 #include <string>
@@ -166,15 +166,15 @@ protected:
 		//
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)
-		std::string this->m_sGNUPlotFileName = "pgnuplot.exe";
-		std::string this->m_sGNUPlotPath = "C:/program files/gnuplot/bin/";
+		this->m_sGNUPlotFileName = "gnuplot.exe";
+		this->m_sGNUPlotPath = "C:/Program Files/gnuplot/bin/";
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 		this->m_sGNUPlotFileName = "gnuplot";
 		this->m_sGNUPlotPath = "/usr/local/bin";
 #endif
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)
-		std::string this->terminal_std = "windows";
+		this->terminal_std = "windows";
 #elif ( defined(unix) || defined(__unix) || defined(__unix__) ) && !defined(__APPLE__)
 		this->terminal_std = "wxt";
 #elif defined(__APPLE__)
@@ -198,20 +198,18 @@ protected:
 			std::cerr << "!> Can't find gnuplot! " << " \n";
 		}
 
-		//
-		// open pipe
-		//
-		std::string tmp = this->m_sGNUPlotPath + "/" + this->m_sGNUPlotFileName
-				+ " -persist";
-
 		// FILE *popen(const char *command, const char *mode);
 		// The popen() function shall execute the command specified by the string
 		// command, create a pipe between the calling program and the executed
 		// command, and return a pointer to a stream that can be used to either read
 		// from or write to the pipe.
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)
+		std::string tmp = "\"" + this->m_sGNUPlotPath + "/" + this->m_sGNUPlotFileName +"\"" +
+				+ " -persist";
 		gnucmd = _popen(tmp.c_str(),"w");
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+		std::string tmp = this->m_sGNUPlotPath + "/" + this->m_sGNUPlotFileName +
+				+ " -persist";
 		gnucmd = popen(tmp.c_str(), "w");
 #endif
 
@@ -265,7 +263,7 @@ protected:
 			std::list<std::string> ls;
 			//split path (one long string) into list ls of strings
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__TOS_WIN__)
-			stringtok(ls, idx,";");
+			stringtok(ls, path,";");
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 			stringtok(ls, path, ":");
 #endif
@@ -595,14 +593,14 @@ public:
 			const std::string& filename,
 			           double  x         = 800,
 			           double  y         = 600,
-			const std::string& font      = "Helvetica",
+			const std::string& font      = "Fira Code",
 			              int  fontsize  = 12) {
 		this->terminal_std = "pngcairo";
 		std::stringstream sst;
 		sst << "set terminal " << this->terminal_std << " enhanced font '"
 				<< font << "," << fontsize << "'" << "size " << x << ", " << y;
 		cmd(sst.str());
-		cmd("set output '" + filename + "'");
+		cmd("set output '" + filename + ".png'");
 		return *this;
 	}
 
@@ -1149,7 +1147,5 @@ spActor XY(
 }
 
 }
-
-
 
 #endif

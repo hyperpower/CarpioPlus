@@ -17,7 +17,6 @@
  *  @file  Clock.h
  *  @brief The Clock class. Supplies timing facilities.
  **/
-
 #include "tinyformat.hpp"
 #include <iostream>
 #include <iterator>
@@ -38,6 +37,11 @@
 
 #ifdef __APPLE__
 #include <mach/mach_time.h>
+#endif
+
+#ifndef MARK_UNUSED
+/// If a variable is labelled with this directive, the compiler should not emit a warning even if it is unused in the code.
+#define MARK_UNUSED(x) ((void)x)
 #endif
 
 namespace carpio {
@@ -196,7 +200,7 @@ public:
 #ifdef WIN32
 		LARGE_INTEGER ddwTimer;
 		BOOL success = QueryPerformanceCounter(&ddwTimer);
-		assume(success != 0);
+		__assume(success != 0);
 		MARK_UNUSED(success);
 		return ddwTimer.LowPart;
 #else
@@ -224,7 +228,7 @@ public:
 #elif defined(WIN32)
 		LARGE_INTEGER ddwTimer;
 		BOOL success = QueryPerformanceCounter(&ddwTimer);
-		assume(success != 0);
+		__assume(success != 0);
 		MARK_UNUSED(success);
 		return ddwTimer.QuadPart;
 #elif defined(__APPLE__)
@@ -255,7 +259,13 @@ public:
 #endif
 
 #elif defined(WIN32)
-		return ddwTimerFrequency;
+		LARGE_INTEGER ddwTimerFrequency;
+		if (!QueryPerformanceFrequency(&ddwTimerFrequency)){
+			ddwTimerFrequency.HighPart = (unsigned long)-1;
+			ddwTimerFrequency.LowPart = (unsigned long)-1;
+		}
+
+		return ddwTimerFrequency.QuadPart;
 #elif defined(__APPLE__)
 		return ticksPerSecond;
 #elif defined(_POSIX_MONOTONIC_CLOCK)
@@ -300,7 +310,7 @@ public:
 	}
 
 	static inline float TicksToMillisecondsF(tick_t ticks) {
-		return ticks * 1000.0 / (float) TicksPerSec();
+		return float(ticks * 1000.0 / (float) TicksPerSec());
 	}
 	static inline double TicksToMillisecondsD(tick_t ticks) {
 		return ticks * 1000.0 / (double) TicksPerSec();
@@ -351,7 +361,7 @@ public:
 		_tp_num.clear();
 	}
 
-	St size() const {
+	auto size() const {
 		return _tp_name.size();
 	}
 

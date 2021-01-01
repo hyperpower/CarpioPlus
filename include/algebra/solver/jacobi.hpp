@@ -70,7 +70,7 @@ protected:
 		// construct T
 		St M = T.size_i();
 #pragma omp parallel for
-		for (St i = 0; i < M; ++i) {
+		for (int i = 0; i < M; ++i) {
 			// find D
 			Vt dv;
 			int flag = -1;
@@ -169,8 +169,6 @@ protected:
 		return 1;
 	}
 };
-
-
 
 
 }

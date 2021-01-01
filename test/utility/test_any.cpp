@@ -1,6 +1,3 @@
-#ifndef __TEST_ANY_HPP_
-#define __TEST_ANY_HPP_
-
 #include "gtest/gtest.h"
 #include "utility/any.hpp"
 
@@ -8,7 +5,7 @@
 #include <string>
 #include <memory>
 
-namespace carpio {
+using namespace carpio;
 
 template<size_t N>
 struct words {
@@ -197,7 +194,3 @@ TEST(Any, stack) {
 	Any r1 = regression1_type();
 	EXPECT_TRUE(is_stack_allocated(r1, any_cast<const regression1_type>(&r1)));
 }
-
-}
-
-#endif

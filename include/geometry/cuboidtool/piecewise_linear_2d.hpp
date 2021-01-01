@@ -159,9 +159,17 @@ public:
 	}
 
 	Line interface(const Point& start,
+			       const Point& end){
+		Point ori = Point(0.0, 0.0)
+		Point sstart = start - ori;  // shift start
+		Point send   = end   - ori;  // shift end
+		return Line(sstart, send);
+	}
+
+	Line interface(const Point& start,
 			       const Point& end,
-				   const Point& ori = Point(0.0, 0.0)){
-		auto sstart = start - ori;  // shift start
+				   const Point& ori){
+		auto sstart = start - ori; // shift start
 		auto send   = end   - ori;  // shift end
 		return Line(sstart, send);
 	}
@@ -739,9 +747,6 @@ public:
 		return cVOF_whichcase8[a >= 0 ? 0 : 1][b >= 0 ? 0 : 1][
 				std::abs(b) >= std::abs(a) ? 0 : 1];
 	}
-
-
-
 };
 
 }

@@ -4,14 +4,11 @@
  *  Created on: Jun 15, 2018
  *      Author: zhou
  */
-#ifndef GEOMETRY_TEST_BEZIER_HPP_
-#define GEOMETRY_TEST_BEZIER_HPP_
 #include "geometry/geometry.hpp"
-
 #include "gtest/gtest.h"
 #include <list>
 
-namespace carpio {
+using namespace carpio;
 
 typedef Point_<double, 2> Point2;
 typedef Point_<double, 3> Point3;
@@ -160,7 +157,3 @@ TEST(bezier, high){
 	gnu.plot();
 
 }
-
-
-}
-#endif

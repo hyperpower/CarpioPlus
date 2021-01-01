@@ -9,7 +9,6 @@
 #include "algebra/io/gnuplot_actor_a.hpp"
 #include "io/gnuplot.hpp"
 #include "utility/tinyformat.hpp"
-#include <unistd.h>
 #include <memory>
 
 using namespace carpio;

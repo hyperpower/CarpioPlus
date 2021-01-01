@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(This Algebra)
+set(This Substance)
 
 set(Sources
-    test_solver_jacobi.cpp
-    test_multi_array.cpp
-    test_linear_polynomial.cpp
-    test_matrix_sparse.cpp
+    test_atmosphere.cpp
 )
 
 add_executable(${This} ${Sources})

@@ -7,7 +7,7 @@
 #include <math.h>
 #include <string>
 #include <memory>
-#include "mpi.h"
+// #include "mpi.h"
 
 namespace carpio {
 

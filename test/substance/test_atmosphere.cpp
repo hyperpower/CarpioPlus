@@ -1,13 +1,9 @@
-#ifndef __TEST_ATMOSPHERE_HPP_
-#define __TEST_ATMOSPHERE_HPP_
-
-
 #include "gtest/gtest.h"
 #include "substance/atmosphere.hpp"
 #include "io/gnuplot.hpp"
 #include <math.h>
 
-namespace carpio {
+using namespace carpio;
 
 const std::string OUTPUTPATH = "./test/substance/";
 
@@ -194,8 +190,3 @@ TEST(atmosphere, Other) {
 	std::cout << atmos << std::endl;
 }
 
-
-
-}
-
-#endif
