@@ -1,10 +1,7 @@
-#ifndef _ALGEBRA_TEST_LINEAR_POLYNOMIAL_HPP_
-#define _ALGEBRA_TEST_LINEAR_POLYNOMIAL_HPP_
-
 #include "gtest/gtest.h"
 #include "algebra/misc/linear_polynomial.hpp"
 
-namespace carpio{
+using namespace carpio;
 
 TEST(linear_polynomial, lp){
 	typedef LinearPolynomial_<double, std::string> Poly;
@@ -150,9 +147,3 @@ TEST(linear_polynomial, op_add_term){
 	str = "e";
 	std::cout << str + pb << std::endl;
 }
-
-
-}
-
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef ALGEBRA_TEST_MATRIX_SPARSE_HPP_
-#define ALGEBRA_TEST_MATRIX_SPARSE_HPP_
-
 #include "algebra/matrix/matrix_sco.hpp"
 #include "algebra/matrix/matrix_scr.hpp"
 #include "algebra/io/mmio.hpp"
@@ -10,12 +7,14 @@
 
 #include "algebra/io/gnuplot_actor_a.hpp"
 
-namespace carpio{
+using namespace carpio;
+
 
 TEST(matrxi_sparse, matrix){
 	typedef MatrixSCO_<double> MatSCO;
 	typedef ArrayListV_<double> Arr;
 	std::cout << "This test show how to read sparse matrix aa" << std::endl;
+	std::cout << GetWorkingPath() << std::endl;
 	MatSCO mat;
 	mm_read_mtx_sparse("./test/input_files/mm/cavity01.mtx", mat);
 
@@ -83,13 +82,4 @@ TEST(matrxi_sparse, matrix_jacobi){
 	gnu.set_ylogscale();
 	gnu.add(GnuplotActor::Lines(solver.get_residual_array()));
 	gnu.plot();
-
 }
-
-
-}
-
-
-
-
-#endif

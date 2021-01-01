@@ -101,6 +101,36 @@ inline std::string ToString(const Orientation& a) {
 	return "_C_";
 }
 
+inline std::string GetWorkingPath()
+{
+    char temp [ 256 ];
+
+    if ( getcwd(temp, 256) != 0) 
+        return std::string ( temp );
+
+    int error = errno;
+
+    switch ( error ) {
+        // EINVAL can't happen - size argument > 0
+
+        // PATH_MAX includes the terminating nul, 
+        // so ERANGE should not be returned
+
+        case EACCES:
+            throw std::runtime_error("Access denied");
+
+        case ENOMEM:
+            // I'm not sure whether this can happen or not 
+            throw std::runtime_error("Insufficient storage");
+
+        default: {
+            std::ostringstream str;
+            str << "Unrecognised error" << error;
+            throw std::runtime_error(str.str());
+        }
+    }
+}
+
 inline bool FileAccessCheck( //
 		const std::string &filename, //
 		int mode //
@@ -125,9 +155,9 @@ inline bool FileAccessCheck( //
 	if (_access(filename.c_str(), mode) == 0)
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 	if (access(filename.c_str(), mode) == 0)
-			#endif
-			{
-		return true;
+#endif
+    {
+        return true;
 	} else {
 		return false;
 	}

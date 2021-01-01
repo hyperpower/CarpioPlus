@@ -114,7 +114,7 @@ enum Plane {
 };
 
 
-Orientation Opposite(const Orientation& ori){
+inline Orientation Opposite(const Orientation& ori){
 	if(ori == _M_){
 		return _P_;
 	}else if(ori == _P_){

@@ -584,7 +584,7 @@ void mm_read_array(std::string filename, ArrayListV_<VALUE>& arr) {
 template<class VALUE>
 void mm_read_mtx_sparse(std::string filename, MatrixSCO_<VALUE>& m) {
 	FILE* f;
-	if (FileAccessCheck(filename, 4)) { //enable read
+	if (FileAccessCheck(filename, 0)) { //enable read
 		f = fopen(filename.c_str(), "r");
 	} else {
 		std::cerr << " !> Can't read file " << filename << "\n";
