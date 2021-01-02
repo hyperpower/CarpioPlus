@@ -4,13 +4,11 @@
  *  Created on: Jun 15, 2018
  *      Author: zhou
  */
-#ifndef GEOMETRY_TEST_BOX_HPP_
-#define GEOMETRY_TEST_BOX_HPP_
 #include "geometry/geometry.hpp"
-#include "gtest/gtest.h"
 #include "utility/tinyformat.hpp"
+#include "gtest/gtest.h"
 
-namespace carpio {
+using namespace carpio;
 
 typedef Point_<double, 3>   Point3;
 typedef Point_<double, 2>   Point2;
@@ -177,8 +175,3 @@ TEST(box, box_vs_line_positive){
     }
 }
 
-
-
-
-} //end namespace
-#endif

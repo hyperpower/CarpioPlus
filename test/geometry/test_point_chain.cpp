@@ -1,11 +1,9 @@
-#ifndef GEOMETRY_TEST_POINT_CHAIN_HPP_
-#define GEOMETRY_TEST_POINT_CHAIN_HPP_
-
 #include "geometry/geometry.hpp"
 #include "gtest/gtest.h"
 #include "utility/random.hpp"
 
-namespace carpio {
+using namespace carpio;
+
 typedef Point_<double, 2> Point;
 typedef PointChain_<double, 2> PC;
 typedef GGnuplotActor_<double, 2> GA;
@@ -74,6 +72,7 @@ TEST(point_chain, is_simple){
 	PC pc(l);
 	std::cout << "Is Simple = " << pc.is_simple() << std::endl;
 	Gnuplot gnu;
+    gnu.set_terminal_png("./plot/point_chain_is_simple");
 	gnu.set_xrange(-0.5, 2);
 	gnu.set_yrange(-0.5, 2);
 	gnu.add(GA::Arrows(pc, 0));
@@ -120,10 +119,3 @@ TEST(point_chain, is_simple){
 //
 //}
 
-
-
-
-
-}
-
-#endif

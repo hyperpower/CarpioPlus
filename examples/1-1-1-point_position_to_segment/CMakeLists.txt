@@ -7,7 +7,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build/)
 
 set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-
 # Check the architecture and set CMAKE_LIBRARY_ARCHITECTURE accordingly
 #if(UNIX)
 #  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -21,13 +20,6 @@ set(REQUIRED_PYTHON_VERSION 3.4)
 find_package ( PythonInterp ${REQUIRED_PYTHON_VERSION} REQUIRED)
 find_package ( PythonLibs ${REQUIRED_PYTHON_VERSION} REQUIRED)
 
-#message(STATUS "PYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE}")
-#message(STATUS "PYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY}")
-#message(STATUS "PYTHON_LIBRARIES:=${PYTHON_LIBRARIES}")
-#message(STATUS "PYTHON_INCLUDE_DIR:FILEPATH=${PYTHON_INCLUDE_DIR}")
-#message(STATUS "PYTHON_FRAMEWORK_INCLUDES=${PYTHON_FRAMEWORK_INCLUDES}")
-#message(STATUS "PYTHONLIBS_VERSION_STRING=${PYTHONLIBS_VERSION_STRING}")
-#message(STATUS "PYTHON_FRAMEWORKS=${Python_FRAMEWORKS}")
 message(STATUS "PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}")
 
 IF(PYTHONLIBS_FOUND)
@@ -46,10 +38,6 @@ add_executable(main ${SOURCE_FILES})
 
 
 # link the libraries to the executable
-#target_link_libraries (carpio io)
-#target_link_libraries (carpio utility)
-#target_link_libraries (carpio gtest)
-#target_link_libraries (carpio glog)
 #target_link_libraries (carpio pthread)
 
 if(PYTHON_LIBRARIES)

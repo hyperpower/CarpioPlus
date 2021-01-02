@@ -5,13 +5,10 @@
  *      Author: zhou
  */
 
-#ifndef GEOMETRY_TEST_POINT_HPP_
-#define GEOMETRY_TEST_POINT_HPP_
-
 #include "geometry/geometry.hpp"
 #include "gtest/gtest.h"
 
-namespace carpio {
+using namespace carpio;
 
 const St dim = 3;
 
@@ -62,19 +59,6 @@ TEST(point, max_and_min){
 }
 
 
-TEST(point, draw_on_gnuplot){
-	Point2 x(1, 0, 0);
-	Point2 y(0, 1, 0);
-	Point2 z(0, 0, 1);
-
-	Gnuplot gnu;
-	auto a1 = GA::Points(x, 0);
-	a1->style() = "with points pointtype 7 pointsize 3 lc variable";
-	gnu.add(a1);
-//	gnu.plot();
-}
-
-
 TEST(point, distance_to_line){
 	typedef Line_<Vt> Line;
 	Line l(1.0, 1.0, 1.0);
@@ -86,19 +70,10 @@ TEST(point, distance_to_line){
 
 	Gnuplot gnu;
 	auto ap = GA::Points(p, 0);
+    gnu.set_terminal_png("./plot/distance_to_line");
 	ap->style() = "with points pointtype 7 pointsize 3 lc variable";
 	gnu.add(ap);
 	auto al = GA::Lines(l);
 	gnu.add(al);
 	gnu.plot();
-
 }
-
-
-
-
-}
-
-
-
-#endif /* GEOMETRY_TEST_POINT_HPP_ */

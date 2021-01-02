@@ -11,7 +11,7 @@
 namespace carpio {
 
 
-std::string ToString(IntersectionTypeSS ss){
+inline std::string ToString(IntersectionTypeSS ss){
 	switch(ss){
 		case _SS_NO_       :  return "NO";       break;
 		case _SS_CONNECT_  :  return "CONNECT";  break;
@@ -24,7 +24,7 @@ std::string ToString(IntersectionTypeSS ss){
 	return "ERROR IntersectionType";
 }
 
-IntersectionTypeSS ToIntersectionTypeSS(int a){
+inline IntersectionTypeSS ToIntersectionTypeSS(int a){
 	ASSERT(a >=0 && a <=5);
 	switch(a){
 		case 0 : return _SS_NO_       ; break;

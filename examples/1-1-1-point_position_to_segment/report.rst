@@ -29,7 +29,7 @@ Location 0 IN
 --------------
 The point is inside the Segment
 
-.. figure:: _static/{{folder_name}}/IN.png
+.. figure:: ./fig/IN.png
    :alt: Figure point loaction IN
    :align: center 
 
@@ -39,7 +39,7 @@ Location 1 LEFT
 ------------------
 The point is on the left of the Segment
 
-.. figure:: _static/{{folder_name}}/LEFT.png
+.. figure:: ./fig/LEFT.png
    :alt: Figure point loaction LEFT
    :align: center 
 
@@ -49,7 +49,7 @@ Location 2 RIGHT
 ------------------
 The point is on the left of the Segment
 
-.. figure:: _static/{{folder_name}}/RIGHT.png
+.. figure:: fig/RIGHT.png
    :alt: Figure point loaction RIGHT
    :align: center 
 
@@ -59,7 +59,7 @@ Location 3 ON START
 ---------------------
 The point is on the start point of the Segment
 
-.. figure:: _static/{{folder_name}}/ON_START.png
+.. figure:: fig/ON_START.png
    :alt: Figure point loaction ON_START
    :align: center 
 
@@ -69,27 +69,27 @@ Location 4 ON END
 ------------------
 The point is on the end point of the Segment
 
-.. figure:: _static/{{folder_name}}/ON_END.png
+.. figure:: fig/ON_END.png
    :alt: Figure point loaction ON_END
    :align: center 
 
    An example of the Point located on the end point of the Segment
 
-Location 4 OUT START
+Location 5 OUT START
 ---------------------
 The point is outside the start point of the Segment, but the point is colinear with the Segment.
 
-.. figure:: _static/{{folder_name}}/OUT_START.png
+.. figure:: fig/OUT_START.png
    :alt: Figure point loaction OUT_START
    :align: center 
 
    An example of the Point located outside the start point of the Segment
 
-Location 4 OUT END
+Location 6 OUT END
 ---------------------
 The point is outside the end point of the Segment, but the point is colinear with the Segment.
 
-.. figure:: _static/{{folder_name}}/OUT_END.png
+.. figure:: fig/OUT_END.png
    :alt: Figure point loaction OUT_END
    :align: center 
 

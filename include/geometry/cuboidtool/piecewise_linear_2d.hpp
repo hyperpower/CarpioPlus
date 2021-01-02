@@ -160,7 +160,7 @@ public:
 
 	Line interface(const Point& start,
 			       const Point& end){
-		Point ori = Point(0.0, 0.0)
+		Point ori = Point(0.0, 0.0);
 		Point sstart = start - ori;  // shift start
 		Point send   = end   - ori;  // shift end
 		return Line(sstart, send);

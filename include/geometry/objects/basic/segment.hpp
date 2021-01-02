@@ -354,7 +354,7 @@ enum PointToSegmentPosition {
 	_PS_OUT_END_   = 6,  //
 };
 
-PointToSegmentPosition ToPointToSegmentPosition(int idx){
+inline PointToSegmentPosition ToPointToSegmentPosition(int idx){
 	switch(idx){
 		case 0 : return _PS_IN_       ;  break;
 		case 1 : return _PS_LEFT_     ;  break;
@@ -368,7 +368,7 @@ PointToSegmentPosition ToPointToSegmentPosition(int idx){
 	return _PS_IN_; //make complier happy
 }
 
-std::string ToString(const PointToSegmentPosition& ps){
+inline std::string ToString(const PointToSegmentPosition& ps){
 	switch(ps){
 	case _PS_IN_       :  return "IN";        break;
 	case _PS_LEFT_     :  return "LEFT";      break;
