@@ -19,16 +19,15 @@ namespace carpio{
 //z
 
 
-template<St DIM>
-class SGhostRegular_ : public SGhost_<DIM>{
+template<St DIM, class GRID>
+class SGhostRegular_ : public SGhost_<DIM, GRID>{
 public:
-    typedef    SIndex_<DIM> Index;
-    typedef SGrid_<DIM> Grid;
+    typedef SIndex_<DIM> Index;
+    typedef GRID Grid;
     typedef std::shared_ptr<Grid> spGrid;
 
 protected:
     spGrid _grid;
-
 public:
     SGhostRegular_(spGrid spg): _grid(spg){
 
@@ -38,19 +37,19 @@ public:
     }
 
     virtual std::string type() const{
-    	return "SGhostRegular";
+        return "SGhostRegular";
     }
 
     virtual St type(const Index& idx) const{
-    	return this->is_ghost(idx) ? _GHOST_ : _NORMAL_;
+        return this->is_ghost(idx) ? _GHOST_ : _NORMAL_;
     }
 
     virtual Grid& grid() {
-       	return *_grid;
+           return *_grid;
     }
 
     virtual const Grid& grid() const {
-       	return *_grid;
+           return *_grid;
     }
 
     St ghost_layer() const{
@@ -86,7 +85,7 @@ public:
     }
 
     virtual bool is_cut(const Index& index) const{
-    	return false;
+        return false;
     }
 
     virtual bool is_normal(const Index& index) const{
@@ -115,16 +114,16 @@ public:
     };
 
     virtual Index boundary_index(const Index& indexc,
-    	                         const Index& indexg,
-    	                         const St&    axe,
-    	                         const St&    ori) const{
-    	auto oori = Opposite(Orientation(ori));  // opposite oritation
+                                 const Index& indexg,
+                                 const St&    axe,
+                                 const St&    ori) const{
+        auto oori = Opposite(Orientation(ori));  // opposite oritation
         auto idxb = indexg;
-    	int  step = 0;
-    	while(this->is_ghost(idxb)){ // find nearest normal cell or cut;
-    		Shift(idxb, axe, oori);
-    	    step++;
-    	}
+        int  step = 0;
+        while(this->is_ghost(idxb)){ // find nearest normal cell or cut;
+            Shift(idxb, axe, oori);
+            step++;
+        }
         return idxb;
     }
 
@@ -132,7 +131,7 @@ public:
         return _grid->num_cells();
     }
     virtual St size_not_ghost() const{
-    	return _grid->num_cells();
+        return _grid->num_cells();
     }
 };
 

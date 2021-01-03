@@ -12,19 +12,19 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class SExpField_{
 public:
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM>  Grid;
-    typedef SGhost_<DIM> Ghost;
-    typedef SOrder_<DIM> Order;
-    typedef SField_<DIM> Field;
+    typedef GRID  Grid;
+    typedef GHOST Ghost;
+    typedef ORDER Order;
+    typedef SField_<DIM, GRID, GHOST, ORDER> Field;
 
     typedef std::shared_ptr<SIndex_<DIM> > spIndex;
-    typedef std::shared_ptr<SGrid_<DIM>  > spGrid;
-    typedef std::shared_ptr<SGhost_<DIM> > spGhost;
-    typedef std::shared_ptr<SOrder_<DIM> > spOrder;
+    typedef std::shared_ptr<Grid>  spGrid;
+    typedef std::shared_ptr<Ghost> spGhost;
+    typedef std::shared_ptr<Order> spOrder;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
@@ -33,7 +33,7 @@ public:
     typedef MultiArrayV_<Expression, DIM> Mat;
     typedef typename Mat::reference             reference;
     typedef typename Mat::const_reference const_reference;
-    typedef SExpField_<DIM> Self;
+    typedef SExpField_<DIM, GRID, GHOST, ORDER> Self;
 protected:
     spGrid  _grid;
     spGhost _ghost;
@@ -46,7 +46,7 @@ public:
         _grid(spg), _ghost(spgh),
         _mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
         // Initall a default order_xyz
-        _order = spOrder(new SOrderXYZ_<DIM>(spg,spgh));
+        _order = spOrder(new SOrderXYZ_<DIM, GRID, GHOST>(spg,spgh));
     }
 
     SExpField_(spGrid spg, spGhost spgh, spOrder spor) :
@@ -214,99 +214,99 @@ protected:
     }
 };
 
-template<St DIM>
-inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const SExpField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator+(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SExpField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs += rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator+(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs += rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator+(const Vt& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator+(const Vt& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs += lhs;
     return rhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator+(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator+(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs += rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator+(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator+(const SField_<DIM, GRID, GHOST, ORDER>& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs += lhs;
     return rhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const SExpField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator-(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SExpField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs -= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator-(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs -= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator-(const Vt& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator-(const Vt& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs -= lhs;
     return rhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator-(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator-(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs -= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator-(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator-(const SField_<DIM, GRID, GHOST, ORDER>& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs -= lhs;
     return rhs;
 }
 
 
-template<St DIM>
-inline SExpField_<DIM> operator*(SExpField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator*(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs *= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator*(const Vt& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator*(const Vt& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs *= lhs;
     return rhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator*(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator*(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs *= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SExpField_<DIM> operator*(const SField_<DIM>& lhs, SExpField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator*(const SField_<DIM, GRID, GHOST, ORDER>& lhs, SExpField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs *= lhs;
     return rhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator/(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs /= rhs;
     return lhs;
 }
-template<St DIM>
-inline SExpField_<DIM> operator/(SExpField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SExpField_<DIM, GRID, GHOST, ORDER> operator/(SExpField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs /= rhs;
     return lhs;
 }
-template<St DIM>
-SExpField_<DIM> ExpressionField(const SField_<DIM>& lhs) {
-    SExpField_<DIM> res(lhs.spgrid(), lhs.spghost(), lhs.sporder());
+template<St DIM, class GRID, class GHOST, class ORDER>
+SExpField_<DIM, GRID, GHOST, ORDER> ExpressionField(const SField_<DIM, GRID, GHOST, ORDER>& lhs) {
+    SExpField_<DIM, GRID, GHOST, ORDER> res(lhs.spgrid(), lhs.spghost(), lhs.sporder());
     for (auto& idx : res.order()) {
         res(idx) = idx;
     }

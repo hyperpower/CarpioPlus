@@ -361,7 +361,8 @@ public:
 		_tp_num.clear();
 	}
 
-	auto size() const {
+	typename std::list<std::string>::size_type
+	size() const {
 		return _tp_name.size();
 	}
 

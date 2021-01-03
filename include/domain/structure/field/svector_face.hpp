@@ -15,23 +15,23 @@ namespace carpio{
 //    i-1        i        i+1       center index
 //          i        i+1       i+2  face   index
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class SVectorFace_{
 public:
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM>  Grid;
-    typedef SGhost_<DIM> Ghost;
-    typedef SOrder_<DIM> Order;
+    typedef GRID  Grid;
+    typedef GHOST Ghost;
+    typedef ORDER Order;
 
     typedef std::shared_ptr<SIndex_<DIM> > spIndex;
-    typedef std::shared_ptr<SGrid_<DIM>  > spGrid;
-    typedef std::shared_ptr<SGhost_<DIM> > spGhost;
-    typedef std::shared_ptr<SOrder_<DIM> > spOrder;
+    typedef std::shared_ptr<Grid> spGrid;
+    typedef std::shared_ptr<Ghost> spGhost;
+    typedef std::shared_ptr<Order> spOrder;
 
     typedef MultiArrayV_<Vt, DIM> Mat;
     typedef typename Mat::reference reference;
     typedef typename Mat::const_reference const_reference;
-    typedef SVectorFace_<DIM> Self;
+    typedef SVectorFace_<DIM, GRID, GHOST, ORDER> Self;
 protected:
     spGrid  _grid;
     spGhost _ghost;

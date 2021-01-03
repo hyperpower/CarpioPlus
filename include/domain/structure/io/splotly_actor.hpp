@@ -60,10 +60,10 @@ spPA_scatter3d WireFrame(const SGrid_<DIM>& grid) {
     return res;
 }
 
-template<St DIM>
-spPA_scatter FieldCenter(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
+template<St DIM, class GRID, class GHOST, class ORDER>
+spPA_scatter FieldCenter(const SField_<DIM, GRID, GHOST, ORDER>& v, St dim = 2, Idx i = 0) {
     typedef SGrid_<DIM> Grid;
-    typedef SField_<DIM> Field;
+    typedef SField_<DIM, GRID, GHOST, ORDER> Field;
     typedef std::list<double> Listd;
     Listd lx, ly, lz, lv;
     for(auto& index : v.order()){
@@ -95,10 +95,10 @@ spPA_scatter FieldCenter(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
     return res;
 }
 
-template<St DIM>
-spPA_scatter3d FieldCenter3d(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
+template<St DIM, class GRID, class GHOST, class ORDER>
+spPA_scatter3d FieldCenter3d(const SField_<DIM, GRID, GHOST, ORDER>& v, St dim = 2, Idx i = 0) {
     typedef SGrid_<DIM> Grid;
-    typedef SField_<DIM> Field;
+    typedef SField_<DIM, GRID, GHOST, ORDER> Field;
     typedef std::list<double> Listd;
     Listd lx, ly, lz, lv;
     for(auto& index : v.order()){
@@ -125,10 +125,10 @@ spPA_scatter3d FieldCenter3d(const SField_<DIM>& v, St dim = 2, Idx i = 0) {
     return res;
 }
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 spPA_heatmap Heatmap( //
         const SGrid_<DIM>& grid, //
-        const SField_<DIM>& csfield, //
+        const SField_<DIM, GRID, GHOST, ORDER>& csfield, //
         St dim1 = _X_, St dim2 = _Y_, Idx idx = 0) {
     typedef SGrid_<DIM> Grid;
     typedef SIndex_<DIM> Index;

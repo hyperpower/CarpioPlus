@@ -284,12 +284,12 @@ public:
 
 };
 
-template<St DIM>
-class SGhostLinearCut_: public SGhostRegular_<DIM> {
+template<St DIM, class GRID>
+class SGhostLinearCut_: public SGhostRegular_<DIM, GRID> {
 public:
-	typedef SGhostRegular_<DIM>     Base;
-	typedef SIndex_<DIM>            Index;
-	typedef SGrid_<DIM>             Grid;
+	typedef SGhostRegular_<DIM, GRID> Base;
+	typedef SIndex_<DIM>              Index;
+	typedef GRID                      Grid;
 	typedef std::shared_ptr<Grid> spGrid;
 	typedef SCellLinearCut_<DIM>    Cell;
 	typedef std::shared_ptr<Cell> spCell;

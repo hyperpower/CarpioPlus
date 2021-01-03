@@ -20,25 +20,25 @@
 namespace carpio{
 
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SInterpolate_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
-    typedef SCorner_<DIM>       Corner;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
+    typedef SCorner_<DIM, Grid, Ghost, Order>       Corner;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryCondition BC;
-    typedef SValue_<DIM> Value;
-    typedef SValue_<1> Value1;
-    typedef SValue_<2> Value2;
-    typedef SValue_<3> Value3;
+    typedef SValue_<DIM, Field> Value;
+    typedef SValue_<1, Field> Value1;
+    typedef SValue_<2, Field> Value2;
+    typedef SValue_<3, Field> Value3;
 
     typedef AInterpolate_<Vt, Vt> AInter;
 
@@ -71,13 +71,13 @@ public:
     }
 
 protected:
-    typedef SField_<1>  Field1;
-    typedef SField_<2>  Field2;
-    typedef SField_<3>  Field3;
+    typedef SField_<1, Grid, Ghost, Order>  Field1;
+    typedef SField_<2, Grid, Ghost, Order>  Field2;
+    typedef SField_<3, Grid, Ghost, Order>  Field3;
 
-    typedef SCorner_<1> Corner1;
-    typedef SCorner_<2> Corner2;
-    typedef SCorner_<3> Corner3;
+    typedef SCorner_<1, Grid, Ghost, Order> Corner1;
+    typedef SCorner_<2, Grid, Ghost, Order> Corner2;
+    typedef SCorner_<3, Grid, Ghost, Order> Corner3;
 public:
     static void CenterToCorner(const Field1& f, Corner1& c, spBI bi){
         for(auto& idx : f.order()){

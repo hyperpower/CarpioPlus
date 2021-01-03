@@ -7,11 +7,11 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class GRID>
 class SGhost_ {
 public:
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM>  Grid;
+    typedef GRID Grid;
 
     SGhost_(){
 
@@ -19,16 +19,16 @@ public:
     virtual ~SGhost_(){
     }
     virtual std::string type() const{
-    	return "SGhost";
+        return "SGhost";
     }
-	virtual St type(const Index& idx) const{}
+    virtual St type(const Index& idx) const{}
 
     virtual Grid& grid() {
-    	SHOULD_NOT_REACH;
+        SHOULD_NOT_REACH;
     }
 
     virtual const Grid& grid() const {
-    	SHOULD_NOT_REACH;
+        SHOULD_NOT_REACH;
     }
 
     virtual bool is_ghost(const Index& index) const{};
@@ -38,7 +38,7 @@ public:
             const St&    a,
             const St&    o) const{};
     virtual bool is_cut(
-    		const Index& index) const{};
+            const Index& index) const{};
     virtual bool is_normal(const Index& index) const{};
 
 
@@ -56,7 +56,5 @@ public:
 
 
 }
-
-
 
 #endif

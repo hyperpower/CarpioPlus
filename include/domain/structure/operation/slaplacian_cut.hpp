@@ -17,31 +17,29 @@
 
 namespace carpio{
 
-template<St DIM>
-class SLaplacianCut_: public SLaplacian_<DIM>{
+template<St DIM, class FIELD>
+class SLaplacianCut_: public SLaplacian_<DIM, FIELD>{
 public:
-	typedef SLaplacian_<DIM> Base;
-    typedef SGrid_<DIM>      Grid;
-    typedef SGhost_<DIM>     Ghost;
-    typedef SOrder_<DIM>     Order;
-    typedef SField_<DIM>     Field;
+	typedef SLaplacian_<DIM, FIELD> Base;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>     Index;
 
-    typedef SGhostLinearCut_<DIM> GhostLinearCut;
-    typedef std::shared_ptr<SGhostLinearCut_<DIM> > spGhostLinearCut;
+    typedef SGhostLinearCut_<DIM, Grid> GhostLinearCut;
+    typedef std::shared_ptr<GhostLinearCut> spGhostLinearCut;
     typedef typename GhostLinearCut::spCell spCell;
 
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
 
-
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
-
-    typedef SExpField_<DIM>                      ExpField;
-    typedef typename SExpField_<DIM>::Expression Exp;
+    typedef SExpField_<DIM, Grid, Ghost, Order>                      ExpField;
+    typedef typename ExpField::Expression Exp;
     typedef BoundaryIndex       BI;
 
-    typedef SValue_<DIM> Value;
-    typedef SValueCut_<DIM> ValueCut;
+    typedef SValue_<DIM, Field> Value;
+    typedef SValueCut_<DIM, Field> ValueCut;
 
 protected:
     typedef std::shared_ptr<BoundaryIndex> spBI;

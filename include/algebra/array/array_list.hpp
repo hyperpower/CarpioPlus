@@ -733,7 +733,7 @@ V ArrayListV_<V>::norm1() const {
 template<typename V>
 V ArrayListV_<V>::norm2() const {
     ASSERT(this->m_p != nullptr);
-    return Nrm2(this->m_Len, this->m_p, 1);
+    return Nrm2(*this);
 }
 
 template<typename V>

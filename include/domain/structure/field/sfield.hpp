@@ -10,26 +10,25 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class SField_{
 public:
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM>  Grid;
-    typedef SGhost_<DIM> Ghost;
-    typedef SOrder_<DIM> Order;
+    typedef GRID  Grid;
+    typedef GHOST Ghost;
+    typedef ORDER Order;
 
-    typedef std::shared_ptr<SIndex_<DIM> > spIndex;
-    typedef std::shared_ptr<SGhost_<DIM> > spGhost;
-    typedef std::shared_ptr<SGrid_<DIM> >  spGrid;
-
-    typedef std::shared_ptr<SOrder_<DIM> > spOrder;
+    typedef std::shared_ptr<Index> spIndex;
+    typedef std::shared_ptr<Ghost> spGhost;
+    typedef std::shared_ptr<Grid>  spGrid;
+    typedef std::shared_ptr<Order> spOrder;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
     typedef MultiArrayV_<Vt, DIM> Mat;
     typedef typename Mat::reference reference;
     typedef typename Mat::const_reference const_reference;
-    typedef SField_<DIM> Self;
+    typedef SField_<DIM, GRID, GHOST, ORDER> Self;
 protected:
     spGrid  _grid;
     spGhost _ghost;
@@ -42,7 +41,7 @@ public:
         _grid(spg), _ghost(spgh),
         _mat(spg->n(_X_), spg->n(_Y_), spg->n(_Z_)){
         // Initall a default order_xyz
-        _order = spOrder(new SOrderXYZ_<DIM>(spg,spgh));
+        _order = spOrder(new SOrderXYZ_<DIM, Grid, Ghost>(spg,spgh));
     }
     SField_(spGrid spg, spGhost spgh, spOrder spor) :
             _grid(spg), _ghost(spgh), _order(spor),
@@ -69,11 +68,11 @@ public:
         }
     }
     Vt sum() const{
-    	Vt sum = 0.0;
+        Vt sum = 0.0;
         for(auto& idx : (*_order)){
-        	sum += this->operator ()(idx);
+            sum += this->operator ()(idx);
         }
-    	return sum;
+        return sum;
     }
 
     Vt max() const {
@@ -256,17 +255,16 @@ public:
         }
         return res;
     }
-
-
-
 };
-template<St DIM>
-bool IsCompatible(const SField_<DIM>& lhs, const SField_<DIM>& rhs){
+
+template<St DIM, class GRID, class GHOST, class ORDER>
+bool IsCompatible(const SField_<DIM, GRID, GHOST, ORDER>& lhs,
+                  const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     return lhs.is_compatible(rhs);
 }
 
-template<St DIM>
-std::ostream& operator<<(std::ostream& stream, const SField_<DIM>& s) {
+template<St DIM, class GRID, class GHOST, class ORDER>
+std::ostream& operator<<(std::ostream& stream, const SField_<DIM, GRID, GHOST, ORDER>& s) {
     for (St d = 0; d < DIM; ++d) {
         tfm::format(stream, "%d", s.n(d));
         if(d < DIM - 1){
@@ -310,82 +308,84 @@ std::ostream& operator<<(std::ostream& stream, const SField_<DIM>& s) {
     return stream;
 }
 
-template<St DIM>
-inline SField_<DIM> operator+(SField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER>
+operator+(      SField_<DIM, GRID, GHOST, ORDER> lhs, 
+          const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs += rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator+(SField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator+(SField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs += rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator+(const Vt& lhs, SField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator+(const Vt& lhs, SField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs += lhs;
     return rhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator-(SField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator-(SField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs -= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator-(SField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator-(SField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs -= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator-(const Vt& lhs, SField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator-(const Vt& lhs, SField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs = -rhs + lhs;
     return rhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator*(SField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator*(SField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs *= rhs;
       return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator*(SField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator*(SField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs *= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator*(const Vt& lhs, SField_<DIM> rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator*(const Vt& lhs, SField_<DIM, GRID, GHOST, ORDER> rhs){
     rhs *= lhs;
     return rhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator/(SField_<DIM> lhs, const SField_<DIM>& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator/(SField_<DIM, GRID, GHOST, ORDER> lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
     lhs /= rhs;
       return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator/(SField_<DIM> lhs, const Vt& rhs){
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator/(SField_<DIM, GRID, GHOST, ORDER> lhs, const Vt& rhs){
     lhs /= rhs;
     return lhs;
 }
 
-template<St DIM>
-inline SField_<DIM> operator/(const Vt& lhs, const SField_<DIM>& rhs){
-    SField_<DIM> res(rhs);
+template<St DIM, class GRID, class GHOST, class ORDER>
+inline SField_<DIM, GRID, GHOST, ORDER> operator/(const Vt& lhs, const SField_<DIM, GRID, GHOST, ORDER>& rhs){
+    SField_<DIM, GRID, GHOST, ORDER> res(rhs);
     res.assign(lhs);
     res /= rhs;
     return res;
 }
 // a^2
-template<St DIM>
-SField_<DIM> Square(const SField_<DIM>& a){
+template<St DIM, class GRID, class GHOST, class ORDER>
+SField_<DIM, GRID, GHOST, ORDER> Square(const SField_<DIM, GRID, GHOST, ORDER>& a){
     auto res = a.new_compatible();
 
     for(auto& idx : res.order()){
@@ -397,8 +397,8 @@ SField_<DIM> Square(const SField_<DIM>& a){
 
 
 // a^2 + b^2
-template<St DIM>
-SField_<DIM> SquareSum(const SField_<DIM>& a, const SField_<DIM>& b){
+template<St DIM, class GRID, class GHOST, class ORDER>
+SField_<DIM, GRID, GHOST, ORDER> SquareSum(const SField_<DIM, GRID, GHOST, ORDER>& a, const SField_<DIM, GRID, GHOST, ORDER>& b){
     ASSERT(a.is_compatible(b));
     auto res = a.new_compatible();
 
@@ -410,10 +410,10 @@ SField_<DIM> SquareSum(const SField_<DIM>& a, const SField_<DIM>& b){
     return res;
 }
 
-template<St DIM>
-SField_<DIM> SquareSum(const SField_<DIM>& a,
-                       const SField_<DIM>& b,
-                       const SField_<DIM>& c){
+template<St DIM, class GRID, class GHOST, class ORDER>
+SField_<DIM, GRID, GHOST, ORDER> SquareSum(const SField_<DIM, GRID, GHOST, ORDER>& a,
+                       const SField_<DIM, GRID, GHOST, ORDER>& b,
+                       const SField_<DIM, GRID, GHOST, ORDER>& c){
     ASSERT(a.is_compatible(b));
     ASSERT(a.is_compatible(c));
     auto res = a.new_compatible();
@@ -427,8 +427,8 @@ SField_<DIM> SquareSum(const SField_<DIM>& a,
     return res;
 }
 
-template<St DIM>
-SField_<DIM> Sqrt(const SField_<DIM>& a){
+template<St DIM, class GRID, class GHOST, class ORDER>
+SField_<DIM, GRID, GHOST, ORDER> Sqrt(const SField_<DIM, GRID, GHOST, ORDER>& a){
     auto res = a.new_compatible();
 
     for(auto& idx : res.order()){
@@ -438,35 +438,35 @@ SField_<DIM> Sqrt(const SField_<DIM>& a){
     return res;
 }
 
-template<St DIM>
-SField_<DIM> Abs(const SField_<DIM>& f){
+template<St DIM, class GRID, class GHOST, class ORDER>
+SField_<DIM, GRID, GHOST, ORDER> Abs(const SField_<DIM, GRID, GHOST, ORDER>& f){
     auto res(f);
     res.abs();
     return res;
 }
 
-template<St DIM>
-Vt Norm1(const SField_<DIM>& f, const SField_<DIM>& exact){
+template<St DIM, class GRID, class GHOST, class ORDER>
+Vt Norm1(const SField_<DIM, GRID, GHOST, ORDER>& f, const SField_<DIM, GRID, GHOST, ORDER>& exact){
     auto res = f - exact;
     return res.norm1();
 }
 
-template<St DIM>
-Vt Norm2(const SField_<DIM>& f, const SField_<DIM>& exact){
+template<St DIM, class GRID, class GHOST, class ORDER>
+Vt Norm2(const SField_<DIM, GRID, GHOST, ORDER>& f, const SField_<DIM, GRID, GHOST, ORDER>& exact){
     auto res = Square(f - exact);
     return res.sum();
 }
 
-template<St DIM>
-Vt NormInf(const SField_<DIM>& f, const SField_<DIM>& exact){
+template<St DIM, class GRID, class GHOST, class ORDER>
+Vt NormInf(const SField_<DIM, GRID, GHOST, ORDER>& f, const SField_<DIM, GRID, GHOST, ORDER>& exact){
     auto res = Abs(f - exact);
     return res.max();
 }
 
-#define UNPACK_FIELD(field)  \
-	auto& grid  = field.grid();  \
-	auto& ghost = field.ghost(); \
-	auto& order = field.order();
+#define UNPACK_FIELD(field)     \
+    auto& grid  = field.grid();  \
+    auto& ghost = field.ghost(); \
+    auto& order = field.order();
 
 
 }

@@ -52,7 +52,7 @@ public:
         return this->_type;
     }
     void set_type(int t) const{
-    	this->_type = t;
+        this->_type = t;
     }
 
     void set_boundary_id(int a, int o, int id){
@@ -70,12 +70,12 @@ public:
     }
 };
 
-template<St DIM>
-class SGhostMask_ : public SGhostRegular_<DIM>{
+template<St DIM, class GRID>
+class SGhostMask_ : public SGhostRegular_<DIM, GRID>{
 public:
-	typedef SGhostRegular_<DIM>   Base;
+    typedef SGhostRegular_<DIM,GRID>    Base;
     typedef SIndex_<DIM>                Index;
-    typedef SGrid_<DIM>                 Grid;
+    typedef GRID                        Grid;
     typedef std::shared_ptr<Grid>     spGrid;
     typedef SCellMask_<DIM>             CellMask;
     typedef std::shared_ptr<CellMask> spCellMask;
@@ -93,8 +93,8 @@ public:
             > FunSetByXYZ;
 
     typedef std::function<
-    		spCellMask(const Vt&, const Vt&, const Vt&, const Vt&)
-			> FunSetByXYZT;
+            spCellMask(const Vt&, const Vt&, const Vt&, const Vt&)
+            > FunSetByXYZT;
 
     typedef MultiArray_<spCellMask, DIM> Mat;
     typedef typename Mat::reference reference;
@@ -110,17 +110,17 @@ public:
     virtual ~SGhostMask_(){}
 
     virtual std::string type() const {
-		return "SGhostMask";
-	}
+        return "SGhostMask";
+    }
 
     virtual St type(const Index& idx) const {
-		auto spc = this->operator ()(idx);
-		if (spc == nullptr) {
-			return _NORMAL_;
-		} else {
-			return spc->type();
-		}
-	}
+        auto spc = this->operator ()(idx);
+        if (spc == nullptr) {
+            return _NORMAL_;
+        } else {
+            return spc->type();
+        }
+    }
 
     Grid& grid(){
         return *(this->_grid);
@@ -140,16 +140,16 @@ public:
     }
 
     virtual bool is_ghost(const Index& index) const{
-		bool bres = Base::is_ghost(index);
-		if (bres == false) {
-			auto& pc = this->operator ()(index);
-			if (pc != nullptr) {
-				return (pc->type() == _GHOST_) ? true : false;
-			} else { //pc == nullptr
-				return false;
-			}
-		}
-		return bres;
+        bool bres = Base::is_ghost(index);
+        if (bres == false) {
+            auto& pc = this->operator ()(index);
+            if (pc != nullptr) {
+                return (pc->type() == _GHOST_) ? true : false;
+            } else { //pc == nullptr
+                return false;
+            }
+        }
+        return bres;
     };
 
     virtual bool is_boundary(
@@ -221,35 +221,35 @@ public:
     }
 
     void set(FunSetByXYZT fun, const Vt& time) {
-		FunIndex funi = [&fun, this, &time](const Index& idx) {
-			auto& grid = *(this->_grid);
-			auto cp = grid.c(idx);
-			auto x = cp.value(_X_);
-			auto y = cp.value(_Y_);
-			auto z = cp.value(_Z_);
-			auto res = fun(x, y, z, time);
-			this->operator ()(idx) = res;
-		};
-		this->_grid->for_each(funi);
-	}
+        FunIndex funi = [&fun, this, &time](const Index& idx) {
+            auto& grid = *(this->_grid);
+            auto cp = grid.c(idx);
+            auto x = cp.value(_X_);
+            auto y = cp.value(_Y_);
+            auto z = cp.value(_Z_);
+            auto res = fun(x, y, z, time);
+            this->operator ()(idx) = res;
+        };
+        this->_grid->for_each(funi);
+    }
 
 
     St size_normal() const{
-    	return size_not_ghost();
+        return size_not_ghost();
     }
 
     virtual St size_not_ghost() const{
         return _count_not_ghost();
     }
-	St _count_not_ghost() const {
-		St count = 0;
-		for (auto spc : this->_mat) {
-			if (spc == nullptr) {
-				count++;
-			}
-		}
-		return count;
-	}
+    St _count_not_ghost() const {
+        St count = 0;
+        for (auto spc : this->_mat) {
+            if (spc == nullptr) {
+                count++;
+            }
+        }
+        return count;
+    }
 protected:
     void _init_mat(){
         for(auto& v : this->_mat){

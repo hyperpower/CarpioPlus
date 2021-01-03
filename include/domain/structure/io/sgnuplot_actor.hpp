@@ -23,49 +23,49 @@ public:
     typedef SGrid_<1>     Grid1;
     typedef SGrid_<2>     Grid2;
     typedef SGrid_<3>     Grid3;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SGhost_<1>    Ghost1;
-    typedef SGhost_<2>    Ghost2;
-    typedef SGhost_<3>    Ghost3;
+    typedef SGhost_<DIM, Grid>  Ghost;
+    typedef SGhost_<1, Grid>    Ghost1;
+    typedef SGhost_<2, Grid>    Ghost2;
+    typedef SGhost_<3, Grid>    Ghost3;
 
-    typedef SGhostLinearCut_<DIM> GhostLinearCut;
-    typedef SGhostLinearCut_<1>   GhostLinearCut1;
-    typedef SGhostLinearCut_<2>   GhostLinearCut2;
-    typedef SGhostLinearCut_<3>   GhostLinearCut3;
+    typedef SGhostLinearCut_<DIM, Grid> GhostLinearCut;
+    typedef SGhostLinearCut_<1, Grid>   GhostLinearCut1;
+    typedef SGhostLinearCut_<2, Grid>   GhostLinearCut2;
+    typedef SGhostLinearCut_<3, Grid>   GhostLinearCut3;
 
     typedef SCellLinearCut_<DIM> CellLinearCut;
     typedef SCellLinearCut_<1> CellLinearCut1;
     typedef SCellLinearCut_<2> CellLinearCut2;
     typedef SCellLinearCut_<3> CellLinearCut3;
 
-    typedef SOrder_<DIM>  Order;
-    typedef SOrder_<1>    Order1;
-    typedef SOrder_<2>    Order2;
-    typedef SOrder_<3>    Order3;
-    typedef SField_<DIM>  Field;
-    typedef SField_<1>    Field1;
-    typedef SField_<2>    Field2;
-    typedef SField_<3>    Field3;
-    typedef SVectorCenter_<DIM> VC;
-    typedef SVectorCenter_<1>   VC1;
-    typedef SVectorCenter_<2>   VC2;
-    typedef SVectorCenter_<3>   VC3;
+    typedef SOrder_<DIM, Grid, Ghost>  Order;
+    typedef SOrder_<1, Grid, Ghost>    Order1;
+    typedef SOrder_<2, Grid, Ghost>    Order2;
+    typedef SOrder_<3, Grid, Ghost>    Order3;
+    typedef SField_<DIM, Grid, Ghost, Order>  Field;
+    typedef SField_<1, Grid, Ghost, Order>    Field1;
+    typedef SField_<2, Grid, Ghost, Order>    Field2;
+    typedef SField_<3, Grid, Ghost, Order>    Field3;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VC;
+    typedef SVectorCenter_<1, Grid, Ghost, Order>   VC1;
+    typedef SVectorCenter_<2, Grid, Ghost, Order>   VC2;
+    typedef SVectorCenter_<3, Grid, Ghost, Order>   VC3;
 
-    typedef SVectorFace_<DIM> VF;
-    typedef SVectorFace_<1>   VF1;
-    typedef SVectorFace_<2>   VF2;
-    typedef SVectorFace_<3>   VF3;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order> VF;
+    typedef SVectorFace_<1, Grid, Ghost, Order>   VF1;
+    typedef SVectorFace_<2, Grid, Ghost, Order>   VF2;
+    typedef SVectorFace_<3, Grid, Ghost, Order>   VF3;
 
-    typedef SCorner_<DIM>     Corner;
-    typedef SCorner_<1>       Corner1;
-    typedef SCorner_<2>       Corner2;
-    typedef SCorner_<3>       Corner3;
+    typedef SCorner_<DIM, Grid, Ghost, Order>     Corner;
+    typedef SCorner_<1, Grid, Ghost, Order>       Corner1;
+    typedef SCorner_<2, Grid, Ghost, Order>       Corner2;
+    typedef SCorner_<3, Grid, Ghost, Order>       Corner3;
 
     typedef SIndex_<1>    Index1;
     typedef SIndex_<2>    Index2;
     typedef SIndex_<3>    Index3;
 
-    typedef SLoop_<DIM>   Loop;
+    typedef SLoop_<DIM, Field>   Loop;
 
     static spActor WireFrame(
             const Grid2& grid, int color_idx = -1) {

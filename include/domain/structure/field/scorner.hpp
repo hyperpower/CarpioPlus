@@ -46,28 +46,28 @@ namespace carpio{
 // _PMP_ = 5,  1  0  1
 // _PPM_ = 6,  0  1  1
 // _PPP_ = 7,  1  1  1
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class SCorner_{
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
     static const St NumFace = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
 
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM>  Grid;
-    typedef SGhost_<DIM> Ghost;
-    typedef SOrder_<DIM> Order;
+    typedef GRID  Grid;
+    typedef GHOST Ghost;
+    typedef ORDER Order;
 
     typedef std::shared_ptr<SIndex_<DIM> > spIndex;
-    typedef std::shared_ptr<SGrid_<DIM>  > spGrid;
-    typedef std::shared_ptr<SGhost_<DIM> > spGhost;
-    typedef std::shared_ptr<SOrder_<DIM> > spOrder;
+    typedef std::shared_ptr<Grid> spGrid;
+    typedef std::shared_ptr<Ghost> spGhost;
+    typedef std::shared_ptr<Order> spOrder;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
     typedef MultiArrayV_<Vt, DIM> Mat;
     typedef typename Mat::reference reference;
     typedef typename Mat::const_reference const_reference;
-    typedef SCorner_<DIM> Self;
+    typedef SCorner_<DIM, GRID, GHOST, ORDER> Self;
 
 protected:
     spGrid  _grid;
@@ -141,26 +141,26 @@ public:
         _mat.assign(value);
     }
 
-	void assign(FunXYZT_Value fun, Vt t = 0.0) {
-		auto& grid = *(_grid);
-		for (auto& idx : (*_order)) {
-			auto pv     = grid.v(0, idx);
-			auto value  = fun(pv.value(_X_), pv.value(_Y_), pv.value(_Z_), t);
-			this->operator ()(0,idx) = value;
-			FOR_EACH_DIM{
-				if(_ghost->is_boundary(idx, d, _P_)){
-					for(int vo = 1; vo < NumVertex; vo++){ // vertex order
-						auto pv = grid.v(vo, idx);
-						auto value = fun(pv.value(_X_),
-								         pv.value(_Y_),
-										 pv.value(_Z_), t);
-						this->operator ()(vo,idx) = value;
-					}
-					// this loop is not efficient
-				}
-			}
-		}
-	}
+    void assign(FunXYZT_Value fun, Vt t = 0.0) {
+        auto& grid = *(_grid);
+        for (auto& idx : (*_order)) {
+            auto pv     = grid.v(0, idx);
+            auto value  = fun(pv.value(_X_), pv.value(_Y_), pv.value(_Z_), t);
+            this->operator ()(0,idx) = value;
+            FOR_EACH_DIM{
+                if(_ghost->is_boundary(idx, d, _P_)){
+                    for(int vo = 1; vo < NumVertex; vo++){ // vertex order
+                        auto pv = grid.v(vo, idx);
+                        auto value = fun(pv.value(_X_),
+                                         pv.value(_Y_),
+                                         pv.value(_Z_), t);
+                        this->operator ()(vo,idx) = value;
+                    }
+                    // this loop is not efficient
+                }
+            }
+        }
+    }
 
 protected:
     void initial_didx(){

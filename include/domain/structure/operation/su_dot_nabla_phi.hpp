@@ -18,18 +18,17 @@
 namespace carpio{
 
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SUdotNabla_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM> Field;
+    typedef FIELD Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
-
-    typedef SExpField_<DIM>     ExpField;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
+    typedef SExpField_<DIM, Grid, Ghost, Order>     ExpField;
 
 protected:
     typedef std::shared_ptr<BoundaryIndex> spBI;
@@ -68,29 +67,29 @@ public:
 };
 
 
-template<St DIM>
-class SUdotNabla_FOU: public SUdotNabla_<DIM>{
+template<St DIM, class FIELD>
+class SUdotNabla_FOU: public SUdotNabla_<DIM, FIELD>{
 public:
+    typedef FIELD Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
 
-    typedef SUdotNabla_<DIM> Base;
-    typedef SUdotNabla_FOU<DIM> Self;
+    typedef SUdotNabla_<DIM, FIELD> Base;
+    typedef SUdotNabla_FOU<DIM, FIELD> Self;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
     typedef BoundaryIndex       BI;
     typedef std::shared_ptr<BoundaryIndex> spBI;
 
-    typedef SExpField_<DIM>                      ExpField;
-    typedef typename SExpField_<DIM>::Expression Exp;
+    typedef SExpField_<DIM, Grid, Ghost, Order> ExpField;
+    typedef typename ExpField::Expression Exp;
 
-    typedef SValue_<DIM> Value;
+    typedef SValue_<DIM, Field> Value;
 
-    typedef SLoop_<DIM> Loop;
+    typedef SLoop_<DIM, Field> Loop;
 
     SUdotNabla_FOU(): Base(){
     }
@@ -219,22 +218,22 @@ public:
 
 };
 
-template<St DIM>
-class SUdotNabla_TVD: public SUdotNabla_<DIM>{
+template<St DIM, class FIELD>
+class SUdotNabla_TVD: public SUdotNabla_<DIM, FIELD>{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM> Field;
+    typedef FIELD Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
-    typedef SUdotNabla_<DIM> Base;
+    typedef SUdotNabla_<DIM, Field> Base;
 
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
     typedef std::shared_ptr<BoundaryIndex> spBI;
 
-    typedef SValue_<DIM> Value;
+    typedef SValue_<DIM, Field> Value;
 
     typedef Vt (*Limiter)(Vt, Vt);
     typedef std::unordered_map<std::string, Limiter> LimiterMap;

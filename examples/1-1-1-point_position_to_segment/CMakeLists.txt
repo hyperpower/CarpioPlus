@@ -13,7 +13,7 @@ set(SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 #    set(CMAKE_LIBRARY_ARCHITECTURE "x86_64-linux-gnu")
 #  endif()
 #endif()
-#set(Python_ADDITIONAL_VERSIONS 3.4)
+#set(Python_ADDITIONAL_VERSIONS 3.4
 # python =======
 set(REQUIRED_PYTHON_VERSION 3.4)
 # message(STATUS "======== LOOKING FOR PYTHON ${REQUIRED_PYTHON_VERSION} ========================")

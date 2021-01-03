@@ -18,21 +18,21 @@
 
 namespace carpio{
 
-template<St DIM>
-class SInterpolationLocal_ : public SInterpolation_<DIM>{
+template<St DIM, class FIELD>
+class SInterpolationLocal_ : public SInterpolation_<DIM, FIELD>{
 public:
-	typedef SInterpolation_<DIM>      Base;
-	typedef SInterpolationLocal_<DIM> Self;
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
+	typedef SInterpolation_<DIM, FIELD>      Base;
+	typedef SInterpolationLocal_<DIM, FIELD> Self;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
-    typedef SCorner_<DIM>       Corner;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
+    typedef SCorner_<DIM, Grid, Ghost, Order>       Corner;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryCondition BC;
 
@@ -45,7 +45,7 @@ public:
 
     typedef AInterpolate_<Vt, Vt> AInter;
 
-    typedef SExpField_<DIM> ExpField;
+    typedef SExpField_<DIM, Grid, Ghost, Order> ExpField;
     typedef typename ExpField::Expression Exp;
     typedef typename Exp::Term            Term;
     typedef typename Exp::Coe             Coe;

@@ -17,23 +17,23 @@
 namespace carpio{
 
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SLaplacian_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
 
-    typedef SExpField_<DIM>                      ExpField;
-    typedef typename SExpField_<DIM>::Expression Exp;
+    typedef SExpField_<DIM, Grid, Ghost, Order>       ExpField;
+    typedef typename ExpField::Expression Exp;
     typedef BoundaryIndex       BI;
 
-    typedef SValue_<DIM> Value;
+    typedef SValue_<DIM, Field> Value;
 
 protected:
     typedef std::shared_ptr<BoundaryIndex> spBI;

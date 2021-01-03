@@ -32,7 +32,8 @@ int main(int argc, char** argv) {
     // Define the equation
     Convection_<DIM, Domain> equ(spgrid, spghost, sporder);
 
-    equ.set_time_term(500, dt);
+//     equ.set_time_term(500, dt);
+    equ.set_time_term(3, dt);
 
     // Set boundary condition
     typedef std::shared_ptr<BoundaryIndex> spBI;

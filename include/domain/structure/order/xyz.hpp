@@ -11,13 +11,13 @@
 
 namespace carpio{
 
-template<St DIM>
-class SOrderXYZ_ : public SOrder_<DIM>{
+template<St DIM,class GRID, class GHOST>
+class SOrderXYZ_ : public SOrder_<DIM, GRID, GHOST>{
 public:
     typedef SIndex_<DIM> Index;
-    typedef SGrid_<DIM> Grid;
+    typedef GRID  Grid;
     typedef std::shared_ptr<Grid> spGrid;
-    typedef SGhost_<DIM> Ghost;
+    typedef GHOST Ghost;
     typedef std::shared_ptr<Ghost> spGhost;
 
     typedef std::vector<Index> OrderVector;

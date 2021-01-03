@@ -35,14 +35,14 @@
 
 namespace carpio {
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class StructureDomain_{
 public:
     typedef St SizeType;
     typedef Vt ValueType;
     typedef SIndex_<DIM>                Index;
 
-    typedef SGrid_<DIM>                 Grid;
+    typedef GRID                        Grid;
     typedef Grid&                       ref_Grid;
     typedef const Grid&                 const_ref_Grid;
     typedef Grid*                       pGrid;
@@ -50,7 +50,7 @@ public:
     typedef std::shared_ptr<Grid>       spGrid;
     typedef std::shared_ptr<const Grid> spcGrid;
 
-    typedef SGhost_<DIM>                 Ghost;
+    typedef GHOST                        Ghost;
     typedef Ghost&                       ref_Ghost;
     typedef const Ghost&                 const_ref_Ghost;
     typedef Ghost*                       pGhost;
@@ -58,7 +58,7 @@ public:
     typedef std::shared_ptr<Ghost>       spGhost;
     typedef std::shared_ptr<const Ghost> spcGhost;
 
-    typedef SOrder_<DIM>                 Order;
+    typedef ORDER                        Order;
     typedef Order&                       ref_Order;
     typedef const Order&                 const_ref_Order;
     typedef Order*                       pOrder;
@@ -66,7 +66,7 @@ public:
     typedef std::shared_ptr<Order>       spOrder;
     typedef std::shared_ptr<const Order> spcOrder;
 
-    typedef SField_<DIM>                 Field;
+    typedef SField_<DIM, GRID, GHOST, ORDER> Field;
     typedef Field&                       ref_Field;
     typedef const Field&                 const_ref_Field;
     typedef Field*                       pField;
@@ -74,14 +74,14 @@ public:
     typedef std::shared_ptr<Field>       spField;
     typedef std::shared_ptr<const Field> spcField;
 
-    typedef SExpField_<DIM>              ExpField;
+    typedef SExpField_<DIM, GRID, GHOST, ORDER> ExpField;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, GRID, GHOST, ORDER> VectorCenter;
+    typedef SVectorFace_<DIM, GRID, GHOST, ORDER>   VectorFace;
 
-    typedef SUdotNabla_<DIM>    UdotNabla;
-    typedef SUdotNabla_FOU<DIM> UdotNabla_FOU;
-    typedef SUdotNabla_TVD<DIM> UdotNabla_TVD;
+    typedef SUdotNabla_<DIM, Field>    UdotNabla;
+    typedef SUdotNabla_FOU<DIM, Field> UdotNabla_FOU;
+    typedef SUdotNabla_TVD<DIM, Field> UdotNabla_TVD;
 
     // creation
 
@@ -90,13 +90,13 @@ public:
 
 
     // operation
-    typedef SValue_<DIM>        Value;
-    typedef SInterpolate_<DIM>  Interpolate;
-    typedef SLaplacian_<DIM>    Laplacian;
-    typedef SLaplacianCut_<DIM> LaplacianCut;
-    typedef SBuildMatrix_<DIM>  BuildMatrix;
+    typedef SValue_<DIM, Field> Value;
+    typedef SInterpolate_<DIM, Field>  Interpolate;
+    typedef SLaplacian_<DIM, Field>    Laplacian;
+    typedef SLaplacianCut_<DIM, Field> LaplacianCut;
+    typedef SBuildMatrix_<DIM, Field>  BuildMatrix;
     // io file
-    typedef SIOFile_<DIM> IOFile;
+    typedef SIOFile_<DIM, Grid, Ghost, Order> IOFile;
 
     // plot
     typedef SGnuplotActor_<DIM> GnuplotActor;

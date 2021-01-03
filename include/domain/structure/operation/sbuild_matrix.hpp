@@ -18,13 +18,13 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SBuildMatrix_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef Field*       pField;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
@@ -32,13 +32,13 @@ public:
     typedef ArrayListV_<Vt> Arr;
     typedef ArrayListV_<St> ArrSt;
 
-    typedef SExpField_<DIM> ExpField;
+    typedef SExpField_<DIM, Grid, Ghost, Order> ExpField;
     typedef typename ExpField::Expression Exp;
     typedef typename Exp::Term            Term;
     typedef typename Exp::Coe             Coe;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryIndex* pBI;
     typedef BoundaryCondition BC;

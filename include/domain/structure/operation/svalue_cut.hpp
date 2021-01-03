@@ -18,29 +18,29 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SValueCut_{
 public:
+    typedef FIELD  Field;
 	typedef Point_<Vt, DIM>  Point;
-    typedef SGrid_<DIM>   Grid;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef std::shared_ptr<Grid> spGrid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SGhostLinearCut_<DIM> GhostLinearCut;
+    typedef SGhostLinearCut_<DIM, Grid> GhostLinearCut;
     typedef std::shared_ptr<GhostLinearCut> spGhostLinearCut;
     typedef typename GhostLinearCut::spCell spCell;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
     typedef Field*       pField;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
 
-    typedef SExpField_<DIM> ExpField;
+    typedef SExpField_<DIM, Grid, Ghost, Order> ExpField;
     typedef typename ExpField::Expression Exp;
     typedef typename Exp::Term            Term;
     typedef typename Exp::Coe             Coe;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryIndex* pBI;
     typedef BoundaryCondition BC;

@@ -19,15 +19,15 @@ namespace carpio{
 ///
 //z
 
-template<St DIM>
-class SGhostRegularSubdivision_ : public SGhostRegular_<DIM>{
+template<St DIM, class GRID>
+class SGhostRegularSubdivision_ : public SGhostRegular_<DIM, GRID>{
 public:
     static const St NumVertex = DIM == 1 ? 2 : (DIM == 2 ? 4 : 8);
     static const St NumFace   = DIM == 1 ? 2 : (DIM == 2 ? 4 : 6);
 
-    typedef SGhostRegular_<DIM>     Base;
-	typedef SIndex_<DIM>            Index;
-	typedef SGrid_<DIM>             Grid;
+    typedef SGhostRegular_<DIM, GRID> Base;
+    typedef SIndex_<DIM>              Index;
+    typedef GRID                      Grid;
     typedef std::shared_ptr<Grid> spGrid;
 
     // input 1. Regular ID
@@ -52,7 +52,7 @@ public:
     }
 
     virtual std::string type() const{
-    	return "SGhostRegularSubdivision";
+        return "SGhostRegularSubdivision";
     }
 
     virtual int boundary_id(

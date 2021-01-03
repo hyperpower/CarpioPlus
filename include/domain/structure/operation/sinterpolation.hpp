@@ -17,19 +17,19 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SInterpolation_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
-    typedef SCorner_<DIM>       Corner;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
+    typedef SCorner_<DIM, Grid, Ghost, Order>       Corner;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryCondition BC;
 //    typedef SValue_<DIM> Value;

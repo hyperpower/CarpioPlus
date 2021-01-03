@@ -29,7 +29,7 @@ public:
 	typedef std::shared_ptr<Grid>       spGrid;
 	typedef std::shared_ptr<const Grid> spcGrid;
 
-	typedef SGhost_<DIM>                 Ghost;
+	typedef SGhost_<DIM, Grid>                 Ghost;
 	typedef Ghost&                       ref_Ghost;
 	typedef const Ghost&                 const_ref_Ghost;
 	typedef Ghost*                       pGhost;
@@ -37,26 +37,26 @@ public:
 	typedef std::shared_ptr<Ghost>       spGhost;
 	typedef std::shared_ptr<const Ghost> spcGhost;
 
-	typedef SGhostRegular_<DIM>                       GhostRegular;
-	typedef std::shared_ptr<SGhostRegular_<DIM> >   spGhostRegular;
-	typedef SOrder_<DIM>                           Order;
-	typedef std::shared_ptr<SOrder_<DIM> >       spOrder;
-	typedef SOrderXYZ_<DIM>                        OrderXYZ;
-	typedef std::shared_ptr<SOrderXYZ_<DIM> >    spOrderXYZ;
+	typedef SGhostRegular_<DIM, Grid>                       GhostRegular;
+	typedef std::shared_ptr<GhostRegular >   spGhostRegular;
+	typedef SOrder_<DIM, Grid, Ghost>                           Order;
+	typedef std::shared_ptr<Order>       spOrder;
+	typedef SOrderXYZ_<DIM, Grid , Ghost>                        OrderXYZ;
+	typedef std::shared_ptr<OrderXYZ>    spOrderXYZ;
 
-	typedef SGhostMask_<DIM>               GhostMask;
+	typedef SGhostMask_<DIM, Grid>               GhostMask;
 	typedef std::shared_ptr<GhostMask>   spGhostMask;
 	typedef SCellMask_<DIM>               CellMask;
 	typedef std::shared_ptr<CellMask>   spCellMask;
 
-	typedef SGhostLinearCut_<DIM>              GhostLinearCut;
+	typedef SGhostLinearCut_<DIM, Grid>              GhostLinearCut;
 	typedef std::shared_ptr<GhostLinearCut>  spGhostLinearCut;
 	typedef SCellLinearCut_<DIM>               CellLinearCut;
 	typedef std::shared_ptr<CellLinearCut>   spCellLinearCut;
 
 	typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
-	typedef SCorner_<DIM>              Corner;
+	typedef SCorner_<DIM, Grid, Ghost, Order>              Corner;
 	typedef std::shared_ptr<Corner>  spCorner;
 
 	typedef typename std::conditional<DIM == 2,

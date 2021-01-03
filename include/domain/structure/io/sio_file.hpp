@@ -8,7 +8,7 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class GRID, class GHOST, class ORDER>
 class SIOFile_ {
 public:
     static const St Dim = DIM;
@@ -17,13 +17,9 @@ public:
     typedef SIndex_<Dim> Index;
     typedef BoundaryIndex BI;
 
-
-    typedef SField_<DIM> Field;
-
-    typedef SField_<2>   Field2;
-
+    typedef SField_<DIM, GRID, GHOST, ORDER> Field;
+    typedef SField_<2, GRID, GHOST, ORDER>   Field2;
 public:
-
 
 
     static void OutputField(const std::string& filename, const Field& data) {

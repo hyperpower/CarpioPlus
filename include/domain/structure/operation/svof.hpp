@@ -18,22 +18,22 @@
 
 namespace carpio{
 
-template<St DIM>
+template<St DIM, class FIELD>
 class SVOF_{
 public:
-    typedef SGrid_<DIM>   Grid;
-    typedef SGhost_<DIM>  Ghost;
-    typedef SOrder_<DIM>  Order;
-    typedef SField_<DIM>  Field;
-    typedef SField_<1>  Field1;
-    typedef SField_<2>  Field2;
-    typedef SField_<3>  Field3;
+    typedef FIELD  Field;
+    typedef typename Field::Grid  Grid;
+    typedef typename Field::Ghost Ghost;
+    typedef typename Field::Order Order;
+    typedef SField_<1, Grid, Ghost, Order>  Field1;
+    typedef SField_<2, Grid, Ghost, Order>  Field2;
+    typedef SField_<3, Grid, Ghost, Order>  Field3;
     typedef Field*       pField;
     typedef SIndex_<DIM>  Index;
     typedef std::shared_ptr<Field> spField;
 
-    typedef SVectorCenter_<DIM> VectorCenter;
-    typedef SVectorFace_<DIM>   VectorFace;
+    typedef SVectorCenter_<DIM, Grid, Ghost, Order> VectorCenter;
+    typedef SVectorFace_<DIM, Grid, Ghost, Order>   VectorFace;
     typedef std::shared_ptr<BoundaryIndex> spBI;
     typedef BoundaryIndex* pBI;
     typedef BoundaryCondition BC;
