@@ -183,8 +183,6 @@ inline int LoopPrev(const int& bgn, const int& end, const int& cur){
 	return (cur == bgn) ? end : cur - 1;
 }
 
-
-
 }
 
 

@@ -90,7 +90,7 @@ public:
 
 
     // operation
-    typedef SValue_<DIM, Field> Value;
+    typedef SValue_<DIM, Field>        Value;
     typedef SInterpolate_<DIM, Field>  Interpolate;
     typedef SLaplacian_<DIM, Field>    Laplacian;
     typedef SLaplacianCut_<DIM, Field> LaplacianCut;

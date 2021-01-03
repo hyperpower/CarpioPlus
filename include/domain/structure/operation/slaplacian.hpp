@@ -81,7 +81,6 @@ public:
 //                std::cout << "arr [d] " << d <<"  = " << << std::endl;
             }
 
-
             Vt sum = 0;
             FOR_EACH_DIM
             {

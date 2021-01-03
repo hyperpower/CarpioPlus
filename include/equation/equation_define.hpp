@@ -25,14 +25,13 @@ public:
     typedef typename Domain::Ghost     Ghost;
     typedef typename Domain::Order     Order;
     typedef typename Domain::Field     Field;
+    typedef typename Domain::VectorCenter VectorCenter;
+    typedef typename Domain::VectorFace   VectorFace;
 
     typedef Event_<DIM, Domain>          Event;
     typedef EventCondition_<DIM, Domain> EventCondition;
     typedef TimeTerm_<DIM>               TimeTerm;
     typedef StopManager_<DIM, Domain>    StopManager;
-
-    typedef typename Domain::VectorCenter VectorCenter;
-    typedef typename Domain::VectorFace   VectorFace;
 
     typedef std::shared_ptr<Event>  spEvent;
     typedef std::shared_ptr<Event>  spEventCondition;
