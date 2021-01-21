@@ -9,9 +9,9 @@ TEST(base_equation, first){
     typedef BaseGhost_<3> Ghost;
     typedef BaseOrder_<3> Order;
 
-    typedef BaseField_<3, Grid, Ghost, Order> Field;
+    typedef BaseField_<3, float, Grid, Ghost, Order> Field;
 
     Field field;
-    Laplacian(field, "BI", 0);
+    Laplacian(field, "BI");
     
 }

@@ -18,33 +18,33 @@ namespace carpio {
 template<class TYPE>
 class CuboidToolPL3_:public CuboidTool_<TYPE, 3>{
 public:
-	static const St Dim = 3;
-	static const St NumFaces = 6;
-	static const St NumVertexes = 8;
+    static const St Dim = 3;
+    static const St NumFaces = 6;
+    static const St NumVertexes = 8;
 
-	typedef TYPE Vt;
-	typedef CuboidTool_<TYPE, Dim>              Base;
-	typedef CuboidToolPL2_<TYPE>               Tool2;
-	typedef Point_<TYPE, Dim>                  Point;
-	typedef Point_<TYPE, Dim>&             ref_Point;
-	typedef const Point_<TYPE, Dim>& const_ref_Point;
+    typedef TYPE Vt;
+    typedef CuboidTool_<TYPE, Dim>              Base;
+    typedef CuboidToolPL2_<TYPE>               Tool2;
+    typedef Point_<TYPE, Dim>                  Point;
+    typedef Point_<TYPE, Dim>&             ref_Point;
+    typedef const Point_<TYPE, Dim>& const_ref_Point;
 
-	typedef Line_<Vt>                           Line;
-	typedef Line*                              pLine;
-	typedef std::shared_ptr<Line>             spLine;
-	typedef const pLine                  const_pLine;
+    typedef Line_<Vt>                           Line;
+    typedef Line*                              pLine;
+    typedef std::shared_ptr<Line>             spLine;
+    typedef const pLine                  const_pLine;
 
-	typedef Box_<Vt, Dim>                      Box;
-	typedef Box*                              pBox;
-	typedef std::shared_ptr<Box>             spBox;
-	typedef const pBox                  const_pBox;
+    typedef Box_<Vt, Dim>                      Box;
+    typedef Box*                              pBox;
+    typedef std::shared_ptr<Box>             spBox;
+    typedef const pBox                  const_pBox;
 
-	typedef Segment_<Vt, Dim>                Segment;
-	typedef Segment*                        pSegment;
-	typedef std::shared_ptr<Segment>       spSegment;
-	typedef const pSegment            const_pSegment;
+    typedef Segment_<Vt, Dim>                Segment;
+    typedef Segment*                        pSegment;
+    typedef std::shared_ptr<Segment>       spSegment;
+    typedef const pSegment            const_pSegment;
 
-	typedef PointChain_<Vt, Dim>          PointChain;
+    typedef PointChain_<Vt, Dim>          PointChain;
 
     typedef std::function<Vt(Vt, Vt, Vt, Vt)> FunXYZT_Value;
 
@@ -52,20 +52,20 @@ public:
     CuboidToolPL3_():Base(){}
 
     std::array<Vt, NumFaces> cut_cell_aperture_ratios(
-    			const Vt& xo,
-    			const Vt& yo,
-    			const Vt& dx,
-    			const Vt& dy,
-    			const Vt& time,
-    			const Vt& th,
-    			FunXYZT_Value fun,
-    			const Vt& tol,
-    			const std::array<Vt, NumVertexes>& arrv) const{
-    		// v0 - 2 => e0
-    		// v1 - 3 => e1
-    		// v0 - 1 => e2
-    		// v2 - 3 => e3
-    		std::array<Vt, NumFaces> arrres;
+                const Vt& xo,
+                const Vt& yo,
+                const Vt& dx,
+                const Vt& dy,
+                const Vt& time,
+                const Vt& th,
+                FunXYZT_Value fun,
+                const Vt& tol,
+                const std::array<Vt, NumVertexes>& arrv) const{
+            // v0 - 2 => e0
+            // v1 - 3 => e1
+            // v0 - 1 => e2
+            // v2 - 3 => e3
+            std::array<Vt, NumFaces> arrres;
 //    		auto se0  = _aperture_state(arrv[0], arrv[2], th); //2D
 //    		arrres[0] = edge_aperture_ratio(xo,  yo, _Y_, dy,
 //    				                            time, th, fun, tol, se0);

@@ -39,7 +39,7 @@ public:
 
     virtual ~BaseOrder_(){};
 };
-template<St DIM, class GRID, class GHOST, class ORDER>
+template<St DIM, class VT, class GRID, class GHOST, class ORDER>
 class BaseField_ {
 public:
     static const St Dim = DIM;
@@ -47,6 +47,7 @@ public:
     typedef GRID  Grid;
     typedef GHOST Ghost;
     typedef ORDER Order;
+    typedef VT    ValueType;
 
     typedef BaseFieldTag Tag;
 public:
@@ -54,9 +55,9 @@ public:
 
     virtual ~BaseField_(){}
 
-    virtual Grid&  grid(){};
-    virtual Ghost& ghost(){};
-    virtual Order& order(){};
+    virtual Grid&  grid(){return Grid();};
+    virtual Ghost& ghost(){return Ghost();};
+    virtual Order& order(){return Order();};
 
 };
 
